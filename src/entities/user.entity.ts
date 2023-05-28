@@ -25,28 +25,28 @@ class User{
     @Column()
     public winrate: number;
 
-    @ManyToMany(() => Achievement, achievement => achievement.users)
-    public achievements: Achievement[];
+    // @ManyToMany(() => Achievement, achievement => achievement.users)
+    // public achievements: Achievement[];
 
-    @OneToMany(() => MatchHistory, (matchHisory) => matchHisory.player1)
-    public matchHistoryPlayer1: MatchHistory[];
+    // @OneToMany(() => MatchHistory, (matchHisory) => matchHisory.player1)
+    // public matchHistoryPlayer1: MatchHistory[];
 
-    @OneToMany(() => MatchHistory, (matchHisory) => matchHisory.player2)
-    public matchHistoryPlayer2: MatchHistory[];
-
-
-    @OneToMany(() => Channel, (channel) => channel.owner);
-    public channels: Channel[];
+    // @OneToMany(() => MatchHistory, (matchHisory) => matchHisory.player2)
+    // public matchHistoryPlayer2: MatchHistory[];
 
 
-    @OneToMany(() => ChannelMessages, (channelMessages) => channelMessages.user)
-    channelMessages: ChannelMessages[];
+    // @OneToMany(() => Channel, (channel) => channel.owner);
+    // public channels: Channel[];
+
+
+    // @OneToMany(() => ChannelMessages, (channelMessages) => channelMessages.user)
+    // channelMessages: ChannelMessages[];
 
     
 
 
-    @OneToMany(() => ChannelUsers, (channelUsers) => channelUsers.user)
-    public ChannelUsers: ChannelUsers[];
+    // @OneToMany(() => ChannelUsers, (channelUsers) => channelUsers.user)
+    // public ChannelUsers: ChannelUsers[];
 
 }
 
