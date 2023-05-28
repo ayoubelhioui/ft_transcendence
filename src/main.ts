@@ -6,7 +6,3 @@ async function bootstrap() {
   await app.listen(3000);
 }
 bootstrap();
-function Get() {
-  throw new Error('Function not implemented.');
-}
-

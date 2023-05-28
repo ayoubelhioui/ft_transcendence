@@ -15,8 +15,11 @@ export class CreateUserDto{
     avatar: string;
 
     @IsNotEmpty()
-    win: number;
+    wins: number;
 
     @IsNotEmpty()
     loss: number;
+
+    @IsNotEmpty()
+    winrate: number
 }

@@ -1,5 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Default, OneToMany } from 'typeorm';
-import User from './user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import Channel from './channel.entity';
 import { channel } from 'diagnostics_channel';
 
@@ -17,11 +16,11 @@ class ChannelUsers{
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @ManyToOne(() => User, user => user.channelUsers, { primary: true })
-    user: User;
+    // @ManyToOne(() => User, user => user.channelUsers, { primary: true })
+    // user: User;
 
-    @ManyToOne(() => Channel, channel => channel.channelUsers, { primary: true })
-    channel: Channel;
+    // @ManyToOne(() => Channel, channel => channel.channelUsers, { primary: true })
+    // channel: Channel;
 
     @Column()
     public userRole : channelUserRole;

@@ -6,24 +6,24 @@ import {Achievement, Channel, ChannelMessages, ChannelUsers, MatchHistory} from 
 
 
 @Entity()
-class User{
+export class User{
     @PrimaryGeneratedColumn()
-    public id: number;
+    id: number;
 
     @Column()
-    public username: string;
+    username: string;
     
     @Column()
-    public avatar: string;
+    avatar: string;
 
     @Column()
-    public wins: number;
+    wins: number;
 
     @Column()
-    public loss: number;
+    loss: number;
 
     @Column()
-    public winrate: number;
+    winrate: number;
 
     // @ManyToMany(() => Achievement, achievement => achievement.users)
     // public achievements: Achievement[];
@@ -50,4 +50,4 @@ class User{
 
 }
 
-export default User;
+// export default User;
