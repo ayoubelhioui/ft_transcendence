@@ -10,7 +10,7 @@ exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
-const user_entity_1 = require("../entities/user.entity");
+const index_1 = require("../entities/index");
 const user_module_1 = require("../user/user.module");
 let AuthModule = class AuthModule {
 };
@@ -27,7 +27,7 @@ AuthModule = __decorate([
                     username: "postgres",
                     password: "ayoub",
                     database: configService.get('DB_NAME'),
-                    entities: [user_entity_1.User],
+                    entities: [index_1.User],
                     synchronize: true,
                 }),
                 inject: [config_1.ConfigService],

@@ -3,6 +3,6 @@ import { UserService } from "./user.service";
 export declare class UserController {
     private readonly userService;
     constructor(userService: UserService);
-    getUsers(id: number): Promise<import("../entities/user.entity").User>;
-    createUsers(createUserDto: CreateUserDto): Promise<import("../entities/user.entity").User>;
+    getUsers(): Promise<import("../entities/user.entity").default[]>;
+    createUsers(createUserDto: CreateUserDto): Promise<import("../entities/user.entity").default>;
 }

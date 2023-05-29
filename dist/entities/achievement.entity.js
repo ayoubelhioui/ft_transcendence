@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
+const index_1 = require("./index");
 let Achievement = class Achievement {
 };
 __decorate([
@@ -24,6 +25,11 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Achievement.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => index_1.User, user => user.achievements),
+    (0, typeorm_1.JoinTable)(),
+    __metadata("design:type", Array)
+], Achievement.prototype, "users", void 0);
 Achievement = __decorate([
     (0, typeorm_1.Entity)()
 ], Achievement);

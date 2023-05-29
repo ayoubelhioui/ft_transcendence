@@ -10,12 +10,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
+const index_1 = require("./index");
 let MatchHistory = class MatchHistory {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], MatchHistory.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => index_1.User, (user) => user.matchHistoryPlayer1),
+    __metadata("design:type", index_1.User)
+], MatchHistory.prototype, "player1", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => index_1.User, (user) => user.matchHistoryPlayer2),
+    __metadata("design:type", index_1.User)
+], MatchHistory.prototype, "player2", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)

@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
+const index_1 = require("./index");
 var channelUserRole;
 (function (channelUserRole) {
     channelUserRole[channelUserRole["owner"] = 0] = "owner";
@@ -22,6 +23,16 @@ __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], ChannelUsers.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.PrimaryColumn)({ name: 'user' }),
+    (0, typeorm_1.ManyToOne)(() => index_1.User, user => user.channelUsers, { cascade: true }),
+    __metadata("design:type", index_1.User)
+], ChannelUsers.prototype, "user", void 0);
+__decorate([
+    (0, typeorm_1.PrimaryColumn)({ name: 'channel' }),
+    (0, typeorm_1.ManyToOne)(() => index_1.Channel, channel => channel.channelUsers, { cascade: true }),
+    __metadata("design:type", index_1.Channel)
+], ChannelUsers.prototype, "channel", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)

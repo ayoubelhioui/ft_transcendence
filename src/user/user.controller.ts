@@ -5,9 +5,9 @@ import { UserService } from "./user.service";
 @Controller('users')
 export class UserController{
     constructor(private readonly userService: UserService){}
-    @Get(':id')
-    getUsers(@Param('id') id: number){
-        return (this.userService.findUserById(id))
+    @Get()
+    getUsers(){
+        return (this.userService.findUserById())
     }
     @UsePipes(ValidationPipe)
     @Post()

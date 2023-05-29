@@ -1,12 +1,13 @@
 
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToMany, ManyToOne } from 'typeorm';
 
-import {Achievement, Channel, ChannelMessages, ChannelUsers, MatchHistory} from './index'
+import {Achievement, Channel, ChannelMessages, ChannelUsers, 
+    MatchHistory,UsersMuted, LiveGames,Notification} from './index'
 
 
 
 @Entity()
-export class User{
+class User{
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -25,29 +26,65 @@ export class User{
     @Column()
     winrate: number;
 
-    // @ManyToMany(() => Achievement, achievement => achievement.users)
-    // public achievements: Achievement[];
+    @ManyToMany(() => Achievement, achievement => achievement.users)
+    public achievements: Achievement[];
 
-    // @OneToMany(() => MatchHistory, (matchHisory) => matchHisory.player1)
-    // public matchHistoryPlayer1: MatchHistory[];
+    @OneToMany(() => MatchHistory, (matchHisory) => matchHisory.player1)
+    public matchHistoryPlayer1: MatchHistory[];
 
-    // @OneToMany(() => MatchHistory, (matchHisory) => matchHisory.player2)
-    // public matchHistoryPlayer2: MatchHistory[];
+    /* ******************************************************* */
+    @OneToMany(() => MatchHistory, (matchHisory) => matchHisory.player2)
+    public matchHistoryPlayer2: MatchHistory[];
 
-
-    // @OneToMany(() => Channel, (channel) => channel.owner);
-    // public channels: Channel[];
-
-
-    // @OneToMany(() => ChannelMessages, (channelMessages) => channelMessages.user)
-    // channelMessages: ChannelMessages[];
-
-    
+    /************************************************************/
+    @OneToMany(() => Channel, (channel: Channel) => channel.owner)
+    public channels: Channel[];
 
 
-    // @OneToMany(() => ChannelUsers, (channelUsers) => channelUsers.user)
-    // public ChannelUsers: ChannelUsers[];
+    /************************************************************/
+    @OneToMany(() => ChannelMessages, (channelMessages) => channelMessages.user)
+    channelMessages: ChannelMessages[];
+
+
+    /************************************************************/
+    @OneToMany(() => ChannelUsers, (channelUsers) => channelUsers.user)
+    public channelUsers: ChannelUsers[];
+
+
+    /************************************************************/
+    @OneToMany(() => UsersMuted, (userMuted) => userMuted.user)
+    usersMuted: UsersMuted[];
+
+
+    /************************************************************/
+    @ManyToMany(() => Channel, channel => channel.blacklistedUsers)
+    public forbiddenChannels: Channel[];
+
+
+    /************************************************************/
+    @OneToMany(() => LiveGames, (liveGames) => liveGames.player1)
+    public liveGamesPlayer1: LiveGames[];
+
+    /* ******************************************************* */
+    @OneToMany(() => LiveGames, (liveGames) => liveGames.player2)
+    public liveGamesPlayer2: LiveGames[];
+
+
+    /* ******************************************************* */
+    @OneToMany(() => Notification, (notifications: Notification) => notifications.receiver)
+    public notifications: Notification[];
+
+
+    /* ******************************************************* */
+    @OneToMany(() => Notification, (notifications: Notification) => notifications.sender)
+    public sentNotifications: Notification[];
+
+
+    /************************************************************/
+    @ManyToMany(() => Channel, channel => channel.invitedUsers)
+    public channelInvites: Channel[];
+
 
 }
 
-// export default User;
+export default User;

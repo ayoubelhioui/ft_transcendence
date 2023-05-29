@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
+const index_1 = require("./index");
 var ChannelsVisibility;
 (function (ChannelsVisibility) {
     ChannelsVisibility[ChannelsVisibility["private"] = 0] = "private";
@@ -32,9 +33,21 @@ __decorate([
     __metadata("design:type", String)
 ], Channel.prototype, "password", void 0);
 __decorate([
+    (0, typeorm_1.ManyToOne)(() => index_1.User, (user) => user.channels),
+    __metadata("design:type", index_1.User)
+], Channel.prototype, "owner", void 0);
+__decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], Channel.prototype, "visibility", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => index_1.ChannelMessages, (channelMessages) => channelMessages.channel),
+    __metadata("design:type", Array)
+], Channel.prototype, "channelMessages", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => index_1.ChannelUsers, (channelUsers) => channelUsers.channel),
+    __metadata("design:type", Array)
+], Channel.prototype, "channelUsers", void 0);
 Channel = __decorate([
     (0, typeorm_1.Entity)()
 ], Channel);

@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { User } from './index';
 
 @Entity()
 
@@ -12,9 +13,9 @@ class Achievement{
     @Column()
     public name: string;
 
-    // @ManyToMany(() => User, user => user.achievements)
-    // @JoinTable()
-    // users: User[];
+    @ManyToMany(() => User, user => user.achievements)
+    @JoinTable()
+    users: User[];
 }
 
 export default Achievement;

@@ -1,24 +1,31 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryColumn } from 'typeorm';
 import Channel from './channel.entity';
-import { channel } from 'diagnostics_channel';
+
+import {User} from './index'
 
 @Entity()
 class ChannelMessages{
+
+
     @PrimaryGeneratedColumn()
     public id: number;
 
+    @PrimaryColumn({ name: 'user' })
+    @ManyToOne(() => User, (user) => user.channelMessages ,{ cascade: true })
+    user : User;
 
-    // @ManyToOne(() => User, (user) => user.channelMessages, {primary : true})
-    // user : User;
-
-    // @ManyToOne(() => Channel, (channel) => channel.channelMessages, {primary : true})
-    // channel : Channel;
+    @PrimaryColumn({ name: 'channel' })
+    @ManyToOne(() => Channel, (channel) => channel.channelMessages, {cascade: true})
+    channel : Channel;
 
     @Column()
     public message: string;
 
     @Column({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
     public time: Date;
+
+    @Column({nullable: true})
+    public seen: boolean;
 
 
 }
