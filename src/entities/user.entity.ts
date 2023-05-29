@@ -5,6 +5,7 @@ import {Achievement, Channel, ChannelMessages, ChannelUsers,
     MatchHistory,UsersMuted, LiveGames,Notification} from './index'
 import friends from './friends.entity';
 import Friends from './friends.entity';
+import BlockedUsers from './blocked_friends.entity';
 
 
 
@@ -93,6 +94,14 @@ class User{
     /* ******************************************************* */
     @OneToMany(() => Friends, (friend: Friends) => friend.receiver)
     public receivedFriends: Friends[];
+
+
+    @OneToMany(() => BlockedUsers, blockedUsers => blockedUsers.blocked)
+    public blocked: BlockedUsers[];
+
+
+    @OneToMany(() => BlockedUsers, blockedUsers => blockedUsers.blockedBy)
+    public blockedBy: BlockedUsers[];
 }
 
 export default User;

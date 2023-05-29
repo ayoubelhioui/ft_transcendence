@@ -27,6 +27,7 @@ class Friends{
 
     @ManyToOne(() => User, (user) => user.receivedFriends)
     public receiver: User;
+
 }
 
 export default Friends;

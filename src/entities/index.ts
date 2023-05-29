@@ -7,8 +7,8 @@ import ChannelUsers from './channel_users.entity';
 import Notification from './notification.enity';
 import UsersMuted from './users_muted.entity';
 import LiveGames from './live_games.entity';
-
 import ChannelBlacklist from './channel_blacklist.entity';
+import BlockedUsers from './blocked_friends.entity';
 
 
 
