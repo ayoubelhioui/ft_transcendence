@@ -3,6 +3,8 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToMany, ManyToOn
 
 import {Achievement, Channel, ChannelMessages, ChannelUsers, 
     MatchHistory,UsersMuted, LiveGames,Notification} from './index'
+import friends from './friends.entity';
+import Friends from './friends.entity';
 
 
 
@@ -84,7 +86,13 @@ class User{
     @ManyToMany(() => Channel, channel => channel.invitedUsers)
     public channelInvites: Channel[];
 
+    /* ******************************************************* */
+    @OneToMany(() => Friends, (friend: Friends) => friend.sender)
+    public sentFriends: Friends[];
 
+    /* ******************************************************* */
+    @OneToMany(() => Friends, (friend: Friends) => friend.receiver)
+    public receivedFriends: Friends[];
 }
 
 export default User;
