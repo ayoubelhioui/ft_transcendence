@@ -2,14 +2,14 @@
 # content-type: application/json
 
 # {
-#     "id": 8512,
-#     "username": "wdwdw",
-#     "password": "heldwdwdwloWorld",
-#     "avatar": "dwdwdwd",
+#     "id": 8513332,
+#     "username": "oussama",
+#     "password": "tcha9nba9",
+#     "avatar": "fuck",
 #     "wins": 2,
 #     "loss": 4433,
 #     "winrate": 22100
 # }
 
-GET http://localhost:3000/users HTTP/1.1
+GET http://localhost:3000/users/333 HTTP/1.1
 content-type: application/json

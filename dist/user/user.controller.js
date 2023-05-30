@@ -20,19 +20,19 @@ let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
     }
-    getUsers() {
-        return (this.userService.findUserById());
+    getUsers(id) {
+        return (this.userService.findUserById(id));
     }
     createUsers(createUserDto) {
-        console.log(createUserDto);
         return (this.userService.createUser(createUserDto));
     }
 };
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)(':id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
 ], UserController.prototype, "getUsers", null);
 __decorate([
     (0, common_1.UsePipes)(common_1.ValidationPipe),
@@ -40,7 +40,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [user_dto_1.CreateUserDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UserController.prototype, "createUsers", null);
 UserController = __decorate([
     (0, common_1.Controller)('users'),

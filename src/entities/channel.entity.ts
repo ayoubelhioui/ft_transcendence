@@ -1,56 +1,52 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+// import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 
-import {User, ChannelMessages, ChannelUsers} from './index';
-import UsersMuted from './users_muted.entity';
-
-
-enum ChannelsVisibility 
-{
-    private,
-    public,
-    protected
-};
+// import {User, ChannelMessages, ChannelUsers} from './index';
+// import UsersMuted from './users_muted.entity';
 
 
-@Entity()
-class Channel{
-    @PrimaryGeneratedColumn()
-    public id: number;
+// enum ChannelsVisibility 
+// {
+//     private,
+//     public,
+//     protected
+// };
 
-    @Column()
-    public name: string;
+// @Entity()
+// class Channel{
+//     @PrimaryGeneratedColumn()
+//     public id: number;
 
-    @Column({nullable: true})
-    public password: string;
+//     @Column()
+//     public name: string;
 
+//     @Column({nullable: true})
+//     public password: string;
 
-    @ManyToOne(() => User, (user) => user.channels,  {cascade : true, nullable: true})
-    public owner: User;
+//     @ManyToOne(() => User, (user) => user.channels,  {cascade : true, nullable: true})
+//     public owner: User;
 
-
-    @Column()
-    public visibility: ChannelsVisibility;
-
+//     @Column()
+//     public visibility: ChannelsVisibility;
    
-    @OneToMany(() => ChannelMessages, (channelMessages) => channelMessages.channel)
-    channelMessages: ChannelMessages[];
+//     @OneToMany(() => ChannelMessages, (channelMessages) => channelMessages.channel)
+//     channelMessages: ChannelMessages[];
 
-    @OneToMany(() => ChannelUsers, (channelUsers) => channelUsers.channel)
-    public channelUsers: ChannelUsers[];
-
-
-    @OneToMany(() => UsersMuted, (userMuted) => userMuted.channel)
-    public usersMuted: UsersMuted[];
+//     @OneToMany(() => ChannelUsers, (channelUsers) => channelUsers.channel)
+//     public channelUsers: ChannelUsers[];
 
 
-    @ManyToMany(() => User, user => user.forbiddenChannels)
-    @JoinTable()
-    blacklistedUsers: User[];
+//     @OneToMany(() => UsersMuted, (userMuted) => userMuted.channel)
+//     public usersMuted: UsersMuted[];
 
 
-    @ManyToMany(() => User, user => user.channelInvites)
-    @JoinTable()
-    public invitedUsers: User[];
-}
+//     @ManyToMany(() => User, user => user.forbiddenChannels)
+//     @JoinTable()
+//     blacklistedUsers: User[];
 
-export default Channel
+
+//     @ManyToMany(() => User, user => user.channelInvites)
+//     @JoinTable()
+//     public invitedUsers: User[];
+// }
+
+// export default Channel

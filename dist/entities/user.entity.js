@@ -10,7 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
-const index_1 = require("./index");
 let User = class User {
 };
 __decorate([
@@ -37,30 +36,6 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], User.prototype, "winrate", void 0);
-__decorate([
-    (0, typeorm_1.ManyToMany)(() => index_1.Achievement, achievement => achievement.users),
-    __metadata("design:type", Array)
-], User.prototype, "achievements", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => index_1.MatchHistory, (matchHisory) => matchHisory.player1),
-    __metadata("design:type", Array)
-], User.prototype, "matchHistoryPlayer1", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => index_1.MatchHistory, (matchHisory) => matchHisory.player2),
-    __metadata("design:type", Array)
-], User.prototype, "matchHistoryPlayer2", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => index_1.Channel, (channel) => channel.owner),
-    __metadata("design:type", Array)
-], User.prototype, "channels", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => index_1.ChannelMessages, (channelMessages) => channelMessages.user),
-    __metadata("design:type", Array)
-], User.prototype, "channelMessages", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => index_1.ChannelUsers, (channelUsers) => channelUsers.user),
-    __metadata("design:type", Array)
-], User.prototype, "channelUsers", void 0);
 User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);
