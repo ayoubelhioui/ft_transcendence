@@ -84,7 +84,21 @@ class User{
     // @ManyToMany(() => Channel, channel => channel.invitedUsers)
     // public channelInvites: Channel[];
 
+    /* ******************************************************* */
+    @OneToMany(() => Friends, (friend: Friends) => friend.sender)
+    public sentFriends: Friends[];
 
+    /* ******************************************************* */
+    @OneToMany(() => Friends, (friend: Friends) => friend.receiver)
+    public receivedFriends: Friends[];
+
+
+    @OneToMany(() => BlockedUsers, blockedUsers => blockedUsers.blocked)
+    public blocked: BlockedUsers[];
+
+
+    @OneToMany(() => BlockedUsers, blockedUsers => blockedUsers.blockedBy)
+    public blockedBy: BlockedUsers[];
 }
 
 export default User;
