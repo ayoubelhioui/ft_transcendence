@@ -11,5 +11,6 @@
 #     "winrate": 22100
 # }
 
-GET http://localhost:3000/users/333 HTTP/1.1
+GET http://localhost:3000/auth/intra HTTP/1.1
 content-type: application/json
+Authorization: "this is an authorization code generated for testing"
