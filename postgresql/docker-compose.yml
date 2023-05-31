@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  postgresql:
+    build: .
+    container_name: my-postgresql
+    ports:
+      - "5432:5432"
+    init: true
+    env_file:
+      - ./.env
+    volumes:
+      - db:/var/lib/postgresql/15/main
+
+volumes:
+  db:
+    # driver: local
+    # driver_opts:
+    #   device: /Users/ael-hiou/data/postgresql
+    #   o: bind
+    #   type: none
