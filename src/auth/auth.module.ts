@@ -32,17 +32,26 @@
   
 // export class AuthModule { }
 
-import { Module } from "@nestjs/common";
-import { JwtModule } from "@nestjs/jwt"
+import { Controller, Module } from "@nestjs/common";
+import { JwtModule, JwtService } from "@nestjs/jwt"
 import { jwtConstants } from "./auth.constants";
 import { AuthService } from "./auth.service";
+import { PassportModule } from "@nestjs/passport";
+import { FortyTwoStrategy } from "src/strategy/fortytwo.strategy";
+import { AuthController } from "./auth.controller";
+import { JoinTable } from "typeorm";
 Module({
     imports: [
         JwtModule.register({
-            secret: jwtConstants.secret,
+            secret: 'helloWorld',
             signOptions: { expiresIn: '60s' },
         }
-    )],
-    providers: [AuthService]
+    ),
+        PassportModule.register({
+            defaultStrategy: '42'
+        }),
+        ],
+    controllers: [AuthController],
+    providers: [AuthService, JwtModule, FortyTwoStrategy],
 })
 export class AuthModule{}

@@ -1,9 +1,4 @@
-export declare class CreateUserDto {
+export declare class UserDto {
     id: number;
     username: string;
-    password: string;
-    avatar: string;
-    wins: number;
-    loss: number;
-    winrate: number;
 }

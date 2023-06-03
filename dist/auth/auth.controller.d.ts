@@ -1,7 +1,8 @@
 import { AuthService } from "./auth.service";
+import { UserDto } from "src/user/user.dto";
 export declare class AuthController {
     private authService;
     constructor(authService: AuthService);
-    signIn(headers: Record<string, string>): void;
-    signI(req: string): void;
+    signIn(req: any): void;
+    singI(userDto: UserDto): Promise<object>;
 }
