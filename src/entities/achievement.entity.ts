@@ -1,21 +1,20 @@
-// import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
-// import { User } from './index';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { User } from './index';
 
-// @Entity()
+@Entity()
+class Achievement{
+    @PrimaryGeneratedColumn()
+    public id: number;
 
-// class Achievement{
-//     @PrimaryGeneratedColumn()
-//     public id: number;
+    @Column()
+    public icon: string;
 
-//     @Column()
-//     public icon: string;
+    @Column()
+    public name: string;
 
-//     @Column()
-//     public name: string;
+    @ManyToMany(() => User, user => user.achievements)
+    @JoinTable()
+    users: User[];
+}
 
-//     @ManyToMany(() => User, user => user.achievements)
-//     @JoinTable()
-//     users: User[];
-// }
-
-// export default Achievement;
+export default Achievement;

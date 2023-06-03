@@ -11,27 +11,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const index_1 = require("./index");
-let Achievement = class Achievement {
+let BlockedUsers = class BlockedUsers {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Achievement.prototype, "id", void 0);
+], BlockedUsers.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Achievement.prototype, "icon", void 0);
+    (0, typeorm_1.ManyToOne)(() => index_1.User, user => user.blocked),
+    __metadata("design:type", index_1.User)
+], BlockedUsers.prototype, "blocked", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Achievement.prototype, "name", void 0);
-__decorate([
-    (0, typeorm_1.ManyToMany)(() => index_1.User, user => user.achievements),
-    (0, typeorm_1.JoinTable)(),
-    __metadata("design:type", Array)
-], Achievement.prototype, "users", void 0);
-Achievement = __decorate([
+    (0, typeorm_1.ManyToOne)(() => index_1.User, user => user.blockedBy),
+    __metadata("design:type", index_1.User)
+], BlockedUsers.prototype, "blockedBy", void 0);
+BlockedUsers = __decorate([
     (0, typeorm_1.Entity)()
-], Achievement);
-exports.default = Achievement;
-//# sourceMappingURL=achievement.entity.js.map
+], BlockedUsers);
+exports.default = BlockedUsers;
+//# sourceMappingURL=blocked_users.entity.js.map
