@@ -22,7 +22,6 @@ let FortyTwoStrategy = class FortyTwoStrategy extends (0, passport_1.PassportStr
         });
     }
     async validate(accessToken, refreshToken, profile) {
-        console.log(accessToken);
         return (profile);
     }
 };

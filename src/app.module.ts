@@ -7,9 +7,10 @@ import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { FortyTwoStrategy } from './strategy/fortytwo.strategy';
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [AuthModule],
 })
+
 export class AppModule {}

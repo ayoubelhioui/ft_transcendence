@@ -1,4 +1,4 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common';
-export declare class TokenAuthGuard implements CanActivate {
+export declare class TokenPresenceGuard implements CanActivate {
     canActivate(context: ExecutionContext): boolean;
 }

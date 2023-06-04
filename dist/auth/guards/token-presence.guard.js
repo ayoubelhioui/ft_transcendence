@@ -6,16 +6,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TokenAuthGuard = void 0;
+exports.TokenPresenceGuard = void 0;
 const common_1 = require("@nestjs/common");
-let TokenAuthGuard = class TokenAuthGuard {
+let TokenPresenceGuard = class TokenPresenceGuard {
     canActivate(context) {
         const request = context.switchToHttp().getRequest();
+        console.log(request.headers.authorization);
         return (request.headers.authorization);
     }
 };
-TokenAuthGuard = __decorate([
+TokenPresenceGuard = __decorate([
     (0, common_1.Injectable)()
-], TokenAuthGuard);
-exports.TokenAuthGuard = TokenAuthGuard;
+], TokenPresenceGuard);
+exports.TokenPresenceGuard = TokenPresenceGuard;
 //# sourceMappingURL=token-presence.guard.js.map
