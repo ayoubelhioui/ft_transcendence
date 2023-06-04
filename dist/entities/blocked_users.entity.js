@@ -9,27 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthService = void 0;
-const common_1 = require("@nestjs/common");
-const jwt_1 = require("@nestjs/jwt");
-require('dotenv').config();
-let AuthService = class AuthService {
-    constructor(jwtService) {
-        this.jwtService = jwtService;
-    }
-    async createUser(userDto) {
-        const payload = { sub: userDto.id, username: userDto.username };
-        return ({
-            access_token: await this.jwtService.signAsync(payload, {
-                expiresIn: '1m',
-                secret: process.env.TOKEN_SECRET,
-            }),
-        });
-    }
+const typeorm_1 = require("typeorm");
+const index_1 = require("./index");
+let BlockedUsers = class BlockedUsers {
 };
-AuthService = __decorate([
-    (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [jwt_1.JwtService])
-], AuthService);
-exports.AuthService = AuthService;
-//# sourceMappingURL=auth.service.js.map
+__decorate([
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
+], BlockedUsers.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => index_1.User, user => user.blocked),
+    __metadata("design:type", index_1.User)
+], BlockedUsers.prototype, "blocked", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => index_1.User, user => user.blockedBy),
+    __metadata("design:type", index_1.User)
+], BlockedUsers.prototype, "blockedBy", void 0);
+BlockedUsers = __decorate([
+    (0, typeorm_1.Entity)()
+], BlockedUsers);
+exports.default = BlockedUsers;
+//# sourceMappingURL=blocked_users.entity.js.map

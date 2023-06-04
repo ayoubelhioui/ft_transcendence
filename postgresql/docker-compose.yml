@@ -11,6 +11,14 @@ services:
       - ./.env
     volumes:
       - db:/var/lib/postgresql/15/main
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5050:80"
+
 
 volumes:
   db:
