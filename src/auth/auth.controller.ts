@@ -15,7 +15,7 @@ export class AuthController{
     // signIn(@Req() req) { }
     @UseGuards(AuthGuard('42'))
     @Get('callback')
-    async singI(@Req() userDto: UserDto, @Res({passthrough: true}) res: Response){
+    async singI(@Req() userDto: UserDto){
         const token = this.authService.createUser(userDto);
         return (token);
     }

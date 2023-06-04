@@ -9,7 +9,7 @@ import { AuthService } from './auth/auth.service';
 import { FortyTwoStrategy } from './strategy/fortytwo.strategy';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 
-const ENV_PATH : string = './src/.env';
+const ENV_PATH : string = './src/.env'; 
 
 @Module({
   imports: [
@@ -20,9 +20,9 @@ const ENV_PATH : string = './src/.env';
         type:     'postgres',
         host:     configService.get('DB_HOST'),
         port:     +configService.get('DB_PORT'),
-        username: configService.get('DB_USERNMAE'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_DATABASE'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASS'), 
+        database: configService.get('DB_NAME'),
         entities:       [User, Achievement, Channel, Friends, ChannelMessages, ChannelBlacklist, BlockedUsers, ChannelUsers, LiveGames, MatchHistory, Notification, UsersMuted],
         synchronize:    true,
         autoSchemaSync: true,

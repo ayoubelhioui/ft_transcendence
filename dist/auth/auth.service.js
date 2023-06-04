@@ -18,6 +18,7 @@ let AuthService = class AuthService {
         this.jwtService = jwtService;
     }
     async createUser(userDto) {
+        console.log(userDto.id, userDto.username);
         const payload = { sub: userDto.id, username: userDto.username };
         return ({
             access_token: await this.jwtService.signAsync(payload, {

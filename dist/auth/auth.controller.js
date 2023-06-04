@@ -21,7 +21,7 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    async singI(userDto, res) {
+    async singI(userDto) {
         const token = this.authService.createUser(userDto);
         return (token);
     }
@@ -30,9 +30,8 @@ __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('42')),
     (0, common_1.Get)('callback'),
     __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [user_dto_1.UserDto, Object]),
+    __metadata("design:paramtypes", [user_dto_1.UserDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "singI", null);
 AuthController = __decorate([
