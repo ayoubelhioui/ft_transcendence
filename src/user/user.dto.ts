@@ -8,10 +8,6 @@ export class UserDto{
     username: string;
 
     // @IsNotEmpty()
-    // @MinLength(3)
-    // password: string;
-
-    // @IsNotEmpty()
     // avatar: string;
 
     // @IsNotEmpty()

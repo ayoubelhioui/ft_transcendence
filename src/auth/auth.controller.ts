@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Req, Res, Headers, Head, Scope, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query, Req, Res, Headers, Head, Scope, UseGuards, Request } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
@@ -15,8 +15,8 @@ export class AuthController{
     // signIn(@Req() req) { }
     @UseGuards(AuthGuard('42'))
     @Get('callback')
-    async singI(@Req() userDto: UserDto){
-        const token = this.authService.createUser(userDto);
+    async singUp(@Request() req){
+        const token = await this.authService.createUser(req.user);
         return (token);
     }
 }
