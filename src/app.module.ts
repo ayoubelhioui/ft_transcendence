@@ -6,6 +6,8 @@ import User from 'src/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
+import { FortyTwoStrategy } from './strategy/fortytwo.strategy';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 
 const ENV_PATH : string = './src/.env';
 
@@ -13,7 +15,7 @@ const ENV_PATH : string = './src/.env';
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ENV_PATH }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [AuthModule, ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type:     'postgres',
         host:     configService.get('DB_HOST'),
@@ -21,17 +23,15 @@ const ENV_PATH : string = './src/.env';
         username: configService.get('DB_USERNMAE'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-
-
         entities:       [User, Achievement, Channel, Friends, ChannelMessages, ChannelBlacklist, BlockedUsers, ChannelUsers, LiveGames, MatchHistory, Notification, UsersMuted],
         synchronize:    true,
         autoSchemaSync: true,
       }),
       inject: [ConfigService],
     }),
-    AuthModule
   ],
-  controllers: [AuthController],
-  providers: [AuthService],
+  controllers: [],
+  providers: [],
 })
+
 export class AppModule {}

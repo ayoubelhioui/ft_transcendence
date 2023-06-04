@@ -13,8 +13,6 @@ const typeorm_1 = require("@nestjs/typeorm");
 const entities_1 = require("./entities");
 const user_entity_1 = require("./entities/user.entity");
 const auth_module_1 = require("./auth/auth.module");
-const auth_controller_1 = require("./auth/auth.controller");
-const auth_service_1 = require("./auth/auth.service");
 const ENV_PATH = './src/.env';
 let AppModule = class AppModule {
 };
@@ -23,7 +21,7 @@ AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({ isGlobal: true, envFilePath: ENV_PATH }),
             typeorm_1.TypeOrmModule.forRootAsync({
-                imports: [config_1.ConfigModule],
+                imports: [auth_module_1.AuthModule, config_1.ConfigModule],
                 useFactory: (configService) => ({
                     type: 'postgres',
                     host: configService.get('DB_HOST'),
@@ -37,10 +35,9 @@ AppModule = __decorate([
                 }),
                 inject: [config_1.ConfigService],
             }),
-            auth_module_1.AuthModule
         ],
-        controllers: [auth_controller_1.AuthController],
-        providers: [auth_service_1.AuthService],
+        controllers: [],
+        providers: [],
     })
 ], AppModule);
 exports.AppModule = AppModule;

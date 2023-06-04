@@ -9,27 +9,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthService = void 0;
+exports.TokenValidationGuard = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
-require('dotenv').config();
-let AuthService = class AuthService {
+let TokenValidationGuard = class TokenValidationGuard {
     constructor(jwtService) {
         this.jwtService = jwtService;
     }
-    async createUser(userDto) {
-        const payload = { sub: userDto.id, username: userDto.username };
-        return ({
-            access_token: await this.jwtService.signAsync(payload, {
-                expiresIn: '1m',
+    async canActivate(context) {
+        const request = context.switchToHttp().getRequest();
+        const token = request.headers.authorization.replace('Bearer ', '');
+        console.log(process.env.TOKEN_SECRET);
+        try {
+            console.log(token);
+            const payload = await this.jwtService.verify(token, {
                 secret: process.env.TOKEN_SECRET,
-            }),
-        });
+            });
+        }
+        catch (err) {
+            console.log(err);
+        }
+        return (true);
     }
 };
-AuthService = __decorate([
+TokenValidationGuard = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [jwt_1.JwtService])
-], AuthService);
-exports.AuthService = AuthService;
-//# sourceMappingURL=auth.service.js.map
+], TokenValidationGuard);
+exports.TokenValidationGuard = TokenValidationGuard;
+//# sourceMappingURL=token-validation.guard.js.map

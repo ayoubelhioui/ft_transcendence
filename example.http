@@ -13,4 +13,4 @@
 
 GET http://localhost:3000/auth/intra HTTP/1.1
 content-type: application/json
-Authorization: "this is an authorization code generated for testing"
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0Ijo4OTc4OTc1NDU0Nn0.x3N2_31hyLfOiBdjDJZR4fB2RyTnCWn4XvCjF0Dx6X0
