@@ -16,32 +16,19 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const passport_1 = require("@nestjs/passport");
-const token_presence_guard_1 = require("./guards/token-presence.guard");
 const user_dto_1 = require("../user/user.dto");
-const token_validation_guard_1 = require("./guards/token-validation.guard");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    signIn(req) { }
     async singI(userDto, res) {
-        console.log('im here');
         const token = this.authService.createUser(userDto);
-        console.log(token);
         return (token);
     }
 };
 __decorate([
-    (0, common_1.Get)('intra'),
-    (0, common_1.UseGuards)(token_presence_guard_1.TokenPresenceGuard, token_validation_guard_1.TokenValidationGuard),
-    __param(0, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "signIn", null);
-__decorate([
-    (0, common_1.Get)('callback'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('42')),
+    (0, common_1.Get)('callback'),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),

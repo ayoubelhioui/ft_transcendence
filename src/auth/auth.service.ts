@@ -9,7 +9,6 @@ export class AuthService{
     constructor(private jwtService: JwtService){}
     async createUser(userDto: UserDto): Promise<object>{
         const payload = { sub: userDto.id, username: userDto.username };
-        console.log("test", process.env.TOKEN_SECRET);
         return ({
             access_token: await this.jwtService.signAsync(payload, {
                 expiresIn: '1m',

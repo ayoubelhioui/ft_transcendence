@@ -19,7 +19,6 @@ let AuthService = class AuthService {
     }
     async createUser(userDto) {
         const payload = { sub: userDto.id, username: userDto.username };
-        console.log("test", process.env.TOKEN_SECRET);
         return ({
             access_token: await this.jwtService.signAsync(payload, {
                 expiresIn: '1m',

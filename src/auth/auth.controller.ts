@@ -10,19 +10,13 @@ import { TokenValidationGuard } from "./guards/token-validation.guard";
 @Controller('auth')
 export class AuthController{
     constructor(private authService: AuthService){}
-    @Get('intra')
-    @UseGuards(TokenPresenceGuard, TokenValidationGuard)
-    signIn(@Req() req) { }
-    @Get('callback')
+    // @Get('intra')
+    // @UseGuards(TokenPresenceGuard, TokenValidationGuard)
+    // signIn(@Req() req) { }
     @UseGuards(AuthGuard('42'))
+    @Get('callback')
     async singI(@Req() userDto: UserDto, @Res({passthrough: true}) res: Response){
-        console.log('im here');
         const token = this.authService.createUser(userDto);
-        console.log(token);
-        // res.cookie('access_token', token, {
-        //     httpOnly: true,
-        //     expires: new Date(Date.now() + 1 * 60 * 1000),
-        // }).send().status(200);
         return (token);
     }
 }
