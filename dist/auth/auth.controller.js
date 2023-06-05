@@ -21,7 +21,7 @@ let AuthController = class AuthController {
         this.authService = authService;
     }
     async singUp(req) {
-        const token = await this.authService.createUser(req.user);
+        const token = await this.authService.authenticateUser(req.user);
         return (token);
     }
 };

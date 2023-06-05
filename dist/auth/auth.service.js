@@ -12,14 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
+const user_service_1 = require("../user/user.service");
 require('dotenv').config();
 let AuthService = class AuthService {
-    constructor(jwtService) {
+    constructor(jwtService, userService) {
         this.jwtService = jwtService;
+        this.userService = userService;
     }
-    async createUser(userDto) {
-        console.log(userDto.id, userDto.username);
+    async authenticateUser(userDto) {
         const payload = { sub: userDto.id, username: userDto.username };
+        this.userService.createUser(userDto);
         return ({
             access_token: await this.jwtService.signAsync(payload, {
                 expiresIn: '1m',
@@ -30,7 +32,7 @@ let AuthService = class AuthService {
 };
 AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [jwt_1.JwtService])
+    __metadata("design:paramtypes", [jwt_1.JwtService, user_service_1.UserService])
 ], AuthService);
 exports.AuthService = AuthService;
 //# sourceMappingURL=auth.service.js.map

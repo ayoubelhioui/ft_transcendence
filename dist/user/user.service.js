@@ -22,7 +22,12 @@ let UserService = class UserService {
         this.userRepository = userRepository;
     }
     async createUser(createUserDto) {
+        createUserDto.avatar = 'helloWorld';
+        createUserDto.loss = 39;
+        createUserDto.winrate = 33;
+        createUserDto.wins = 3333;
         const newUser = await this.userRepository.create(createUserDto);
+        await this.userRepository.save(newUser);
     }
     async findUserById(id) {
         return (await this.userRepository.findOne({

@@ -1,14 +1,16 @@
 import { Inject, Injectable, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt"
-import { UserDto } from "src/user/user.dto";
+import { UserDto } from "src/dto/user.dto";
+// import { UserRepository } from "src/repositories/user.repository";
+import { UserService } from "src/user/user.service";
 require('dotenv').config();
 @Injectable()
 export class AuthService{
-    constructor(private jwtService: JwtService){}
-    async createUser(userDto: UserDto): Promise<object>{
-        console.log(userDto.id, userDto.username);
+    constructor(private jwtService: JwtService, private userService: UserService){}
+    async authenticateUser(userDto: UserDto): Promise<object>{
         const payload = { sub: userDto.id, username: userDto.username };
+        this.userService.createUser(userDto);
         return ({
             access_token: await this.jwtService.signAsync(payload, {
                 expiresIn: '1m',

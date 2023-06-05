@@ -1,5 +1,5 @@
 
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToMany, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import {Achievement, Channel, ChannelMessages, ChannelUsers, 
     MatchHistory,UsersMuted, LiveGames,Notification, Friends, BlockedUsers} from './index'
