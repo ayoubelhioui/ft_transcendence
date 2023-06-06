@@ -30,11 +30,14 @@ let UserService = class UserService {
         await this.userRepository.save(newUser);
     }
     async findUserById(id) {
-        return (await this.userRepository.findOne({
+        const user = await this.userRepository.findOne({
             where: {
                 id: id,
             },
-        }));
+        });
+        if (!user)
+            throw new common_1.NotFoundException('User not found');
+        return (user);
     }
 };
 UserService = __decorate([

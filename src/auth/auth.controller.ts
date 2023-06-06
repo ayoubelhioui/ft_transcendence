@@ -10,11 +10,15 @@ import { TokenValidationGuard } from "./guards/token-validation.guard";
 @Controller('auth')
 export class AuthController{
     constructor(private authService: AuthService){}
+    @Get('intra')
+    @UseGuards(TokenValidationGuard)
+    singIn(@Request() req){ 
+        // console.log(req.user);
+    }
     @UseGuards(AuthGuard('42'))
     @Get('callback')
     async singUp(@Request() req){
         const token = await this.authService.authenticateUser(req.user);
-        
         return (token);
     }
 }

@@ -12,29 +12,32 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TokenValidationGuard = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
+const auth_service_1 = require("../auth.service");
 let TokenValidationGuard = class TokenValidationGuard {
-    constructor(jwtService) {
+    constructor(jwtService, authService) {
         this.jwtService = jwtService;
+        this.authService = authService;
     }
     async canActivate(context) {
         const request = context.switchToHttp().getRequest();
         const token = request.headers.authorization.replace('Bearer ', '');
-        console.log(process.env.TOKEN_SECRET);
+        let payload;
         try {
-            console.log(token);
-            const payload = await this.jwtService.verify(token, {
+            payload = await this.jwtService.verifyAsync(token, {
                 secret: process.env.TOKEN_SECRET,
             });
+            await this.authService.findUserById(payload.sub);
         }
         catch (err) {
-            console.log(err);
+            return (false);
         }
+        request['user'] = payload;
         return (true);
     }
 };
 TokenValidationGuard = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [jwt_1.JwtService])
+    __metadata("design:paramtypes", [jwt_1.JwtService, auth_service_1.AuthService])
 ], TokenValidationGuard);
 exports.TokenValidationGuard = TokenValidationGuard;
 //# sourceMappingURL=token-validation.guard.js.map

@@ -16,15 +16,26 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const passport_1 = require("@nestjs/passport");
+const token_validation_guard_1 = require("./guards/token-validation.guard");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
+    }
+    singIn(req) {
     }
     async singUp(req) {
         const token = await this.authService.authenticateUser(req.user);
         return (token);
     }
 };
+__decorate([
+    (0, common_1.Get)('intra'),
+    (0, common_1.UseGuards)(token_validation_guard_1.TokenValidationGuard),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "singIn", null);
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('42')),
     (0, common_1.Get)('callback'),

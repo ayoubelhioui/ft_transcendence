@@ -4,10 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Achievement, BlockedUsers, Channel, ChannelBlacklist, ChannelMessages, ChannelUsers, Friends, LiveGames, MatchHistory, Notification, UsersMuted } from 'src/entities';
 import User from 'src/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
-import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
-import { FortyTwoStrategy } from './strategy/fortytwo.strategy';
-import { JwtModule, JwtService } from '@nestjs/jwt';
 
 const ENV_PATH : string = './src/.env'; 
 

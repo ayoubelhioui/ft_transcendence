@@ -6,4 +6,5 @@ export declare class AuthService {
     private userService;
     constructor(jwtService: JwtService, userService: UserService);
     authenticateUser(userDto: UserDto): Promise<object>;
+    findUserById(userId: number): Promise<object>;
 }

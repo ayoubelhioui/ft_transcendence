@@ -2,7 +2,6 @@ import { Inject, Injectable, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt"
 import { UserDto } from "src/dto/user.dto";
-// import { UserRepository } from "src/repositories/user.repository";
 import { UserService } from "src/user/user.service";
 require('dotenv').config();
 @Injectable()
@@ -17,5 +16,9 @@ export class AuthService{
                 secret: process.env.TOKEN_SECRET,
             }), 
         });
+        
+    }
+    async findUserById(userId: number) : Promise<object>{
+        return (await this.userService.findUserById(userId));
     }
 }

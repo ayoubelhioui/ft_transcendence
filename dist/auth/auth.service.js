@@ -29,6 +29,9 @@ let AuthService = class AuthService {
             }),
         });
     }
+    async findUserById(userId) {
+        return (await this.userService.findUserById(userId));
+    }
 };
 AuthService = __decorate([
     (0, common_1.Injectable)(),
