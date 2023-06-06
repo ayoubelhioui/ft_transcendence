@@ -13,10 +13,12 @@ export class TokenValidationGuard implements CanActivate {
         payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.TOKEN_SECRET,
       });
-      await this.authService.findUserById(payload.sub);
     } catch (err) {
+      console.log(err);
       return (false);
     }
+    // if (!await this.authService.findUserById(payload.sub))
+      // return (false);
     request['user'] = payload;
     return (true);
   }

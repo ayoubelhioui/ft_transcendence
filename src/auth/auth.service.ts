@@ -11,8 +11,12 @@ export class AuthService{
         const payload = { sub: userDto.id, username: userDto.username };
         this.userService.createUser(userDto);
         return ({
+            refresh_token: await this.jwtService.signAsync(payload, {
+                expiresIn: '3d',
+                secret: process.env.TOKEN_SECRET,
+            }),
             access_token: await this.jwtService.signAsync(payload, {
-                expiresIn: '1m',
+                expiresIn: '10m',
                 secret: process.env.TOKEN_SECRET,
             }), 
         });

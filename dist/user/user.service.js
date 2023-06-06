@@ -35,8 +35,6 @@ let UserService = class UserService {
                 id: id,
             },
         });
-        if (!user)
-            throw new common_1.NotFoundException('User not found');
         return (user);
     }
 };

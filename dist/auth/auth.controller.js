@@ -16,6 +16,7 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const passport_1 = require("@nestjs/passport");
+const token_presence_guard_1 = require("./guards/token-presence.guard");
 const token_validation_guard_1 = require("./guards/token-validation.guard");
 let AuthController = class AuthController {
     constructor(authService) {
@@ -30,7 +31,7 @@ let AuthController = class AuthController {
 };
 __decorate([
     (0, common_1.Get)('intra'),
-    (0, common_1.UseGuards)(token_validation_guard_1.TokenValidationGuard),
+    (0, common_1.UseGuards)(token_presence_guard_1.TokenPresenceGuard, token_validation_guard_1.TokenValidationGuard),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

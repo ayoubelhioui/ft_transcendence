@@ -26,9 +26,9 @@ let TokenValidationGuard = class TokenValidationGuard {
             payload = await this.jwtService.verifyAsync(token, {
                 secret: process.env.TOKEN_SECRET,
             });
-            await this.authService.findUserById(payload.sub);
         }
         catch (err) {
+            console.log(err);
             return (false);
         }
         request['user'] = payload;
