@@ -24,8 +24,8 @@ let FortyTwoStrategy = class FortyTwoStrategy extends (0, passport_1.PassportStr
     async validate(accessToken, refreshToken, profile) {
         const { id, username } = profile;
         return ({
-            id,
-            username
+            IntraId: id,
+            username: username,
         });
     }
 };

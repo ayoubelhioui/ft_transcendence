@@ -5,21 +5,23 @@ import { Response } from 'express';
 import { TokenPresenceGuard } from "./guards/token-presence.guard";
 import { UserDto } from "src/dto/user.dto";
 import { ConfigModule } from "@nestjs/config";
-import { TokenValidationGuard } from "./guards/token-validation.guard";
+import { AccessTokenGuard } from "./guards/acces-token.guard";
+import { RefreshTokenGuard } from "./guards/refresh-token.guard";
 
 @Controller('auth')
 export class AuthController{
     constructor(private authService: AuthService){}
-    @Get('intra')
-    @UseGuards(TokenPresenceGuard, TokenValidationGuard)
-    singIn(@Request() req){
-        // console.log(req.user);
-    }
+    @Get('refresh-token')
+    @UseGuards(AccessTokenGuard)
+    refreshToken(@Request() req) : Promise<object>{
+        return (req.user.accessToken);
+     }
+    @Get('intra') 
+    @UseGuards(AccessTokenGuard)
+    singIn(@Request() req){ }
     @UseGuards(AuthGuard('42'))
     @Get('callback')
     async singUp(@Request() req){
-        const token = await this.authService.authenticateUser(req.user);
-        // console.log('');
-        return (token);
+        return (await this.authService.authenticateUser(req.user));
     }
 }

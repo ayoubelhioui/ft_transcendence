@@ -9,8 +9,10 @@ import {Achievement, Channel, ChannelMessages, ChannelUsers,
 @Entity()
 class User{
     @PrimaryGeneratedColumn()
-    // @PrimaryColumn()
     public id: number;
+
+    @PrimaryColumn()
+    public IntraId: number;
 
     @Column()
     public username: string;

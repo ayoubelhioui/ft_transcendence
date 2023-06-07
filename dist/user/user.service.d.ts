@@ -5,5 +5,5 @@ export declare class UserService {
     private readonly userRepository;
     constructor(userRepository: Repository<User>);
     createUser(createUserDto: UserDto): Promise<void>;
-    findUserById(id: number): Promise<User>;
+    findUserById(IntraId: number): Promise<User>;
 }

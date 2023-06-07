@@ -16,22 +16,30 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const passport_1 = require("@nestjs/passport");
-const token_presence_guard_1 = require("./guards/token-presence.guard");
-const token_validation_guard_1 = require("./guards/token-validation.guard");
+const acces_token_guard_1 = require("./guards/acces-token.guard");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    singIn(req) {
+    refreshToken(req) {
+        return (req.user.accessToken);
     }
+    singIn(req) { }
     async singUp(req) {
-        const token = await this.authService.authenticateUser(req.user);
-        return (token);
+        return (await this.authService.authenticateUser(req.user));
     }
 };
 __decorate([
+    (0, common_1.Get)('refresh-token'),
+    (0, common_1.UseGuards)(acces_token_guard_1.AccessTokenGuard),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "refreshToken", null);
+__decorate([
     (0, common_1.Get)('intra'),
-    (0, common_1.UseGuards)(token_presence_guard_1.TokenPresenceGuard, token_validation_guard_1.TokenValidationGuard),
+    (0, common_1.UseGuards)(acces_token_guard_1.AccessTokenGuard),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

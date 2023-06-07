@@ -20,21 +20,24 @@ let AuthService = class AuthService {
         this.userService = userService;
     }
     async authenticateUser(userDto) {
-        const payload = { sub: userDto.id, username: userDto.username };
+        this.payload = { sub: userDto.IntraId, username: userDto.username };
         this.userService.createUser(userDto);
         return ({
-            refresh_token: await this.jwtService.signAsync(payload, {
-                expiresIn: '3d',
-                secret: process.env.TOKEN_SECRET,
-            }),
-            access_token: await this.jwtService.signAsync(payload, {
-                expiresIn: '10m',
-                secret: process.env.TOKEN_SECRET,
-            }),
+            refresh_token: await this.generateNewToken('10d'),
+            access_token: await this.generateNewToken('10m')
         });
     }
-    async findUserById(userId) {
-        return (await this.userService.findUserById(userId));
+    async generateNewToken(expiringTime) {
+        return (await this.jwtService.signAsync(this.payload, {
+            expiresIn: expiringTime,
+            secret: process.env.ACCESS_TOKEN_SECRET,
+        }));
+    }
+    async findUserById(intraId) {
+        return (await this.userService.findUserById(intraId));
+    }
+    isRefreshTokenValid(refreshToken) {
+        return (true);
     }
 };
 AuthService = __decorate([

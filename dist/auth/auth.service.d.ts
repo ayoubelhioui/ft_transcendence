@@ -5,6 +5,9 @@ export declare class AuthService {
     private jwtService;
     private userService;
     constructor(jwtService: JwtService, userService: UserService);
+    private payload;
     authenticateUser(userDto: UserDto): Promise<object>;
-    findUserById(userId: number): Promise<object>;
+    generateNewToken(expiringTime: string): Promise<string>;
+    findUserById(intraId: number): Promise<object>;
+    isRefreshTokenValid(refreshToken: string): boolean;
 }

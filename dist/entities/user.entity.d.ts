@@ -1,6 +1,7 @@
 import { Achievement, Channel, ChannelMessages, ChannelUsers, MatchHistory, UsersMuted, LiveGames, Notification, Friends, BlockedUsers } from './index';
 declare class User {
     id: number;
+    IntraId: number;
     username: string;
     avatar: string;
     wins: number;

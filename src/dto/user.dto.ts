@@ -2,7 +2,7 @@ import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
 
 export class UserDto{
     @IsNotEmpty()
-    id: number;
+    IntraId: number;
 
     @IsNotEmpty()
     username: string;

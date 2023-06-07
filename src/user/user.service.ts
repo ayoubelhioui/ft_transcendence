@@ -16,14 +16,15 @@ export class UserService{
         const newUser = await this.userRepository.create(createUserDto);
         await this.userRepository.save(newUser);
     }
-    async findUserById(id: number): Promise<User>{
+
+    async findUserById(IntraId: number): Promise<User>{
         const user = await this.userRepository.findOne({ 
             where : {
-                id: id,
+                IntraId: IntraId,
             },
         });
-        // if (!user)
-        //     throw new NotFoundException('User not found');
         return (user);
     }
+
+    
 }

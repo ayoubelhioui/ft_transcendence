@@ -29,10 +29,10 @@ let UserService = class UserService {
         const newUser = await this.userRepository.create(createUserDto);
         await this.userRepository.save(newUser);
     }
-    async findUserById(id) {
+    async findUserById(IntraId) {
         const user = await this.userRepository.findOne({
             where: {
-                id: id,
+                IntraId: IntraId,
             },
         });
         return (user);
