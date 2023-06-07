@@ -12,6 +12,7 @@ const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
 const db_configs_1 = require("./database/configs/db_configs");
 const user_module_1 = require("./components/user/user.module");
+const game_module_1 = require("./game/game.module");
 const ENV_PATH = './src/.env';
 let AppModule = class AppModule {
 };
@@ -20,7 +21,8 @@ AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({ isGlobal: true, envFilePath: ENV_PATH }),
             typeorm_1.TypeOrmModule.forRootAsync((0, db_configs_1.default)()),
-            user_module_1.UserModule
+            user_module_1.UserModule,
+            game_module_1.GameModule
         ],
         controllers: [],
         providers: [],

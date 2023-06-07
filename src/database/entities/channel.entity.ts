@@ -1,7 +1,8 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable, OneToOne } from 'typeorm';
 
 import {User, ChannelMessages, ChannelUsers} from './index';
 import UsersMuted from './users_muted.entity';
+import Invites from './invites';
 
 
 enum ChannelsVisibility 
@@ -27,6 +28,9 @@ class Channel{
 
     @Column()
     public visibility: ChannelsVisibility;
+    
+    @Column({default : true})
+    public isGroup : boolean;
    
     @OneToMany(() => ChannelMessages, (channelMessages) => channelMessages.channel)
     channelMessages: ChannelMessages[];
@@ -47,6 +51,14 @@ class Channel{
     @ManyToMany(() => User, user => user.channelInvites)
     @JoinTable()
     public invitedUsers: User[];
+
+
+    @OneToMany(() => Invites, (invites) => invites.group_id)
+    public group_invites: Invites[];
+
+    //update on each message sent
+    @OneToOne(() => ChannelMessages, channelMessage => channelMessage.id)
+    lastMessage : ChannelMessages;
 }
 
 export default Channel

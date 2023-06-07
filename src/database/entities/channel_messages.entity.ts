@@ -2,6 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryCo
 import Channel from './channel.entity';
 
 import {User} from './index'
+import Invites from './invites';
 
 @Entity()
 class ChannelMessages{
@@ -10,22 +11,22 @@ class ChannelMessages{
     @PrimaryGeneratedColumn()
     public id: number;
 
+    @Column()
+    public message: string;
+
+    @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+    public time: Date;
+
+    @Column({nullable: true})
+    public seen: boolean;
+
     @ManyToOne(() => User, (user) => user.channelMessages ,{ cascade: true })
     user : User;
 
     @ManyToOne(() => Channel, (channel) => channel.channelMessages, {cascade: true})
     channel : Channel;
 
-    @Column()
-    public message: string;
-
-    @Column({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
-    public time: Date;
-
-    @Column({nullable: true})
-    public seen: boolean;
-
-
+ 
 
 }
 

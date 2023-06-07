@@ -3,8 +3,8 @@ import {User} from './index';
 
 @Entity()
 class MatchHistory{
-    @PrimaryGeneratedColumn()
-    public id: number;
+    @PrimaryGeneratedColumn("uuid")
+    public token: string;
 
     @ManyToOne(() => User, (user) => user.matchHistoryPlayer1)
     public player1: User;
@@ -18,7 +18,8 @@ class MatchHistory{
     @Column()
     public player2_score: number;
 
-    @Column()
+    //if null then game is live
+    @Column({nullable : true, default : null})
     public match_time_end: Date;
 
     @Column()

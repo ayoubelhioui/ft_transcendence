@@ -2,7 +2,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToMany, ManyToOne } from 'typeorm';
 
 import {Achievement, Channel, ChannelMessages, ChannelUsers, 
-    MatchHistory,UsersMuted, LiveGames,Notification, Friends, BlockedUsers} from './index'
+    MatchHistory,UsersMuted,Notification, Friends, BlockedUsers} from './index'
+import Invites from './invites';
 
 
 
@@ -62,12 +63,12 @@ class User{
 
 
     /************************************************************/
-    @OneToMany(() => LiveGames, (liveGames) => liveGames.player1)
-    public liveGamesPlayer1: LiveGames[];
+    // @OneToMany(() => LiveGames, (liveGames) => liveGames.player1)
+    // public liveGamesPlayer1: LiveGames[];
 
-    /* ******************************************************* */
-    @OneToMany(() => LiveGames, (liveGames) => liveGames.player2)
-    public liveGamesPlayer2: LiveGames[];
+    // /* ******************************************************* */
+    // @OneToMany(() => LiveGames, (liveGames) => liveGames.player2)
+    // public liveGamesPlayer2: LiveGames[];
 
 
     /* ******************************************************* */
@@ -99,6 +100,11 @@ class User{
 
     @OneToMany(() => BlockedUsers, blockedUsers => blockedUsers.blockedBy)
     public blockedBy: BlockedUsers[];
+
+
+    @OneToMany(() => Invites, (invites) => invites.user_id)
+    public group_invites: Invites[];
 }
+
 
 export default User;
