@@ -13,6 +13,7 @@ const typeorm_1 = require("@nestjs/typeorm");
 const entities_1 = require("./entities");
 const user_entity_1 = require("./entities/user.entity");
 const auth_module_1 = require("./auth/auth.module");
+const token_blacklist_1 = require("./entities/token_blacklist");
 const ENV_PATH = './src/.env';
 let AppModule = class AppModule {
 };
@@ -29,7 +30,7 @@ AppModule = __decorate([
                     username: configService.get('DB_USERNAME'),
                     password: configService.get('DB_PASS'),
                     database: configService.get('DB_NAME'),
-                    entities: [user_entity_1.default, entities_1.Achievement, entities_1.Channel, entities_1.Friends, entities_1.ChannelMessages, entities_1.ChannelBlacklist, entities_1.BlockedUsers, entities_1.ChannelUsers, entities_1.LiveGames, entities_1.MatchHistory, entities_1.Notification, entities_1.UsersMuted],
+                    entities: [user_entity_1.default, entities_1.Achievement, entities_1.Channel, entities_1.Friends, entities_1.ChannelMessages, entities_1.ChannelBlacklist, entities_1.BlockedUsers, entities_1.ChannelUsers, entities_1.LiveGames, entities_1.MatchHistory, entities_1.Notification, entities_1.UsersMuted, token_blacklist_1.default],
                     synchronize: true,
                     autoSchemaSync: true,
                 }),

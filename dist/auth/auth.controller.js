@@ -21,7 +21,8 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    logOut() {
+    async logOut(body) {
+        await this.authService.removeTokens(body);
     }
     async newAccessToken(req) {
         return ({
@@ -29,19 +30,18 @@ let AuthController = class AuthController {
         });
     }
     singIn(req) {
-        return ({
-            statusCode: 200,
-        });
+        return ({});
     }
     async singUp(req) {
         return (await this.authService.authenticateUser(req.user));
     }
 };
 __decorate([
-    (0, common_1.Get)('logout'),
+    (0, common_1.Post)('logout'),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
 ], AuthController.prototype, "logOut", null);
 __decorate([
     (0, common_1.Get)('refresh-token'),

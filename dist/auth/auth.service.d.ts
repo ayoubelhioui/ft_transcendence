@@ -1,4 +1,5 @@
 import { JwtService } from "@nestjs/jwt";
+import { TokensDto } from "src/dto/tokens.dto";
 import { UserDto } from "src/dto/user.dto";
 import { UserService } from "src/user/user.service";
 export declare class AuthService {
@@ -9,5 +10,7 @@ export declare class AuthService {
     authenticateUser(userDto: UserDto): Promise<object>;
     generateNewToken(expiringTime: string): Promise<string>;
     findUserById(intraId: number): Promise<object>;
-    removeTokens(refreshToken: string, accessToken: string): Promise<void>;
+    removeTokens(tokensDto: TokensDto): Promise<void>;
+    isAccessTokenInBlacklist(token: string): Promise<boolean>;
+    isRefreshTokenInBlacklist(token: string): Promise<boolean>;
 }

@@ -17,13 +17,15 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const entities_1 = require("../entities");
+const token_blacklist_1 = require("../entities/token_blacklist");
 let UserService = class UserService {
-    constructor(userRepository) {
+    constructor(userRepository, tokenBlacklistRepository) {
         this.userRepository = userRepository;
+        this.tokenBlacklistRepository = tokenBlacklistRepository;
     }
     async createUser(createUserDto) {
         this.initializeUserDto(createUserDto);
-        const newUser = await this.userRepository.create(createUserDto);
+        const newUser = await this.userRepository.save(createUserDto);
     }
     initializeUserDto(createUserDto) {
         createUserDto.avatar = 'this is just a test';
@@ -38,11 +40,30 @@ let UserService = class UserService {
         });
         return (user);
     }
+    async addingTokensToBlacklist(tokensDto) {
+        await this.tokenBlacklistRepository.save(tokensDto);
+    }
+    async refreshTokenInBlacklist(token) {
+        return !!(await this.tokenBlacklistRepository.findOne({
+            where: {
+                refresh_token: token,
+            },
+        }));
+    }
+    async accessTokenInBlacklist(token) {
+        return !!(await this.tokenBlacklistRepository.findOne({
+            where: {
+                access_token: token,
+            },
+        }));
+    }
 };
 UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(entities_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(1, (0, typeorm_1.InjectRepository)(token_blacklist_1.default)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository])
 ], UserService);
 exports.UserService = UserService;
 //# sourceMappingURL=user.service.js.map

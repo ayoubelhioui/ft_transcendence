@@ -3,8 +3,13 @@ import { Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
 class TokenBlacklist {
+    
     @PrimaryColumn()
-    public token: string;
+    public access_token: string;
+
+    @PrimaryColumn()
+    public refresh_token: string;
+    
 }
 
 export default TokenBlacklist

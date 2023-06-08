@@ -38,8 +38,14 @@ let AuthService = class AuthService {
     async findUserById(intraId) {
         return (await this.userService.findUserById(intraId));
     }
-    async removeTokens(refreshToken, accessToken) {
-        await this.generateNewToken('1s');
+    async removeTokens(tokensDto) {
+        await this.userService.addingTokensToBlacklist(tokensDto);
+    }
+    async isAccessTokenInBlacklist(token) {
+        return (await this.userService.accessTokenInBlacklist(token));
+    }
+    async isRefreshTokenInBlacklist(token) {
+        return (await this.userService.refreshTokenInBlacklist(token));
     }
 };
 AuthService = __decorate([

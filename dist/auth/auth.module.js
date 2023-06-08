@@ -16,13 +16,14 @@ const auth_controller_1 = require("./auth.controller");
 const typeorm_1 = require("@nestjs/typeorm");
 const user_service_1 = require("../user/user.service");
 const entities_1 = require("../entities");
+const token_blacklist_1 = require("../entities/token_blacklist");
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
             typeorm_1.TypeOrmModule.forFeature([
-                entities_1.User
+                entities_1.User, token_blacklist_1.default
             ]),
             jwt_1.JwtModule.register({}),
             passport_1.PassportModule.register({
