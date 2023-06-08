@@ -2,7 +2,10 @@ import { AuthService } from "./auth.service";
 export declare class AuthController {
     private authService;
     constructor(authService: AuthService);
-    refreshToken(req: any): Promise<object>;
-    singIn(req: any): void;
+    logOut(): void;
+    newAccessToken(req: any): Promise<object>;
+    singIn(req: any): {
+        statusCode: number;
+    };
     singUp(req: any): Promise<object>;
 }

@@ -13,7 +13,6 @@ exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const user_service_1 = require("../user/user.service");
-require('dotenv').config();
 let AuthService = class AuthService {
     constructor(jwtService, userService) {
         this.jwtService = jwtService;
@@ -23,21 +22,24 @@ let AuthService = class AuthService {
         this.payload = { sub: userDto.IntraId, username: userDto.username };
         this.userService.createUser(userDto);
         return ({
-            refresh_token: await this.generateNewToken('10d'),
-            access_token: await this.generateNewToken('10m')
+            tokens: {
+                refresh_token: await this.generateNewToken('1m'),
+                access_token: await this.generateNewToken('10m'),
+            },
+            userDto,
         });
     }
     async generateNewToken(expiringTime) {
         return (await this.jwtService.signAsync(this.payload, {
             expiresIn: expiringTime,
-            secret: process.env.ACCESS_TOKEN_SECRET,
+            secret: process.env.TOKEN_SECRET,
         }));
     }
     async findUserById(intraId) {
         return (await this.userService.findUserById(intraId));
     }
-    isRefreshTokenValid(refreshToken) {
-        return (true);
+    async removeTokens(refreshToken, accessToken) {
+        await this.generateNewToken('1s');
     }
 };
 AuthService = __decorate([

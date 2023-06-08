@@ -11,7 +11,6 @@ const common_1 = require("@nestjs/common");
 let TokenPresenceGuard = class TokenPresenceGuard {
     canActivate(context) {
         const request = context.switchToHttp().getRequest();
-        console.log(request.headers.authorization);
         return (request.headers.authorization);
     }
 };

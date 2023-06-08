@@ -16,6 +16,6 @@ export class UserDto{
     // @IsNotEmpty()    
     loss: number;
 
-    // @IsNotEmpty()    
+    // @IsNotEmpty()
     winrate: number;
 }

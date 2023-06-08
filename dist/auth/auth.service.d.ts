@@ -9,5 +9,5 @@ export declare class AuthService {
     authenticateUser(userDto: UserDto): Promise<object>;
     generateNewToken(expiringTime: string): Promise<string>;
     findUserById(intraId: number): Promise<object>;
-    isRefreshTokenValid(refreshToken: string): boolean;
+    removeTokens(refreshToken: string, accessToken: string): Promise<void>;
 }

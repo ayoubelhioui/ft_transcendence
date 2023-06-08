@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Achievement, BlockedUsers, Channel, ChannelBlacklist, ChannelMessages, ChannelUsers, Friends, LiveGames, MatchHistory, Notification, UsersMuted } from 'src/entities';
 import User from 'src/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
+import TokenBlacklist from './entities/token_blacklist';
 
 const ENV_PATH : string = './src/.env'; 
 
@@ -19,7 +20,7 @@ const ENV_PATH : string = './src/.env';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASS'), 
         database: configService.get('DB_NAME'),
-        entities:       [User, Achievement, Channel, Friends, ChannelMessages, ChannelBlacklist, BlockedUsers, ChannelUsers, LiveGames, MatchHistory, Notification, UsersMuted],
+        entities:       [User, Achievement, Channel, Friends, ChannelMessages, ChannelBlacklist, BlockedUsers, ChannelUsers, LiveGames, MatchHistory, Notification, UsersMuted, TokenBlacklist],
         synchronize:    true,
         autoSchemaSync: true,
       }),

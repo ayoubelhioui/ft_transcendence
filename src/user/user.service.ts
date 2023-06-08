@@ -8,23 +8,25 @@ import { UserDto } from 'src/dto/user.dto';
 @Injectable()
 export class UserService{
     constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
+
     async createUser(createUserDto: UserDto){
-        createUserDto.avatar = 'helloWorld';
-        createUserDto.loss = 39;
-        createUserDto.winrate = 33;
-        createUserDto.wins = 3333;
+        this.initializeUserDto(createUserDto);
         const newUser = await this.userRepository.create(createUserDto);
-        await this.userRepository.save(newUser);
+    }
+
+    initializeUserDto(createUserDto: UserDto) : void{
+        createUserDto.avatar = 'this is just a test';
+        
+        createUserDto.winrate = 0;
+        createUserDto.wins = 0;
     }
 
     async findUserById(IntraId: number): Promise<User>{
-        const user = await this.userRepository.findOne({ 
+        const user = await this.userRepository.findOne({
             where : {
                 IntraId: IntraId,
             },
         });
         return (user);
     }
-
-    
 }

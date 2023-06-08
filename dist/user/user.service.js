@@ -22,12 +22,13 @@ let UserService = class UserService {
         this.userRepository = userRepository;
     }
     async createUser(createUserDto) {
-        createUserDto.avatar = 'helloWorld';
-        createUserDto.loss = 39;
-        createUserDto.winrate = 33;
-        createUserDto.wins = 3333;
+        this.initializeUserDto(createUserDto);
         const newUser = await this.userRepository.create(createUserDto);
-        await this.userRepository.save(newUser);
+    }
+    initializeUserDto(createUserDto) {
+        createUserDto.avatar = 'this is just a test';
+        createUserDto.winrate = 0;
+        createUserDto.wins = 0;
     }
     async findUserById(IntraId) {
         const user = await this.userRepository.findOne({

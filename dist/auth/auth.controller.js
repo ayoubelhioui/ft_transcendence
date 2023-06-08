@@ -21,25 +21,39 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    refreshToken(req) {
-        return (req.user.accessToken);
+    logOut() {
     }
-    singIn(req) { }
+    async newAccessToken(req) {
+        return ({
+            access_token: await this.authService.generateNewToken('10m'),
+        });
+    }
+    singIn(req) {
+        return ({
+            statusCode: 200,
+        });
+    }
     async singUp(req) {
         return (await this.authService.authenticateUser(req.user));
     }
 };
 __decorate([
+    (0, common_1.Get)('logout'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "logOut", null);
+__decorate([
     (0, common_1.Get)('refresh-token'),
-    (0, common_1.UseGuards)(acces_token_guard_1.AccessTokenGuard),
+    (0, common_1.UseGuards)(acces_token_guard_1.TokenValidationGuard),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "refreshToken", null);
+], AuthController.prototype, "newAccessToken", null);
 __decorate([
     (0, common_1.Get)('intra'),
-    (0, common_1.UseGuards)(acces_token_guard_1.AccessTokenGuard),
+    (0, common_1.UseGuards)(acces_token_guard_1.TokenValidationGuard),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
