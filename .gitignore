@@ -4,3 +4,4 @@ backend/example.http
 backend/potgresql/.env
 backend/dist
 front-end/node_modules
+front-end/dist
