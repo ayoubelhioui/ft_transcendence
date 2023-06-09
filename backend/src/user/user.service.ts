@@ -21,6 +21,7 @@ export class UserService{
         createUserDto.avatar = 'this is just a test';
         createUserDto.winrate = 0;
         createUserDto.wins = 0;
+        createUserDto.loss = 0;
     }
 
     async findUserById(IntraId: number): Promise<User>{

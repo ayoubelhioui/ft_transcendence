@@ -19,7 +19,10 @@ export class TokenValidationGuard implements CanActivate {
       return (false);
     }
     if ((this.authService.isTokenInBlacklist(token)) || !(this.authService.findUserById(this.payload.sub)))
+    {
+    console.log('im here');
       return (false);
+    }
     request['user'] = this.payload;
     return (true);
   }
