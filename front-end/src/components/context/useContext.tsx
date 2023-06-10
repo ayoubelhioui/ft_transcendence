@@ -120,7 +120,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                 const headers = {
                     Authorization: `Bearer ${accessToken}`,
                 };
-                const response = await axios.get("http://localhost:3000/auth/intra", { headers });
+                const response = await axios.get("http://localhost:3000/auth/user-validation", { headers });
                 
                 if (response.data.status === 200)
                 {

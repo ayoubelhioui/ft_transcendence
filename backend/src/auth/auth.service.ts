@@ -15,7 +15,7 @@ export class AuthService{
         return ({
             tokens: {
                 refresh_token: await this.generateNewToken('1m'),
-                access_token: await this.generateNewToken('10m'),
+                access_token: await this.generateNewToken('1m'),
             },
             userDto,
         });
@@ -35,11 +35,19 @@ export class AuthService{
     }
 
     async removeTokens(accessToken: string, refreshToken: string){
-        await this.userService.addingTokensToBlacklist(accessToken, refreshToken);
+        await this.userService.addTokenToBlacklist(accessToken);
+        await this.userService.addTokenToBlacklist(refreshToken);
     }
 
     async isTokenInBlacklist(token: string): Promise<boolean> {
         return (await this.userService.accessTokenInBlacklist(token));
     }
+
+    async mailingUser(userMail: string): Promise<string> {
+        const emailVerificationCode: string = await this.generateNewToken('3m');
+        await this.userService.sendEmail(emailVerificationCode, userMail);
+        return (emailVerificationCode);
+    }
+
 }
 

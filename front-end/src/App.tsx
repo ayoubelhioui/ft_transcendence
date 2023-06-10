@@ -40,6 +40,7 @@ const App = () => {
         {authApp.isAuthenticated && <Navbar />}
         
         <Routes>
+          <Route path='/Homes' element={(<Profile />)}></Route>
           <Route path='/' element={(<SignIn />)}/>
           <Route path='/Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
           <Route path='/Profile' element={(<ProtectedRoute> <Profile /> </ProtectedRoute>)}/>

@@ -21,4 +21,4 @@ const transporter = nodemailer.createTransport({
     } else {
       console.log('Email sent successfully!', info.response);
     }
-  });
+});

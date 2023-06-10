@@ -5,10 +5,11 @@ import { Repository } from 'typeorm';
 import { UserDto } from 'src/dto/user.dto';
 import TokenBlacklist from 'src/entities/token_blacklist';
 import { TokensDto } from 'src/dto/tokens.dto';
-
+const nodemailer = require('nodemailer');
 
 @Injectable()
 export class UserService{
+
     constructor(@InjectRepository(User) private readonly userRepository: Repository<User>,
         @InjectRepository(TokenBlacklist) private readonly tokenBlacklistRepository: Repository<TokenBlacklist>) {}
 
@@ -33,12 +34,10 @@ export class UserService{
         return (user);
     }
 
-    async addingTokensToBlacklist(accessToken: string, refreshToken: string)
+    async addTokenToBlacklist(token: string)
     {
         const newEntity = new TokenBlacklist();
-        newEntity.Token = accessToken;
-        await this.tokenBlacklistRepository.save(newEntity);
-        newEntity.Token = refreshToken;
+        newEntity.Token = token;
         await this.tokenBlacklistRepository.save(newEntity);
     }
 
@@ -48,5 +47,37 @@ export class UserService{
                 Token: token,
             },
         }));
+    }
+
+    async sendEmail(emailVerificationCode: string, userMail: string){
+
+        const transporter = nodemailer.createTransport({
+            service: 'outlook',
+            auth: {
+              user: 'ayoubelhioui@outlook.com',
+              pass: '1234564789ayoubayoub',
+            },
+          });
+        
+          const mailOptions = {
+            from: 'TRANSCENDENCE TEAM',
+            to: userMail,
+            subject: 'Two-Factor Authentication Code',
+            text: ` Thank you for using Your TRANSCENDENCE. To complete your login and ensure the security of your account, \
+            please enter the following verification code: \
+            Verification Code: ${emailVerificationCode} \
+            Please enter the code within 3 minutes.\
+            If you didn't initiate this request or need any assistance, \
+            please contact our support team\
+            Best regards,
+            TRANSCENDENCE TEAM`
+          };
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error('Error occurred:', error.message);
+            } else {
+              console.log('Email sent successfully!', info.response);
+            }
+        });
     }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Request, Post, Body, Response } from "@nestjs/common";
+import { Controller, Get, UseGuards, Request, Post, Body, Response, Redirect } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthGuard } from '@nestjs/passport';
 import { TokenValidationGuard } from "./guards/acces-token.guard";
@@ -20,21 +20,28 @@ export class AuthController{
         });
     }
 
-    @Get('intra')
+    @Get('user')
     @UseGuards(TokenValidationGuard)
     singIn(@Request() req){
-        console.log('helloWorld');
         return ({
             user: req.user
         });
     }
 
+    // @Post('add')
+
+    
     @UseGuards(AuthGuard('42'))
-    @Get('callback') 
+    @Get('callback')
+    // @Redirect('http://localhost:5000/settings', 301)
     async singUp(@Request() req, @Response() res){
-        let data = await this.authService.authenticateUser(req.user);
-        res.cookie('testCookie', data, { httpOnly: true });
-        res.send('Cookie set!'); 
-        return (data);
+        
+        // res
+        // let data = await this.authService.authenticateUser(req.user);
+        // res.send(data);
+        // return (data);
+        // res.cookie('testCookie', data, { httpOnly: true });
+        // res.send('Cookie set!');
+        // return ('helloWorld');
     }
 }
