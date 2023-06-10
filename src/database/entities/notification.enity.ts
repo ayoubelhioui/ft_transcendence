@@ -24,11 +24,11 @@ class Notification {
     @Column()
     public seen : boolean;
 
-    @ManyToOne(() => User, (user) => user.notifications)
+    @ManyToOne(() => User, (user) => user.notifications, {onDelete: 'CASCADE'})
     public receiver : User;
 
 
-    @ManyToOne(() => User, (user) => user.sentNotifications)
+    @ManyToOne(() => User, (user) => user.sentNotifications, {onDelete: 'CASCADE'})
     public sender : User;
 }
 

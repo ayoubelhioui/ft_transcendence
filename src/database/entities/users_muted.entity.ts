@@ -7,10 +7,10 @@ class UsersMuted{
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @ManyToOne(() => Channel, (channel) => channel.channelMessages, { cascade: true })
+    @ManyToOne(() => Channel, (channel) => channel.channelMessages, {onDelete: 'CASCADE'})
     channel : Channel;
 
-    @ManyToOne(() => User, (user) => user.channelMessages ,{ cascade: true })
+    @ManyToOne(() => User, (user) => user.channelMessages, {onDelete: 'CASCADE'})
     user : User;
 
     @Column()

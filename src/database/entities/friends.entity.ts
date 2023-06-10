@@ -22,10 +22,10 @@ class Friends{
    @Column()
    public accepted_time : Date;
 
-   @ManyToOne(() => User, (user) => user.sentFriends)
+   @ManyToOne(() => User, (user) => user.sentFriends, {onDelete: 'CASCADE'})
     public sender: User;
 
-    @ManyToOne(() => User, (user) => user.receivedFriends)
+    @ManyToOne(() => User, (user) => user.receivedFriends, {onDelete: 'CASCADE'})
     public receiver: User;
 
 }

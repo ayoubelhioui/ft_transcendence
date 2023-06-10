@@ -1,0 +1,32 @@
+import { DeepPartial } from "typeorm";
+
+interface IBaseRepository<T,deleteResult = any>
+{
+    create(data: T | any): Promise< T | undefined>;
+
+    findOneById(id: any): Promise<T | undefined>;
+
+    findOneByIdWithRelations(id: any, relations : any): Promise<T | undefined>;
+    
+
+    findByCondition(filterCondition: any): Promise<T[] | undefined>;
+
+    findByConditionWithRelations(filterCondition: any, relations : any): Promise<T[] | undefined>;
+
+
+    findAll(): Promise<T[] | undefined>;
+
+    findAllWithRelations(relations : any): Promise<T[] | undefined>;
+
+
+    remove(criteria : Object): Promise<deleteResult>;
+
+    
+    save(entity: T | any) : Promise< T | undefined>;
+
+
+    preload(object : DeepPartial<T>) :  Promise<T | undefined>;
+}
+
+
+export default IBaseRepository;

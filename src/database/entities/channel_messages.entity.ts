@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryCo
 import Channel from './channel.entity';
 
 import {User} from './index'
-import Invites from './invites';
+import Invites from './invites.entity';
 
 @Entity()
 class ChannelMessages{
@@ -20,10 +20,10 @@ class ChannelMessages{
     @Column({nullable: true})
     public seen: boolean;
 
-    @ManyToOne(() => User, (user) => user.channelMessages ,{ cascade: true })
+    @ManyToOne(() => User, (user) => user.channelMessages, {onDelete: 'CASCADE'})
     user : User;
 
-    @ManyToOne(() => Channel, (channel) => channel.channelMessages, {cascade: true})
+    @ManyToOne(() => Channel, (channel) => channel.channelMessages, {onDelete: 'CASCADE'})
     channel : Channel;
 
  

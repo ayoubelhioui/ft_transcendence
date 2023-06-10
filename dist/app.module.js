@@ -12,7 +12,12 @@ const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
 const db_configs_1 = require("./database/configs/db_configs");
 const user_module_1 = require("./components/user/user.module");
-const game_module_1 = require("./game/game.module");
+const game_module_1 = require("./components/game/game.module");
+const chat_module_1 = require("./components/chat/chat.module");
+const notification_module_1 = require("./components/notification/notification.module");
+const group_invites_module_1 = require("./components/group_invites/group_invites.module");
+const friends_module_1 = require("./components/friends/friends.module");
+const channel_module_1 = require("./components/channels/channel.module");
 const ENV_PATH = './src/.env';
 let AppModule = class AppModule {
 };
@@ -22,7 +27,12 @@ AppModule = __decorate([
             config_1.ConfigModule.forRoot({ isGlobal: true, envFilePath: ENV_PATH }),
             typeorm_1.TypeOrmModule.forRootAsync((0, db_configs_1.default)()),
             user_module_1.UserModule,
-            game_module_1.GameModule
+            channel_module_1.ChannelModule,
+            game_module_1.GameModule,
+            chat_module_1.ChatModule,
+            notification_module_1.NotificationModule,
+            group_invites_module_1.GroupInvitesModule,
+            friends_module_1.FriendsModule,
         ],
         controllers: [],
         providers: [],

@@ -1,4 +1,4 @@
-import { Achievement, BlockedUsers, Channel, ChannelBlacklist, ChannelMessages, ChannelUsers, Friends, MatchHistory, Notification, UsersMuted, User } from 'src/database/entities';
+import { Invites ,Achievement, BlockedUsers, Channel, ChannelBlacklist, ChannelMessages, ChannelUsers, Friends, MatchHistory, Notification, UsersMuted, User } from 'src/database/entities';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from 'src/components/auth/auth.module';
 
@@ -13,7 +13,7 @@ export default function typeOrmConfigs() : any {
           username: configService.get('DB_USERNMAE'),
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DB_DATABASE'),
-          entities:       [User, Achievement, Channel, Friends, ChannelMessages, ChannelBlacklist, BlockedUsers, ChannelUsers,  MatchHistory, Notification, UsersMuted],
+          entities:       [User, Achievement, Channel, Friends, ChannelMessages, ChannelBlacklist, BlockedUsers, ChannelUsers,  MatchHistory, Notification, UsersMuted, Invites],
           synchronize:    true,
           autoSchemaSync: true
         })

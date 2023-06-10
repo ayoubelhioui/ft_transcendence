@@ -12,7 +12,7 @@ class Achievement{
     @Column()
     public name: string;
 
-    @ManyToMany(() => User, user => user.achievements)
+    @ManyToMany(() => User, user => user.achievements, {onDelete: 'CASCADE'})
     @JoinTable()
     users: User[];
 }

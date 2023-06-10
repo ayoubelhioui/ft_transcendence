@@ -1,7 +1,7 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/database/entities";
-import { IUserRepository } from "src/repositories_interfaces";
-import { DeleteResult, FindOneOptions, FindOptionsWhere, Repository } from "typeorm";
+import { IUserRepository } from "src/components/repositories/repositories_interfaces";
+import { DeepPartial, DeleteResult, FindOneOptions, FindOptionsWhere, Repository } from "typeorm";
 import IBaseRepository from "./base.repository.interface";
 
 //TypeOrm abstract base class
@@ -24,26 +24,56 @@ abstract class ABaseRepository<T> implements IBaseRepository<T,DeleteResult>
         };
         return (await this.entity.findOne(findOptions));
     }
+
+    async findOneByIdWithRelations(id: any, relations : any): Promise< T | undefined > 
+    {
+        const findOptions: FindOneOptions<T> = {
+            where: {
+              id: id,
+            }as FindOptionsWhere<T>,
+            relations
+        };
+        return (await this.entity.findOne(findOptions));
+    }
     
     async findByCondition(filterCondition: any): Promise<T[] | undefined> {
         return await this.entity.find({
           where: filterCondition,
         });
     }
+
+    async findByConditionWithRelations(filterCondition: any, relations : any): Promise<T[] | undefined>
+    {
+        return await this.entity.find({
+            where: filterCondition,
+            relations
+        });
+    }
     
     async findAll(): Promise<T[] | undefined> {
         return await this.entity.find();
+    }
+
+    async findAllWithRelations(relations: any): Promise<T[] | undefined> {
+        return await this.entity.find({
+          relations,
+        });
     }
     
     async remove(criteria: any): Promise<DeleteResult> {
         return await this.entity.delete(criteria);
     }
     
-    async findWithRelations(relations: any): Promise<T[] | undefined> {
-        return await this.entity.find({
-          relations,
-        });
+
+    async save(entity: T | any) : Promise< T | undefined> {
+        return await this.entity.save(entity);
     }
+
+    async  preload(object : DeepPartial<T>) :  Promise<T | undefined>
+    {
+        return (this.entity.preload(object));
+    }
+
 }
 
 

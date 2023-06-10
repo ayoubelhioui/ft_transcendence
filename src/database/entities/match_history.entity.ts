@@ -6,10 +6,10 @@ class MatchHistory{
     @PrimaryGeneratedColumn("uuid")
     public token: string;
 
-    @ManyToOne(() => User, (user) => user.matchHistoryPlayer1)
+    @ManyToOne(() => User, (user) => user.matchHistoryPlayer1, {onDelete: 'CASCADE'})
     public player1: User;
 
-    @ManyToOne(() => User, (user) => user.matchHistoryPlayer2)
+    @ManyToOne(() => User, (user) => user.matchHistoryPlayer2, {onDelete: 'CASCADE'})
     public player2: User;
 
     @Column()

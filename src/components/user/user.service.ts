@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {CreateUserDto} from './user.dto';
 import { User } from 'src/database/entities';
-import { IUserRepository } from 'src/repositories_interfaces';
-import UserRepository from './user.repository';
-import ABaseRepository from 'src/repositories_interfaces/base/base.repository.abstract';
+import { IUserRepository } from 'src/components/repositories/repositories_interfaces';
+import UserRepository from '../repositories/user.repository';
+import ABaseRepository from 'src/components/repositories/repositories_interfaces/base/base.repository.abstract';
 import { Repository } from 'typeorm';
 
 
@@ -16,17 +16,17 @@ export class UserService {
         return  (this.userRepository.create(createUserDto));
     }
     
-    async findUserById(id: number): Promise<User | undefined> {
-
-        console.log(typeof this.userRepository);
-        console.log(this.userRepository instanceof UserRepository);
-        console.log(this.userRepository instanceof ABaseRepository);
-        console.log(this.userRepository instanceof Repository);
-        return  (this.userRepository.findOneById(id));
+    async findUserById(id: number, relations: any = {}): Promise<User | undefined> {
+        return  (this.userRepository.findOneByIdWithRelations(id, relations));
     }
 
     async findAll()
     {
         return  (this.userRepository.findAll());
+    }
+
+    async removeUser(userId : number)
+    {
+        return (this.userRepository.remove(userId));
     }
 }
