@@ -5,6 +5,8 @@ import { Navigate } from "react-router-dom";
 
 import { useCookies } from "react-cookie";
 
+import Cookies from 'js-cookie';
+
 
 interface AuthContextType {
     checkAuth: () => Promise<void>;
@@ -56,9 +58,9 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     const checkAuth = async () => {
         try {
             console.log("here");
-            const responseData = await axios.get("http://localhost:3000/auth/callback");
-
+            const responseData = await axios.get("http://localhost:3000/auth/intra");
             const { tokens, userInfo } = responseData.data;
+            console.log("here");
             
             // Need To Set UserInfo ` avatar, name, wins, losses ... `
 
@@ -106,10 +108,15 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     useEffect( () => {
         const checkAuthentication = async () => {
             try {
-                const accessToken = cookie.accessTokenCookie;
+                // console.log(document.cookie);
+                const accessToken = Cookies.get('tokens');
+
+                
 
                 if (!accessToken)
                 {
+                    console.log("No Tokeeen");
+
                     // Need to redirect to sign in page
                     setIsAuthenticated(false);
                     <Navigate to="/" replace />
@@ -117,19 +124,21 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                     return ;
                 }
 
-                const headers = {
-                    Authorization: `Bearer ${accessToken}`,
-                };
-                const response = await axios.get("http://localhost:3000/auth/user-validation", { headers });
+                // axios.defaults.headers.common['Cookie'] = accessToken;
+
+                const response = await axios.get("http://localhost:3000/auth/user"); 
+
+                console.log(response.data);
                 
-                if (response.data.status === 200)
-                {
-                    setIsAuthenticated(true);
-                    <Navigate to="/Home" replace />
-                }
-                else if (response.data.status === 401) {
-                    refreshAccessToken();
-                }
+                setIsAuthenticated(true);
+                // if (response.data.status === 200)
+                // {
+                //     setIsAuthenticated(true);
+                //     <Navigate to="/Home" replace />
+                // }
+                // else if (response.data.status === 401) {
+                //     refreshAccessToken();
+                // }
             } catch (error: any) {
                 // don't know what to do in here
             }

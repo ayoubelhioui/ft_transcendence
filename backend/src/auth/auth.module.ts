@@ -9,6 +9,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserService } from "src/user/user.service";
 import { User } from "src/entities";
 import TokenBlacklist from "src/entities/token_blacklist";
+
 @Module({
     imports: [
         TypeOrmModule.forFeature([
