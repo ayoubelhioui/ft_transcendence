@@ -17,7 +17,7 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
   }
 
  
-  async addUserToChannel(channel : Channel ,user : User, role : ChannelUserRole =  ChannelUserRole.member) : Promise < ChannelUsers | undefined > {
+  async addUserToChannel(user : User, channel : Channel, role : ChannelUserRole) : Promise < ChannelUsers | undefined > {
 
     let channelUsers : ChannelUsers = new ChannelUsers();
     channelUsers.user = user;
@@ -25,6 +25,14 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
     channelUsers.channel = channel;
 
     return (this.entity.save(channelUsers));
+  }
+
+  async isUserInChannel(user: User, channel : Channel) : Promise <ChannelUsers | undefined> {
+    const condition : any = {
+      user, 
+      channel
+    };
+    return (this.findOneByCondition(condition));
   }
 }
 

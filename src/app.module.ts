@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeOrmConfigs from './database/configs/db_configs';
@@ -9,6 +9,7 @@ import { NotificationModule } from './components/notification/notification.modul
 import { GroupInvitesModule } from './components/group_invites/group_invites.module';
 import { FriendsModule } from './components/friends/friends.module';
 import { ChannelModule } from './components/channels/channel.module';
+import { AddUserMiddleware } from './global/middlewares/add-default-user.middleware';
 
 const ENV_PATH : string = './src/.env'; 
 
@@ -27,5 +28,8 @@ const ENV_PATH : string = './src/.env';
   controllers: [],
   providers: [],
 })
-
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AddUserMiddleware).forRoutes('*');
+  }
+}

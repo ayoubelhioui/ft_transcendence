@@ -6,7 +6,9 @@ import { ChannelUserRole } from "src/components/channels/types/channel-user-role
 //TO ADD extra custom methods
 interface IChannelUsersRepository extends IBaseRepository<ChannelUsers>
 {
-    addUserToChannel(channel : Channel ,user : User, role : ChannelUserRole) : Promise < ChannelUsers | undefined >;
+    addUserToChannel(user : User, channel : Channel, role : ChannelUserRole) : Promise < ChannelUsers | undefined >;
+    isUserInChannel(user: User, channel : Channel) : Promise <ChannelUsers | undefined>;
+
 }
 
 

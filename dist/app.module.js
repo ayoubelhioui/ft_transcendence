@@ -18,8 +18,12 @@ const notification_module_1 = require("./components/notification/notification.mo
 const group_invites_module_1 = require("./components/group_invites/group_invites.module");
 const friends_module_1 = require("./components/friends/friends.module");
 const channel_module_1 = require("./components/channels/channel.module");
+const add_default_user_middleware_1 = require("./global/middlewares/add-default-user.middleware");
 const ENV_PATH = './src/.env';
 let AppModule = class AppModule {
+    configure(consumer) {
+        consumer.apply(add_default_user_middleware_1.AddUserMiddleware).forRoutes('*');
+    }
 };
 AppModule = __decorate([
     (0, common_1.Module)({

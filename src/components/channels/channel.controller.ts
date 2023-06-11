@@ -1,11 +1,17 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Req, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { ChannelService } from './channel.service';
 import { Channel, User } from 'src/database/entities';
-import { DefaultUser } from 'src/global/decorators/default-user.decorator';
-import { ValidationPasswordPipe } from './pipe/validation-password.pipe';
-import { use } from 'passport';
-import { STATUS_CODES } from 'http';
+import { GetUser } from 'src/global/decorators/default-user.decorator';
+import { ChannelRoles } from './decorators/channel-roles.decorator';
+import { ChannelUserRole } from './types/channel-user-roles';
+import { ChannelExistsGuard } from './guards/channel-exists.guard';
+import { UserInChannelGuard } from './guards/user-in-channel.guard';
+import { ChannelRolesGuard } from './guards/channel-roles.guard';
+import { GetChannel } from 'src/global/decorators/channel.decorator';
+import { UpdateChannelDto } from './dto/update-channel.dto';
+import { ReturnedChannelDto } from './dto/returned-channel.dto';
+import { UserNotInChannelGuard } from './guards/user-not-in-channel.guard';
 
 @Controller('channels')
 export class ChannelController {
@@ -18,44 +24,60 @@ export class ChannelController {
     };
 
     @Get('my')
-    async getMyChannels(@DefaultUser() user: User) : Promise< Channel[] | undefined > {
+    async getMyChannels(@GetUser() user: User) : Promise< Channel[] | undefined > {
         return (await this.channelService.getMyChannels(user));
     };
     
     @Post('')
-    @UsePipes(ValidationPasswordPipe)
-    async createChannel(@Body() createChannelDto : CreateChannelDto, @DefaultUser() user: User) : Promise < CreateChannelDto | undefined > {
+    async createChannel(@GetUser() user: User, @Body() createChannelDto : CreateChannelDto) : Promise < ReturnedChannelDto | undefined > {
         return (await this.channelService.createChannel(user,createChannelDto));
     };
 
 
 
     @Put(':id')
-    async updateChannel(){};
+    @ChannelRoles(ChannelUserRole.admin, ChannelUserRole.owner)
+    @UseGuards(ChannelExistsGuard, UserInChannelGuard, ChannelRolesGuard)
+    async updateChannel(@GetChannel() channel: Channel, @Body() updateChannelDto : UpdateChannelDto) : 
+    Promise < ReturnedChannelDto | undefined > {
+        return (await this.channelService.updateChannel(channel, updateChannelDto));
+    };
 
 
 
     @Delete(':id')
+    @ChannelRoles(ChannelUserRole.owner)
+    @UseGuards(ChannelExistsGuard, UserInChannelGuard, ChannelRolesGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
-    async deleteChannel(@Param('id', ParseIntPipe)  channelId : number, @DefaultUser() user: User) {
-        await this.channelService.deleteChannel(channelId, user.id);
+    async deleteChannel(@GetChannel() channel: Channel) {
+        // console.log(channel);
+        await this.channelService.deleteChannel(channel);
     };
 
+
+    /* check if user is not blocked from this channel*/
     @Post(':id/join')
-    async joinChannel(){};
+    @UseGuards(ChannelExistsGuard, UserNotInChannelGuard)
+    async joinChannel(@GetUser() user : User, @GetChannel() channel : Channel) {
+
+    };
 
 
     @Post(':id/role/:userId')
+    @ChannelRoles(ChannelUserRole.owner)
     async changeMemberRole(){};
 
     @Delete(':id/kick/:userId')
+    @ChannelRoles(ChannelUserRole.admin, ChannelUserRole.owner)
     async kickMember(){};
 
 
     @Delete(':id/block/:userId')
+    @ChannelRoles(ChannelUserRole.admin, ChannelUserRole.owner)
     async blockMember(){};
 
     @Post(':id/mute/:userId')
+    @ChannelRoles(ChannelUserRole.admin, ChannelUserRole.owner)
     async muteMember(){};
 
     @Delete(':id/leave')

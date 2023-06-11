@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ChannelService } from './channel.service';
 import { ChannelController } from './channel.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,6 +9,12 @@ import { APP_PIPE } from '@nestjs/core';
 import { ValidationPasswordPipe } from './pipe/validation-password.pipe';
 import { PasswordService } from './password.service';
 import { ChannelUsersRepository } from '../repositories';
+import { ChannelExistsGuard } from './guards/channel-exists.guard';
+import { ChannelRolesGuard } from './guards/channel-roles.guard';
+import { UserInChannelGuard } from './guards/user-in-channel.guard';
+import { UserNotInChannelGuard } from './guards/user-not-in-channel.guard';
+import { ChannelUsersService } from './channel-users.service';
+import { ValidationPasswordMiddleware } from './middlewares/validation-password.middleware';
 
 @Module({
   imports: [
@@ -17,6 +23,7 @@ import { ChannelUsersRepository } from '../repositories';
   ],
   providers: [
     ChannelService,
+    ChannelUsersService,
     PasswordService,
     {
       provide: 'MyChannelRepository',
@@ -26,11 +33,22 @@ import { ChannelUsersRepository } from '../repositories';
       provide: 'MyChannelUsersRepository',
       useClass: ChannelUsersRepository
     },
-    { 
-      provide: APP_PIPE, 
-      useClass: ValidationPasswordPipe, 
-    }
+    ValidationPasswordPipe, 
+    /********************** GUARD *************/
+    ChannelExistsGuard,
+    ChannelRolesGuard,
+    UserInChannelGuard,
+    UserNotInChannelGuard
   ],
   controllers: [ChannelController]
 })
-export class ChannelModule {}
+export class ChannelModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(ValidationPasswordMiddleware)
+      .forRoutes(
+        { path: 'channels', method: RequestMethod.POST },
+        { path: 'channels/:id', method: RequestMethod.PUT },
+    );
+  }
+}

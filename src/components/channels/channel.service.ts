@@ -9,16 +9,20 @@ import { ChannelUserRole } from './types/channel-user-roles';
 import { IChannelUsersRepository } from '../repositories/repositories_interfaces';
 import { ReturnedChannelDto } from './dto/returned-channel.dto';
 import { plainToClass } from 'class-transformer';
+import { UpdateChannelDto } from './dto/update-channel.dto';
+import { ChannelUsersService } from './channel-users.service';
 
 
 @Injectable()
 export class ChannelService {
 
     constructor(@Inject('MyChannelRepository') private readonly channelRepository: IChannelRepository,
-                @Inject('MyChannelUsersRepository') private readonly channelUsersRepository: IChannelUsersRepository,
-                private readonly userService : UserService,
+                private readonly ChannelUsersService: ChannelUsersService,
                 private readonly passwordService: PasswordService) {}
 
+    async getChannelById(channelId : number) : Promise <Channel | undefined> {
+        return (this.channelRepository.findOneById(channelId));
+    }
 
     // get list public / protected groups
     async getChannels() : Promise< Channel[] | undefined > {
@@ -31,7 +35,7 @@ export class ChannelService {
         channel = {...channel, ...createChannelDto, owner : user};
         channel.password = await this.passwordService.hashPassword(channel.password);
         let createdChannel : Channel = await this.channelRepository.create(channel);
-        await this.channelUsersRepository.addUserToChannel(createdChannel, user, ChannelUserRole.owner);
+        await this.ChannelUsersService.addUserToChannel(user, channel, ChannelUserRole.owner);
         return (plainToClass(ReturnedChannelDto, createdChannel));
     };
 
@@ -45,25 +49,27 @@ export class ChannelService {
         return (this.channelRepository.getOwnerChannels(owner));
     };
 
-
-    async joinChannel(){};
-
-
     
-    async deleteChannel(channelId : number,  userId : number)   {
-        let channel : Channel = await  this.channelRepository.findOneByIdWithRelations(channelId, ['owner']);
-        console.log(channel);
-        if (!channel)
-            throw  new NotFoundException('Channel Not Found');
-        if (channel.owner.id != userId)
-            throw  new ForbiddenException("You Are not authorize to delete this channel")
+    async deleteChannel(channel : Channel)   {
         await this.channelRepository.remove(channel);
     };
 
 
-    async updateChannel(){
-
+    async updateChannel(channel : Channel, updateChannelDto : UpdateChannelDto) : Promise< ReturnedChannelDto | undefined> {
+        if (updateChannelDto.password)
+            updateChannelDto.password = await this.passwordService.hashPassword(updateChannelDto.password);
+        let updatedChannel : Channel = await this.channelRepository.save({
+            ...channel,
+            ...updateChannelDto // updated fields
+        });
+        return (plainToClass(ReturnedChannelDto, updatedChannel));
     };
+
+
+    async joinChannel(user : User, channel : Channel) {
+        return (this.ChannelUsersService.addUserToChannel(user, channel));
+    };
+
 
 
     async changeMemberRole(){};
@@ -71,7 +77,7 @@ export class ChannelService {
 
     async  kickMember(){};
 
-    async blockMember(){};
+    async  blockMember(){};
 
 
     async  muteMember(){};

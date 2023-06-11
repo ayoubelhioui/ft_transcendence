@@ -25,6 +25,15 @@ abstract class ABaseRepository<T> implements IBaseRepository<T,DeleteResult>
         return (await this.entity.findOne(findOptions));
     }
 
+    async findOneByCondition(condition: any): Promise<T | undefined>
+    {
+        const findOptions: FindOneOptions<T> = {
+            where: condition
+        };
+        return (await this.entity.findOne(findOptions));
+    }
+
+
     async findOneByIdWithRelations(id: any, relations : any): Promise< T | undefined > 
     {
         const findOptions: FindOneOptions<T> = {

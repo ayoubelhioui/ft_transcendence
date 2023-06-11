@@ -6,6 +6,8 @@ interface IBaseRepository<T,deleteResult = any>
 
     findOneById(id: any): Promise<T | undefined>;
 
+    findOneByCondition(condition: any): Promise<T | undefined>;
+
     findOneByIdWithRelations(id: any, relations : any): Promise<T | undefined>;
     
 
