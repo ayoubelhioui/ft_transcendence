@@ -7,6 +7,11 @@ export default {
   theme: {
 
     extend: {
+      gridTemplateRows: {
+
+        // Complex site-specific row configuration
+        'layout': '650px minmax(650px, 1fr)',
+      },
       backgroundColor: {
         'custom-blue': 'rgba(9, 9, 121, 0.3)',
         'custom-bg-icon': 'rgba(217, 217, 217, 0.1)',

@@ -1,6 +1,6 @@
 // import { useState, useEffect, useContext } from 'react'
 
-import { Navbar, HomePage, Profile, SignIn } from './components/index'
+import { Navbar, HomePage, Profile, SignIn, Chat } from './components/index'
 
 import { authContext } from './components/context/useContext';
 
@@ -36,18 +36,18 @@ const App = () => {
     <div className=' h-[1020px]'>
       <div className=' w-full flex absolute top-1/2 -translate-y-1/2 max-sm:top-0 max-sm:-translate-y-0'>
 
-        {/* <Navbar />
+        <Navbar />
         <Routes>
-          <Route path='/' element={(<Profile />)}/>
-        </Routes> */}
+          <Route path='/' element={(<Chat />)}/>
+        </Routes>
 
-        {authApp.isAuthenticated && <Navbar />}
+        {/* {authApp.isAuthenticated && <Navbar />}
 
         <Routes>
           <Route path='/' element={(<SignIn />)}/>
           <Route path='/Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
           <Route path='/Profile' element={(<ProtectedRoute> <Profile /> </ProtectedRoute>)}/>
-        </Routes>
+        </Routes> */}
       </div>
     </div>
   )

@@ -128,12 +128,21 @@ h1 {
   margin: 6rem 2.5rem 0;
 }
 
+
 .top_1 {
   background: rgba(10, 73, 159, 0.2);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(15px);
   min-height: calc(250px - 2rem);
+}
+
+.top_2 {
+  background: rgba(3, 56, 130, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  min-height: 790px;
 }
 
 .align {
