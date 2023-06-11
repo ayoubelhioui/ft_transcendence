@@ -7,6 +7,9 @@ export default {
   theme: {
 
     extend: {
+      gridTemplateColumns: {
+        'column-layout': 'repeat(auto-fit, minmax(320px, 1fr))',
+      },
       gridTemplateRows: {
 
         // Complex site-specific row configuration
