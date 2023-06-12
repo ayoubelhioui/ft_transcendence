@@ -10,7 +10,7 @@ export class AuthService{
     private payload: object;
     private user: object;
     async authenticateUser(userDto: UserDto): Promise<object> {
-        if (!this.findUserById(userDto.IntraId))
+        // if (!this.findUserById(userDto.IntraId))
             this.userService.createUser(userDto);
         this.payload = { sub: userDto.IntraId, username: userDto.username };
         return (await this.generateAuthTokens());
@@ -46,8 +46,8 @@ export class AuthService{
 
     async generateAuthTokens(): Promise<object>{
         return ({
-            refresh_token: await this.generateNewToken('10m'),
-            access_token: await this.generateNewToken('10d'),
+            access_token: await this.generateNewToken('10m'),
+            refresh_token: await this.generateNewToken('10d'),
         });
     }
 }
