@@ -21,8 +21,12 @@ interface IBaseRepository<T,deleteResult = any>
     findAllWithRelations(relations : any): Promise<T[] | undefined>;
 
 
-    remove(criteria : Object): Promise<deleteResult>;
+    // remove(criteria : Object): Promise<deleteResult>;
 
+
+    remove(entity: T): Promise<T>; 
+
+    delete(criteria: Object): Promise<deleteResult>;
     
     save(entity: T | any) : Promise< T | undefined>;
 

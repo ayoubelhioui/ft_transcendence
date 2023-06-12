@@ -69,7 +69,11 @@ abstract class ABaseRepository<T> implements IBaseRepository<T,DeleteResult>
         });
     }
     
-    async remove(criteria: any): Promise<DeleteResult> {
+    async remove(entity: T): Promise<T> {
+        return await this.entity.remove(entity);
+    }
+
+    async delete(criteria: any): Promise<DeleteResult> {
         return await this.entity.delete(criteria);
     }
     
