@@ -2,11 +2,14 @@ import UserRepository from './user.repository';
 import ChannelUsersRepository from './channel-users.repository';
 import ChannelRepository from './channel.repository';
 import FriendsRepository from './friends.repository';
-import { BlockedUsers } from 'src/database/entities';
+import BlockedUsersRepository from './blocked-users.repository';
+import { NotificationRepository } from './notification.repository';
+
 export {
     UserRepository,
     ChannelUsersRepository,
     ChannelRepository,
     FriendsRepository,
-    BlockedUsers
+    BlockedUsersRepository,
+    NotificationRepository
 };
