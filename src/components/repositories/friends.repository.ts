@@ -22,10 +22,16 @@ async getFriendsOfId(userId : number) : Promise <Friends[]>
 {
     return await(
         this.findByCondition({
-            where : {
-                id : userId,
-                status : friendRequestStatus.accepted,
-            }
+            where : [
+                {
+                    sender : userId,
+                    status : friendRequestStatus.accepted,
+                },
+                {
+                    receiver : userId,
+                    status : friendRequestStatus.accepted,
+                }
+            ]
         })
     );
 }
@@ -36,7 +42,7 @@ async getFriendRequestOfId(userId : number) : Promise <Friends[]>
     return await(
         this.findByCondition({
             where : {
-                id : userId,
+                receiver : userId,
                 status : friendRequestStatus.pending,
             }
         })
