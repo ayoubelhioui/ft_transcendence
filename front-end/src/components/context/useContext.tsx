@@ -57,11 +57,8 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     
     const checkAuth = async () => {
         try {
-            console.log("here");
-
             const responseData = await axios.get("http://localhost:3000/auth/intra");
             const { tokens, userInfo } = responseData.data;
-            console.log("here");
             
             // Need To Set UserInfo ` avatar, name, wins, losses ... `
 
@@ -110,9 +107,9 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
         const checkAuthentication = async () => {
             try {
                 // console.log(document.cookie);
-                const accessToken = Cookies.get('tokens');
-
-                console.log(accessToken?.split(';'));
+                // const jsonString = '{"name": "John", "age": 30}';
+                const accessToken = Cookies.get('access_token');
+                const refreshToken = Cookies.get('refresh_token');
 
                 if (!accessToken)
                 {
@@ -122,18 +119,17 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                     <Navigate to="/" replace />
                     return ;
                 }
-
+                // axios.defaults.headers.common['Cookie'] = accessToken;
                 const response = await axios.get('http://localhost:3000/auth/user', {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
-                }); 
+                });
 
-                console.log(response.data);
+                console.log(response.data.user);
                 
                 setIsAuthenticated(true);
-                
-                <Navigate to="/Home" replace />
+                // <Navigate to="/Home" replace />
                 // if (response.data.status === 200)
                 // {
                 //     setIsAuthenticated(true);
@@ -163,4 +159,18 @@ export const authContext = () => useContext(AuthContext);
 
 // auth/callback --> the user has no cookie
 //auth/intra ---> the user has a cookie
-//auth/refresh-token --> the user access_token has expired, and need a new access_token via refresh_token.
+//auth/refresh-token --> the user access_token has expired, and need a new access_token via refresh_token.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
