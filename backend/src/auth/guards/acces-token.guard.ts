@@ -8,12 +8,11 @@ export class TokenValidationGuard implements CanActivate {
   constructor(private jwtService: JwtService, private authService: AuthService){}
   private payload: any;
   private token: string;
-
+  private user: object;
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     try {
       this.token = request.headers.authorization.replace('Bearer ', '');
-      // console.log(request.headers.authorization);
         this.payload = await this.jwtService.verifyAsync(this.token, {
           secret: process.env.TOKEN_SECRET, 
       });
@@ -21,14 +20,11 @@ export class TokenValidationGuard implements CanActivate {
     catch (err) {
       return (false); 
     }
-    // if ((this.authService.isTokenInBlacklist(this.token)) || !(this.authService.findUserById(this.payload.sub)))
-    // {
-    //   console.log('helloWorld');
-
-    //   return (false);
-    // }
-    request['user'] = this.payload;
-    console.log('im here');
+    this.user = await this.authService.findUserById(this.payload.sub);
+    if (!(this.authService.isTokenInBlacklist(this.token)) || !this.user)
+      return (false);
+    console.log(this.user);
+    request['user'] = this.user;
     return (true);
   }
 }

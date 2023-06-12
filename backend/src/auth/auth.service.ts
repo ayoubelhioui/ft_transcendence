@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt"
 import { TokensDto } from "src/dto/tokens.dto";
 import { UserDto } from "src/dto/user.dto";
+import TokenBlacklist from "src/entities/token_blacklist";
 import { UserService } from "src/user/user.service";
 
 @Injectable()
@@ -10,13 +11,13 @@ export class AuthService{
     private payload: object;
     private user: object;
     async authenticateUser(userDto: UserDto): Promise<object> {
-        // if (!this.findUserById(userDto.IntraId))
+        if (!await this.findUserById(userDto.IntraId))
             this.userService.createUser(userDto);
         this.payload = { sub: userDto.IntraId, username: userDto.username };
         return (await this.generateAuthTokens());
     }
 
-    async generateNewToken(expiringTime: string) : Promise<string> {
+    async generateNewToken(expiringTime: string) : Promise<string | undefined> {
         return (
             await this.jwtService.signAsync(this.payload, {
                 expiresIn: expiringTime,
@@ -34,7 +35,7 @@ export class AuthService{
         await this.userService.addTokenToBlacklist(refreshToken);
     }
 
-    async isTokenInBlacklist(token: string): Promise<boolean> {
+    async isTokenInBlacklist(token: string): Promise<TokenBlacklist | undefined> {
         return (await this.userService.accessTokenInBlacklist(token));
     }
 

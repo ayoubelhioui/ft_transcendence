@@ -32,7 +32,6 @@ export class AuthController{
     @Get('callback')
     async singUp(@Request() req, @Response() res){
         const tokens = await this.authService.authenticateUser(req.user);
-        console.log(tokens['access_token']);
         res.cookie('access_token', tokens['access_token']);
         res.cookie('refresh_token', tokens['refresh_token']);
         res.redirect("http://localhost:5000/Home");
