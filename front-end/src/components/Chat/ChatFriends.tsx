@@ -5,7 +5,7 @@ import { AiOutlinePlusCircle as PlusCircle } from 'react-icons/ai'
 const UserFriends = () => {
   return (
     <div className="flex">
-        htgdgrf
+        
     </div>
   )
 }
@@ -13,7 +13,7 @@ const UserFriends = () => {
 const ChannelsGroup = () => {
   return (
     <div className="flex">
-      df
+      
     </div>
   )
 }
@@ -30,9 +30,16 @@ const ChatFriends = () => {
                 <PlusCircle size={30} className='text-white'/>
             </button>
         </div>
-        <div className="flex mt-4">
+        <div className="flex mt-4 flex-col">
+
+            <div className="flex text-white justify-around items-center w-full border-solid border-y-[1px] border-y-gray-500 text-xl text-center">
+              <h2 className=' hover:bg-white hover:text-blue-950 cursor-pointer ease duration-300 p-6 w-full'>Friends</h2>
+              {/* <span ></span> */}
+              <h2 className='hover:bg-white hover:text-blue-950 cursor-pointer ease duration-300 p-6 w-full'>Channels</h2>
+            </div>
+
             <UserFriends />
-            <ChannelsGroup />
+            {/* <ChannelsGroup /> */}
         </div>    
     </div>
   )

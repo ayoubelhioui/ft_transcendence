@@ -35,7 +35,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
 
     const refreshAccessToken = async () => {
         try {
-            const response = await axios.get("http://localhost:3000/auth/refresh-token", {
+            const response = await axios.get("http://localhost:5000/auth/refresh-token", {
                 headers: {
                   Authorization: `Bearer ${refreshToken}`,
             }, });
@@ -56,7 +56,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     const checkAuth = async () => {
         try {
             console.log("here");
-            const responseData = await axios.get("http://localhost:3000/auth/callback");
+            const responseData = await axios.get("http://localhost:5000/auth/callback");
 
             const { tokens, userInfo } = responseData.data;
             
