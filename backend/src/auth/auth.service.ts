@@ -8,17 +8,12 @@ import { UserService } from "src/user/user.service";
 export class AuthService{
     constructor(private jwtService: JwtService, private userService: UserService){}
     private payload: object;
-    
+    private user: object;
     async authenticateUser(userDto: UserDto): Promise<object> {
+        if (!this.findUserById(userDto.IntraId))
+            this.userService.createUser(userDto);
         this.payload = { sub: userDto.IntraId, username: userDto.username };
-        this.userService.createUser(userDto);
-        return ({
-            tokens: {
-                refresh_token: await this.generateNewToken('1m'),
-                access_token: await this.generateNewToken('1m'),
-            },
-            userDto,
-        });
+        return (await this.generateAuthTokens());
     }
 
     async generateNewToken(expiringTime: string) : Promise<string> {
@@ -30,7 +25,7 @@ export class AuthService{
         );
     }
 
-    async findUserById(intraId: number) : Promise<object> {
+    async findUserById(intraId: number) : Promise<object | undefined> {
         return (await this.userService.findUserById(intraId));
     }
 
@@ -49,5 +44,11 @@ export class AuthService{
         return (emailVerificationCode);
     }
 
+    async generateAuthTokens(): Promise<object>{
+        return ({
+            refresh_token: await this.generateNewToken('10m'),
+            access_token: await this.generateNewToken('10d'),
+        });
+    }
 }
 

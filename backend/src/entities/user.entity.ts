@@ -29,6 +29,9 @@ class User{
     @Column()
     public winrate: number;
 
+    @Column()
+    public two_factors_enabled: boolean;
+
     @ManyToMany(() => Achievement, (achievement) => achievement.users)
     public achievements: Achievement[];
 

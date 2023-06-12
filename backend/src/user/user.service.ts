@@ -23,9 +23,10 @@ export class UserService{
         createUserDto.winrate = 0;
         createUserDto.wins = 0;
         createUserDto.loss = 0;
+        createUserDto.two_factors_enabled = false;
     }
 
-    async findUserById(IntraId: number): Promise<User>{
+    async findUserById(IntraId: number): Promise<User | undefined>{
         const user = await this.userRepository.findOne({
             where : {
                 IntraId: IntraId,
