@@ -42,8 +42,8 @@ export class UserService{
         await this.tokenBlacklistRepository.save(newEntity);
     }
 
-    async accessTokenInBlacklist(token: string): Promise<boolean>{
-        return !!(await this.tokenBlacklistRepository.findOne({
+    async accessTokenInBlacklist(token: string): Promise<TokenBlacklist | undefined> {
+        return (await this.tokenBlacklistRepository.findOne({
             where : {
                 Token: token,
             },
