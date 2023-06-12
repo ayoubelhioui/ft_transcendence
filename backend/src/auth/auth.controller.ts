@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Request, Post, Body } from "@nestjs/common";
+import { Controller, Get, UseGuards, Request, Post, Body, Response, Redirect, Header } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthGuard } from '@nestjs/passport';
 import { TokenValidationGuard } from "./guards/acces-token.guard";
@@ -9,7 +9,7 @@ export class AuthController{
 
     @Post('logout')
     async logOut(@Body() body){ 
-        await this.authService.removeTokens(body.refreshToken, body.accessToken); 
+        await this.authService.removeTokens(body.refreshToken, body.accessToken);
     }
 
     @Get('refresh-token')
@@ -20,18 +20,21 @@ export class AuthController{
         });
     }
 
-    @Get('intra')
+    @Get('user')
     @UseGuards(TokenValidationGuard)
     singIn(@Request() req){
-        return ({
+        return ({ 
             user: req.user
         });
     }
-
+    
     @UseGuards(AuthGuard('42'))
     @Get('callback')
-    async singUp(@Request() req): Promise<object>{
-        console.log('im here');
-        return (await this.authService.authenticateUser(req.user));
+    async singUp(@Request() req, @Response() res){
+        const tokens  = await this.authService.authenticateUser(req.user);
+        res.cookie('tokens', {
+            "access_token": "aksdjfajsdklfjasdf"
+        }); 
+        res.redirect("http://localhost:5000/Home");
     }
 }

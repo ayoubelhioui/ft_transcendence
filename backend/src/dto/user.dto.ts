@@ -7,15 +7,18 @@ export class UserDto{
     @IsNotEmpty()
     username: string;
 
-    // @IsNotEmpty()    
+    @IsNotEmpty()    
     avatar: string;
 
-    // @IsNotEmpty()    
+    @IsNotEmpty()    
     wins: number;
 
-    // @IsNotEmpty()    
+    @IsNotEmpty()    
     loss: number;
 
-    // @IsNotEmpty()
+    @IsNotEmpty()
     winrate: number;
+
+    @IsNotEmpty()
+    two_factors_enabled: boolean;
 }
