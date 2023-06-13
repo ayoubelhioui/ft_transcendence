@@ -10,10 +10,6 @@ import { NotificationRepository } from '../repositories';
       provide : "NotificationRepository",
       useClass : NotificationRepository
     },
-    {
-      provide : "NotificationRepository",
-      useClass : NotificationRepository
-    }
   ],
   controllers: [NotificationController]
 })

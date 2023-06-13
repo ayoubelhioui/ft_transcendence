@@ -4,7 +4,6 @@ import { Injectable } from "@nestjs/common";
 import { Notification, User } from 'src/database/entities';
 import ABaseRepository from "./repositories_interfaces/base/base.repository.abstract";
 import { INotificationRepository } from "./repositories_interfaces";
-import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 
 
 
@@ -37,8 +36,5 @@ export class NotificationRepository extends ABaseRepository<Notification> implem
     });
   }
 
-  async update(criteria : any,  partialEntity: QueryDeepPartialEntity<Notification>)
-  {
-    return this.entity.update(criteria, partialEntity);
-  }
+
 }

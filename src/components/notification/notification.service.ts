@@ -6,7 +6,6 @@ import { INotificationRepository, IUserRepository } from '../repositories/reposi
 @Injectable()
 export class NotificationService {
     constructor(
-        @Inject("UserRepository") private readonly userRepository : IUserRepository,
         @Inject("NotificationRepository") private readonly notificationRepository : INotificationRepository
         ){}
 
@@ -27,10 +26,14 @@ export class NotificationService {
 
     };
 
+    //check i notification exits guard?
     async setNotificationSeen(notification :Notification) 
     {
-        notification.seen = true;
-        return this.notificationRepository.update(notification,{seen : true});
+        return this.notificationRepository.update({
+            where :{
+                id : notification.id
+            }
+        },{seen : true});
     };
 
 

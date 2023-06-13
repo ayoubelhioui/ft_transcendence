@@ -32,6 +32,7 @@ interface IBaseRepository<T,deleteResult = any>
 
 
     preload(object : DeepPartial<T>) :  Promise<T | undefined>;
+    update(criteria : any,  partialEntity: any);
 }
 
 

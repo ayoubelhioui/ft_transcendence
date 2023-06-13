@@ -6,7 +6,6 @@ import { Notification, User } from 'src/database/entities';
 interface INotificationRepository extends IBaseRepository<Notification>
 {
     getUserNotifications(user : User, date? : Date) : Promise < Notification[] >;
-    update(criteria : any,  partialEntity: any)
 
 }
 

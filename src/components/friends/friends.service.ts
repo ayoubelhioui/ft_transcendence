@@ -16,7 +16,7 @@ export class FriendsService {
     constructor(
         @Inject("FriendsRepository") private readonly friendsRepository : IFriendsRepository,
         @Inject("UserRepository") private readonly userRepository : IUserRepository,
-        @Inject("BlockedUsers") private readonly blockedUsersRepository : IBlockedUsersRepository,
+        @Inject("BlockedUsersRepository") private readonly blockedUsersRepository : IBlockedUsersRepository,
         ){}
 
 

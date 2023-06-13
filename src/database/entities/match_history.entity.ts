@@ -12,10 +12,10 @@ class MatchHistory{
     @ManyToOne(() => User, (user) => user.matchHistoryPlayer2, {onDelete: 'CASCADE'})
     public player2: User;
 
-    @Column()
+    @Column({nullable : true})
     public player1_score: number;
 
-    @Column()
+    @Column({nullable : true})
     public player2_score: number;
 
     //if null then game is live

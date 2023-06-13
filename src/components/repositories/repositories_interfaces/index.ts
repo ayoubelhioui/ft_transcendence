@@ -4,11 +4,13 @@ import IChannelUsersRepository from './channel-users.repository.interface';
 import IFriendsRepository from './friends.repository.interface';
 import IBlockedUsersRepository from './blocked-users.repository.interface';
 import INotificationRepository from './notification.repository.interface';
+import IGamesRepository from './game.repository.interface';
 export {
     IUserRepository,
     IChannelRepository,
     IChannelUsersRepository,
     IFriendsRepository,
     IBlockedUsersRepository,
-    INotificationRepository
+    INotificationRepository,
+    IGamesRepository
 };

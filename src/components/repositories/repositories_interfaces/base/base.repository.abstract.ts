@@ -86,7 +86,11 @@ abstract class ABaseRepository<T> implements IBaseRepository<T,DeleteResult>
     {
         return (this.entity.preload(object));
     }
-
+    
+    async update(criteria : any,  partialEntity: any)
+    {
+      return this.entity.update(criteria, partialEntity);
+    }
 }
 
 

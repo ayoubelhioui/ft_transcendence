@@ -4,6 +4,7 @@ import ChannelRepository from './channel.repository';
 import FriendsRepository from './friends.repository';
 import BlockedUsersRepository from './blocked-users.repository';
 import { NotificationRepository } from './notification.repository';
+import { GamesRepository } from './game.repository';
 
 export {
     UserRepository,
@@ -11,5 +12,6 @@ export {
     ChannelRepository,
     FriendsRepository,
     BlockedUsersRepository,
-    NotificationRepository
+    NotificationRepository,
+    GamesRepository
 };
