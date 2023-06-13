@@ -4,7 +4,7 @@ import { Navbar, HomePage, Profile, SignIn, Chat } from './components/index'
 
 import { authContext } from './components/context/useContext';
 
-import { Navigate } from "react-router-dom";
+import { Navigate, useRouteError } from "react-router-dom";
 
 import React from 'react';
 
@@ -28,6 +28,20 @@ export const ProtectedRoute: React.FC<{children: any}> = ( { children } ) => {
   )
 }
 
+function NotFound() {
+  const error: any = useRouteError();
+
+  return (
+    <div className='text-2xl'>
+      <h1 className='text-center'>Oops!</h1>
+      <p className='text-center'>Sorry, an unexpected error has occurred.</p>
+      <p>
+        <i>{error.statusText || error.message}</i>
+      </p>
+    </div>
+  );
+}
+
 
 const App = () => {
   const authApp = authContext();
@@ -44,9 +58,11 @@ const App = () => {
         {authApp.isAuthenticated && <Navbar />}
 
         <Routes>
-          <Route path='/' element={(<SignIn />)}/>
+          {!authApp.isAuthenticated ? <Route path='/' element={(<SignIn />)}/> : <Route path='/Home' element={(<HomePage />)}/> }
+          
           <Route path='/Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
           <Route path='/Profile' element={(<ProtectedRoute> <Profile /> </ProtectedRoute>)}/>
+          <Route path='*' element={(<NotFound />)}/>
         </Routes>
       </div>
     </div>
