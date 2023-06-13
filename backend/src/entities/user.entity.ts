@@ -59,7 +59,7 @@ class User{
 
     /************************************************************/
     @OneToMany(() => UsersMuted, (userMuted) => userMuted.user)
-    usersMuted: UsersMuted[];
+    public usersMuted: UsersMuted[];
 
 
     /************************************************************/

@@ -22,18 +22,29 @@ export class AuthController{
 
     @Get('user')
     @UseGuards(TokenValidationGuard)
-    singIn(@Request() req){
+    singIn(@Request() req) : object{
         return ({ 
             user: req.user
         });
     }
     
+    @Post('verify-two-factors')
+    async verifyTwoFactors(@Body() body, @Response() res) {
+        await this.authService.twoFactors(body.token, body.userEmail);
+    }
+
+    @Post('two-factors')
+    async twoFactorsAuth(@Body() body) : Promise<string>{
+        return (await this.authService.mailingUser(body.userEmail));
+    }
+
     @UseGuards(AuthGuard('42'))
     @Get('callback')
     async singUp(@Request() req, @Response() res){
-        const tokens = await this.authService.authenticateUser(req.user);
-        res.cookie('access_token', tokens['access_token']);
-        res.cookie('refresh_token', tokens['refresh_token']);
-        res.redirect("http://localhost:5000/Home");
+        let user = await this.authService.isUserAlreadyExist(req.user);
+        if (user.two_factors_enabled)
+            res.redirect('http://localhost:5000/two-factors');
+        else
+            await this.authService.authenticate(req.user, res);
     }
 }

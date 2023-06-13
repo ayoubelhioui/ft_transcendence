@@ -32,10 +32,4 @@ const ENV_PATH : string = './src/.env';
 })
 
 
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(cookieParser())
-      .forRoutes('*');
-  }
-}
+export class AppModule{}
