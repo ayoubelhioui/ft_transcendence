@@ -15,11 +15,8 @@ export class AuthService{
     async isUserAlreadyExist(userDto: UserDto){
         this.userInfo = await this.findUserById(userDto.IntraId)
         if (!this.userInfo)
-            this.userInfo = await this.userService.createUser(userDto); 
+            this.userInfo = await this.userService.createUser(userDto);
         return (this.userInfo);
-        // return (false);
-        // this.payload = { sub: userDto.IntraId, username: userDto.username };
-        // return (await this.generateAuthTokens());
     }
 
     async authenticate(userDto: UserDto, res: any) {
@@ -29,6 +26,7 @@ export class AuthService{
         res.cookie('refresh_token', tokens['refresh_token']);
         res.redirect('http://localhost:5000/Home');
     }
+    
     async generateNewToken(expirationTime: string) : Promise<string | undefined> {
         return (
             await this.jwtService.signAsync(this.payload, {
@@ -51,11 +49,10 @@ export class AuthService{
         return (await this.userService.accessTokenInBlacklist(token));
     }
 
-    async mailingUser(userMail: string): Promise<string> {
-        this.payload = { sub: userMail };
+    async mailingUser(userEmail: string) {
+        this.payload = { sub: userEmail };
         const emailVerificationCode: string = await this.generateNewToken('3m');
-        await this.userService.sendEmail(emailVerificationCode, userMail);
-        return (emailVerificationCode);
+        await this.userService.sendEmail(emailVerificationCode, userEmail);
     }
 
     async generateAuthTokens(): Promise<object>{

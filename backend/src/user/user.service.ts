@@ -49,7 +49,6 @@ export class UserService{
     }
 
     async sendEmail(emailVerificationCode: string, userMail: string){
-        console.log(userMail + "\n " + emailVerificationCode);
          const transporter = await nodemailer.createTransport({
             service: 'outlook',
             auth: {
