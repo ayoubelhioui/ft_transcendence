@@ -11,7 +11,7 @@ class UsersMuted{
     @ManyToOne(() => Channel, (channel) => channel.usersMuted, {onDelete: 'CASCADE'})
     channel : Channel;
 
-    @ManyToOne(() => User, (user) => user.usersMuted, {onDelete: 'CASCADE'})
+    @ManyToOne(() => User, (user) => user.channelsMuted, {onDelete: 'CASCADE'})
     user : User;
 
     @Column()

@@ -9,10 +9,9 @@ export class GameService {
 
     
     constructor(
-        @Inject("UserRepository") private readonly userRepository : IUserRepository,
-        @Inject("GamesRepository") private readonly gamesRepository : IGamesRepository,
-        private friendsService: FriendsService
-        
+        @Inject("MyUserRepository") private readonly userRepository : IUserRepository,
+        @Inject("MyGamesRepository") private readonly gamesRepository : IGamesRepository,
+        private readonly friendsService: FriendsService
         ){}
     
     //user exists guard
@@ -57,21 +56,21 @@ export class GameService {
         })
         return (existingGame);
     }
-    //player2 exists guard
-    async joinGame(player2: User,  token : string){
+    // //player2 exists guard
+    // async joinGame(player2: User,  token : string){
 
-        const game = await this.gamesRepository.findOneByCondition({
-            where:{token, match_time_end: IsNull() } 
-        })
-        if(!game)
-            throw new NotFoundException("game finished Or doesn't exist")
-        const accessible = await this.friendsService.blocking_exists(game.player1,player2);
-        if(!accessible)
-            throw new UnauthorizedException("user innacessible");
-        game.player2 = player2;
-        return await this.gamesRepository.save(game);
+    //     const game = await this.gamesRepository.findOneByCondition({
+    //         where:{token, match_time_end: IsNull() } 
+    //     })
+    //     if(!game)
+    //         throw new NotFoundException("game finished Or doesn't exist")
+    //     const accessible = await this.friendsService.blocking_exists(game.player1,player2);
+    //     if(!accessible)
+    //         throw new UnauthorizedException("user innacessible");
+    //     game.player2 = player2;
+    //     return await this.gamesRepository.save(game);
 
-    }
+    // }
 
     //user exists?
     async get_game_link(user: User) : Promise <string>

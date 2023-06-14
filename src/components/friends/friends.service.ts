@@ -14,9 +14,9 @@ import { DeleteResult } from 'typeorm';
 export class FriendsService {
 
     constructor(
-        @Inject("FriendsRepository") private readonly friendsRepository : IFriendsRepository,
-        @Inject("UserRepository") private readonly userRepository : IUserRepository,
-        @Inject("BlockedUsersRepository") private readonly blockedUsersRepository : IBlockedUsersRepository,
+        @Inject("MyFriendsRepository") private readonly friendsRepository : IFriendsRepository,
+        @Inject("MyUserRepository") private readonly userRepository : IUserRepository,
+        @Inject("MyBlockedUsersRepository") private readonly blockedUsersRepository : IBlockedUsersRepository,
         ){}
 
 

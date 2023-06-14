@@ -3,19 +3,24 @@ import { FriendsService } from './friends.service';
 import { FriendsController } from './friends.controller';
 import { FriendRequestsController } from './friend_requests.controller';
 import { BlockedUsersRepository, FriendsRepository, UserRepository } from '../repositories';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { BlockedUsers, Friends, User } from 'src/database/entities';
 
 
 @Module({
+    imports: [
+      TypeOrmModule.forFeature([User, BlockedUsers, Friends]),
+    ],
   providers: [FriendsService, {
-    provide : "FriendsRepository",
+    provide : "MyFriendsRepository",
     useClass : FriendsRepository
   },
   {
-    provide : "UserRepository",
+    provide : "MyUserRepository",
     useClass : UserRepository
   },
   {
-    provide : "BlockedUsersRepository",
+    provide : "MyBlockedUsersRepository",
     useClass : BlockedUsersRepository
   }
 ],

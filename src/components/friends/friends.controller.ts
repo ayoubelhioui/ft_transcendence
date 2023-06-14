@@ -1,7 +1,7 @@
 import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { FriendsService } from './friends.service';
-import { GetUser } from 'src/global/decorators/default-user.decorator';
 import { User } from 'src/database/entities';
+import { GetUser } from '../user/decorators/user.decorator';
 
 @Controller('users/me/friends')
 export class FriendsController {

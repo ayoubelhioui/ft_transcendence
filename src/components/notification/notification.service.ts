@@ -6,7 +6,7 @@ import { INotificationRepository, IUserRepository } from '../repositories/reposi
 @Injectable()
 export class NotificationService {
     constructor(
-        @Inject("NotificationRepository") private readonly notificationRepository : INotificationRepository
+        @Inject("MyNotificationRepository") private readonly notificationRepository : INotificationRepository
         ){}
 
     async createNotification(notificationDto :NotificationDto, sender: User ,receiver: User)
