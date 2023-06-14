@@ -1,7 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt"
+import { env } from "process";
 import { TokensDto } from "src/dto/tokens.dto";
 import { UserDto } from "src/dto/user.dto";
+import { User } from "src/entities";
 import TokenBlacklist from "src/entities/token_blacklist";
 import { UserService } from "src/user/user.service";
 
@@ -9,18 +11,26 @@ import { UserService } from "src/user/user.service";
 export class AuthService{
     constructor(private jwtService: JwtService, private userService: UserService){}
     private payload: object;
-    private user: object;
-    async authenticateUser(userDto: UserDto): Promise<object> {
-        if (!await this.findUserById(userDto.IntraId))
-            this.userService.createUser(userDto);
-        this.payload = { sub: userDto.IntraId, username: userDto.username };
-        return (await this.generateAuthTokens());
+    private userInfo: any;
+    async isUserAlreadyExist(userDto: UserDto){
+        this.userInfo = await this.findUserById(userDto.IntraId)
+        if (!this.userInfo)
+            this.userInfo = await this.userService.createUser(userDto);
+        return (this.userInfo);
     }
 
-    async generateNewToken(expiringTime: string) : Promise<string | undefined> {
+    async authenticate(userDto: UserDto, res: any) {
+        this.payload = { sub: userDto.IntraId, username: userDto.username };
+        const tokens = await this.generateAuthTokens();
+        res.cookie('access_token', tokens['access_token']);
+        res.cookie('refresh_token', tokens['refresh_token']);
+        res.redirect('http://localhost:5000/');
+    }
+    
+    async generateNewToken(expirationTime: string) : Promise<string | undefined> {
         return (
             await this.jwtService.signAsync(this.payload, {
-                expiresIn: expiringTime,
+                expiresIn: expirationTime,
                 secret: process.env.TOKEN_SECRET,
             })
         );
@@ -39,10 +49,10 @@ export class AuthService{
         return (await this.userService.accessTokenInBlacklist(token));
     }
 
-    async mailingUser(userMail: string): Promise<string> {
+    async mailingUser(userEmail: string) {
+        this.payload = { sub: userEmail };
         const emailVerificationCode: string = await this.generateNewToken('3m');
-        await this.userService.sendEmail(emailVerificationCode, userMail);
-        return (emailVerificationCode);
+        await this.userService.sendEmail(emailVerificationCode, userEmail);
     }
 
     async generateAuthTokens(): Promise<object>{
@@ -51,5 +61,15 @@ export class AuthService{
             refresh_token: await this.generateNewToken('10d'),
         });
     }
+
+    async twoFactors(token: string, userEmail: string) {
+        this.payload = await this.jwtService.verifyAsync(token, {
+            secret: process.env.TOKEN_SECRET,
+        });
+        if (userEmail != this.payload['sub'])
+            throw new ForbiddenException;
+    }
+
+
 }
 

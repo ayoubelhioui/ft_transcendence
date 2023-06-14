@@ -44,6 +44,7 @@ export const ProtectedRoute: React.FC<{children: any}> = ( { children } ) => {
 const App = () => {
   const authApp = authContext();
 
+  console.log(authApp.user?.avatar);
 
   return (
     <div className=' h-[1020px]'>

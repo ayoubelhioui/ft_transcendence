@@ -32,4 +32,4 @@ const ENV_PATH : string = './src/.env';
 })
 
 
-export class AppModule {}
+export class AppModule{}
