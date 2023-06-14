@@ -1,12 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryColumn, Timestamp } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryColumn, Timestamp, OneToOne } from 'typeorm';
+import {Channel, User} from './index';
+import { friendRequestStatus } from 'src/global/types';
 
-import {User} from './index';
-
-enum friendRequestStatus{
-	pending,
-	accepted,
-	refused
-}
 
 @Entity()
 class Friends{
@@ -17,10 +12,10 @@ class Friends{
    @Column()
    public status : friendRequestStatus;
 
-   @Column()
+   @Column({/*give it default of date now (of the creation)*/})
    public request_time : Date;
 
-   @Column()
+   @Column({nullable : true})
    public accepted_time : Date;
 
    @ManyToOne(() => User, (user) => user.sentFriends, {onDelete: 'CASCADE'})
@@ -29,6 +24,8 @@ class Friends{
     @ManyToOne(() => User, (user) => user.receivedFriends, {onDelete: 'CASCADE'})
     public receiver: User;
 
+    @OneToOne(() => Channel, (channel) => channel.id , {onDelete: 'CASCADE', nullable : true})
+    channel : Channel;
 }
 
 export default Friends;

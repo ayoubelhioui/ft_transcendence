@@ -1,5 +1,4 @@
 import { DeepPartial } from "typeorm";
-import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 
 interface IBaseRepository<T,deleteResult = any>
 {
@@ -22,20 +21,17 @@ interface IBaseRepository<T,deleteResult = any>
     findAllWithRelations(relations : any): Promise<T[] | undefined>;
 
 
-    remove(entity : T): Promise<T>;
+    remove(entity: T): Promise<T>; 
 
-
-    delete(criteria : Object): Promise<deleteResult>;
-
-
-    update(criteria: any, updatedData: QueryDeepPartialEntity<T>): Promise<any>
-
+    delete(criteria: Object): Promise<deleteResult>;
     
     save(entity: T | any) : Promise< T | undefined>;
 
 
 
     preload(object : DeepPartial<T>) :  Promise<T | undefined>;
+
+    update(criteria : any,  partialEntity: any);
 }
 
 

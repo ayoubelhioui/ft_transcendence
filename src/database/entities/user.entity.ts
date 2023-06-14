@@ -54,7 +54,7 @@ class User{
 
     /************************************************************/
     @OneToMany(() => UsersMuted, (userMuted) => userMuted.user, { cascade: true, onDelete: 'CASCADE' })
-    usersMuted: UsersMuted[];
+    channelsMuted: UsersMuted[];
 
 
     /************************************************************/

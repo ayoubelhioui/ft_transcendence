@@ -14,6 +14,21 @@ class UserRepository extends ABaseRepository<User> implements IUserRepository
   ) {
     super();
   }
+
+  async fetchTwoUsers(user1Id: number, user2Id: number) {
+      const users = await this.entity.createQueryBuilder('MatchHistory')
+        .where('user.id IN (:ids)', { ids: [user1Id, user2Id] })
+        .getMany();
+    
+      const [user1, user2] = users;
+    
+      if (!user1 || !user2) {
+        throw new Error('Invalid sender or receiver ID');
+      }
+      return ({
+          user1,user2
+      })
+  }
 }
 
 export default UserRepository;

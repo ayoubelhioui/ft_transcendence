@@ -1,6 +1,5 @@
 import { DeepPartial, DeleteResult, FindOneOptions, FindOptionsWhere, Repository } from "typeorm";
 import IBaseRepository from "./base.repository.interface";
-import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 
 //TypeOrm abstract base class
 abstract class ABaseRepository<T> implements IBaseRepository<T,DeleteResult>
@@ -70,12 +69,10 @@ abstract class ABaseRepository<T> implements IBaseRepository<T,DeleteResult>
     async remove(entity: T): Promise<T> {
         return await this.entity.remove(entity);
     }
-    
+
     async delete(criteria: any): Promise<DeleteResult> {
         return await this.entity.delete(criteria);
     }
-    
-
 
     async save(entity: T | any) : Promise< T | undefined> {
         return await this.entity.save(entity);
@@ -86,12 +83,10 @@ abstract class ABaseRepository<T> implements IBaseRepository<T,DeleteResult>
         return (this.entity.preload(object));
     }
 
-    async   update(criteria: any, updatedData: QueryDeepPartialEntity<T>): Promise<any>
+    async update(criteria : any,  partialEntity: any)
     {
-        return (this.entity.update(criteria, updatedData));
+      return this.entity.update(criteria, partialEntity);
     }
-
-
 }
 
 
