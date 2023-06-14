@@ -34,21 +34,21 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="flex ml-12 justify-around w-full text-center flex-wrap items-center max-w-[900px] mx-auto max-md:ml-2 max-md:mt-4 max-md:pt-4 max-md:border-t-2 max-md:border-t-slate-400 max-md:border-b-2 max-md:border-b-slate-400 max-md:pb-4">
+        <div className="flex ml-12 justify-around flex-1 flex-wrap max-md:w-full text-center items-center max-w-[900px] mx-auto max-md:ml-2 max-md:mt-4 max-md:pt-4 max-md:border-t-2 max-md:border-t-slate-400 max-md:border-b-2 max-md:border-b-slate-400 max-md:pb-4">
 
           <div className="flex flex-col items-center">
-            <span className='text-3xl'>27</span>
-            <h2 className=' opacity-70 text-2xl'>Wins</h2>
+            <span className='text-3xl max-sm:text-xl'>27</span>
+            <h2 className=' opacity-70 text-2xl max-sm:text-lg'>Wins</h2>
           </div>
           <span className='w-[1px] h-[50px] bg-gray-400  max-md:hidden'></span>
           <div className="flex flex-col items-center">
-            <span className='text-3xl'>13</span>
-            <h2 className=' opacity-70 text-2xl'>Losses</h2>
+            <span className='text-3xl max-sm:text-xl'>13</span>
+            <h2 className=' opacity-70 text-2xl max-sm:text-lg'>Losses</h2>
           </div>
           <span className='w-[1px] h-[50px] bg-gray-400  max-md:hidden'></span>
           <div className="flex flex-col items-center">
-            <span className='text-3xl'>62%</span>
-            <h2 className=' opacity-70 text-2xl'>Win Rate</h2>
+            <span className='text-3xl max-sm:text-xl'>62%</span>
+            <h2 className=' opacity-70 text-2xl max-sm:text-lg'>Win Rate</h2>
           </div>
 
         </div>
