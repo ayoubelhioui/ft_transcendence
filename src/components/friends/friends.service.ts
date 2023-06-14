@@ -20,14 +20,14 @@ export class FriendsService {
         ){}
 
 
-    async getFriends(userId  : number) : Promise <Friends[] | undefined>
+    async getFriends(user  : User) : Promise <Friends[] | undefined>
     {
-        return this.friendsRepository.getFriendsOfId(userId);
+        return this.friendsRepository.getFriendsOfId(user);
     };
 
 
     //only user if both users exists
-    async is_blocked(blocked  : User, blockedBy  : User) : Promise<boolean>
+    async is_blocked_by(blocked  : User, blockedBy  : User) : Promise<boolean>
     {
         const result : BlockedUsers[] = await this.blockedUsersRepository.findByCondition(
             {
@@ -39,10 +39,27 @@ export class FriendsService {
         return (result.length > 0)
     }
 
-    
-    async getFriendRequests(userId  : number) : Promise <Friends[] | undefined>
+    async blocking_exists(blocked  : User, blockedBy  : User) : Promise<boolean>
     {
-        return this.friendsRepository.getFriendRequestOfId(userId);
+        const result : BlockedUsers[] = await this.blockedUsersRepository.findByCondition(
+            {
+                where : [
+                    {
+                        blocked, blockedBy
+                    },
+                    {
+                        blocked : blockedBy,
+                        blockedBy : blocked
+                    }
+            ]
+            }
+        )
+        return (result.length > 0)
+    }
+
+    async getFriendRequests(user  : User) : Promise <Friends[] | undefined>
+    {
+        return this.friendsRepository.getFriendRequestOfId(user);
     }
     // getOnlineFriends(userId  : number){}; sockets?
 
@@ -53,11 +70,13 @@ export class FriendsService {
         if (!receiver)
         throw new NotFoundException("This user doesn't exist");
         
-        const is_blocked = await this.is_blocked(Sender, receiver);
+        const is_blocked = await this.is_blocked_by(Sender, receiver);
         if (is_blocked)
         throw new UnauthorizedException('You are blocked and cannot perform this action.');
         
         // await this.unblockFriend(Sender,receiver)
+
+
         let existingRequest : Friends = await this.friendsRepository.findOneByCondition({
         where: [
                     {
@@ -70,9 +89,14 @@ export class FriendsService {
                     }
                 ]
         });
-    
+        
         if (existingRequest) {
-        // If request already exists, just accept it by updating the status to 'accept'
+            if(existingRequest.status === friendRequestStatus.accepted)
+            return(
+                {
+                    message: `You're already friends`,
+                    friendRequest: existingRequest,
+                });
         existingRequest.status = friendRequestStatus.accepted;
         existingRequest.accepted_time = new Date();
         await this.friendsRepository.save(existingRequest);
@@ -82,7 +106,6 @@ export class FriendsService {
                 friendRequest: existingRequest,
             });
         } else {
-        // Otherwise, create a new friend request
             existingRequest  = await this.friendsRepository.create({
             status: friendRequestStatus.pending,
             request_time: new Date(),
@@ -90,7 +113,6 @@ export class FriendsService {
             sender: Sender,
             receiver: receiver,
         });
-        // await this.friendsRepository.save(existingRequest);
         }
         return {
             message: 'Friend request sent',

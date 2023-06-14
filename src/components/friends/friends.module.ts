@@ -19,6 +19,7 @@ import { BlockedUsersRepository, FriendsRepository, UserRepository } from '../re
     useClass : BlockedUsersRepository
   }
 ],
-  controllers: [FriendsController, FriendRequestsController]
+  controllers: [FriendsController, FriendRequestsController],
+  exports: [FriendsService]
 })
 export class FriendsModule {}

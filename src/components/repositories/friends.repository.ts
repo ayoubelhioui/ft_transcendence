@@ -1,7 +1,7 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
-import { Friends } from "src/database/entities";
+import { Friends, User } from "src/database/entities";
 import ABaseRepository from "./repositories_interfaces/base/base.repository.abstract";
 import { IFriendsRepository } from "./repositories_interfaces";
 import { friendRequestStatus } from "src/global/types";
@@ -18,17 +18,17 @@ class FriendsRepository extends ABaseRepository<Friends> implements IFriendsRepo
     super();
   }
 
-async getFriendsOfId(userId : number) : Promise <Friends[]>
+async getFriendsOfId(user : User) : Promise <Friends[]>
 {
     return await(
         this.findByCondition({
             where : [
                 {
-                    sender : userId,
+                    sender : user,
                     status : friendRequestStatus.accepted,
                 },
                 {
-                    receiver : userId,
+                    receiver : user,
                     status : friendRequestStatus.accepted,
                 }
             ]
@@ -37,12 +37,12 @@ async getFriendsOfId(userId : number) : Promise <Friends[]>
 }
 
 
-async getFriendRequestOfId(userId : number) : Promise <Friends[]>
+async getFriendRequestOfId(user : User) : Promise <Friends[]>
 {
     return await(
         this.findByCondition({
             where : {
-                receiver : userId,
+                receiver : user,
                 status : friendRequestStatus.pending,
             }
         })

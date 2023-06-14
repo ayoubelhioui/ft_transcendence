@@ -9,7 +9,7 @@ class MatchHistory{
     @ManyToOne(() => User, (user) => user.matchHistoryPlayer1, {onDelete: 'CASCADE'})
     public player1: User;
 
-    @ManyToOne(() => User, (user) => user.matchHistoryPlayer2, {onDelete: 'CASCADE'})
+    @ManyToOne(() => User, (user) => user.matchHistoryPlayer2, {onDelete: 'CASCADE', nullable: true })
     public player2: User;
 
     @Column({nullable : true})

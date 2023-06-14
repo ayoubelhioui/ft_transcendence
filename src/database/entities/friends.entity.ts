@@ -1,5 +1,5 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryColumn, Timestamp } from 'typeorm';
-import {User} from './index';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryColumn, Timestamp, OneToOne } from 'typeorm';
+import {Channel, User} from './index';
 import { friendRequestStatus } from 'src/global/types';
 
 
@@ -23,6 +23,8 @@ class Friends{
     @ManyToOne(() => User, (user) => user.receivedFriends, {onDelete: 'CASCADE'})
     public receiver: User;
 
+    @OneToOne(() => Channel, (channel) => channel.id , {onDelete: 'CASCADE', nullable : true})
+    channel : Channel;
 }
 
 export default Friends;
