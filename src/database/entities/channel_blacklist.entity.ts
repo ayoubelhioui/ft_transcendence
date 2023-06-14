@@ -4,6 +4,7 @@ import {User, Channel} from './index';
 
 @Entity()
 class ChannelBlacklist{
+
     @PrimaryGeneratedColumn()
     public id: number;
 

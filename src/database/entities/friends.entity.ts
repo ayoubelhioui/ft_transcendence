@@ -10,6 +10,7 @@ enum friendRequestStatus{
 
 @Entity()
 class Friends{
+    
    @PrimaryGeneratedColumn()
    public id : number;
 

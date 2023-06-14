@@ -3,6 +3,7 @@ import { User } from './index';
 
 @Entity()
 class BlockedUsers {
+
     @PrimaryGeneratedColumn()
     public id: number;
 

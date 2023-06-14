@@ -2,16 +2,14 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryCo
 import Channel from './channel.entity';
 
 import {User} from './index'
-import Invites from './invites.entity';
+import Invites from './channel-invites.entity';
 
 @Entity()
 class ChannelMessages{
-
-
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @Column()
+    @Column({type : "text"})
     public message: string;
 
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })

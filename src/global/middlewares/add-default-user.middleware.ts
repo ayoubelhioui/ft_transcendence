@@ -14,11 +14,15 @@ export class AddUserMiddleware implements NestMiddleware {
     async use(req: Request, res: Response, next: NextFunction) {
 
         const users : User[] | undefined = await this.userService.findAll();
+        const id = 1;
         let user : User = null;
-        if (!users || !users.length)
+        user = await this.userService.findUserById(id);
+        if (!user)
           user = await this.createUser();
-        else
-          user = users[0];
+        // if (!users || !users.length)
+        //    user = await this.createUser();
+        // else
+        //   user = users[0];
         (req as any).user = user;
         console.log(user);
         next();

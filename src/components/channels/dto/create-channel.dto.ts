@@ -1,4 +1,4 @@
-import { ChannelsVisibility } from "../types/channel-visibility.type";
+import { ChannelsVisibility } from "../../../global/types/channel-visibility.type";
 import { IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength, min } from 'class-validator';
 
 export class CreateChannelDto {

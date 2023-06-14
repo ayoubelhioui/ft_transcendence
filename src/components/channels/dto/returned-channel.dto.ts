@@ -1,5 +1,5 @@
 import { Exclude } from "class-transformer";
-import { ChannelsVisibility } from "../types/channel-visibility.type";
+import { ChannelsVisibility } from "../../../global/types/channel-visibility.type";
 import { User } from "src/database/entities";
 
 export class ReturnedChannelDto {

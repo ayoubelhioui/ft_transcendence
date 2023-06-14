@@ -1,11 +1,11 @@
 import { InjectRepository } from "@nestjs/typeorm";
-import { Channel, ChannelUsers, User } from "src/database/entities";
+import { Channel, User } from "src/database/entities";
 import { In, Repository } from "typeorm";
 import ABaseRepository from "src/components/repositories/repositories_interfaces/base/base.repository.abstract";
 import { Injectable } from "@nestjs/common";
 import IChannelRepository from "src/components/repositories/repositories_interfaces/channel.repository.interface";
-import { ChannelsVisibility } from "../channels/types/channel-visibility.type";
-import { ChannelUserRole } from '../channels/types/channel-user-roles';
+import { ChannelsVisibility } from "../../global/types/channel-visibility.type";
+import { ChannelWithPassword } from '../../global/dto/channel-with-password.dto';
 
 @Injectable()
 class ChannelRepository extends ABaseRepository<Channel> implements IChannelRepository
@@ -32,6 +32,16 @@ class ChannelRepository extends ABaseRepository<Channel> implements IChannelRepo
     return (this.findByCondition(condition));
   }
 
+  async getChannelWithPassword(channelId : number) : Promise<ChannelWithPassword | undefined> {
+    const channelWithPassword = await this.entity
+    .createQueryBuilder('channel')
+    .addSelect('channel.id', 'id')
+    .addSelect('channel.name', 'name')
+    .addSelect('channel.password', 'password')
+    .where('channel.id = :channelId', { channelId })
+    .getRawOne();
+    return (channelWithPassword);
+  }
 }
 
 export default ChannelRepository;

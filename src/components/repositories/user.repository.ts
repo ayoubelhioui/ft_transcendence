@@ -1,5 +1,5 @@
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "src/database/entities";
+import { Channel, ChannelUsers, User } from "src/database/entities";
 import { IUserRepository } from "src/components/repositories/repositories_interfaces";
 import { Repository } from "typeorm";
 import ABaseRepository from "src/components/repositories/repositories_interfaces/base/base.repository.abstract";

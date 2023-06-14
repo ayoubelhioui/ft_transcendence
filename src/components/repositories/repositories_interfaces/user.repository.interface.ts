@@ -1,4 +1,4 @@
-import { User } from "src/database/entities";
+import { ChannelUsers, User } from "src/database/entities";
 import IBaseRepository from "./base/base.repository.interface";
 
 

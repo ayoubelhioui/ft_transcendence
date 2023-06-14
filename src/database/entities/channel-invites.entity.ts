@@ -3,15 +3,15 @@ import Channel from "./channel.entity";
 import User from "./user.entity";
 
 @Entity()
-class Invites{
+class ChannelInvites{
     @PrimaryGeneratedColumn("uuid")
     public token: string;
 
     @ManyToOne(() => User, (user) => user.group_invites, {onDelete: 'CASCADE'})
-    public user_id: User;
+    public user: User;
 
     @ManyToOne(() => Channel, (channel) => channel.group_invites, {onDelete: 'CASCADE'})
-    public group_id : Channel;
+    public group: Channel;
 }
 
-export default Invites;
+export default ChannelInvites;

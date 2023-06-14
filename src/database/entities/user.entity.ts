@@ -3,7 +3,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToMany, ManyToOn
 
 import {Achievement, Channel, ChannelMessages, ChannelUsers, 
     MatchHistory,UsersMuted,Notification, Friends, BlockedUsers} from './index'
-import Invites from './invites.entity';
+import Invites from './channel-invites.entity';
 
 
 
@@ -102,7 +102,7 @@ class User{
     public blockedBy: BlockedUsers[];
 
 
-    @OneToMany(() => Invites, (invites) => invites.user_id, { cascade: true, onDelete: 'CASCADE' })
+    @OneToMany(() => Invites, (invites) => invites.user, { cascade: true, onDelete: 'CASCADE' })
     public group_invites: Invites[];
 }
 

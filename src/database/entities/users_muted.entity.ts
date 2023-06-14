@@ -1,16 +1,17 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 import { User, Channel } from './index';
 
 @Entity()
 class UsersMuted{
-    @PrimaryGeneratedColumn()
-    public id: number;
 
-    @ManyToOne(() => Channel, (channel) => channel.channelMessages, {onDelete: 'CASCADE'})
+    @PrimaryGeneratedColumn()
+    id : number
+    
+    @ManyToOne(() => Channel, (channel) => channel.usersMuted, {onDelete: 'CASCADE'})
     channel : Channel;
 
-    @ManyToOne(() => User, (user) => user.channelMessages, {onDelete: 'CASCADE'})
+    @ManyToOne(() => User, (user) => user.usersMuted, {onDelete: 'CASCADE'})
     user : User;
 
     @Column()

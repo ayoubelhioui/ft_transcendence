@@ -13,6 +13,8 @@ export class PasswordService {
     }
 
     async verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
+        if (!password  || !hashedPassword)
+            return (false);
         const isMatch = await bcrypt.compare(password, hashedPassword);
         return isMatch;
     }

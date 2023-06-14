@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {CreateUserDto} from './user.dto';
 import { User } from 'src/database/entities';
 import { IUserRepository } from 'src/components/repositories/repositories_interfaces';
@@ -17,7 +17,11 @@ export class UserService {
     }
     
     async findUserById(id: number, relations: any = {}): Promise<User | undefined> {
-        return  (this.userRepository.findOneByIdWithRelations(id, relations));
+        const user : User  = await this.userRepository.findOneByIdWithRelations(id, relations);
+        if (!user)
+            throw new NotFoundException("user Not Found");
+        return (user);
+
     }
 
     async findAll()
@@ -27,6 +31,6 @@ export class UserService {
 
     async removeUser(userId : number)
     {
-        return (this.userRepository.remove(userId));
+        return (this.userRepository.delete(userId));
     }
 }

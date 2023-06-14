@@ -1,22 +1,29 @@
-import { CanActivate, ExecutionContext, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Inject, Injectable, NotFoundException, mixin, Param } from '@nestjs/common';
 import { Channel, ChannelUsers, User } from "src/database/entities";
-import { ChannelUsersService } from "../channel-users.service";
+import { IChannelUsersRepository } from "src/components/repositories/repositories_interfaces";
+import { Reflector } from "@nestjs/core";
+import { UserService } from '../../user/user.service';
 
 
 @Injectable()
 export class UserInChannelGuard implements CanActivate {
-    constructor(private readonly channelUserService : ChannelUsersService) {};
-    async canActivate(context: ExecutionContext): Promise <boolean> {
-        const request = context.switchToHttp().getRequest();
-        const channel  : Channel = request.channel;
-        const user     : User = request.user;
+    constructor(@Inject('MyChannelUsersRepository') private readonly channelUsersRepository: IChannelUsersRepository) {};
 
-        const userInChannel : ChannelUsers | undefined  = await this.channelUserService.isUserInChannel(user, channel);
-        console.log("user In Channel  === ")
-        console.log(userInChannel);
+    private async isUserInChannel(user : User , channel : Channel) : Promise <ChannelUsers> {
+        const userInChannel : ChannelUsers | undefined  = await this.channelUsersRepository.isUserInChannel(user, channel);
         if (!userInChannel)
             throw  new NotFoundException('User Not exist In Channel');
-        request.userRoleInChannel = userInChannel.userRole;
+        return (userInChannel);
+    }
+    async canActivate(context: ExecutionContext): Promise <boolean> {
+
+        const request = context.switchToHttp().getRequest();
+        const channel  : Channel = request.channel;
+        const user     : User =    request.user;
+
+        const userInChannel : ChannelUsers  = await this.isUserInChannel(user, channel);
+        request.channelUser = userInChannel;
+        request.userRole = userInChannel.userRole;
         return (true);
     }
 }
