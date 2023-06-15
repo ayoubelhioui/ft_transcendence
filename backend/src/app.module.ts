@@ -15,7 +15,7 @@ const ENV_PATH : string = './src/.env';
       imports: [AuthModule, ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type:     'postgres',
-        host:     configService.get('DB_HOST'),
+        host:     configService.get('DB_HOST'), 
         port:     +configService.get('DB_PORT'),
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASS'), 
@@ -32,4 +32,4 @@ const ENV_PATH : string = './src/.env';
 })
 
 
-export class AppModule{} 
+export class AppModule{}

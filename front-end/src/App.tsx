@@ -22,7 +22,6 @@ export const ProtectedRoute: React.FC<{children: any}> = ( { children } ) => {
   if (!auth.isAuthenticated)
     return <Navigate to="/" replace />;
 
-
   return ( children );
 }
 

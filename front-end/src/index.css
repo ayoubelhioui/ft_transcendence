@@ -44,6 +44,16 @@ input {
   padding: .3rem 1rem;
 }
 
+.inp {
+  outline: none;
+  margin: 1rem;
+  border-radius: 15px;
+  
+  padding: .8rem 1rem;
+  /* border-radius: 0; */
+
+}
+
 h2 {
   font-family: var(--outfit);
 }
