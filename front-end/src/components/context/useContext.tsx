@@ -119,7 +119,6 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                             Authorization: `Bearer ${access_Token}`
                         }
                     });
-                    console.log(response.data.user);
                     setUser(response.data.user);
                     // const userData = response.data.user;
                     
