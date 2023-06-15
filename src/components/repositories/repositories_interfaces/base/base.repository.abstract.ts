@@ -48,6 +48,18 @@ abstract class ABaseRepository<T> implements IBaseRepository<T,DeleteResult>
         });
     }
 
+    async findByOptions(options : any) : Promise<T[] | undefined> {
+        return await this.entity.find(
+          options
+        );
+    }
+    async findOneByOptions(options : any) : Promise<T | undefined> {
+        return await this.entity.findOne(
+          options
+        );
+    }
+
+
     async findByConditionWithRelations(filterCondition: any, relations : any): Promise<T[] | undefined>
     {
         return await this.entity.find({

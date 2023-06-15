@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException, UnauthorizedException, Delete } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnauthorizedException, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { BlockedUsers, Friends, User } from 'src/database/entities';
 // import { BlockedUsersRepository, FriendsRepository, UserRepository } from '../repositories';
 import { IBlockedUsersRepository, IFriendsRepository, IUserRepository } from '../repositories/repositories_interfaces';
@@ -19,17 +19,19 @@ export class FriendsService {
         @Inject("MyBlockedUsersRepository") private readonly blockedUsersRepository : IBlockedUsersRepository,
         ){}
 
-
-    async getFriends(user  : User) : Promise <Friends[] | undefined>
+    
+    async getFriends(user  : User) : Promise <User[]>
     {
-        return this.friendsRepository.getFriendsOfId(user);
+         
+        const users = await this.friendsRepository.getFriendsOfId(user);
+        return users;
     };
 
 
     //only user if both users exists
     async is_blocked_by(blocked  : User, blockedBy  : User) : Promise<boolean>
     {
-        const result : BlockedUsers[] = await this.blockedUsersRepository.findByCondition(
+        const result : BlockedUsers[] = await this.blockedUsersRepository.findByOptions(
             {
                 where : {
                     blocked, blockedBy
@@ -41,7 +43,7 @@ export class FriendsService {
 
     async blocking_exists(blocked  : User, blockedBy  : User) : Promise<boolean>
     {
-        const result : BlockedUsers[] = await this.blockedUsersRepository.findByCondition(
+        const result : BlockedUsers[] = await this.blockedUsersRepository.findByOptions(
             {
                 where : [
                     {
@@ -57,6 +59,24 @@ export class FriendsService {
         return (result.length > 0)
     }
 
+    async blocking_relationship(blocked  : User, blockedBy  : User)
+    {
+        const result = await this.blockedUsersRepository.findOneByOptions(
+            {
+                where : [
+                    {
+                        blocked, blockedBy
+                    },
+                    {
+                        blocked : blockedBy,
+                        blockedBy : blocked
+                    }
+            ], relations: ["blockedBy", "blocked"]
+            }
+        )
+        return (result)
+    }
+
     async getFriendRequests(user  : User) : Promise <Friends[] | undefined>
     {
         return this.friendsRepository.getFriendRequestOfId(user);
@@ -65,46 +85,62 @@ export class FriendsService {
 
 
     //both users exist guard
-    async requestFriend(Sender: User, ReceiverId: number) {
-        const receiver: User | undefined = await this.userRepository.findOneById(ReceiverId);
-        if (!receiver)
-        throw new NotFoundException("This user doesn't exist");
+    async requestFriend(Sender: User, receiver: User) {
+        // const receiver: User | undefined = await this.userRepository.findOneById(ReceiverId);
+        // if (!receiver)
+        // throw new NotFoundException("This user doesn't exist");
         
         const is_blocked = await this.is_blocked_by(Sender, receiver);
         if (is_blocked)
         throw new UnauthorizedException('You are blocked and cannot perform this action.');
         
         // await this.unblockFriend(Sender,receiver)
+        if(receiver.id == Sender.id){
 
+             throw new HttpException("You can't send friend request to yourself yourself",HttpStatus.BAD_REQUEST);
+        } 
 
-        let existingRequest : Friends = await this.friendsRepository.findOneByCondition({
-        where: [
-                    {
-                        sender: Sender,
-                        receiver : receiver,
-                    },
-                    {
-                        sender: receiver,
-                        receiver: Sender,
-                    }
-                ]
-        });
+        let existingRequest : Friends = await this.friendsRepository.findOneByOptions({
+                where: [
+                            {
+                                sender: Sender,
+                                receiver : receiver,
+                            },
+                            {
+                                sender: receiver,
+                                receiver: Sender,
+                            }
+                        ], relations : ["sender" , "receiver"]
+            }
+        );
         
         if (existingRequest) {
             if(existingRequest.status === friendRequestStatus.accepted)
-            return(
+            {
+                return(
+                    {
+                        message: `You're already friends`,
+                        friendRequest: existingRequest,
+                    });
+            }
+            if(existingRequest.receiver.id == Sender.id)
+            {
+            existingRequest.status = friendRequestStatus.accepted;
+            existingRequest.accepted_time = new Date();
+            await this.friendsRepository.save(existingRequest);
+                return(
                 {
-                    message: `You're already friends`,
+                    message: 'Friend request accepted',
                     friendRequest: existingRequest,
                 });
-        existingRequest.status = friendRequestStatus.accepted;
-        existingRequest.accepted_time = new Date();
-        await this.friendsRepository.save(existingRequest);
-            return(
+            }
+            else if(existingRequest.sender.id == Sender.id)
             {
-                message: 'Friend request accepted',
-                friendRequest: existingRequest,
-            });
+                return {
+                    message: 'You already sent a request',
+                    friendRequest: existingRequest,
+                  };
+            }
         } else {
             existingRequest  = await this.friendsRepository.create({
             status: friendRequestStatus.pending,
@@ -121,22 +157,19 @@ export class FriendsService {
     };
     
     //both users exist guard
-    async acceptFriend(Sender  : User, ReceiverId  : number)
+    async acceptFriend(user  : User, sender  : User)
     {
         //no need to check if blocked, cus if so then a friendrequest wouldnt be existing on the table
-        const receiver: User | undefined = await this.userRepository.findOneById(ReceiverId);
-        if (!receiver)
-        throw new NotFoundException("This user doesn't exist");
 
-        const existingRequest : Friends | undefined = await this.friendsRepository.findOneByCondition({
+        const existingRequest : Friends | undefined = await this.friendsRepository.findOneByOptions({
             where: [
+                        // {
+                        //     sender: Sender,
+                        //     receiver : receiver,
+                        // },
                         {
-                            sender: Sender,
-                            receiver : receiver,
-                        },
-                        {
-                            sender: receiver,
-                            receiver: Sender,
+                            sender: sender,
+                            receiver: user,
                         }
                     ]
             });
@@ -145,6 +178,10 @@ export class FriendsService {
             existingRequest.status = friendRequestStatus.accepted;
             existingRequest.accepted_time = new Date();
             await this.friendsRepository.save(existingRequest);
+            return {
+                message : `friend request from ${sender.username} has been accepted`
+    
+               }
         } else {
             throw new NotFoundException("Friendrequest invalid")
         }
@@ -156,19 +193,7 @@ export class FriendsService {
     async deleteFriend(user  : User, friend  : User)
     {
         //they already friends
-        
-        const deleteResult : DeleteResult  = await this.friendsRepository.delete({
-            where : [
-                {
-                    sender: user,
-                    receiver : friend,
-                },
-                {
-                    sender: user,
-                    receiver: friend,
-                }
-            ]
-        })
+        const deleteResult : DeleteResult  = await this.friendsRepository.deleteFriend(user,friend);
         return ({
             message : deleteResult.affected ?"friend deleted" : "delete failure",
             deletedRows : deleteResult.affected ? deleteResult.affected : 0,
@@ -176,27 +201,29 @@ export class FriendsService {
     };
 
     //users exists Guard
-    async refuseFriend(Sender  : User, ReceiverId  : number)
+    async refuseFriend(user  : User, sender  : User)
     {
-        const receiver: User | undefined = await this.userRepository.findOneById(ReceiverId);
-        if (!receiver)
-        throw new NotFoundException("This user doesn't exist");
-
-        const existingRequest : Friends | undefined = await this.friendsRepository.findOneByCondition({
+        const existingRequest : Friends | undefined = await this.friendsRepository.findOneByOptions({
             where: [
+                        // {
+                        //     sender: Sender,
+                        //     receiver : receiver,
+                        //     status : friendRequestStatus.pending
+                        // },
                         {
-                            sender: Sender,
-                            receiver : receiver,
-                        },
-                        {
-                            sender: receiver,
-                            receiver: Sender,
+                            sender: sender,
+                            receiver: user,
+                            status : friendRequestStatus.pending
                         }
                     ]
             });
         if(existingRequest)
         {
-            await this.friendsRepository.remove(existingRequest);
+           await this.friendsRepository.remove(existingRequest);
+           return {
+            message : `friend request from ${sender.username} has been refused`
+
+           }
         } else {
             throw new NotFoundException("Friendrequest invalid")
         }
@@ -204,9 +231,11 @@ export class FriendsService {
 
 
     //if both users exist guard
-    async blockFriend(blockedBy  : User, blocked  : User)
+    async blockFriend(blockedBy  : User, blocked  : User): Promise<BlockedUsers | { message: string;} >
     {
         // delete friendship or friendrequests
+        if(await this.blocking_exists(blocked,blockedBy))
+            return { message : "already blocked"}
         try {
             this.deleteFriend(blockedBy,blocked);
         } catch (error) {
@@ -235,22 +264,24 @@ export class FriendsService {
         )
     };
 
-    async isFriend (userId  : User, friendId: number) : Promise<boolean> {
+    async isFriend (user  : User, friend: User) : Promise<boolean> {
 
-        const res : Friends[] | undefined = await this.friendsRepository.findByCondition({
+        const res : Friends[] | undefined = await this.friendsRepository.findByOptions({
             where :[
                 {
-                    sender: userId,
-                    receiver : friendId,
+                    sender: user,
+                    receiver : friend,
                     status:  friendRequestStatus.accepted
                 },
                 {
-                    sender: friendId,
-                    receiver : userId,
+                    sender: friend,
+                    receiver : user,
                     status:  friendRequestStatus.accepted
                 }
             ]
         })
         return (res.length > 0)
     };
+
+
 }

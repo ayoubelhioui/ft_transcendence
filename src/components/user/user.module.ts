@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { User } from 'src/database/entities';
 import UserRepository from '../repositories/user.repository';
+import { TargetUserExistGuard } from './guards/target-user-exists.guard';
 
 @Module({
     imports: [
@@ -11,13 +12,14 @@ import UserRepository from '../repositories/user.repository';
     ],
     providers: [
         UserService,
+        TargetUserExistGuard,
         {
             provide: 'MyUserRepository',
             useClass: UserRepository
         }
     ],
     controllers: [UserController],
-    exports: [UserService]
+    exports: [UserService, TargetUserExistGuard]
 })
 
 export class UserModule{ }

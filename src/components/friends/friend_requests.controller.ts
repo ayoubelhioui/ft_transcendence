@@ -1,23 +1,37 @@
-import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
-import { Friends } from 'src/database/entities';
+import { Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common';
+import { Friends, User } from 'src/database/entities';
 import { FriendsService } from './friends.service';
+import { GetUser } from '../user/decorators/user.decorator';
+import { TargetUserExistGuard } from '../user/guards/target-user-exists.guard';
+import { GetTargetedUser } from '../user/decorators/targeted-user.decorator';
 
+
+//user exists guard is for target user
 @Controller('users/me/friend-requests')
 export class FriendRequestsController {
     constructor(private readonly friendsService: FriendsService) {}
     @Get('')
-    async getFriendRequests(userId  : number) : Promise <Friends[] | undefined>
+    async getFriendRequests(@GetUser() user : User) : Promise <Friends[] | undefined>
     {
-        return 
+        return this.friendsService.getFriendRequests(user);
     }
 
-    @Post(':userId')
-    requestFriend(){};//if not blocked
+    @Post(':targetUserId')
+    @UseGuards(TargetUserExistGuard)
+    async requestFriend(@GetUser() sender : User,  @GetTargetedUser() receiver : User){
+        return this.friendsService.requestFriend(sender, receiver)
+    };
 
-    @Put(':id')
-    acceptFriend(){};
+    @Put(':targetUserId')
+    @UseGuards(TargetUserExistGuard)
+    async acceptFriend(@GetUser() user : User,  @GetTargetedUser() sender : User){
+        return this.friendsService.acceptFriend(user, sender)
+    };
 
-    @Delete(':id')
-    refuseFriend(){};
+    @Delete(':targetUserId')
+    @UseGuards(TargetUserExistGuard)
+    async refuseFriend(@GetUser() user : User,  @GetTargetedUser() sender : User){
+        return this.friendsService.refuseFriend(user,sender);
+    };
 
 }

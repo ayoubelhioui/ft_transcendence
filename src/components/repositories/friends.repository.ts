@@ -18,35 +18,60 @@ class FriendsRepository extends ABaseRepository<Friends> implements IFriendsRepo
     super();
   }
 
-async getFriendsOfId(user : User) : Promise <Friends[]>
+async getFriendsOfId(user: User): Promise<User[]> {
+    const friends = await this.findByOptions({
+      where: [
+        {
+          sender: user,
+          status: friendRequestStatus.accepted,
+        },
+        {
+          receiver: user,
+          status: friendRequestStatus.accepted,
+        },
+      ],
+      relations: ['sender', 'receiver'],
+    });
+  
+    const users: User[] = friends.map((friend) => {
+      if (friend.sender.id === user.id) {
+        return friend.receiver;
+      } else {
+        return friend.sender;
+      }
+    });
+    return users;
+  }
+
+async getFriendRequestOfId(user : User) : Promise <Friends[]>
 {
     return await(
-        this.findByCondition({
-            where : [
-                {
-                    sender : user,
-                    status : friendRequestStatus.accepted,
-                },
-                {
-                    receiver : user,
-                    status : friendRequestStatus.accepted,
-                }
-            ]
+        this.findByOptions({
+            where : {
+                receiver : user,
+                status : friendRequestStatus.pending,
+            }, 
+            relations : ['sender']
         })
     );
 }
 
 
-async getFriendRequestOfId(user : User) : Promise <Friends[]>
-{
-    return await(
-        this.findByCondition({
-            where : {
-                receiver : user,
-                status : friendRequestStatus.pending,
-            }
-        })
-    );
+
+async deleteFriend(user: User, friend: User) {
+  return await this.entity.createQueryBuilder()
+    .delete()
+    .from(Friends) // Target the table associated with the Friends entity
+    .where('status = :status')
+    .andWhere(
+      '(senderId = :senderId AND receiverId = :receiverId) OR (senderId = :receiverId AND receiverId = :senderId)',
+      {
+        status: friendRequestStatus.accepted,
+        senderId: user.id,
+        receiverId: friend.id,
+      }
+    )
+    .execute();
 }
 
 

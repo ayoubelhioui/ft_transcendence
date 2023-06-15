@@ -5,11 +5,14 @@ import { FriendRequestsController } from './friend_requests.controller';
 import { BlockedUsersRepository, FriendsRepository, UserRepository } from '../repositories';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlockedUsers, Friends, User } from 'src/database/entities';
+import { UserModule } from '../user/user.module';
+import { IsFriendGuard } from './guards/is-friend.guard';
 
 
 @Module({
     imports: [
       TypeOrmModule.forFeature([User, BlockedUsers, Friends]),
+      UserModule
     ],
   providers: [FriendsService, {
     provide : "MyFriendsRepository",
@@ -22,7 +25,9 @@ import { BlockedUsers, Friends, User } from 'src/database/entities';
   {
     provide : "MyBlockedUsersRepository",
     useClass : BlockedUsersRepository
-  }
+  },
+  /**guards**/
+  IsFriendGuard
 ],
   controllers: [FriendsController, FriendRequestsController],
   exports: [FriendsService]

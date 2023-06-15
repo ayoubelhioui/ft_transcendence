@@ -8,15 +8,21 @@ export class GameController {
 
 
     @Get('/live')
-    getLiveGames(){};
+    getLiveGames(){
+
+    };
 
 
     @Post('')
-    createGame(){};
+    createGame(){
+
+    };
 
 
     @Put('')
-    setGameResult(){};
+    setGameResult(){
+
+    };
 
 
     // getGamePlayers(){};
