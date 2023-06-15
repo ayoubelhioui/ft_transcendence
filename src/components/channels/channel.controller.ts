@@ -24,6 +24,7 @@ import {  MessagesDateDto } from './dto/messages-date.dto';
 import {  UserMutedGuard } from './guards/user-muted.guard';
 import { BlacklistedGuard } from './guards/blacklisted.guard';
 import { GroupGuard } from './guards/group.guard';
+import { CreateMessageDto } from './dto/create-message.dto';
 
 @Controller('channels')
 export class ChannelController {
@@ -31,8 +32,8 @@ export class ChannelController {
     constructor(private readonly channelService: ChannelService) {}
 
     @Get('')
-    async getChannels() : Promise < Channel[] | undefined >  {
-        return (await this.channelService.getChannels());
+    async getChannels(@GetUser() user : User) : Promise < Channel[] | undefined >  {
+        return (await this.channelService.getChannels(user));
     };
 
     @Get('my')
@@ -148,14 +149,18 @@ export class ChannelController {
 
     @Get(':id/messages')
     @UseGuards(ChannelExistsGuard, UserInChannelGuard)
-    async getChannelMessages(@GetChannel() channel : Channel, @Query('date') messagesDateDto: MessagesDateDto) : Promise <ChannelMessages[] | undefined>{
-        return (await this.channelService.getChannelMessages(channel, messagesDateDto.date));
+    async getChannelMessages(@GetChannel() channel : Channel, @Body() messagesDateDto: MessagesDateDto) : Promise <ChannelMessages[] | undefined>{
+        console.log(messagesDateDto);
+        let date : Date = null;
+        if (messagesDateDto.date)
+            date = new Date(messagesDateDto.date);
+        return (await this.channelService.getChannelMessages(channel, date));
     };
 
     @Post(':id/messages')
     @UseGuards(ChannelExistsGuard, UserInChannelGuard, UserMutedGuard)
-    async createMessage(@GetUser() user : User, @GetChannel() channel : Channel, @Body('message') message : string) 
+    async createMessage(@GetUser() user : User, @GetChannel() channel : Channel, @Body() messageDto : CreateMessageDto) 
                     : Promise <ChannelMessages | undefined> {
-        return (await this.channelService.createMessage(user, channel, message));
+        return (await this.channelService.createMessage(user, channel, messageDto.message));
     };
 }

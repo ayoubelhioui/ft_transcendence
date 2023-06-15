@@ -33,8 +33,8 @@ export class ChannelService {
     }
 
     // get list public / protected groups
-    async getChannels() : Promise< Channel[] | undefined > {
-        return (this.channelRepository.getChannels());
+    async getChannels(user : User) : Promise< Channel[] | undefined > {
+        return (this.channelRepository.getChannels(user));
     };
 
     addUserToChannel(user : User, channel : Channel, userRole : ChannelUserRole) : Promise<ChannelUsers>  {
@@ -52,15 +52,16 @@ export class ChannelService {
     };
 
     async createDmChannel(user1 : User , user2 : User, nameChannel : string) : Promise<Channel | undefined> {
-        const createChannelDto : CreateChannelDto = {
+        const createChannelDto : any = {
             name : nameChannel,
             visibility : ChannelsVisibility.private,
             isGroup : false
-        }
+        };
+
         let createdChannel : Channel = await this.channelRepository.create(createChannelDto);
         await Promise.all([
-            this.addUserToChannel(user1, createdChannel, ChannelUserRole.owner),
-            this.addUserToChannel(user2, createdChannel, ChannelUserRole.owner),
+            this.addUserToChannel(user1, createdChannel, ChannelUserRole.member),
+            this.addUserToChannel(user2, createdChannel, ChannelUserRole.member),
         ]);
         return (createdChannel);
     }
@@ -97,7 +98,6 @@ export class ChannelService {
     }
 
     async joinChannel(user : User, channel : Channel, joinChannelDto : JoinChannelDto) : Promise< ChannelUsers > {
-        await (this.isUserBlacklisted(user, channel));
         if (channel.visibility == ChannelsVisibility.protected) {
             const channelWithPassword : ChannelWithPassword = await this.channelRepository.getChannelWithPassword(channel.id);
             const isCorrectPassword : boolean  = await this.passwordService.verifyPassword(joinChannelDto.password, channelWithPassword.password);

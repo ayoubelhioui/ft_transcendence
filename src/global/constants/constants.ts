@@ -1,2 +1,2 @@
-export const LIMIT_MESSAGES = 30
+export const LIMIT_MESSAGES = 2
 

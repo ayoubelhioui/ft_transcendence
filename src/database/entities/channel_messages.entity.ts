@@ -1,8 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryColumn, Index } from 'typeorm';
 import Channel from './channel.entity';
 
 import {User} from './index'
-import Invites from './channel-invites.entity';
 
 @Entity()
 class ChannelMessages{
@@ -13,6 +12,7 @@ class ChannelMessages{
     public message: string;
 
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+    @Index()
     public time: Date;
 
     @Column({nullable: true})

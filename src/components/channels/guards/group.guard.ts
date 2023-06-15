@@ -8,7 +8,7 @@ import { channel } from 'diagnostics_channel';
 export class GroupGuard implements CanActivate {
     async canActivate(context: ExecutionContext): Promise < boolean> {
         const request = context.switchToHttp().getRequest();
-        const channel : Channel= request.Channel;
+        const channel : Channel = request.channel;
         return (channel.isGroup);
     }
 }

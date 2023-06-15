@@ -6,6 +6,8 @@ import { ChannelUserRole } from 'src/global/types/channel-user-roles';
 
 
 @Entity()
+@Index(['user', 'channel'], {unique : true})
+
 class ChannelUsers{
     @PrimaryGeneratedColumn()
     public id?: number;
