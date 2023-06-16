@@ -30,7 +30,9 @@ body {
 }
 
 #root {
-  background: linear-gradient(180deg, #35425B 25.52%, #1E2023 100%);
+  /* background: linear-gradient(190deg, #5C4D7D 0.52%, #4D194D 100%); */
+
+  background: radial-gradient(circle, #1780A1 -40%, #4D194D 100%);
   min-height: 100vh;
 
   font-family: var(--outfit);
@@ -112,10 +114,11 @@ h1 {
 }
 
 .back {
+  /* outline: 2px solid #300152; */
   background: rgba(10, 73, 159, 0.2);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(10, 73, 159, 0.13);
   /* padding-bottom: 7rem; */
@@ -127,15 +130,15 @@ h1 {
 }
 
 .top {
-  background: rgba(98, 252, 206, 0.1);
+  background: rgba(10, 73, 159, 0.2);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(10, 73, 159, 0.13);
   /* padding-bottom: 7rem; */
   min-height: 15rem;
-  margin: 6rem 2.5rem 0;
+  margin: 2rem 1rem 0;
 }
 
 .top_1 {
