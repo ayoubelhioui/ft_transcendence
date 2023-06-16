@@ -10,7 +10,7 @@ export class BlacklistedGuard implements CanActivate {
         const request = context.switchToHttp().getRequest();
     
         const user : User = request.user;
-        const channel : Channel = request.Channel;
+        const channel : Channel = request.channel;
         await this.channelService.isUserBlacklisted(user, channel);
         return true;
     }

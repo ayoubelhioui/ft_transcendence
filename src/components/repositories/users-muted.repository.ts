@@ -41,7 +41,8 @@ class UsersMutedRepository extends ABaseRepository<UsersMuted> implements IUsers
       channel
     }
     const userMuted : UsersMuted | undefined = await this.findOneByCondition(condition);
-    return (!userMuted || userMuted.expirationTime > new Date());
+    console.log(userMuted);
+    return (userMuted != null && userMuted.expirationTime > new Date());
   } 
 }
 

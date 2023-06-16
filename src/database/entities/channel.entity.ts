@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable, OneToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable, OneToOne, JoinColumn } from 'typeorm';
 
 import {User, ChannelMessages, ChannelUsers} from './index';
 import UsersMuted from './users_muted.entity';
@@ -56,8 +56,9 @@ class Channel{
     public group_invites: Invites[];
 
     //update on each message sent
-    @OneToOne(() => ChannelMessages, channelMessage => channelMessage.id, { nullable: true, cascade: true, onDelete: 'CASCADE'  })
-    lastMessage : ChannelMessages;
+    @OneToOne(() => ChannelMessages,  {nullable : true, cascade: true, onDelete: 'SET NULL' })
+    @JoinColumn()
+    lastMessage: ChannelMessages
 
     // toJSON () {
     //     delete this.password;

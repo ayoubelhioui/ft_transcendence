@@ -16,8 +16,13 @@ class ChannelBlacklistRepository extends ABaseRepository<ChannelBlacklist> imple
   }
 
   async isUserBlacklisted(user : User, channel : Channel) : Promise <Boolean> {
+    console.log(user);
+    console.log(channel);
     const condition = {user, channel};
     const isUserInChannelBlacklist = await this.findOneByCondition(condition);
+    console.log(isUserInChannelBlacklist);
+
+
     return (isUserInChannelBlacklist != undefined)
   }
 }

@@ -1,8 +1,9 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryColumn, Index } from 'typeorm';
 
 import {User, Channel} from './index';
 
 @Entity()
+@Index(['user', 'channel'], {unique : true})
 class ChannelBlacklist{
 
     @PrimaryGeneratedColumn()

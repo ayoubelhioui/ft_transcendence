@@ -33,8 +33,8 @@ export class ChannelService {
     }
 
     // get list public / protected groups
-    async getChannels() : Promise< Channel[] | undefined > {
-        return (this.channelRepository.getChannels());
+    async getChannels(user : User) : Promise< Channel[] | undefined > {
+        return (this.channelRepository.getChannels(user));
     };
 
     addUserToChannel(user : User, channel : Channel, userRole : ChannelUserRole) : Promise<ChannelUsers>  {
@@ -52,21 +52,22 @@ export class ChannelService {
     };
 
     async createDmChannel(user1 : User , user2 : User, nameChannel : string) : Promise<Channel | undefined> {
-        const createChannelDto : CreateChannelDto = {
+        const createChannelDto : any = {
             name : nameChannel,
             visibility : ChannelsVisibility.private,
             isGroup : false
-        }
+        };
+
         let createdChannel : Channel = await this.channelRepository.create(createChannelDto);
         await Promise.all([
-            this.addUserToChannel(user1, createdChannel, ChannelUserRole.owner),
-            this.addUserToChannel(user2, createdChannel, ChannelUserRole.owner),
+            this.addUserToChannel(user1, createdChannel, ChannelUserRole.member),
+            this.addUserToChannel(user2, createdChannel, ChannelUserRole.member),
         ]);
         return (createdChannel);
     }
 
     async getMyChannels(user : User) :  Promise < Channel[] | undefined > {
-        return (this.channelUsersRepository.getUserChannels(user.id));
+        return (this.channelUsersRepository.getUserChannelsWithLastMessage(user.id));
     };
 
 
@@ -97,7 +98,6 @@ export class ChannelService {
     }
 
     async joinChannel(user : User, channel : Channel, joinChannelDto : JoinChannelDto) : Promise< ChannelUsers > {
-        await (this.isUserBlacklisted(user, channel));
         if (channel.visibility == ChannelsVisibility.protected) {
             const channelWithPassword : ChannelWithPassword = await this.channelRepository.getChannelWithPassword(channel.id);
             const isCorrectPassword : boolean  = await this.passwordService.verifyPassword(joinChannelDto.password, channelWithPassword.password);
@@ -173,14 +173,24 @@ export class ChannelService {
         return (this.channelMessagesRepository.getChannelMessages(channel, date));  
     };
 
+    private async setLastMessageChannel(channelId : number, lastMessage : ChannelMessages)
+    {
+        const criteria = {
+            id : channelId
+        };
+        return (this.channelRepository.update(criteria, {lastMessage}))
+    }
+
 
     //if not muted
-    async createMessage(user : User, channel : Channel, message : string) : Promise <ChannelMessages | undefined>{
-        return (this.channelMessagesRepository.create({
+    async createMessage(user : User, channel : Channel, message : string) : Promise <ChannelMessages | undefined> {
+        const createdMessage : ChannelMessages = await this.channelMessagesRepository.create({
             user,
             channel,
             message
-        }));
+        });
+        await (this.setLastMessageChannel(channel.id, createdMessage));
+        return (createdMessage);
     };
 }
 

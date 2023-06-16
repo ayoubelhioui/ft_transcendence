@@ -24,6 +24,7 @@ import {  MessagesDateDto } from './dto/messages-date.dto';
 import {  UserMutedGuard } from './guards/user-muted.guard';
 import { BlacklistedGuard } from './guards/blacklisted.guard';
 import { GroupGuard } from './guards/group.guard';
+import { CreateMessageDto } from './dto/create-message.dto';
 
 @Controller('channels')
 export class ChannelController {
@@ -31,14 +32,14 @@ export class ChannelController {
     constructor(private readonly channelService: ChannelService) {}
 
     @Get('')
-    async getChannels() : Promise < Channel[] | undefined >  {
-        return (await this.channelService.getChannels());
+    async getChannels(@GetUser() user : User) : Promise < Channel[] | undefined >  {
+        return (await this.channelService.getChannels(user));
     };
 
-    @Get('my')
-    async getMyChannels(@GetUser() user: User) : Promise< Channel[] | undefined > {
-        return (await this.channelService.getMyChannels(user));
-    };
+    // @Get('my')
+    // async getMyChannels(@GetUser() user: User) : Promise< Channel[] | undefined > {
+    //     return (await this.channelService.getMyChannels(user));
+    // };
 
     @Get(':id/users')
     @UseGuards(ChannelExistsGuard, UserInChannelGuard)
@@ -74,14 +75,14 @@ export class ChannelController {
 
 
     /* check if user is not blocked from this channel*/
-    @Post(':id/join')
-    @UseGuards(ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard)
-    async joinChannel(@GetUser() user : User, @GetChannel() channel : Channel, @Body() joinChannelDto : JoinChannelDto) {
-        await this.channelService.joinChannel(user, channel, joinChannelDto);
-        return {
-            message : "user joined successfully"
-        };
-    };
+    // @Post(':id/join')
+    // @UseGuards(ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard)
+    // async joinChannel(@GetUser() user : User, @GetChannel() channel : Channel, @Body() joinChannelDto : JoinChannelDto) {
+    //     await this.channelService.joinChannel(user, channel, joinChannelDto);
+    //     return {
+    //         message : "user joined successfully"
+    //     };
+    // };
 
 
     @Put(':id/role/:targetUserId')
@@ -135,27 +136,31 @@ export class ChannelController {
         }; 
     };
 
-    @Delete(':id/leave')
-    @UseGuards(ChannelExistsGuard, GroupGuard, UserInChannelGuard)
-    async leaveChannel(@GetChannel() channel, @GetUser() user  : User, @GetChannelUsers() channelUser : ChannelUsers) {
-        await  this.channelService.leaveChannel(channel, user, channelUser);
-        return {
-            message : "user leave  successfully"
-        }; 
-    };
+    // @Delete(':id/leave')
+    // @UseGuards(ChannelExistsGuard, GroupGuard, UserInChannelGuard)
+    // async leaveChannel(@GetChannel() channel, @GetUser() user  : User, @GetChannelUsers() channelUser : ChannelUsers) {
+    //     await  this.channelService.leaveChannel(channel, user, channelUser);
+    //     return {
+    //         message : "user leave  successfully"
+    //     }; 
+    // };
 
 
 
     @Get(':id/messages')
     @UseGuards(ChannelExistsGuard, UserInChannelGuard)
-    async getChannelMessages(@GetChannel() channel : Channel, @Query('date') messagesDateDto: MessagesDateDto) : Promise <ChannelMessages[] | undefined>{
-        return (await this.channelService.getChannelMessages(channel, messagesDateDto.date));
+    async getChannelMessages(@GetChannel() channel : Channel, @Body() messagesDateDto: MessagesDateDto) : Promise <ChannelMessages[] | undefined>{
+        console.log(messagesDateDto);
+        let date : Date = null;
+        if (messagesDateDto.date)
+            date = new Date(messagesDateDto.date);
+        return (await this.channelService.getChannelMessages(channel, date));
     };
 
     @Post(':id/messages')
     @UseGuards(ChannelExistsGuard, UserInChannelGuard, UserMutedGuard)
-    async createMessage(@GetUser() user : User, @GetChannel() channel : Channel, @Body('message') message : string) 
+    async createMessage(@GetUser() user : User, @GetChannel() channel : Channel, @Body() messageDto : CreateMessageDto) 
                     : Promise <ChannelMessages | undefined> {
-        return (await this.channelService.createMessage(user, channel, message));
+        return (await this.channelService.createMessage(user, channel, messageDto.message));
     };
 }

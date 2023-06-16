@@ -1,9 +1,9 @@
-import { IsDate, IsOptional, isDateString } from "class-validator";
+import { IsDate, IsDateString, IsOptional, isDateString } from "class-validator";
 
 
 export class MessagesDateDto {
 
-    @IsDate()
+    @IsDateString()
     @IsOptional()
-    date ?: Date;
+    date ?: string;
 }

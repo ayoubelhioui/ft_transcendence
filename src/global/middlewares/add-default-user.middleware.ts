@@ -10,7 +10,8 @@ export class AddUserMiddleware implements NestMiddleware {
     private async createUser(id) : Promise<User> {
         const user = {id : id, username : 'test'};
         return this.userService.createUser(user);
-      }
+    }
+
     async use(req: Request, res: Response, next: NextFunction) {
       console.log('middleware')
         const users : User[] | undefined = await this.userService.findAll();

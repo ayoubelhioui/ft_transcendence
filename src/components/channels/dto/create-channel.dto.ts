@@ -16,9 +16,4 @@ export class CreateChannelDto {
 
     @IsEnum(ChannelsVisibility)
     visibility : ChannelsVisibility = ChannelsVisibility.public;
-
-    @IsOptional()
-    isGroup?: boolean = true;
-
-    
 }
