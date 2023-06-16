@@ -12,7 +12,7 @@ export class FriendsController {
     constructor(private readonly friendsService: FriendsService) {}
     @Get()
     async getFriends(@GetUser() user : User){
-        return this.friendsService.getFriends(user);
+        return await this.friendsService.getFriends(user);
     };
 
 
@@ -20,19 +20,19 @@ export class FriendsController {
     @Delete(':targetUserId/block')
     @UseGuards(TargetUserExistGuard)
     async blockFriend(@GetUser() user : User, @GetTargetedUser() userToBlock : User){
-        return this.friendsService.blockFriend(user,userToBlock);
+        return await this.friendsService.blockFriend(user,userToBlock);
     };
 
     @Delete(':targetUserId/unblock')
     @UseGuards(TargetUserExistGuard)
     async unblockFriend(@GetUser() user : User, @GetTargetedUser() userToUnblock : User){
-        return this.friendsService.unblockFriend(user,userToUnblock);
+        return await this.friendsService.unblockFriend(user,userToUnblock);
     };
 
     @Delete(':targetUserId')
     @UseGuards(TargetUserExistGuard, IsFriendGuard)
     async deleteFriend(@GetUser() user : User, @GetTargetedUser() userToDelete : User){
-        return this.friendsService.deleteFriend(user, userToDelete)
+        return await this.friendsService.deleteFriend(user, userToDelete)
     };
     
     @Get(":targetUserId/status")

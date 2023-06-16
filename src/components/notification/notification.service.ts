@@ -20,9 +20,9 @@ export class NotificationService {
     async getNotifactions(user : User, date? : Date)
     {
         if(date)
-            this.notificationRepository.getUserNotifications(user,date);
+            return this.notificationRepository.getUserNotifications(user,date);
         else
-            this.notificationRepository.getUserNotifications(user);
+            return this.notificationRepository.getUserNotifications(user);
 
     };
 

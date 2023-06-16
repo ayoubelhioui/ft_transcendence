@@ -19,15 +19,15 @@ export class GameController {
     //make page dto?
     @Get('/leaderboard')
     async getLeaderboard(){
-       return this.gameService.getLeaderboard();
+       return await this.gameService.getLeaderboard();
     };
 
     @Get('/live')
     @UsePipes(ValidationPipe)
     async getLiveGames(@Query() page?: PaginationDto) { 
         if(page && page.page)
-            return this.gameService.getLiveGames(page.page);
-        return this.gameService.getLiveGames();
+            return await this.gameService.getLiveGames(page.page);
+        return await this.gameService.getLiveGames();
         
     }
 
@@ -46,21 +46,21 @@ export class GameController {
         else 
             type = 1
 
-        return this.gameService.createGame(user,type)
+        return await this.gameService.createGame(user,type)
     };
 
 
     @Put(':token/surrender')
     @UsePipes(ValidationPipe)
     async setSurrender(@GetUser() user : User, @Param() token : TokenDto){
-        return this.gameService.setGameResult(user.id, token.token ,0,5);
+        return await this.gameService.setGameResult(user.id, token.token ,0,5);
     };
 
     @Put('')
     @UsePipes(ValidationPipe)
     //gameExists guard
     async setGameResult(@Body() results:GameResultDto){
-        return this.gameService.setGameResult(results.user1Id,results.token,results.player1Score,results.player2Score);
+        return await this.gameService.setGameResult(results.user1Id,results.token,results.player1Score,results.player2Score);
     }
 
 
