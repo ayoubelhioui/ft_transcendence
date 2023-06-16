@@ -16,6 +16,8 @@ export class GroupInvitesController {
         me owner of group
 
     */
+
+    //localhost:3000/channels/:id/invite/111112
     @Post(':token/accept')
     @UseGuards(ChannelExistsGuard, UserNotInChannelGuard, BlacklistedGuard)
     async acceptInvite(@GetUser() user : User, @GetChannel() channel : Channel,@Param('token', ParseUUIDPipe) token : string){

@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod, forwardRef } from '@nestjs/common';
 import { ChannelService } from './channel.service';
 import { ChannelController } from './channel.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,14 +18,13 @@ import UsersMutedRepository from '../repositories/users-muted.repository';
 import { UserInChannelGuard } from './guards/user-in-channel.guard';
 import { PrivateChannelGuard } from './guards/private-channel.guard';
 import ChannelMessagesRepository from '../repositories/channel-messages.repository';
-import ChannelInvitesRepository from '../repositories/channel-invites.repository';
 import { BlacklistedGuard } from './guards/blacklisted.guard';
 import { GroupGuard } from './guards/group.guard';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Channel, User, ChannelUsers, ChannelBlacklist, UsersMuted, ChannelMessages, ChannelInvites]),
-    UserModule
+    forwardRef(() => UserModule)
   ],
   providers: [
     ChannelService,

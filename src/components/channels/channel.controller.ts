@@ -36,10 +36,10 @@ export class ChannelController {
         return (await this.channelService.getChannels(user));
     };
 
-    @Get('my')
-    async getMyChannels(@GetUser() user: User) : Promise< Channel[] | undefined > {
-        return (await this.channelService.getMyChannels(user));
-    };
+    // @Get('my')
+    // async getMyChannels(@GetUser() user: User) : Promise< Channel[] | undefined > {
+    //     return (await this.channelService.getMyChannels(user));
+    // };
 
     @Get(':id/users')
     @UseGuards(ChannelExistsGuard, UserInChannelGuard)
@@ -75,14 +75,14 @@ export class ChannelController {
 
 
     /* check if user is not blocked from this channel*/
-    @Post(':id/join')
-    @UseGuards(ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard)
-    async joinChannel(@GetUser() user : User, @GetChannel() channel : Channel, @Body() joinChannelDto : JoinChannelDto) {
-        await this.channelService.joinChannel(user, channel, joinChannelDto);
-        return {
-            message : "user joined successfully"
-        };
-    };
+    // @Post(':id/join')
+    // @UseGuards(ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard)
+    // async joinChannel(@GetUser() user : User, @GetChannel() channel : Channel, @Body() joinChannelDto : JoinChannelDto) {
+    //     await this.channelService.joinChannel(user, channel, joinChannelDto);
+    //     return {
+    //         message : "user joined successfully"
+    //     };
+    // };
 
 
     @Put(':id/role/:targetUserId')
@@ -136,14 +136,14 @@ export class ChannelController {
         }; 
     };
 
-    @Delete(':id/leave')
-    @UseGuards(ChannelExistsGuard, GroupGuard, UserInChannelGuard)
-    async leaveChannel(@GetChannel() channel, @GetUser() user  : User, @GetChannelUsers() channelUser : ChannelUsers) {
-        await  this.channelService.leaveChannel(channel, user, channelUser);
-        return {
-            message : "user leave  successfully"
-        }; 
-    };
+    // @Delete(':id/leave')
+    // @UseGuards(ChannelExistsGuard, GroupGuard, UserInChannelGuard)
+    // async leaveChannel(@GetChannel() channel, @GetUser() user  : User, @GetChannelUsers() channelUser : ChannelUsers) {
+    //     await  this.channelService.leaveChannel(channel, user, channelUser);
+    //     return {
+    //         message : "user leave  successfully"
+    //     }; 
+    // };
 
 
 

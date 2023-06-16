@@ -5,7 +5,6 @@ import ABaseRepository from "src/components/repositories/repositories_interfaces
 import { Injectable } from "@nestjs/common";
 import { IChannelUsersRepository } from "./repositories_interfaces";
 import { ChannelUserRole } from "../../global/types/channel-user-roles";
-import { channel } from 'diagnostics_channel';
 
 @Injectable()
 class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IChannelUsersRepository
@@ -52,16 +51,50 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
     return (this.save(nextOwner));
   }
 
-  async getUserChannels(userId : number) : Promise < Channel[] | undefined > {
+  async getUserChannelsWithLastMessage(userId : number) : Promise < any[] | undefined > {
     return this.entity
     .createQueryBuilder('channelUsers')
     .leftJoinAndSelect('channelUsers.channel', 'channel')
+    .leftJoinAndSelect('channelUsers.user', 'user')
+    .leftJoinAndSelect('channel.lastMessage', 'lastMessage')
     .where('channelUsers.userId = :id', { id: userId })
-    .select('channel.id', 'id')
-    .addSelect('channel.name', 'name')
-    .addSelect('channel.visibility', 'visibility')
-    .addSelect('channel.isGroup', 'isGroup')
+    .select(['channel.id', 'channel.name', 'channel.visibility', 'channel.isGroup'])
+    .addSelect('lastMessage.id', 'lastMessage_id')
+    .addSelect('lastMessage.message', 'lastMessage_message')
+    .addSelect('lastMessage.time', 'lastMessage_time')
+    .addSelect('lastMessage.seen', 'lastMessage_seen')
+    .addSelect('user.id', 'user_id')
+    .addSelect('user.username', 'user_username')
+    .addSelect('user.avatar', 'user_avatar')
+    .orderBy('lastMessage.time', 'DESC')
     .getRawMany()
+    .then(results => {
+      // Transform the raw results to the desired output structure
+      return results.map(result => {
+        const channel: any = {
+          id: result.channel_id,
+          name: result.channel_name,
+          visibility: result.channel_visibility,
+          isGroup: result.channel_isGroup,
+          user : {
+            userId : result.user_id,
+            username : result.user_username,
+            avatar : result.user_avatar
+          }
+        };
+
+        if (result.lastMessage_id) {
+          channel.lastMessage = {
+            id: result.lastMessage_id,
+            message: result.lastMessage_message,
+            time: result.lastMessage_time,
+            seen: result.lastMessage_seen
+          };
+        }
+
+        return channel;
+      });
+    });
   }
 
 

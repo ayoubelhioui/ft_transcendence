@@ -14,8 +14,11 @@ class Notification {
     @Column()
     public message : string;
 
-    @Column()
-    public link : string;
+    @Column({nullable : true})
+    public acceptLink : string;
+
+    @Column({nullable : true})
+    public refuseLink : string;
 
     @Column()
     public time : Date;

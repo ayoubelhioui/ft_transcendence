@@ -1,6 +1,6 @@
 import { Inject, Injectable, Module } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt"
-import { CreateUserDto } from "src/components/user/user.dto";
+import { CreateUserDto } from "src/components/user/dto/user.dto";
 require('dotenv').config();
 @Injectable()
 export class AuthService{

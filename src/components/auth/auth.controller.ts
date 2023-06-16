@@ -3,7 +3,7 @@ import { AuthService } from "./auth.service";
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { TokenPresenceGuard } from "./guards/token-presence.guard";
-import { CreateUserDto } from "src/components/user/user.dto";
+import { CreateUserDto } from "src/components/user/dto/user.dto";
 import { ConfigModule } from "@nestjs/config";
 import { TokenValidationGuard } from "./guards/token-validation.guard";
 

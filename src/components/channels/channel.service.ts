@@ -67,7 +67,7 @@ export class ChannelService {
     }
 
     async getMyChannels(user : User) :  Promise < Channel[] | undefined > {
-        return (this.channelUsersRepository.getUserChannels(user.id));
+        return (this.channelUsersRepository.getUserChannelsWithLastMessage(user.id));
     };
 
 
@@ -173,14 +173,24 @@ export class ChannelService {
         return (this.channelMessagesRepository.getChannelMessages(channel, date));  
     };
 
+    private async setLastMessageChannel(channelId : number, lastMessage : ChannelMessages)
+    {
+        const criteria = {
+            id : channelId
+        };
+        return (this.channelRepository.update(criteria, {lastMessage}))
+    }
+
 
     //if not muted
-    async createMessage(user : User, channel : Channel, message : string) : Promise <ChannelMessages | undefined>{
-        return (this.channelMessagesRepository.create({
+    async createMessage(user : User, channel : Channel, message : string) : Promise <ChannelMessages | undefined> {
+        const createdMessage : ChannelMessages = await this.channelMessagesRepository.create({
             user,
             channel,
             message
-        }));
+        });
+        await (this.setLastMessageChannel(channel.id, createdMessage));
+        return (createdMessage);
     };
 }
 

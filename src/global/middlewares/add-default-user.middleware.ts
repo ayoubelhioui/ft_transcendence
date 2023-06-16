@@ -15,7 +15,7 @@ export class AddUserMiddleware implements NestMiddleware {
     async use(req: Request, res: Response, next: NextFunction) {
 
         const users : User[] | undefined = await this.userService.findAll();
-        const id = 2;
+        const id = 1;
         let user : User = null;
         user = await this.userService.findUserById(id);
         if (!user)
