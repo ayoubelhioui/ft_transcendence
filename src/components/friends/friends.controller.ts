@@ -5,7 +5,6 @@ import { GetUser } from '../user/decorators/user.decorator';
 import { TargetUserExistGuard } from '../user/guards/target-user-exists.guard';
 import { GetTargetedUser } from '../channels/decorators';
 import { IsFriendGuard } from './guards/is-friend.guard';
-import { is } from 'date-fns/locale';
 
 @Controller('users/me/friends')
 export class FriendsController {

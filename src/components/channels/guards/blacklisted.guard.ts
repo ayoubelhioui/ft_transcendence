@@ -8,8 +8,9 @@ export class BlacklistedGuard implements CanActivate {
     constructor(private readonly channelService : ChannelService) {};
     async canActivate(context: ExecutionContext): Promise < boolean> {
         const request = context.switchToHttp().getRequest();
+    
         const user : User = request.user;
-        const channel : Channel= request.Channel;
+        const channel : Channel = request.Channel;
         await this.channelService.isUserBlacklisted(user, channel);
         return true;
     }
