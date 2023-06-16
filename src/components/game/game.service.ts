@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, MethodNotAllowedException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { IBlockedUsersRepository, IGamesRepository, IUserRepository } from '../repositories/repositories_interfaces';
 import { MatchHistory, User } from 'src/database/entities';
 import { IsNull, MoreThan, Not } from 'typeorm';
@@ -24,9 +24,18 @@ export class GameService {
         });
     }
     
-    async getLiveGames() {
+    async getLiveGames(page: number = 1, pageSize: number = 10) {
         //make it bring only 10 games last started
-        const liveGames = await this.gamesRepository.findByCondition({ match_time_end: IsNull() });
+
+        const rowsToSkip = (page - 1) * pageSize;
+        const liveGames = await this.gamesRepository.findByOptions({
+          take: pageSize,
+          skip : rowsToSkip, 
+          where : {
+             player2 : Not(IsNull()),
+             match_time_end: IsNull() 
+          },
+        });
         return liveGames;
     }
     
@@ -34,6 +43,11 @@ export class GameService {
     async createGame(player1: User,  gameType : boolean){
         
         const existingGame = await this.hasOpenGame(player1)
+        if(existingGame && existingGame.player2)
+            return ({
+                message : "already have an on going game",
+                inviteId : existingGame.token
+            })
         if(existingGame)
             await this.gamesRepository.remove(existingGame);
         const game = await this.gamesRepository.create({
@@ -48,32 +62,40 @@ export class GameService {
 
     async hasOpenGame(player1: User)
     {
-        const existingGame = await this.gamesRepository.findOneByCondition({
+        const existingGame = await this.gamesRepository.findOneByOptions({
             where : {
                 player1,
                 match_time_end: IsNull(),
-            }
+            },
+            relations : ["player2"]
         })
         return (existingGame);
     }
     // //player2 exists guard
-    // async joinGame(player2: User,  token : string){
+    async joinGame(player2: User,  token : string){
 
-    //     const game = await this.gamesRepository.findOneByCondition({
-    //         where:{token, match_time_end: IsNull() } 
-    //     })
-    //     if(!game)
-    //         throw new NotFoundException("game finished Or doesn't exist")
-    //     const accessible = await this.friendsService.blocking_exists(game.player1,player2);
-    //     if(!accessible)
-    //         throw new UnauthorizedException("user innacessible");
-    //     game.player2 = player2;
-    //     return await this.gamesRepository.save(game);
+        const game = await this.gamesRepository.findOneByOptions(
+            {
+                where : {token, match_time_end: IsNull() } ,
+                relations: ["player1","player2"]
+            }
+        )
+        if(!game)
+            throw new NotFoundException("game finished Or doesn't exist")
+        if(game.player2)
+            throw new UnauthorizedException("game is full");
+        if(game.player1.id === player2.id)
+            throw new UnauthorizedException("can't join your own games");
+        const inaccessible = await this.friendsService.blocking_exists(game.player1,player2);
+        if(inaccessible)
+            throw new UnauthorizedException("user innacessible");
+        game.player2 = player2;
+        return await this.gamesRepository.save(game);
 
-    // }
+    }
 
     //user exists?
-    async get_game_link(user: User) : Promise <string>
+    async get_game_link(user: User) : Promise <string | {message : string}>
     {
         const game = await this.gamesRepository.findOneByCondition({
             where : {
@@ -81,6 +103,10 @@ export class GameService {
                 match_time_end: IsNull(),
             }
         })
+        if(!game)
+            return ({
+                message : "no on going game with that id"
+            })
         return game.token;
     }
 
@@ -102,16 +128,27 @@ export class GameService {
     }
     
     
-    async setGameResult(token: string, player1Score: number, player2Score: number) : Promise <MatchHistory> {
+    async setGameResult(user1Id : number,token: string, player1Score: number, player2Score: number) : Promise <MatchHistory> {
     
-        const matchHistoryArr : MatchHistory[] = await this.gamesRepository.findByConditionWithRelations({where : {token}},["player1", "player2"]);
-        const matchHistory : MatchHistory = matchHistoryArr[0];
-        if (matchHistory) {
+        const matchHistoryArr : MatchHistory[] = await this.gamesRepository.findByConditionWithRelations({token,player2 : Not(IsNull()), match_time_end : IsNull()},["player1", "player2"]);
+        if (matchHistoryArr.length) {
+            const matchHistory : MatchHistory = matchHistoryArr[0];
+
+            if(matchHistory.player1.id == user1Id)
+            {} else if(matchHistory.player2.id == user1Id)
+            {
+                [player1Score,player2Score] = [player2Score,player1Score]
+            }
+            else throw new BadRequestException("user 1 wasn't in playing in this game");
+
+            if(matchHistory.player1_score && matchHistory.player2_score)
+                throw new MethodNotAllowedException("already set scores")
             matchHistory.player1_score = player1Score;
             matchHistory.player2_score = player2Score;
             matchHistory.match_time_end = new Date();
             // await this.gamesRepository.save(matchHistory);
 
+            
             if(player1Score > player2Score)
             {
                 matchHistory.player1.wins += 1 
@@ -120,26 +157,32 @@ export class GameService {
                 matchHistory.player1.wins += 1 
                 matchHistory.player2.loss += 1 
             }
-            matchHistory.player1.winrate = (matchHistory.player1.wins * 100) / (matchHistory.player1.wins + matchHistory.player1.loss)
-            matchHistory.player2.winrate = (matchHistory.player2.wins * 100) / (matchHistory.player2.wins + matchHistory.player2.loss)
+            matchHistory.player1.winrate = Math.round((matchHistory.player1.wins * 100) / (matchHistory.player1.wins + matchHistory.player1.loss))
+            matchHistory.player2.winrate = Math.round((matchHistory.player2.wins * 100) / (matchHistory.player2.wins + matchHistory.player2.loss))
+            await this.userRepository.save([matchHistory.player1 , matchHistory.player2])
             return this.gamesRepository.save(matchHistory);
 
             //TODO: on testing phase test if findOneWithRelationsWork
             // chatgpt says I can just save like this when I retrieve with relations
             
         } else {
-            throw new NotFoundException('Match not found');
+            throw new NotFoundException(`Match not found, Or Hasn't started`);
         }
     }
   
     async getLeaderboard(page: number = 1, pageSize: number = 10){
         const rowsToSkip = (page - 1) * pageSize;
-        const leaderboard = await this.userRepository.findByCondition({
+        const leaderboard = await this.userRepository.findByOptions({
           take: pageSize,
           skip : rowsToSkip, 
-          where : {
-              wins : MoreThan(0)
-          },
+          where : [
+            {
+                wins : MoreThan(0)
+            },
+            {
+                loss : MoreThan(0)
+            }
+                ],
           order: {
           //sort by winrate than sort b games ()
             winrate: 'DESC',
@@ -151,6 +194,9 @@ export class GameService {
     };
 
 
-
-
+    //for guard
+    async findGame(token : string)
+    {
+        return await this.gamesRepository.findOneByCondition({token});
+    }
 }

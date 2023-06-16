@@ -5,6 +5,7 @@ import { BlockedUsersRepository, GamesRepository, UserRepository } from '../repo
 import { FriendsModule } from '../friends/friends.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlockedUsers, MatchHistory, User } from 'src/database/entities';
+import { GameExistsGuard } from './guards/game-exists.guard';
 
 
 @Module({
@@ -26,7 +27,9 @@ import { BlockedUsers, MatchHistory, User } from 'src/database/entities';
     {
       provide : "MyBlockedUsersRepository",
       useClass : BlockedUsersRepository
-    }
+    },
+    /*** guards */
+    GameExistsGuard
   ],
 })
 export class GameModule {}
