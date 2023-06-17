@@ -14,8 +14,6 @@ export class GroupInvitesService {
     
      
     async inviteToGroup(invitedUser : User, channel : Channel) : Promise <ChannelInvites> {
-        console.log(invitedUser);
-        console.log(channel);
         await this.channelService.isUserBlacklisted(invitedUser, channel);
         return (this.channelInvitesRepository.create({
             user: invitedUser, 

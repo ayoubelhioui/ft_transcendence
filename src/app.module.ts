@@ -10,6 +10,7 @@ import { GroupInvitesModule } from './components/group_invites/group_invites.mod
 import { FriendsModule } from './components/friends/friends.module';
 import { ChannelModule } from './components/channels/channel.module';
 import { AddUserMiddleware } from './global/middlewares/add-default-user.middleware';
+import { SocketModule } from './components/socket/socket.module';
 
 const ENV_PATH : string = './src/.env'; 
 
@@ -24,6 +25,7 @@ const ENV_PATH : string = './src/.env';
     NotificationModule,
     GroupInvitesModule,
     FriendsModule,
+    SocketModule,
   ],
   controllers: [],
   providers: [],

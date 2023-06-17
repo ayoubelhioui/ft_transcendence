@@ -16,7 +16,7 @@ class UserRepository extends ABaseRepository<User> implements IUserRepository
   }
 
   async fetchTwoUsers(user1Id: number, user2Id: number) {
-      const users = await this.entity.createQueryBuilder('MatchHistory')
+      const users = await this.entity.createQueryBuilder('Game')
         .where('user.id IN (:ids)', { ids: [user1Id, user2Id] })
         .getMany();
     

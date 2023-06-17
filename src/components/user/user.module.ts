@@ -10,7 +10,7 @@ import { ChannelUsersRepository } from '../repositories';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Channel, User, ChannelUsers, ChannelBlacklist, UsersMuted, ChannelMessages, ChannelInvites]),
+        TypeOrmModule.forFeature([User, ChannelUsers]),
         forwardRef(() => ChannelModule),
     ],
     providers: [

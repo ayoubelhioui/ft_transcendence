@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable, MethodNotAllowedException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { IBlockedUsersRepository, IGamesRepository, IUserRepository } from '../repositories/repositories_interfaces';
-import { MatchHistory, User } from 'src/database/entities';
+import { Game, User } from 'src/database/entities';
 import { IsNull, MoreThan, Not } from 'typeorm';
 import { FriendsService } from '../friends/friends.service';
 
@@ -113,9 +113,9 @@ export class GameService {
 
     //to know which players can input
     async getGamePlayers(token: string) {
-        const matchHistory = await this.gamesRepository.findOneByCondition({where :{ token }});
-        if (matchHistory) {
-            const { player1, player2, match_time_end } = matchHistory;
+        const game = await this.gamesRepository.findOneByCondition({where :{ token }});
+        if (game) {
+            const { player1, player2, match_time_end } = game;
             const isLive = match_time_end === null;
             return {
                 player1,
@@ -128,39 +128,39 @@ export class GameService {
     }
     
     
-    async setGameResult(user1Id : number,token: string, player1Score: number, player2Score: number) : Promise <MatchHistory> {
+    async setGameResult(user1Id : number,token: string, player1Score: number, player2Score: number) : Promise <Game> {
     
-        const matchHistoryArr : MatchHistory[] = await this.gamesRepository.findByConditionWithRelations({token,player2 : Not(IsNull()), match_time_end : IsNull()},["player1", "player2"]);
-        if (matchHistoryArr.length) {
-            const matchHistory : MatchHistory = matchHistoryArr[0];
+        const gameArr : Game[] = await this.gamesRepository.findByConditionWithRelations({token,player2 : Not(IsNull()), match_time_end : IsNull()},["player1", "player2"]);
+        if (gameArr.length) {
+            const game : Game = gameArr[0];
 
-            if(matchHistory.player1.id == user1Id)
-            {} else if(matchHistory.player2.id == user1Id)
+            if(game.player1.id == user1Id)
+            {} else if(game.player2.id == user1Id)
             {
                 [player1Score,player2Score] = [player2Score,player1Score]
             }
             else throw new BadRequestException("user 1 wasn't in playing in this game");
 
-            if(matchHistory.player1_score && matchHistory.player2_score)
+            if(game.player1_score && game.player2_score)
                 throw new MethodNotAllowedException("already set scores")
-            matchHistory.player1_score = player1Score;
-            matchHistory.player2_score = player2Score;
-            matchHistory.match_time_end = new Date();
-            // await this.gamesRepository.save(matchHistory);
+            game.player1_score = player1Score;
+            game.player2_score = player2Score;
+            game.match_time_end = new Date();
+            // await this.gamesRepository.save(game);
 
             
             if(player1Score > player2Score)
             {
-                matchHistory.player1.wins += 1 
-                matchHistory.player2.loss += 1 
+                game.player1.wins += 1 
+                game.player2.loss += 1 
             } else {
-                matchHistory.player1.wins += 1 
-                matchHistory.player2.loss += 1 
+                game.player1.wins += 1 
+                game.player2.loss += 1 
             }
-            matchHistory.player1.winrate = Math.round((matchHistory.player1.wins * 100) / (matchHistory.player1.wins + matchHistory.player1.loss))
-            matchHistory.player2.winrate = Math.round((matchHistory.player2.wins * 100) / (matchHistory.player2.wins + matchHistory.player2.loss))
-            await this.userRepository.save([matchHistory.player1 , matchHistory.player2])
-            return this.gamesRepository.save(matchHistory);
+            game.player1.winrate = Math.round((game.player1.wins * 100) / (game.player1.wins + game.player1.loss))
+            game.player2.winrate = Math.round((game.player2.wins * 100) / (game.player2.wins + game.player2.loss))
+            await this.userRepository.save([game.player1 , game.player2])
+            return this.gamesRepository.save(game);
 
             //TODO: on testing phase test if findOneWithRelationsWork
             // chatgpt says I can just save like this when I retrieve with relations

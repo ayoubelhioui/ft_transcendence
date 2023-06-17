@@ -2,7 +2,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToMany, ManyToOne } from 'typeorm';
 
 import {Achievement, Channel, ChannelMessages, ChannelUsers, 
-    MatchHistory,UsersMuted,Notification, Friends, BlockedUsers} from './index'
+    Game,UsersMuted,Notification, Friends, BlockedUsers} from './index'
 import Invites from './channel-invites.entity';
 
 
@@ -30,12 +30,12 @@ class User{
     @ManyToMany(() => Achievement, (achievement) => achievement.users, { cascade: true, onDelete: 'CASCADE' })
     public achievements: Achievement[];
 
-    @OneToMany(() => MatchHistory, (matchHisory) => matchHisory.player1, { cascade: true, onDelete: 'CASCADE' })
-    public matchHistoryPlayer1: MatchHistory[];
+    @OneToMany(() => Game, (matchHisory) => matchHisory.player1, { cascade: true, onDelete: 'CASCADE' })
+    public gamePlayer1: Game[];
 
     /* ******************************************************* */
-    @OneToMany(() => MatchHistory, (matchHisory) => matchHisory.player2, { cascade: true, onDelete: 'CASCADE' })
-    public matchHistoryPlayer2: MatchHistory[];
+    @OneToMany(() => Game, (matchHisory) => matchHisory.player2, { cascade: true, onDelete: 'CASCADE' })
+    public gamePlayer2: Game[];
 
     /************************************************************/
     @OneToMany(() => Channel, (channel: Channel) => channel.owner, { cascade: true, onDelete: 'CASCADE' })

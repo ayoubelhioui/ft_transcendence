@@ -1,5 +1,5 @@
 import Channel from "./channel.entity";
-import MatchHistory from "./match_history.entity";
+import Game from "./game.entity";
 import User from "./user.entity";
 import Achievement from './achievement.entity';
 import ChannelMessages from './channel_messages.entity';
@@ -13,7 +13,7 @@ import BlockedUsers from './blocked_users.entity';
 import ChannelInvites from 'src/database/entities/channel-invites.entity';
 
 export {
-    Channel, MatchHistory,  Achievement, ChannelMessages,
+    Channel, Game,  Achievement, ChannelMessages,
     ChannelUsers, User, Notification, UsersMuted,
     ChannelBlacklist, Friends, BlockedUsers,ChannelInvites
 };

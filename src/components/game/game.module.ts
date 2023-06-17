@@ -4,14 +4,20 @@ import { GameService } from './game.service';
 import { BlockedUsersRepository, GamesRepository, UserRepository } from '../repositories';
 import { FriendsModule } from '../friends/friends.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BlockedUsers, MatchHistory, User } from 'src/database/entities';
+import { BlockedUsers, Game, User } from 'src/database/entities';
 import { GameExistsGuard } from './guards/game-exists.guard';
+import { GameGateway } from './game.gateway';
+import { SocketModule } from '../socket/socket.module';
+import { UserModule } from '../user/user.module';
+import { JwtModule } from '@nestjs/jwt';
 
 
 @Module({
-  imports: [
+  imports: [SocketModule,
     FriendsModule,
-    TypeOrmModule.forFeature([MatchHistory, User, BlockedUsers]),
+    TypeOrmModule.forFeature([Game, User, BlockedUsers]),
+    UserModule,
+    JwtModule.register({})
   ],
   controllers: [GameController],
   providers: [
@@ -29,7 +35,8 @@ import { GameExistsGuard } from './guards/game-exists.guard';
       useClass : BlockedUsersRepository
     },
     /*** guards */
-    GameExistsGuard
+    GameExistsGuard,
+    GameGateway
   ],
 })
 export class GameModule {}
