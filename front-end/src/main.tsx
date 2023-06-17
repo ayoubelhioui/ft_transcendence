@@ -9,16 +9,18 @@ import {
   BrowserRouter
 } from "react-router-dom";
 
+import { ThemeProvider } from "@material-tailwind/react";
+
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <>
 
     <BrowserRouter>
-
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-      
+      <ThemeProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
 
   </>,
