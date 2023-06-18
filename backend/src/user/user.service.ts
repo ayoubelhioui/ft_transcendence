@@ -24,7 +24,7 @@ export class UserService{
         createUserDto.two_factors_enabled = false;
     }
 
-    async findUserById(IntraId: number): Promise<User | undefined>{
+    async findById(IntraId: number): Promise<User | undefined>{
         const user = await this.userRepository.findOne({
             where : {
                 IntraId: IntraId,
@@ -48,6 +48,14 @@ export class UserService{
         }));
     }
 
+    async update(userDto: UserDto) {
+        const resource = await this.findById(userDto.IntraId);
+        if (!resource)
+            throw new NotFoundException('Resource not found.');
+        Object.assign(resource, userDto);
+        return (await this.userRepository.save(resource));
+    }
+
     async sendEmail(emailVerificationCode: string, userMail: string){
          const transporter = await nodemailer.createTransport({
             service: 'outlook',
@@ -56,7 +64,6 @@ export class UserService{
               pass: '1234564789ayoubayoub',
             },
           });
-        
           const mailOptions = {
             from: 'ayoubelhioui@outlook.com',
             to: userMail,

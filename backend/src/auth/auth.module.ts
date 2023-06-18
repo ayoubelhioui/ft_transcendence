@@ -9,9 +9,11 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserService } from "src/user/user.service";
 import { User } from "src/entities";
 import TokenBlacklist from "src/entities/token_blacklist";
+import { UserModule } from "src/user/user.module";
 
 @Module({
     imports: [
+        UserModule,
         TypeOrmModule.forFeature([
             User, TokenBlacklist
         ]),
@@ -21,6 +23,6 @@ import TokenBlacklist from "src/entities/token_blacklist";
         })
     ],
     controllers: [AuthController],
-    providers: [AuthService, JwtService, FortyTwoStrategy, UserService],
+    providers: [AuthService, JwtService, FortyTwoStrategy],
 })
 export class AuthModule{}

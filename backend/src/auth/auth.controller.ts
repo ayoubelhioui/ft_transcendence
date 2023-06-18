@@ -32,24 +32,23 @@ export class AuthController{
     
     @Post('verify-two-factors')
     async verifyTwoFactors(@Body() body, @Response() res) {
-        console.log(this.user);
         await this.authService.twoFactors(body.token, body.userEmail);
         await this.authService.authenticate(this.user, res);
     }
 
     @Post('two-factors')
-    async twoFactorsAuth(@Body() body) : Promise<void>{
+    async twoFactorsAuth(@Body() body) : Promise<void> {
         await this.authService.mailingUser(body.userEmail);
     }
 
     @UseGuards(AuthGuard('42'))
-    @Get('callback') // return the small image.
+    @Get('callback') // i need to change the image, take the small image from the profile (from intra api).
     async singUp(@Request() req, @Response() res){
         this.user = req.user;
-        let user = await this.authService.isUserAlreadyExist(req.user);
+        let user = await this.authService.isUserAlreadyExist(this.user);
         if (user.two_factors_enabled)
             res.redirect('http://localhost:5000/two-factors-authentication');
         else
-            await this.authService.authenticate(req.user, res);
+               await this.authService.authenticate(this.user, res);
     }
 }

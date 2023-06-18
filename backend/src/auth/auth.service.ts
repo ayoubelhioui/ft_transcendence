@@ -37,7 +37,7 @@ export class AuthService{
     }
 
     async findUserById(intraId: number) : Promise<object | undefined> {
-        return (await this.userService.findUserById(intraId));
+        return (await this.userService.findById(intraId));
     }
 
     async removeTokens(accessToken: string, refreshToken: string){
