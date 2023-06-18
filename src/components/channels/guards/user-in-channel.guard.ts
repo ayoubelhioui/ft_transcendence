@@ -7,7 +7,10 @@ import { UserService } from '../../user/user.service';
 
 @Injectable()
 export class UserInChannelGuard implements CanActivate {
-    constructor(@Inject('MyChannelUsersRepository') private readonly channelUsersRepository: IChannelUsersRepository) {};
+    constructor(
+        @Inject('MyChannelUsersRepository') private readonly channelUsersRepository: IChannelUsersRepository,
+        private reflector: Reflector
+        ) {};
 
     private async isUserInChannel(user : User , channel : Channel) : Promise <ChannelUsers> {
         const userInChannel : ChannelUsers | undefined  = await this.channelUsersRepository.isUserInChannel(user, channel);
@@ -16,8 +19,13 @@ export class UserInChannelGuard implements CanActivate {
         return (userInChannel);
     }
     async canActivate(context: ExecutionContext): Promise <boolean> {
+        const isSocket = this.reflector.getAllAndOverride<boolean>('isSocket', [context.getHandler(), context.getClass()]);
+        let request;
+        if (isSocket)
+            request = context.switchToWs().getClient();
+        else
+            request = context.switchToHttp().getRequest();
 
-        const request = context.switchToHttp().getRequest();
         const channel  : Channel = request.channel;
         const user     : User =    request.user;
 

@@ -3,22 +3,34 @@ import { ChannelService } from '../channels/channel.service';
 import IChannelInvitesReposiroty from '../repositories/repositories_interfaces/channel-invites.repository.interface';
 import { Channel, ChannelInvites, User } from 'src/database/entities';
 import { ChannelUserRole } from 'src/global/types/channel-user-roles';
+import { NotificationService } from '../notification/notification.service';
+import { NotificationDto } from '../notification/dto/notification.dto';
 
 @Injectable()
 export class GroupInvitesService {
 
     constructor(
         private readonly channelService : ChannelService,
+        private readonly notificationService : NotificationService,
         @Inject('MyChannelInvitesRepository') private readonly channelInvitesRepository: IChannelInvitesReposiroty,       
     ){}
     
      
-    async inviteToGroup(invitedUser : User, channel : Channel) : Promise <ChannelInvites> {
+    async inviteToGroup(sender : User , invitedUser : User, channel : Channel) : Promise <ChannelInvites> {
         await this.channelService.isUserBlacklisted(invitedUser, channel);
-        return (this.channelInvitesRepository.create({
+        const invitation : ChannelInvites =  await this.channelInvitesRepository.create({
             user: invitedUser, 
+            sender,
             group : channel
-        }));
+        })
+        const notificationInfos : NotificationDto = {
+            message : `${sender.username} Invite you To Channel ${channel.name}`, 
+            acceptLink : `channels/${channel.id}/invite/${invitation.token}/accept`,
+            refuseLink : `channels/${channel.id}/invite/${invitation.token}/refuse`,
+            acceptMethod : "POST"
+        }
+        await this.notificationService.createNotification(notificationInfos, sender, invitedUser);
+        return (invitation);
     }
 
     private async isInvited(user : User, channel : Channel, token : string) : Promise<ChannelInvites> {
@@ -36,8 +48,12 @@ export class GroupInvitesService {
 
     async acceptInvite(user : User, channel : Channel, token : string) {
         const invite : ChannelInvites = await this.isInvited(user, channel, token);
+        const notificationInfos = {
+            message : `${user.username} Joined the Channel`
+        }
         return (Promise.all([
             this.channelInvitesRepository.remove(invite),
+            this.notificationService.createNotification(notificationInfos, invite.sender, user),
             this.channelService.addUserToChannel(user, channel, ChannelUserRole.member)
         ]));
     }

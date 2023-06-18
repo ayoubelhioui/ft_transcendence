@@ -41,8 +41,8 @@ export class GroupInvitesController {
     @Post(':targetUserId')
     @ChannelRoles(ChannelUserRole.owner)
     @UseGuards(ChannelExistsGuard, GroupGuard, UserInChannelGuard,ChannelRolesGuard, TargetedUserNotInChannelGuard)
-    async inviteToGroup(@GetTargetedUser() targetedUser : User, @GetChannel() channel : Channel) {
-        await this.groupInvitesService.inviteToGroup(targetedUser, channel);
+    async inviteToGroup(@GetUser() user : User ,@GetTargetedUser() targetedUser : User, @GetChannel() channel : Channel) {
+        await this.groupInvitesService.inviteToGroup(user, targetedUser, channel);
         return ({
             message : "invitations done successfully"
         })

@@ -75,14 +75,14 @@ export class ChannelController {
 
 
     /* check if user is not blocked from this channel*/
-    // @Post(':id/join')
-    // @UseGuards(ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard)
-    // async joinChannel(@GetUser() user : User, @GetChannel() channel : Channel, @Body() joinChannelDto : JoinChannelDto) {
-    //     await this.channelService.joinChannel(user, channel, joinChannelDto);
-    //     return {
-    //         message : "user joined successfully"
-    //     };
-    // };
+    @Post('me/channels/:id/join')
+    @UseGuards(ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard)
+    async joinChannel(@GetUser() user : User, @GetChannel() channel : Channel, @Body() joinChannelDto : JoinChannelDto) {
+        await this.channelService.joinChannel(user, channel, joinChannelDto);
+        return {
+            message : "user joined successfully"
+        };
+    };
 
 
     @Put(':id/role/:targetUserId')

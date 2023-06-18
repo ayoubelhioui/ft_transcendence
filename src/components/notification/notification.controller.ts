@@ -9,8 +9,6 @@ export class NotificationController {
     constructor(
         private readonly notificationService: NotificationService
         ){}
-    @Post(':receiverId')
-    createNotification(){};
 
     @Get()
     getNotifactions(@GetUser() user : User){

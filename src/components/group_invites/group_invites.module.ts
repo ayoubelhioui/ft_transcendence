@@ -7,12 +7,14 @@ import { Channel, User, ChannelUsers, ChannelBlacklist, UsersMuted, ChannelMessa
 import ChannelInvitesRepository from '../repositories/channel-invites.repository';
 import { ChannelBlacklistRepository, ChannelMessagesRepository, ChannelRepository, ChannelUsersRepository, UserRepository, UsersMutedRepository } from '../repositories';
 import { UserModule } from '../user/user.module';
+import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   imports : [
     ChannelModule,
     UserModule,
-    TypeOrmModule.forFeature([ User, ChannelUsers, ChannelInvites])
+    TypeOrmModule.forFeature([ User, ChannelUsers, ChannelInvites]),
+    NotificationModule
   ],
   providers: [
     GroupInvitesService,

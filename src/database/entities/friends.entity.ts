@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryColumn, Timestamp, OneToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryColumn, Timestamp, OneToOne, JoinColumn } from 'typeorm';
 import {Channel, User} from './index';
 import { friendRequestStatus } from 'src/global/types';
 
@@ -24,7 +24,8 @@ class Friends{
     @ManyToOne(() => User, (user) => user.receivedFriends, {onDelete: 'CASCADE'})
     public receiver: User;
 
-    @OneToOne(() => Channel, (channel) => channel.id , {onDelete: 'CASCADE', nullable : true})
+    @OneToOne(() => Channel, {onDelete: 'CASCADE', nullable : true})
+    @JoinColumn()
     channel : Channel;
 }
 

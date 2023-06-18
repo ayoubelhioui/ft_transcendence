@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { FriendsService } from './friends.service';
 import { FriendsController } from './friends.controller';
 import { FriendRequestsController } from './friend_requests.controller';
@@ -7,12 +7,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlockedUsers, Friends, User } from 'src/database/entities';
 import { UserModule } from '../user/user.module';
 import { IsFriendGuard } from './guards/is-friend.guard';
+import { NotificationModule } from '../notification/notification.module';
+import { ChannelModule } from '../channels/channel.module';
+import { SocketModule } from '../socket/socket.module';
 
 
 @Module({
     imports: [
       TypeOrmModule.forFeature([User, BlockedUsers, Friends]),
-      UserModule
+      forwardRef(() => SocketModule),
+      forwardRef(() =>  UserModule),
+      NotificationModule,
+      forwardRef(() => ChannelModule),
     ],
   providers: [FriendsService, {
     provide : "MyFriendsRepository",
@@ -26,7 +32,6 @@ import { IsFriendGuard } from './guards/is-friend.guard';
     provide : "MyBlockedUsersRepository",
     useClass : BlockedUsersRepository
   },
-  /**guards**/
   IsFriendGuard
 ],
   controllers: [FriendsController, FriendRequestsController],

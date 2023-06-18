@@ -36,16 +36,7 @@ export class UserController{
 
     @Get('me/channels')
     async getMyChannels(@GetUser() user: User) : Promise< Channel[] | undefined > {
-        return (await this.channelService.getMyChannels(user));
-    };
-
-    @Post('me/channels/:id/join')
-    @UseGuards(ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard)
-    async joinChannel(@GetUser() user : User, @GetChannel() channel : Channel, @Body() joinChannelDto : JoinChannelDto) {
-        await this.channelService.joinChannel(user, channel, joinChannelDto);
-        return {
-            message : "user joined successfully"
-        };
+        return (await this.channelService.getUserChannels(user));
     };
 
 

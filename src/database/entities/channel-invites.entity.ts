@@ -7,7 +7,10 @@ class ChannelInvites{
     @PrimaryGeneratedColumn("uuid")
     public token: string;
 
-    @ManyToOne(() => User, (user) => user.group_invites, {onDelete: 'CASCADE'})
+    @ManyToOne(() => User, (user) => user.group_invites_sent, {onDelete: 'CASCADE'})
+    public sender: User;
+
+    @ManyToOne(() => User, (user) => user.group_invites_received, {onDelete: 'CASCADE'})
     public user: User;
 
     @ManyToOne(() => Channel, (channel) => channel.group_invites, {onDelete: 'CASCADE'})

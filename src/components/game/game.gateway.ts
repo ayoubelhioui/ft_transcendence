@@ -3,13 +3,14 @@ import { Server, Socket } from 'socket.io';
 import { User } from 'src/database/entities';
 import { SocketService } from '../socket/socket.service';
 import { GameService } from './game.service';
-import { UseFilters, UseGuards } from '@nestjs/common';
+import { Injectable, UseFilters, UseGuards } from '@nestjs/common';
 import { WebSocketExceptionFilter } from '../socket/websocket-exception.filter';
 import { AuthSocketGuard } from '../auth/guards/auth-socket.guard';
 
 @UseFilters(WebSocketExceptionFilter)
 // @UseGuards(AuthSocketGuard)
 @WebSocketGateway()
+@Injectable()
 export class GameGateway {
    
   constructor(
@@ -64,15 +65,19 @@ export class GameGateway {
     const { gameId } = payload;
 
     const user = this.socketService.getUser(client);
-    await this.gameService.joinGame(user,gameId);
-
+    const game = await this.gameService.joinGame(user,gameId);
+    const player1Socket = this.socketService.getSocket(game.player1.id);
+                          //getGameSocket
     const payloadToSend = {
       gameId,
       message : "Game invite accepted"
     }
-    client.emit('invite_accepted',payloadToSend );
+    player1Socket.forEach(socket => {
+      socket.emit('invite_accepted',payloadToSend);
+    });
+    player1Socket.forEach(socket => socket.emit('invite_accepted',payloadToSend));
+    client.emit('game_accepted',payloadToSend );
     //redirect
-    
   }
 
 }

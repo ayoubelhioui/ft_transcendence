@@ -4,6 +4,8 @@ import { BlockedUsers, Friends, User } from 'src/database/entities';
 import { IBlockedUsersRepository, IFriendsRepository, IUserRepository } from '../repositories/repositories_interfaces';
 import { friendRequestStatus } from 'src/global/types';
 import { DeleteResult } from 'typeorm';
+import { NotificationService } from '../notification/notification.service';
+import { ChannelService } from '../channels/channel.service';
 
 
 
@@ -15,8 +17,9 @@ export class FriendsService {
 
     constructor(
         @Inject("MyFriendsRepository") private readonly friendsRepository : IFriendsRepository,
-        @Inject("MyUserRepository") private readonly userRepository : IUserRepository,
         @Inject("MyBlockedUsersRepository") private readonly blockedUsersRepository : IBlockedUsersRepository,
+        private readonly channelService : ChannelService,
+        private readonly notificationService : NotificationService
         ){}
 
     
@@ -127,7 +130,15 @@ export class FriendsService {
             {
             existingRequest.status = friendRequestStatus.accepted;
             existingRequest.accepted_time = new Date();
-            await this.friendsRepository.save(existingRequest);
+            existingRequest.channel = await this.channelService.createDmChannel(Sender,receiver,`${Sender.username} - ${receiver.username} DM`);
+            const notificationInfos = {
+                message : `You guys has accepted your friend requests`, 
+            }
+            await  Promise.all([
+                this.friendsRepository.save(existingRequest),
+                this.notificationService.createNotification(notificationInfos,receiver, Sender),
+                this.notificationService.createNotification(notificationInfos,Sender, receiver)
+            ])
                 return(
                 {
                     message: 'Friend request accepted',
@@ -149,6 +160,13 @@ export class FriendsService {
             sender: Sender,
             receiver: receiver,
         });
+        //notification
+        const notificationInfos = {
+            message : `${Sender.username} sent you a friend request`, 
+            acceptLink : `users/me/friend-requests/${Sender.id}`,
+            refuseLink : `users/me/friend-requests/${Sender.id}`
+        }
+        await this.notificationService.createNotification(notificationInfos,Sender, receiver);
         }
         return {
             message: 'Friend request sent',
@@ -163,21 +181,25 @@ export class FriendsService {
 
         const existingRequest : Friends | undefined = await this.friendsRepository.findOneByOptions({
             where: [
-                        // {
-                        //     sender: Sender,
-                        //     receiver : receiver,
-                        // },
                         {
                             sender: sender,
                             receiver: user,
                         }
                     ]
             });
+        const notificationInfos = {
+            message : `${user.username} has accepted your friend request`, 
+        }
+        
         if(existingRequest)
         {
             existingRequest.status = friendRequestStatus.accepted;
             existingRequest.accepted_time = new Date();
-            await this.friendsRepository.save(existingRequest);
+            existingRequest.channel = await this.channelService.createDmChannel(user , sender ,`${sender.username} - ${user.username} DM`);
+            await Promise.all([this.friendsRepository.save(existingRequest),
+                this.notificationService.createNotification(notificationInfos,user, sender)
+            ]
+            );
             return {
                 message : `friend request from ${sender.username} has been accepted`
     

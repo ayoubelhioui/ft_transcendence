@@ -17,8 +17,14 @@ class Notification {
     @Column({nullable : true})
     public acceptLink : string;
 
+    @Column({default : "PUT"})
+    public acceptMethod : string;
+
     @Column({nullable : true})
     public refuseLink : string;
+
+    @Column({default : "DELETE"})
+    public refuseMethod : string;
 
     @Column()
     public time : Date;

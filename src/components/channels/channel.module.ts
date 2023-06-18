@@ -20,11 +20,15 @@ import { PrivateChannelGuard } from './guards/private-channel.guard';
 import ChannelMessagesRepository from '../repositories/channel-messages.repository';
 import { BlacklistedGuard } from './guards/blacklisted.guard';
 import { GroupGuard } from './guards/group.guard';
+import { ChannelGateway } from './channel.gateway';
+import { SocketModule } from '../socket/socket.module';
+import { UserMutedGuard } from './guards';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Channel, User, ChannelUsers, ChannelBlacklist, UsersMuted, ChannelMessages, ChannelInvites]),
-    forwardRef(() => UserModule)
+    SocketModule,
+    forwardRef(() => UserModule),
   ],
   providers: [
     ChannelService,
@@ -62,10 +66,11 @@ import { GroupGuard } from './guards/group.guard';
     TargetedUserInChannelGuard,
     UserNotInChannelGuard,
     PrivateChannelGuard,
-    BlacklistedGuard
+    BlacklistedGuard,
+    ChannelGateway
   ],
   controllers: [ChannelController],
-  exports : [ChannelService]
+  exports : [ChannelService, ChannelExistsGuard, UserInChannelGuard]
 })
 export class ChannelModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

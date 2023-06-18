@@ -3,6 +3,7 @@ import { IBlockedUsersRepository, IGamesRepository, IUserRepository } from '../r
 import { Game, User } from 'src/database/entities';
 import { IsNull, MoreThan, Not } from 'typeorm';
 import { FriendsService } from '../friends/friends.service';
+import { pl } from 'date-fns/locale';
 
 @Injectable()
 export class GameService {
@@ -39,6 +40,11 @@ export class GameService {
         return liveGames;
     }
     
+    async deleteGame(existingGame: Game)
+    {
+        if(existingGame)
+        await this.gamesRepository.remove(existingGame);
+    }
     //if User exist guards
     async createGame(player1: User,  gameType : boolean){
         
@@ -71,6 +77,24 @@ export class GameService {
         })
         return (existingGame);
     }
+
+
+
+    async getJoinedGames(player1: User) : Promise<Game[]>
+    {
+        const existingGame = await this.gamesRepository.findByOptions({
+            where : [{
+                player1,
+                match_time_end: IsNull(),
+            },
+            {
+                player2 : player1,
+                match_time_end: IsNull(),
+            }],
+            relations : ["player1","player2"]
+        })
+        return (existingGame);
+    }
     // //player2 exists guard
     async joinGame(player2: User,  token : string){
 
@@ -90,9 +114,12 @@ export class GameService {
         if(inaccessible)
             throw new UnauthorizedException("user innacessible");
         game.player2 = player2;
-        return await this.gamesRepository.save(game);
+        await this.gamesRepository.save(game);
+        return game;
 
     }
+
+    
 
     //user exists?
     async get_game_link(user: User) : Promise <string | {message : string}>

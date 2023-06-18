@@ -5,11 +5,13 @@ import { IUserRepository } from 'src/components/repositories/repositories_interf
 import UserRepository from '../repositories/user.repository';
 import ABaseRepository from 'src/components/repositories/repositories_interfaces/base/base.repository.abstract';
 import { Repository } from 'typeorm';
+import { ChannelGateway } from '../channels/channel.gateway';
 
 
 @Injectable()
 export class UserService {
-    constructor(@Inject('MyUserRepository') private readonly userRepository: IUserRepository) {}
+    constructor(
+        @Inject('MyUserRepository') private readonly userRepository: IUserRepository) {}
 
     async createUser(createUserDto: CreateUserDto): Promise<User | undefined>{
 

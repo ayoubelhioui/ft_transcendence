@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { GameController } from './game.controller';
 import { GameService } from './game.service';
 import { BlockedUsersRepository, GamesRepository, UserRepository } from '../repositories';
@@ -13,10 +13,11 @@ import { JwtModule } from '@nestjs/jwt';
 
 
 @Module({
-  imports: [SocketModule,
+  imports: [
+    forwardRef(() => SocketModule),
     FriendsModule,
     TypeOrmModule.forFeature([Game, User, BlockedUsers]),
-    UserModule,
+    forwardRef(() => UserModule),
     JwtModule.register({})
   ],
   controllers: [GameController],
@@ -38,5 +39,6 @@ import { JwtModule } from '@nestjs/jwt';
     GameExistsGuard,
     GameGateway
   ],
+  exports : [GameService]
 })
 export class GameModule {}

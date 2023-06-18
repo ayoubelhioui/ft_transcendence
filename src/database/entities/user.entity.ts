@@ -103,7 +103,10 @@ class User{
 
 
     @OneToMany(() => Invites, (invites) => invites.user, { cascade: true, onDelete: 'CASCADE' })
-    public group_invites: Invites[];
+    public group_invites_received: Invites[];
+
+    @OneToMany(() => Invites, (invites) => invites.sender, { cascade: true, onDelete: 'CASCADE' })
+    public group_invites_sent: Invites[];
 }
 
 

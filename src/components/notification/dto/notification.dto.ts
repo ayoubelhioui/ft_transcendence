@@ -11,8 +11,21 @@ export class NotificationDto{
     @IsString()
     @MinLength(5)
     @IsOptional()
-    link?: string;
+    acceptLink?: string;
 
+    @IsString()
+    @IsOptional()
+    acceptMethod?: string;
+
+
+    @IsString()
+    @IsOptional()
+    refuseMethod?: string;
+
+    @IsString()
+    @MinLength(5)
+    @IsOptional()
+    refuseLink?: string;
 
     @IsOptional()
     receiverId?: number ;

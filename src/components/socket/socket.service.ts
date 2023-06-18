@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Socket } from 'socket.io';
-import { User } from 'src/database/entities';
+import { Channel, User } from 'src/database/entities';
 
 @Injectable()
 export class SocketService {
@@ -20,8 +20,17 @@ export class SocketService {
         const sockets : Socket[] = this.socketMap.get(userId);
         if(!sockets || !sockets.length )
             throw new NotFoundException("user not online");
-            return sockets;
+        return sockets;
     }
+
+
+    isUserOnline(userId: number): Socket[] {
+        const sockets : Socket[] = this.socketMap.get(userId);
+        if(!sockets || !sockets.length )
+            return [];
+        return sockets;
+    }
+
   
     removeSocket(userId: number, socket : Socket) {
         if (this.socketMap.has(userId)) {
@@ -33,5 +42,11 @@ export class SocketService {
     getUser(socket : any) : User
     {
         return socket.user;
+    }
+
+
+    getChannel(socket : any) : Channel
+    {
+        return socket.channel;
     }
 }

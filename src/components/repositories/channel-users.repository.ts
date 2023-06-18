@@ -91,10 +91,19 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
             seen: result.lastMessage_seen
           };
         }
-
         return channel;
       });
     });
+  }
+
+
+  async getUserChannelsId(userId : number) : Promise < any[] | undefined > {
+    return this.entity
+    .createQueryBuilder('channelUsers')
+    .leftJoinAndSelect('channelUsers.channel', 'channel')
+    .where('channelUsers.userId = :id', { id: userId })
+    .select(['channel.id'])
+    .getRawMany()
   }
 
 

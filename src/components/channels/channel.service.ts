@@ -15,6 +15,7 @@ import { addMinutes } from 'date-fns';
 import { JoinChannelDto } from './dto/join-channel.dto';
 import { ChannelsVisibility } from 'src/global/types/channel-visibility.type';
 import { ChannelWithPassword } from '../../global/dto/channel-with-password.dto';
+import { ChannelGateway } from './channel.gateway';
 
 
 
@@ -26,7 +27,8 @@ export class ChannelService {
                 @Inject('MyChannelBlacklistRepository') private readonly channelBlacklistRepository: IChannelBlacklistRepository,
                 @Inject('MyUsersMutedRepository') private readonly UsersMutedRepository: IUsersMutedRepository,
                 @Inject('MyChannelMessagesRepository') private readonly channelMessagesRepository: IChannelMessagesRepository,
-                private readonly passwordService: PasswordService) {}
+                private readonly passwordService: PasswordService,
+                private readonly channelGateway : ChannelGateway) {}
 
     async getChannelById(channelId : number) : Promise <Channel | undefined> {
         return (this.channelRepository.findOneById(channelId));
@@ -66,9 +68,13 @@ export class ChannelService {
         return (createdChannel);
     }
 
-    async getMyChannels(user : User) :  Promise < Channel[] | undefined > {
+    async getUserChannels(user : User) :  Promise < Channel[] | undefined > {
         return (this.channelUsersRepository.getUserChannelsWithLastMessage(user.id));
     };
+
+    async getUserChannelsId(user : User) : Promise < Channel[] | undefined > {
+        return await this.channelUsersRepository.getUserChannelsId(user.id);
+    }
 
 
     async getChannelUsers(channelId : number) :  Promise < User[] | undefined > {
@@ -104,7 +110,11 @@ export class ChannelService {
             if (!isCorrectPassword)
                 throw new BadRequestException("Password incorrect!");
         }
-        return this.channelUsersRepository.addUserToChannel(user, channel, ChannelUserRole.member);
+        const joinUser = await Promise.all([
+            this.channelUsersRepository.addUserToChannel(user, channel, ChannelUserRole.member),
+            this.channelGateway.joinUserToChannel(user, channel)
+        ]);
+        return joinUser[0];
     };
 
 
@@ -152,8 +162,8 @@ export class ChannelService {
     async leaveChannel(channel : Channel, user  : User, channelUser : ChannelUsers) {
         await this.channelUsersRepository.delete({user , channel});
         const userRole : ChannelUserRole = channelUser.userRole;
+        await this.channelGateway.leaveChannel(user, channel);
         if (userRole == ChannelUserRole.owner) {
-            console.log("prev user Id ==== ")
             console.log(user.id);
             const nextOwner = await this.channelUsersRepository.getNextOwner(channel, user.id);
             if (!nextOwner) {
@@ -163,7 +173,7 @@ export class ChannelService {
             return (Promise.all([
                 this.channelUsersRepository.setNextOwner(nextOwner),
                 this.channelRepository.save(channel)//update channel owner
-                ]));
+            ]));
         }
     };
 
