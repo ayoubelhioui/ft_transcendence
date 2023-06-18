@@ -15,7 +15,7 @@ export class AuthController{
     }
 
     @Get('refresh-token')
-    @UseGuards(TokenValidationGuard)
+    // @UseGuards(TokenValidationGuard)
     async newAccessToken(@Request() req): Promise<object>{
         return ({
             access_token: await this.authService.generateNewToken('10m'),

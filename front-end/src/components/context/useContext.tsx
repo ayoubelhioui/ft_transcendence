@@ -15,13 +15,13 @@ interface User {
     wins: number;
     loss: number;
     winrate: number;
-    two_factors_enabled: string;
+    two_factors_enabled: boolean;
     intraId: number
     // Add any other relevant user information
 }
 
 interface AuthContextType {
-    // checkAuth: () => Promise<void>;
+    updateUser: (newUsername?: string, newAvatar?: File) => Promise<void>;
     logout: () => void;
     isAuthenticated: boolean;
     refreshAccessToken: () => Promise<void>;
@@ -30,7 +30,7 @@ interface AuthContextType {
 
   
 const AuthContext = createContext<AuthContextType>({
-    // checkAuth: () => Promise.resolve(),
+    updateUser: () => Promise.resolve(),
     logout: () => {},
     isAuthenticated: false,
     refreshAccessToken: () => Promise.resolve(),
@@ -51,10 +51,11 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
 
     // const navigate = useNavigate();
 
-
+    
     const refreshAccessToken = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/auth/refresh-token", {
+            
+            const response = await axios.get("http://localhost:3000/auth/refresh-token", {
                 headers: {
                   Authorization: `Bearer ${refreshToken}`,
             }, });
@@ -62,8 +63,6 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
             const newAccessToken = response.data.access_token;
             
             setAccessToken(newAccessToken);
-
-            // setCookie("accessTokenCookie", accessToken, { path: '/', httpOnly: true});
 
         } catch (error) {
             ///////// if the refresh token has expired... // we need to do something /////////////
@@ -80,18 +79,61 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
         };
         
         try {
-            const res = await axios.post("/logout", jResponse);
+            const res = await axios.post("http://localhost:3000/logout", jResponse);
 
             console.log(res);
 
             // removeCookie('accessTokenCookie', { path: '/' });
             // removeCookie('refreshTokenCookie', { path: '/' });
-    
+            
             setIsAuthenticated(false);
         } catch (error) {
             
         }
     }
+
+    const updateUser = async (newUsername?: string, newAvatar?: File) => {
+        try {
+            if (newUsername !== undefined && newAvatar !== undefined) {
+                
+                const response = await axios.post('http://localhost:3000user/update', {
+                    username: newUsername,
+                    avatar: newAvatar,
+                });
+                // setUser(prevUser => (
+                // {
+                //     ...prevUser!,
+                //     username: response.data.username,
+                //     avatar: response.data.avatar,
+                // }
+                // ));
+            }
+            else if (newUsername === undefined) {
+                const response = await axios.post('http://localhost:3000user/update', {
+                    avatar: newAvatar,
+                });
+                setUser(prevUser => (
+                {
+                    ...prevUser!,
+                    avatar: response.data.avatar,
+                }
+                ));
+            }
+            else {
+                const response = await axios.post('http://localhost:3000user/update', {
+                    username: newUsername,
+                });
+                setUser(prevUser => (
+                {
+                    ...prevUser!,
+                    avatar: response.data.username,
+                }
+                ));
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     useEffect( () => {
         const checkAuthentication = async () => {
@@ -103,11 +145,10 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                 setRefreshToken(refresh_Token);
 
                 
-                console.log(accessToken);
+                
                 if (!access_Token)
                 {
                     console.log("No Tokeeen");
-                    // Need to redirect to sign in page
                     setIsAuthenticated(false);
 
                     return ;
@@ -119,13 +160,20 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                             Authorization: `Bearer ${access_Token}`
                         }
                     });
+
                     setUser(response.data.user);
-                    // const userData = response.data.user;
                     
                     setIsAuthenticated(true);
                 }
             } catch (error: any) {
-                // don't know what to do in here
+                if (error.response.status === 403)
+                {
+                    // console.log(error);
+                    // refreshAccessToken();
+                    setIsAuthenticated(false);
+
+                }
+
             }
         }
 
@@ -133,7 +181,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     }, []);
     
     return (
-        <AuthContext.Provider value={{logout, isAuthenticated, refreshAccessToken, user}}>
+        <AuthContext.Provider value={{logout, isAuthenticated, refreshAccessToken, user, updateUser}}>
             {children}
         </AuthContext.Provider>
     )

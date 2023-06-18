@@ -46,12 +46,12 @@ const Navbar = () => {
 
   return (
     <>
-      <div className=' nav-animate mt-auto py-6 bg-main-gradient p-4 mb-auto shadow-custom-shadowrotate-0 rounded-r-2xl max-md:p-2 max-md:hidden hover:transition-all'>
-          <span className='text-white mb-2 text-lg mx-auto'>Navbar</span>
-          <span className=' flex bg-white h-[1px] mt-6'></span>
-          <div className='animate'>
+      <div className=' nav-animate my-auto py-8 p-4  shadow-custom-shadow rotate-0 rounded-r-2xl max-md:p-2 max-md:hidden hover:transition-all'>
+          <span className='text-white text-lg mx-auto'>Navbar</span>
+          {/* <span className=' flex bg-white h-[1px] mt-6'></span> */}
+          <div className='animate '>
             {!isHovering ? (
-              <ul onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} className='mt-12 flex flex-col items-center cursor-pointer max-md:mt-8 '>
+              <ul onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} className='mt-20 flex flex-col items-center cursor-pointer max-md:mt-8 '>
                 
                   {links.map((link: any, index: number) => (
                     <li className='mb-14 max-md:mb-7' key={index} >
@@ -68,7 +68,7 @@ const Navbar = () => {
 
               </ul>
             ) :
-            <ul onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut} className='mt-12 flex animate flex-col items-center cursor-pointer max-md:mt-8'>
+            <ul onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut} className='mt-20 flex animate flex-col items-center cursor-pointer max-md:mt-8'>
                 {links.map((link: any, index: number) => (
                   <li className='mb-14 max-md:mb-7 hover:transition-all' key={index} >
                     <NavLink

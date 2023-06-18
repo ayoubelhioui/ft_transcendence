@@ -1,5 +1,3 @@
-import { MdEdit } from 'react-icons/md'
-import Backdrop from '@mui/material/Backdrop';
 // import { VscAccount as AccountIcon } from 'react-icons/vsc'
 
 import { motion } from 'framer-motion'
@@ -10,6 +8,7 @@ import ResultsMatch from './ResultsMatch'
 import { authContext } from '../context/useContext';
 
 import TwoFactor from './twoFactor'
+import Settings from './Settings';
 
 
 const Profile = () => {
@@ -33,9 +32,13 @@ const Profile = () => {
 
           </div>
           <div className="flex mt-3 ml-2 max-md:ml-auto max-sm:mr-auto w-full">
-            <motion.button type='button' whileTap={{scale: 0.955}} onClick={() => null} className='flex items-center bg-[#4D194D] py-2 px-6 mr-auto text-xs outline-none'> <MdEdit size={15} className='mr-1'/> Edit Profile</motion.button>
-            <TwoFactor />
-            {/* <motion.button type='button' whileTap={{scale: 0.955}} onClick={() => null} className='flex items-center bg-purple-950 py-2 px-6 mr-auto text-xs outline-none'>Enable 2Fa</motion.button> */}
+            <Settings />
+            {/* <motion.button type='button' whileTap={{scale: 0.955}} onClick={() => null} className='flex items-center bg-[#4D194D] py-2 px-6 mr-auto text-xs outline-none'> <MdEdit size={15} className='mr-1'/> Edit Profile</motion.button> */}
+            { authApp.user?.two_factors_enabled &&
+
+              (<motion.button type='button' whileTap={{scale: 0.955}} onClick={() => null} className='flex items-center bg-[#4D194D] py-2 px-6 mr-auto text-xs outline-none'>Disable 2Fa</motion.button>)
+            }
+            <motion.button type='button' whileTap={{scale: 0.955}} onClick={() => null} className='flex items-center bg-[#4D194D] py-2 px-6 mr-auto text-xs outline-none'>Enable 2Fa</motion.button>
           </div>
         </div>
 
