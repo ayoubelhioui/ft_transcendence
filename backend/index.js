@@ -1,16 +1,16 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: 'outlook',
     auth: {
-      user: 'elhioui001@gmail.com',
-      pass: 'Hkkaskdasl@2019',
+      user: 'ayoubelhioui@outlook.com',
+      pass: '1234564789ayoubayoub',
     },
   });
 
   const mailOptions = {
-    from: 'Elhioui001@gmail.com',
-    to: 'moadammari20@gmail.com',
+    from: 'ayoubelhioui@outlook.com',
+    to: 'klaarous@student.1337.ma',
     subject: 'Test Email',
     text: 'This is a test email sent from my application using Gmail SMTP.',
   };
@@ -21,4 +21,4 @@ const transporter = nodemailer.createTransport({
     } else {
       console.log('Email sent successfully!', info.response);
     }
-  });
+});

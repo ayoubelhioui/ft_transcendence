@@ -1,4 +1,5 @@
 import { IsNotEmpty } from "class-validator";
+import { Achievement, BlockedUsers, Channel, ChannelMessages, Friends, LiveGames, MatchHistory, UsersMuted } from "src/entities";
 
 export class UserDto{
     @IsNotEmpty()
@@ -7,15 +8,18 @@ export class UserDto{
     @IsNotEmpty()
     username: string;
 
-    // @IsNotEmpty()    
+    @IsNotEmpty()
     avatar: string;
 
-    // @IsNotEmpty()    
+    @IsNotEmpty()
     wins: number;
 
-    // @IsNotEmpty()    
+    @IsNotEmpty()  
     loss: number;
 
-    // @IsNotEmpty()
+    @IsNotEmpty()
     winrate: number;
+
+    @IsNotEmpty()
+    two_factors_enabled: boolean;
 }

@@ -4,23 +4,26 @@ import { AuthService } from '../auth.service';
 
 
 @Injectable()
-export class TokenValidationGuard implements CanActivate {
+export class TokenValidationGuard implements CanActivate { 
   constructor(private jwtService: JwtService, private authService: AuthService){}
   private payload: any;
+  private token: string;
+  private user: object;
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const token = request.headers.authorization.replace('Bearer ', '');
     try {
-        this.payload = await this.jwtService.verifyAsync(token, {
-        secret: process.env.TOKEN_SECRET,
+        this.token = request.headers.authorization.replace('Bearer ', '');
+        this.payload = await this.jwtService.verifyAsync(this.token, {
+          secret: process.env.TOKEN_SECRET, 
       });
     }
     catch (err) {
-      return (false);
+      return (false); 
     }
-    if ((this.authService.isTokenInBlacklist(token)) || !(this.authService.findUserById(this.payload.sub)))
+    this.user = await this.authService.findUserById(this.payload.sub);
+    if (!(this.authService.isTokenInBlacklist(this.token)) || !this.user)
       return (false);
-    request['user'] = this.payload;
+    request['user'] = this.user;
     return (true);
   }
 }
