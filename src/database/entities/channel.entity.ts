@@ -42,7 +42,7 @@ class Channel{
     public usersMuted: UsersMuted[];
 
 
-    @ManyToMany(() => User, user => user.forbiddenChannels, {nullable : true})
+    @ManyToMany(() => User, user => user.forbiddenChannels, {nullable : true })
     @JoinTable()
     blacklistedUsers: User[];
 

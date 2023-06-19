@@ -58,7 +58,7 @@ class User{
 
 
     /************************************************************/
-    @ManyToMany(() => Channel, channel => channel.blacklistedUsers, { cascade: true, onDelete: 'CASCADE' })
+    @ManyToMany(() => Channel, channel => channel.blacklistedUsers, { cascade: true })
     public forbiddenChannels: Channel[];
 
 

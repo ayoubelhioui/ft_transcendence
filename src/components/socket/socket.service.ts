@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { Channel, User } from 'src/database/entities';
+import { Length } from 'class-validator';
 
 @Injectable()
 export class SocketService {
@@ -34,8 +35,12 @@ export class SocketService {
   
     removeSocket(userId: number, socket : Socket) {
         if (this.socketMap.has(userId)) {
+
             const socketArray = this.socketMap.get(userId);
-            socketArray.filter(element => element != socket);
+            const indexToRemove = socketArray.indexOf(socket);
+            if (indexToRemove !== -1) {
+                socketArray.splice(indexToRemove, 1);
+            }
         }
     }
 

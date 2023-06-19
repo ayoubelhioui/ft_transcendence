@@ -6,10 +6,10 @@ class Game{
     @PrimaryGeneratedColumn("uuid")
     public token: string;
 
-    @ManyToOne(() => User, (user) => user.gamePlayer1, {onDelete: 'CASCADE'})
+    @ManyToOne(() => User, (user) => user.gamePlayer1)
     public player1: User;
 
-    @ManyToOne(() => User, (user) => user.gamePlayer2, {onDelete: 'CASCADE', nullable: true })
+    @ManyToOne(() => User, (user) => user.gamePlayer2, {nullable: true })
     public player2: User;
 
     @Column({nullable : true})

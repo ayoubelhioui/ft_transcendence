@@ -1,16 +1,16 @@
-import { Injectable, UseFilters, UseGuards } from '@nestjs/common';
-import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { Injectable, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
+import {  WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { WebSocketExceptionFilter } from '../socket/websocket-exception.filter';
-import { AuthSocketGuard } from '../auth/guards/auth-socket.guard';
-import { ChannelExistsGuard, UserInChannelGuard, UserMutedGuard } from '../channels/guards';
-import { IsSocket } from '../socket/decorators/is-socket.decorator';
-import { ChannelService } from '../channels/channel.service';
 import { SocketService } from '../socket/socket.service';
-import { Channel, ChannelMessages, User, Notification } from 'src/database/entities';
+import { User, Notification } from 'src/database/entities';
 
 
 @WebSocketGateway()
+@UsePipes(new ValidationPipe({
+  transform : true,
+  whitelist : true
+}))
 @UseFilters(WebSocketExceptionFilter)
 @Injectable()
 // @UseGuards(AuthSocketGuard)

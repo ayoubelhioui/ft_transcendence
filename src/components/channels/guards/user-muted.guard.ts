@@ -17,6 +17,7 @@ export class UserMutedGuard implements CanActivate {
             request = context.switchToWs().getClient();
         else
             request = context.switchToHttp().getRequest();
+        
         const channel : Channel = request.channel;
         const user : User = request.user;
         const isUserMuted : boolean = await this.usersMuted.isUserMuted(user, channel);

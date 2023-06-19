@@ -1,4 +1,4 @@
-import { Injectable, UseFilters, UseGuards } from '@nestjs/common';
+import { Injectable, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { WebSocketExceptionFilter } from '../socket/websocket-exception.filter';
@@ -12,8 +12,11 @@ import { Channel, ChannelMessages, User } from 'src/database/entities';
 
 @WebSocketGateway()
 @UseFilters(WebSocketExceptionFilter)
+@UsePipes(new ValidationPipe({
+  transform : true,
+  whitelist : true
+}))
 @Injectable()
-// @UseGuards(AuthSocketGuard)
 export class ChannelGateway {
 
   constructor(
@@ -35,18 +38,22 @@ export class ChannelGateway {
   async joinUserToChannel(user : User, channel : Channel) {
     const userSockets : Socket[] = this.socketService.isUserOnline(user.id);
     const channelRoom = "channel_" + channel.id;
+    this.emitSystemPrompt(`${user.username} joined the Channel ${channel.name}`, channelRoom);
     userSockets.forEach(socket => {
-        this.emitSystemPrompt(`${user.username} joined the Channel`, channelRoom);
         socket.join(channelRoom);
     })};
 
 
+    systemMutingPrompts(user : User, channel : Channel, message : string) {
+      const channelRoom = "channel_" + channel.id;
+      this.emitSystemPrompt(`${user.username} ${message}`, channelRoom);
+    };
 
-    async leaveChannel(user : User, channel : Channel) {
+    async leaveChannel(user : User, channel : Channel, message : string) {
         const userSockets : Socket[] = this.socketService.isUserOnline(user.id);
         const channelRoom = "channel_" + channel.id;
+        this.emitSystemPrompt(`${user.username} ${message}`, channelRoom);
         userSockets.forEach(socket => {
-            this.emitSystemPrompt(`${user.username} left the Channel`, channelRoom);
             socket.leave(channelRoom);
     })};
 

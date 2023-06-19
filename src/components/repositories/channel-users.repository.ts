@@ -28,11 +28,11 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
   }
 
   async isUserInChannel(user: User, channel : Channel) : Promise <ChannelUsers | undefined> {
-    const condition : any = {
-      user, 
-      channel
-    };
-    return (this.findOneByCondition(condition));
+    return this.entity.createQueryBuilder('channelUsers')
+    .select('channelUsers')
+    .where('channelUsers.userId = :userId', { userId: user.id })
+    .andWhere('channelUsers.channelId = :channelId', { channelId: channel.id })
+    .getOne();
   }
 
   async getNextOwner( channel : Channel, prevOwnerId : number) : Promise<ChannelUsers | undefined> {
@@ -55,8 +55,8 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
     return this.entity
     .createQueryBuilder('channelUsers')
     .leftJoinAndSelect('channelUsers.channel', 'channel')
-    .leftJoinAndSelect('channelUsers.user', 'user')
     .leftJoinAndSelect('channel.lastMessage', 'lastMessage')
+    .leftJoinAndSelect('lastMessage.user', 'user')
     .where('channelUsers.userId = :id', { id: userId })
     .select(['channel.id', 'channel.name', 'channel.visibility', 'channel.isGroup'])
     .addSelect('lastMessage.id', 'lastMessage_id')
@@ -75,12 +75,7 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
           id: result.channel_id,
           name: result.channel_name,
           visibility: result.channel_visibility,
-          isGroup: result.channel_isGroup,
-          user : {
-            userId : result.user_id,
-            username : result.user_username,
-            avatar : result.user_avatar
-          }
+          isGroup: result.channel_isGroup
         };
 
         if (result.lastMessage_id) {
@@ -88,7 +83,12 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
             id: result.lastMessage_id,
             message: result.lastMessage_message,
             time: result.lastMessage_time,
-            seen: result.lastMessage_seen
+            seen: result.lastMessage_seen,
+            user : {
+              userId : result.user_id,
+              username : result.user_username,
+              avatar : result.user_avatar
+            }
           };
         }
         return channel;
@@ -102,7 +102,7 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
     .createQueryBuilder('channelUsers')
     .leftJoinAndSelect('channelUsers.channel', 'channel')
     .where('channelUsers.userId = :id', { id: userId })
-    .select(['channel.id'])
+    .select('channel.id', 'id')
     .getRawMany()
   }
 

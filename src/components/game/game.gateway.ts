@@ -1,21 +1,23 @@
 import { WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { User } from 'src/database/entities';
+import { Game, User } from 'src/database/entities';
 import { SocketService } from '../socket/socket.service';
 import { GameService } from './game.service';
-import { Injectable, UseFilters, UseGuards } from '@nestjs/common';
+import { Injectable, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { WebSocketExceptionFilter } from '../socket/websocket-exception.filter';
 import { AuthSocketGuard } from '../auth/guards/auth-socket.guard';
 
 @UseFilters(WebSocketExceptionFilter)
-// @UseGuards(AuthSocketGuard)
+@UsePipes(new ValidationPipe({
+  transform : true,
+  whitelist : true
+}))
 @WebSocketGateway()
 @Injectable()
 export class GameGateway {
    
   constructor(
     private readonly socketService: SocketService,
-    private readonly gameService: GameService
 
     ){}
   
@@ -36,7 +38,7 @@ export class GameGateway {
 
   
   //make GenerateInviteLink + Invite user (getFriends)
-  @SubscribeMessage ('invite')
+  @SubscribeMessage ('invite_to_game')
   handleSendInviteEvent(client: Socket, payload: any) {
     // Handle invite event logic
     console.log('Received invite event:', payload);
@@ -45,7 +47,8 @@ export class GameGateway {
     const socketsToSend : Socket[] = this.socketService.getSocket(+targetedUserId);
     const payloadToSend = {
       message: `You've been invited to a game by ${user.username}`,
-      gameId 
+      link : `games/${gameId}/join`,
+      method: "Put"
     }
     socketsToSend.forEach(socketToSend => {
       socketToSend.emit('invitationToGame',payloadToSend );
@@ -53,30 +56,24 @@ export class GameGateway {
   }
 
   //refuse / close button to close popup
-  @SubscribeMessage ('refuse')
-  handleRefuseEvent(client: Socket, payload: any) {
 
+  // @SubscribeMessage ('accept')
+  async gameAcceptInvite(game: Game) { 
 
-  }
-
-  @SubscribeMessage ('accept')
-  async handleAcceptEvent(client: Socket, payload: any) {
-
-    const { gameId } = payload;
-
-    const user = this.socketService.getUser(client);
-    const game = await this.gameService.joinGame(user,gameId);
+    // const game = await this.gameService.joinGame(user,gameId);
     const player1Socket = this.socketService.getSocket(game.player1.id);
-                          //getGameSocket
+    const player2Socket = this.socketService.getSocket(game.player2.id);
     const payloadToSend = {
-      gameId,
+      gameId : game.token,
       message : "Game invite accepted"
     }
     player1Socket.forEach(socket => {
       socket.emit('invite_accepted',payloadToSend);
     });
-    player1Socket.forEach(socket => socket.emit('invite_accepted',payloadToSend));
-    client.emit('game_accepted',payloadToSend );
+  
+    player2Socket.forEach(socket => {
+      socket.emit('game_accepted',payloadToSend);
+    });
     //redirect
   }
 

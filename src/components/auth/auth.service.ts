@@ -34,7 +34,7 @@ export class AuthService{
         const payload = { sub: user.id, ...user};
         return ({
             access_token: await this.jwtService.signAsync(payload, {
-                expiresIn: '30m',
+                expiresIn: '3000m',
                 secret: "khalid",
             }), 
         });

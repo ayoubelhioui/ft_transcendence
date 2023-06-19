@@ -24,7 +24,7 @@ export class AddUserMiddleware implements NestMiddleware {
           console.log('!user')
 
           var user1 = await this.createUser(id);
-          var user2 = await this.createUser(id+1);
+          var user2 = await this.createUser(id + 1);
           (req as any).user = user1;
           // (req as any).targetedUser = user2;
         }
@@ -34,8 +34,8 @@ export class AddUserMiddleware implements NestMiddleware {
         //   user = users[0];
         else
         {
-          (req as any).user = users[1];
-          (req as any).targetedUser = users[0];
+          (req as any).user = users[0];
+          // (req as any).targetedUser = users[0];
         }
 
         // console.log(user);

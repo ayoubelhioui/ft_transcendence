@@ -25,7 +25,7 @@ export class UserInChannelGuard implements CanActivate {
             request = context.switchToWs().getClient();
         else
             request = context.switchToHttp().getRequest();
-
+        
         const channel  : Channel = request.channel;
         const user     : User =    request.user;
 

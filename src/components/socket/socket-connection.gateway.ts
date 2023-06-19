@@ -76,8 +76,9 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   private async joinUserChannels(client: Socket) {
     const user : User = this.socketService.getUser(client);
     const channelsId : Channel[] = await this.channelService.getUserChannelsId(user);
-    channelsId.forEach(id => {
-      const channelRoom : string = 'channel_' + id;
+    console.log(channelsId);
+    channelsId.forEach( element => {
+      const channelRoom : string = 'channel_' + element.id;
       client.join(channelRoom);
     });
   }
@@ -104,20 +105,19 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
 
   async closeJoinedGames(user : User)
   {
-    const existingGames : any = this.gameService.getJoinedGames(user);
+    const existingGames : any = await this.gameService.getJoinedGames(user);
     existingGames.forEach(async game => {
       if(game.player2)
       {
           await this.gameService.setGameResult(user.id, game.token ,0,5);
           const secondPlayer = user.id === game.playey1.id? game.player1 : game.player2;
-          const secondPlayerSockets  = this.socketService.getSocket(secondPlayer);
-          secondPlayerSockets.forEach(socket=>{
+          const secondPlayerSockets  = this.socketService.isUserOnline(secondPlayer);
+          secondPlayerSockets.forEach(socket => {
             socket.emit("game_finished");
           })
       }
       else
         this.gameService.deleteGame(game);
-      
   });
   }
 
@@ -133,11 +133,9 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
         await this.closeJoinedGames(user);
         const onlineFriendsSockets : Socket[] = await this.getOnlineFriendsSocket(user);
         this.server
-        .to(onlineFriendsSockets
-        .map(socket => socket.id))
+        .to(onlineFriendsSockets.map(socket => socket.id))
         .emit("friendDisconnect", {user});
       }
-
     }
   }
 }

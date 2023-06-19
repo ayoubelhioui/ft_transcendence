@@ -7,11 +7,13 @@ import { GameResultDto } from './dto/set-game-result.dto';
 import { BooleanDto } from 'src/global/dto/boolean.dto';
 import { gameTypes, gameTypesNames } from 'src/global/types/game-types';
 import { TokenDto } from './dto/token.dto';
+import { GameGateway } from './game.gateway';
 
 @Controller('games')
 export class GameController {
 
-    constructor(private readonly gameService: GameService) {}
+    constructor(private readonly gameService: GameService,
+) {}
     
     // @Get('users/:id/gameHistory')
 
@@ -22,6 +24,7 @@ export class GameController {
        return await this.gameService.getLeaderboard();
     };
 
+    
     @Get('/live')
     @UsePipes(ValidationPipe)
     async getLiveGames(@Query() page?: PaginationDto) { 

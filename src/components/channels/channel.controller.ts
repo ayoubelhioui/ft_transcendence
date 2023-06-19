@@ -75,7 +75,7 @@ export class ChannelController {
 
 
     /* check if user is not blocked from this channel*/
-    @Post('me/channels/:id/join')
+    @Post(':id/join')
     @UseGuards(ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard)
     async joinChannel(@GetUser() user : User, @GetChannel() channel : Channel, @Body() joinChannelDto : JoinChannelDto) {
         await this.channelService.joinChannel(user, channel, joinChannelDto);
@@ -100,8 +100,8 @@ export class ChannelController {
     @HttpCode(HttpStatus.NO_CONTENT)
     @ChannelRoles(ChannelUserRole.admin, ChannelUserRole.owner)
     @UseGuards(ChannelExistsGuard, GroupGuard, UserInChannelGuard, TargetedUserInChannelGuard,ChannelRolesGuard)
-    async kickMember(@GetTargetedChannelUsers() channelTargetedUser: ChannelUsers){
-        return await this.channelService.kickMember(channelTargetedUser);
+    async kickMember(@GetTargetedUser() targetedUser : User, @GetChannel() channel : Channel){
+        return await this.channelService.kickMember(targetedUser, channel);
     };
 
 

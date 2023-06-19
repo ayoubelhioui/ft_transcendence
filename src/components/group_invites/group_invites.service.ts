@@ -34,13 +34,15 @@ export class GroupInvitesService {
     }
 
     private async isInvited(user : User, channel : Channel, token : string) : Promise<ChannelInvites> {
-        const condition = {
-            token,
-            user,
-            group : channel
-
+        const options = {
+            where : {
+                token,
+                user,
+                group : channel
+            },
+           relations : ['sender'] 
         }
-        const invite : ChannelInvites | undefined = await this.channelInvitesRepository.findOneByCondition(condition);
+        const invite : ChannelInvites | undefined = await this.channelInvitesRepository.findOneByOptions(options);
         if (!invite)
             throw new NotFoundException("this invitation Not Exist");
         return (invite);
@@ -51,10 +53,11 @@ export class GroupInvitesService {
         const notificationInfos = {
             message : `${user.username} Joined the Channel`
         }
+        console.log(invite.sender)
         return (Promise.all([
             this.channelInvitesRepository.remove(invite),
-            this.notificationService.createNotification(notificationInfos, invite.sender, user),
-            this.channelService.addUserToChannel(user, channel, ChannelUserRole.member)
+            this.notificationService.createNotification(notificationInfos, user, invite.sender),
+            this.channelService.joinUserToChannel(user, channel, ChannelUserRole.member),
         ]));
     }
 

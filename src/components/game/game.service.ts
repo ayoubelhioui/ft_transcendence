@@ -4,6 +4,7 @@ import { Game, User } from 'src/database/entities';
 import { IsNull, MoreThan, Not } from 'typeorm';
 import { FriendsService } from '../friends/friends.service';
 import { pl } from 'date-fns/locale';
+import { GameGateway } from './game.gateway';
 
 @Injectable()
 export class GameService {
@@ -12,7 +13,8 @@ export class GameService {
     constructor(
         @Inject("MyUserRepository") private readonly userRepository : IUserRepository,
         @Inject("MyGamesRepository") private readonly gamesRepository : IGamesRepository,
-        private readonly friendsService: FriendsService
+        private readonly friendsService: FriendsService,
+        private readonly  gameGateway : GameGateway
         ){}
     
     //user exists guard
@@ -114,7 +116,8 @@ export class GameService {
         if(inaccessible)
             throw new UnauthorizedException("user innacessible");
         game.player2 = player2;
-        await this.gamesRepository.save(game);
+        await Promise.all([this.gamesRepository.save(game),
+        this.gameGateway.gameAcceptInvite(game)]);
         return game;
 
     }

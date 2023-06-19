@@ -9,10 +9,10 @@ class ChannelBlacklist{
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @ManyToOne(() => Channel, (channel) => channel.channelMessages, {onDelete: 'CASCADE'})
+    @ManyToOne(() => Channel, (channel) => channel.channelMessages)
     channel : Channel;
 
-    @ManyToOne(() => User, (user) => user.channelMessages, {onDelete: 'CASCADE'})
+    @ManyToOne(() => User, (user) => user.channelMessages)
     user : User;
 }
 

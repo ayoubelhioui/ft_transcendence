@@ -103,6 +103,14 @@ export class ChannelService {
         return (false);
     }
 
+    async joinUserToChannel(user : User, channel : Channel, role : ChannelUserRole) : Promise< ChannelUsers > {
+        const joinUser = await Promise.all([
+            this.channelUsersRepository.addUserToChannel(user, channel, ChannelUserRole.member),
+            this.channelGateway.joinUserToChannel(user, channel)
+        ]);
+        return joinUser[0];
+    }
+
     async joinChannel(user : User, channel : Channel, joinChannelDto : JoinChannelDto) : Promise< ChannelUsers > {
         if (channel.visibility == ChannelsVisibility.protected) {
             const channelWithPassword : ChannelWithPassword = await this.channelRepository.getChannelWithPassword(channel.id);
@@ -110,11 +118,7 @@ export class ChannelService {
             if (!isCorrectPassword)
                 throw new BadRequestException("Password incorrect!");
         }
-        const joinUser = await Promise.all([
-            this.channelUsersRepository.addUserToChannel(user, channel, ChannelUserRole.member),
-            this.channelGateway.joinUserToChannel(user, channel)
-        ]);
-        return joinUser[0];
+        return (this.joinUserToChannel(user, channel, ChannelUserRole.member));
     };
 
 
@@ -132,11 +136,15 @@ export class ChannelService {
     };
 
 
-    async  kickMember(channelTargetedUser: ChannelUsers) {
-        await this.channelUsersRepository.remove(channelTargetedUser);
+    async  kickMember(targetedUser : User, channel : Channel) {
+        await this.channelGateway.leaveChannel(targetedUser,channel, "kicked from the channel");
+        Promise.all([
+            this.channelUsersRepository.delete({user : targetedUser, channel})
+        ])
     };
 
     async  blockMember(targetedUser : User, channel : Channel) {
+        await this.channelGateway.leaveChannel(targetedUser, channel, "blocked from  the channel");
         return  Promise.all([
             this.channelBlacklistRepository.create({user : targetedUser, channel}),
             this.channelUsersRepository.delete({user : targetedUser, channel})
@@ -147,10 +155,12 @@ export class ChannelService {
     async  muteMember(targetedMember : User, channel : Channel, muteMemberDto : MuteMemberDto) {
         const currentDate = new Date(); // Get the current date and time
         const dateMuteExpiration : Date = addMinutes(currentDate, muteMemberDto.muteDurationMinutes);
+        this.channelGateway.systemMutingPrompts(targetedMember, channel, `muted for  ${muteMemberDto.muteDurationMinutes} minutes`)
         return (this.UsersMutedRepository.muteMember(targetedMember, channel, dateMuteExpiration));        
     };
 
     async  unmuteMember(targetedMember : User, channel : Channel) {
+        this.channelGateway.systemMutingPrompts(targetedMember, channel, `unmuted from the channel`)
         return (this.UsersMutedRepository.delete({
             user: targetedMember,
             channel
@@ -162,7 +172,7 @@ export class ChannelService {
     async leaveChannel(channel : Channel, user  : User, channelUser : ChannelUsers) {
         await this.channelUsersRepository.delete({user , channel});
         const userRole : ChannelUserRole = channelUser.userRole;
-        await this.channelGateway.leaveChannel(user, channel);
+        await this.channelGateway.leaveChannel(user, channel, "left the channel");
         if (userRole == ChannelUserRole.owner) {
             console.log(user.id);
             const nextOwner = await this.channelUsersRepository.getNextOwner(channel, user.id);
@@ -194,6 +204,7 @@ export class ChannelService {
 
     //if not muted
     async createMessage(user : User, channel : Channel, message : string) : Promise <ChannelMessages | undefined> {
+        console.log(user);
         const createdMessage : ChannelMessages = await this.channelMessagesRepository.create({
             user,
             channel,

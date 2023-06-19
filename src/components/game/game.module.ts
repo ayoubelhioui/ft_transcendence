@@ -18,7 +18,7 @@ import { JwtModule } from '@nestjs/jwt';
     FriendsModule,
     TypeOrmModule.forFeature([Game, User, BlockedUsers]),
     forwardRef(() => UserModule),
-    JwtModule.register({})
+    JwtModule.register({}),
   ],
   controllers: [GameController],
   providers: [

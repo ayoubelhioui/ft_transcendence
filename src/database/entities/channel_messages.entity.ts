@@ -18,13 +18,11 @@ class ChannelMessages{
     @Column({nullable: true})
     public seen: boolean;
 
-    @ManyToOne(() => User, (user) => user.channelMessages, {onDelete: 'CASCADE'})
+    @ManyToOne(() => User, (user) => user.channelMessages)
     user : User;
 
-    @ManyToOne(() => Channel, (channel) => channel.channelMessages, {onDelete: 'CASCADE'})
+    @ManyToOne(() => Channel, (channel) => channel.channelMessages)
     channel : Channel;
-
- 
 
 }
 

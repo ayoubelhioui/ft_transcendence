@@ -18,10 +18,10 @@ class Friends{
    @Column({nullable : true})
    public accepted_time : Date;
 
-   @ManyToOne(() => User, (user) => user.sentFriends, {onDelete: 'CASCADE'})
+   @ManyToOne(() => User, (user) => user.sentFriends)
     public sender: User;
 
-    @ManyToOne(() => User, (user) => user.receivedFriends, {onDelete: 'CASCADE'})
+    @ManyToOne(() => User, (user) => user.receivedFriends)
     public receiver: User;
 
     @OneToOne(() => Channel, {onDelete: 'CASCADE', nullable : true})

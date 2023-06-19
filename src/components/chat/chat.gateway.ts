@@ -1,8 +1,7 @@
-import { Injectable, UseFilters, UseGuards } from '@nestjs/common';
+import { Injectable, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { WebSocketExceptionFilter } from '../socket/websocket-exception.filter';
-import { AuthSocketGuard } from '../auth/guards/auth-socket.guard';
 import { ChannelExistsGuard, UserInChannelGuard, UserMutedGuard } from '../channels/guards';
 import { IsSocket } from '../socket/decorators/is-socket.decorator';
 import { sendMessageDto } from './dto/send-message.dto';
@@ -13,6 +12,10 @@ import { Channel, ChannelMessages, User } from 'src/database/entities';
 
 @WebSocketGateway()
 @UseFilters(WebSocketExceptionFilter)
+@UsePipes(new ValidationPipe({
+  transform : true,
+  whitelist : true
+}))
 @Injectable()
 export class ChatGateway {
 
@@ -32,7 +35,7 @@ export class ChatGateway {
     const channel : Channel = this.socketService.getChannel(socket);
     const createdMessage : ChannelMessages = await this.channelService.createMessage(user, channel, sendMessageDto.message);
     const channelRoom = "channel_" + channel.id;
-    this.server.to(channelRoom).emit("on_message_send", {
+    socket.broadcast.to(channelRoom).emit("on_message_send", {
       user, 
       message : createdMessage.message, 
       time : createdMessage.time
