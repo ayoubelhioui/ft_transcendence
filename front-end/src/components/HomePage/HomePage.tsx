@@ -5,18 +5,19 @@ import { Live, Results, TopPlayers } from './Container'
 import img from "../../assets/ping-pong-player-darkbg.png"
 import { authContext } from '../context/useContext'
 
-import { VscAccount as AccountIcon } from 'react-icons/vsc'
+// import { VscAccount as AccountIcon } from 'react-icons/vsc'
 
 const HomePage = () => {
   const authUser = authContext();
 
 
   return (
-    <div className=" home flex flex-col bg-profile-bg bg-cover bg-center rounded-[10px] max-sm:rounded-none w-[80%] mx-auto max-w-[1400px] h-[75vh] max-md:w-[95%] max-sm:w-full max-sm:bg-none max-sm:drop-shadow-none max-sm:h-screen relative">
-      <div className="flex text-white items-center back bg-blue-950 gap-6 p-3 px-6 flex-row-reverse  w-full">
+    <>
+    {/* // <div className="  flex flex-col bg-profile-bg bg-cover bg-center rounded-[10px] max-sm:rounded-none w-[80%] mx-auto max-w-[1700px] h-[85vh] max-md:w-[95%] max-sm:w-full max-sm:bg-none max-sm:drop-shadow-none max-sm:h-screen"> */}
+      {/* <div className="flex text-white items-center purple_back rounded-[0] bg-blue-950 gap-6 p-3 px-6 flex-row-reverse  w-[70%] mx-auto my-5">
         <img src={authUser.user?.avatar} alt="" className=' cursor-pointer object-cover rounded-full w-[45px] h-[45px]' />
         <AccountIcon size={32} className='cursor-pointer'/>
-      </div>
+      </div> */}
       <div className=" rounded-[10px]">
         
         <div className="mt-4 mx-4 h-[calc(300px_-_2rem)] max-sm:h-[calc(200px_-_1rem)] bg-image-bg bg-cover rounded-[25px]">
@@ -39,8 +40,9 @@ const HomePage = () => {
           </div>
           <TopPlayers />
       </div>
-    </div>
+    </>
   )
+  {/* </div> */}
 }
 
 export default HomePage

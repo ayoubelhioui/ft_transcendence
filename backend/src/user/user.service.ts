@@ -24,13 +24,17 @@ export class UserService{
         createUserDto.two_factors_enabled = false;
     }
 
-    async findUserById(IntraId: number): Promise<User | undefined>{
+    async findById(IntraId: number): Promise<User | undefined>{
         const user = await this.userRepository.findOne({
             where : {
                 IntraId: IntraId,
             },
         });
         return (user);
+    }
+
+    generateImageURL (userId: number) : string{
+        return ('http://localhost:3000/user/images/' + userId);
     }
 
     async addTokenToBlacklist(token: string)
@@ -48,6 +52,14 @@ export class UserService{
         }));
     }
 
+    async update(id: number, userDto: UserDto, imageURL: string) {
+        // const resource = await this.findById(id);
+        // if (!resource)
+        //     throw new NotFoundException('Resource not found.');
+        // Object.assign(resource, userDto);
+        // return (await this.userRepository.save(resource));
+    }
+
     async sendEmail(emailVerificationCode: string, userMail: string){
          const transporter = await nodemailer.createTransport({
             service: 'outlook',
@@ -56,7 +68,6 @@ export class UserService{
               pass: '1234564789ayoubayoub',
             },
           });
-        
           const mailOptions = {
             from: 'ayoubelhioui@outlook.com',
             to: userMail,

@@ -6,6 +6,7 @@ import { Achievement, BlockedUsers, Channel, ChannelBlacklist, ChannelMessages, 
 import User from 'src/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import TokenBlacklist from './entities/token_blacklist';
+import { UserModule } from './user/user.module';
 
 const ENV_PATH : string = './src/.env'; 
 @Module({

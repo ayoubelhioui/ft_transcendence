@@ -38,36 +38,41 @@ const Settings = () => {
 
         if (newUsername.trim() !== '' && newAvatar) {
             
-            // const formData = new FormData();
+            const formData = new FormData();
             
-            // formData.append('username', newUsername);
-            // formData.append('avatar', newAvatar as File);
+            formData.append('username', newUsername);
+            formData.append('avatar', newAvatar as File);
             
             setOpen(false);
             try {
-                await settingContext.updateUser(newUsername, newAvatar);
+                await settingContext.updateUser(formData);
             } catch(error) {
                 console.log(error);
             }
         }
         else if (newUsername.trim() !== '' && !newAvatar) {
             
-            setOpen(false);
-            try {
-                await settingContext.updateUser(newUsername, undefined);
-            } catch(error) {
-                console.log(error);
-            }
-        }
-        else if (newUsername.trim() === '' && newAvatar) {
+  
+            const formData = new FormData();
             
+            formData.append('username', newUsername);
+
             setOpen(false);
             try {
-                await settingContext.updateUser(undefined, newAvatar);
+                await settingContext.updateUser(formData);
             } catch(error) {
                 console.log(error);
             }
         }
+        // else if (newUsername.trim() === '' && newAvatar) {
+            
+        //     setOpen(false);
+        //     try {
+        //         await settingContext.updateUser(formData);
+        //     } catch(error) {
+        //         console.log(error);
+        //     }
+        // }
     }  
 
     return (
@@ -79,7 +84,7 @@ const Settings = () => {
                     
                     <DialogTitle className=" text-center text-lg font-extrabold">Edit Your Profile</DialogTitle>
                     <DialogContent>
-                        <form className="flex flex-col items-center " onSubmit={handleSubmit}>
+                        <form className="flex flex-col items-center " onSubmit={handleSubmit} >
                             {/* <input className="block w-full text-sm text-white rounded-lg cursor-pointer px-0 bg-blue-700 focus:outline-nonedark:placeholder-gray-400" aria-describedby="user_avatar_help" id="user_avatar" type="file" /> */}
                             <label htmlFor="avatar" className="outline-none bg-transparent text-gray-400 border border-white mt-4 py-2 px-3 rounded-lg w-full cursor-pointer">
                                 {newAvatar ? newAvatar.name : "Choose File"}

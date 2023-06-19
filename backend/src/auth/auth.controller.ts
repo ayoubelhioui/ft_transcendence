@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Request, Post, Body, Response, Redirect, Header } from "@nestjs/common";
+import { Controller, Get, UseGuards, Request, Post, Body, Response } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthGuard } from '@nestjs/passport';
 import { TokenValidationGuard } from "./guards/acces-token.guard";
@@ -10,15 +10,16 @@ export class AuthController{
     private user: UserDto;
 
     @Post('logout')
-    async logOut(@Body() body){ 
+    async logOut(@Body() body){
         await this.authService.removeTokens(body.refreshToken, body.accessToken);
     }
 
     @Get('refresh-token')
-    // @UseGuards(TokenValidationGuard)
+    @UseGuards(TokenValidationGuard)
     async newAccessToken(@Request() req): Promise<object>{
+        const payload = { sub: req.user.IntraId, username: req.user.username };
         return ({
-            access_token: await this.authService.generateNewToken('10m'),
+            access_token: await this.authService.generateNewToken(payload, '10m'),
         });
     }
 
@@ -32,25 +33,23 @@ export class AuthController{
     
     @Post('verify-two-factors')
     async verifyTwoFactors(@Body() body, @Response() res) {
-        console.log(this.user);
         await this.authService.twoFactors(body.token, body.userEmail);
         await this.authService.authenticate(this.user, res);
     }
 
     @Post('two-factors')
-    async twoFactorsAuth(@Body() body) : Promise<void>{
+    async twoFactorsAuth(@Body() body) : Promise<void> {
         await this.authService.mailingUser(body.userEmail);
     }
 
     @UseGuards(AuthGuard('42'))
-    @Get('callback') // return the small image.
+    @Get('callback') 
     async singUp(@Request() req, @Response() res){
         this.user = req.user;
-
-        let user = await this.authService.isUserAlreadyExist(req.user);
+        let user = await this.authService.isUserAlreadyExist(this.user);
         if (user.two_factors_enabled)
             res.redirect('http://localhost:5000/two-factors-authentication');
         else
-            await this.authService.authenticate(req.user, res);
+               await this.authService.authenticate(this.user, res);
     }
 }

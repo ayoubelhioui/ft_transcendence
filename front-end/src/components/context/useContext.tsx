@@ -21,7 +21,7 @@ interface User {
 }
 
 interface AuthContextType {
-    updateUser: (newUsername?: string, newAvatar?: File) => Promise<void>;
+    updateUser: (data?: FormData) => Promise<void>;
     logout: () => void;
     isAuthenticated: boolean;
     refreshAccessToken: () => Promise<void>;
@@ -37,7 +37,6 @@ const AuthContext = createContext<AuthContextType>({
     user: null,
 });
 
-// const AuthContext = createContext({});
 
 export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
 
@@ -53,6 +52,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
 
     
     const refreshAccessToken = async () => {
+        console.log(accessToken + "\n" +  refreshToken);
         try {
             
             const response = await axios.get("http://localhost:3000/auth/refresh-token", {
@@ -92,14 +92,13 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
         }
     }
 
-    const updateUser = async (newUsername?: string, newAvatar?: File) => {
+    const updateUser = async (data?: FormData) => {
         try {
-            if (newUsername !== undefined && newAvatar !== undefined) {
-                
-                const response = await axios.post('http://localhost:3000user/update', {
-                    username: newUsername,
-                    avatar: newAvatar,
-                });
+            const response = await axios.post(`http://localhost:3000/user/3`, data, {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                }
+            });
                 // setUser(prevUser => (
                 // {
                 //     ...prevUser!,
@@ -107,29 +106,49 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                 //     avatar: response.data.avatar,
                 // }
                 // ));
-            }
-            else if (newUsername === undefined) {
-                const response = await axios.post('http://localhost:3000user/update', {
-                    avatar: newAvatar,
-                });
-                setUser(prevUser => (
-                {
-                    ...prevUser!,
-                    avatar: response.data.avatar,
-                }
-                ));
-            }
-            else {
-                const response = await axios.post('http://localhost:3000user/update', {
-                    username: newUsername,
-                });
-                setUser(prevUser => (
-                {
-                    ...prevUser!,
-                    avatar: response.data.username,
-                }
-                ));
-            }
+            // if (newUsername !== undefined && newAvatar !== undefined) {
+                
+            //     const response = await axios.post(`http://localhost:3000/user/3`, {
+            //         username: newUsername,
+            //         avatar: newAvatar,
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data'
+            //         },
+            //     });
+            //     // setUser(prevUser => (
+            //     // {
+            //     //     ...prevUser!,
+            //     //     username: response.data.username,
+            //     //     avatar: response.data.avatar,
+            //     // }
+            //     // ));
+            // }
+            // else if (newUsername === undefined) {
+            //     const response = await axios.post(`http://localhost:3000/user/3`, {
+            //         avatar: newAvatar,
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data'
+            //         },
+            //     });
+            //     setUser(prevUser => (
+            //     {
+            //         ...prevUser!,
+            //         avatar: response.data.avatar,
+            //     }
+            //     ));
+            // }
+            // else {
+            //     const response = await axios.post(`http://localhost:3000/user/${user?.intraId}`, {
+            //         username: newUsername,
+                    
+            //     });
+            //     setUser(prevUser => (
+            //     {
+            //         ...prevUser!,
+            //         avatar: response.data.username,
+            //     }
+            //     ));
+            // }
         } catch (error) {
             console.error(error);
         }
@@ -138,14 +157,15 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     useEffect( () => {
         const checkAuthentication = async () => {
             try {
-                const access_Token = Cookies.get('access_token');
-                const refresh_Token = Cookies.get('refresh_token');
+                const access_Token = await Cookies.get('access_token');
+                const refresh_Token = await Cookies.get('refresh_token');
                 
                 setAccessToken(access_Token)
                 setRefreshToken(refresh_Token);
 
                 
                 
+
                 if (!access_Token)
                 {
                     console.log("No Tokeeen");
@@ -168,12 +188,12 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
             } catch (error: any) {
                 if (error.response.status === 403)
                 {
+                    console.log(accessToken);
                     // console.log(error);
-                    // refreshAccessToken();
+                    refreshAccessToken();
                     setIsAuthenticated(false);
 
                 }
-
             }
         }
 

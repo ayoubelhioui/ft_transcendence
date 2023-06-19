@@ -18,8 +18,8 @@ const Profile = () => {
 
 
   return (
-    
-    <div className=" home flex flex-col bg-profile-bg bg-cover bg-center drop-shadow-sm rounded-[10px] max-sm:rounded-none w-[80%] mx-auto max-w-[1400px] h-[70vh] max-sm:w-[100vw] max-md:w-[95%] max-md:h-[90vh] max-sm:h-[1200px]">
+    <>
+    {/* <div className=" home flex flex-col bg-profile-bg bg-cover bg-center drop-shadow-sm rounded-[10px] max-sm:rounded-none w-[80%] mx-auto max-w-[1400px] h-[70vh] max-sm:w-[100vw] max-md:w-[95%] max-md:h-[90vh] max-sm:h-[1200px]"> */}
       <div className="flex text-white mt-14 mx-8 justify-between max-md:flex-col max-md:mt-8 max-sm:mt-14 backdrop-blur-md py-4 max-md:backdrop-blur-0">
 
         <div className="flex flex-col">
@@ -77,9 +77,10 @@ const Profile = () => {
           <Friends />
         </div>
       </div>
+    </>
 
-    </div>
-  )
+)
+// </div>
 }
 
 export default Profile

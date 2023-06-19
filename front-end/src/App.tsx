@@ -45,22 +45,24 @@ const App = () => {
 
   return (
     <div className=' h-[1020px]'>
-      <div className=' w-full flex absolute top-1/2 -translate-y-1/2 max-sm:top-0 max-sm:-translate-y-0'>
+      <div className=' w-full flex absolute top-1/2 -translate-y-1/2 max-sm:top-0 max-sm:-translate-y-0 '>
+        <div className=" flex flex-col bg-profile-bg bg-cover bg-center rounded-[10px] max-sm:rounded-none w-[70%] mx-auto max-w-[1600px] h-[85vh] max-md:w-[95%] max-sm:w-full max-sm:bg-none max-sm:drop-shadow-none max-sm:h-screen ">
         
         {authApp.isAuthenticated && <Navbar />}
 
-        {!authApp.isAuthenticated && <SignIn />
-        }
-        <Routes>
-          <Route path='/' >
-                
-            <Route index element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
-            <Route path='Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
-            <Route path='Profile' element={(<ProtectedRoute> <Profile /> </ProtectedRoute>)}/>
-            <Route path='Chat' element={(<ProtectedRoute> <Chat /> </ProtectedRoute>)}/>
-          </Route>
-          
-        </Routes>
+          {!authApp.isAuthenticated && <SignIn />
+          }
+          <Routes>
+            <Route path='/' >
+                  
+              <Route index element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
+              <Route path='Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
+              <Route path='Profile' element={(<ProtectedRoute> <Profile /> </ProtectedRoute>)}/>
+              <Route path='Chat' element={(<ProtectedRoute> <Chat /> </ProtectedRoute>)}/>
+            </Route>
+            
+          </Routes>
+        </div>
       </div>
     </div>
   )
