@@ -33,6 +33,10 @@ export class UserService{
         return (user);
     }
 
+    generateImageURL (userId: number) : string{
+        return ('http://localhost:3000/user/images/' + userId);
+    }
+
     async addTokenToBlacklist(token: string)
     {
         const newEntity = new TokenBlacklist();
@@ -48,11 +52,9 @@ export class UserService{
         }));
     }
 
-    async update(id: number, userDto: UserDto) {
-        // console.log(id);
-        // console.log(userDto);
+    async update(id: number, userDto: UserDto, imageURL: string) {
         // const resource = await this.findById(id);
-        // if (!resource)o
+        // if (!resource)
         //     throw new NotFoundException('Resource not found.');
         // Object.assign(resource, userDto);
         // return (await this.userRepository.save(resource));

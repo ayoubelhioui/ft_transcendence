@@ -10,7 +10,7 @@ export class AuthController{
     private user: UserDto;
 
     @Post('logout')
-    async logOut(@Body() body){ 
+    async logOut(@Body() body){
         await this.authService.removeTokens(body.refreshToken, body.accessToken);
     }
 
