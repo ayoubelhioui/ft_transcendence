@@ -58,7 +58,7 @@ export class AuthService{
             refresh_token: await this.generateNewToken(this.payload, '10d'),
         });
     }
-
+    
     async twoFactors(token: string, userEmail: string) {
         this.payload = await this.jwtService.verifyAsync(token, {
             secret: process.env.TOKEN_SECRET,
