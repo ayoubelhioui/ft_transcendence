@@ -59,6 +59,8 @@ const App = () => {
               <Route path='Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
               <Route path='Profile' element={(<ProtectedRoute> <Profile /> </ProtectedRoute>)}/>
               <Route path='Chat' element={(<ProtectedRoute> <Chat /> </ProtectedRoute>)}/>
+              <Route path='Play' element={(<ProtectedRoute> <Chat /> </ProtectedRoute>)}/>
+
             </Route>
             
           </Routes>

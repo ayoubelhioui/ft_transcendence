@@ -24,7 +24,7 @@ interface AuthContextType {
     updateUser: (data?: FormData) => Promise<void>;
     logout: () => void;
     isAuthenticated: boolean;
-    refreshAccessToken: () => Promise<void>;
+    refreshAccessToken: (accessTokenParam: string | null, refreshTokenParam: string | null) => Promise<void>;
     user: User | null;
 }
 
@@ -51,18 +51,18 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     // const navigate = useNavigate();
 
     
-    const refreshAccessToken = async () => {
-        console.log(accessToken + "\n" +  refreshToken);
+    const refreshAccessToken = async (accessTokenParam: string | null, refreshTokenParam: string | null) => {
         try {
-            
+            console.log(accessTokenParam, refreshTokenParam)
             const response = await axios.get("http://localhost:3000/auth/refresh-token", {
                 headers: {
-                  Authorization: `Bearer ${refreshToken}`,
+                  Authorization: `Bearer ${refreshTokenParam}`,
             }, });
 
             const newAccessToken = response.data.access_token;
             
             setAccessToken(newAccessToken);
+            Cookies.set('access_token', newAccessToken);
 
         } catch (error) {
             ///////// if the refresh token has expired... // we need to do something /////////////
@@ -156,16 +156,13 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
 
     useEffect( () => {
         const checkAuthentication = async () => {
+            const access_Token = Cookies.get('access_token');
+            const refresh_Token = Cookies.get('refresh_token');
+            
+            // setAccessToken(access_Token)
+            // setRefreshToken(refresh_Token);
+
             try {
-                const access_Token = await Cookies.get('access_token');
-                const refresh_Token = await Cookies.get('refresh_token');
-                
-                setAccessToken(access_Token)
-                setRefreshToken(refresh_Token);
-
-                
-                
-
                 if (!access_Token)
                 {
                     console.log("No Tokeeen");
@@ -188,9 +185,8 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
             } catch (error: any) {
                 if (error.response.status === 403)
                 {
-                    console.log(accessToken);
-                    // console.log(error);
-                    refreshAccessToken();
+                    setAccessToken(null);
+                    await refreshAccessToken(access_Token ?? null, refresh_Token ?? null);
                     setIsAuthenticated(false);
 
                 }
@@ -198,7 +194,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
         }
 
         checkAuthentication();
-    }, []);
+    }, [accessToken]);
     
     return (
         <AuthContext.Provider value={{logout, isAuthenticated, refreshAccessToken, user, updateUser}}>

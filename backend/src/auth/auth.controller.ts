@@ -19,7 +19,7 @@ export class AuthController{
     async newAccessToken(@Request() req): Promise<object>{
         const payload = { sub: req.user.IntraId, username: req.user.username };
         return ({
-            access_token: await this.authService.generateNewToken(payload, '10m'),
+            access_token: await this.authService.generateNewToken(payload, '10s'),
         });
     }
 
