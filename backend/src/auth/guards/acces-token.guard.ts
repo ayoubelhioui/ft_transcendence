@@ -18,7 +18,7 @@ export class TokenValidationGuard implements CanActivate {
       });
     }
     catch (err) {
-      return (false); 
+      return (false);
     }
     this.user = await this.authService.findUserById(this.payload.sub);
     if (!(this.authService.isTokenInBlacklist(this.token)) || !this.user)

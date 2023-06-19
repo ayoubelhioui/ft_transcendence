@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Request, Post, Body, Response, Redirect, Header } from "@nestjs/common";
+import { Controller, Get, UseGuards, Request, Post, Body, Response } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthGuard } from '@nestjs/passport';
 import { TokenValidationGuard } from "./guards/acces-token.guard";
@@ -17,8 +17,9 @@ export class AuthController{
     @Get('refresh-token')
     @UseGuards(TokenValidationGuard)
     async newAccessToken(@Request() req): Promise<object>{
+        const payload = { sub: req.user.IntraId, username: req.user.username };
         return ({
-            access_token: await this.authService.generateNewToken('10m'),
+            access_token: await this.authService.generateNewToken(payload, '10m'),
         });
     }
 
@@ -42,7 +43,7 @@ export class AuthController{
     }
 
     @UseGuards(AuthGuard('42'))
-    @Get('callback') // i need to change the image, take the small image from the profile (from intra api).
+    @Get('callback') 
     async singUp(@Request() req, @Response() res){
         this.user = req.user;
         let user = await this.authService.isUserAlreadyExist(this.user);

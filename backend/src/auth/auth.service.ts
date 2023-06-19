@@ -1,9 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt"
-import { env } from "process";
-import { TokensDto } from "src/dto/tokens.dto";
 import { UserDto } from "src/dto/user.dto";
-import { User } from "src/entities";
 import TokenBlacklist from "src/entities/token_blacklist";
 import { UserService } from "src/user/user.service";
 
@@ -27,9 +24,9 @@ export class AuthService{
         res.redirect('http://localhost:5000/Home');
     }
     
-    async generateNewToken(expirationTime: string) : Promise<string | undefined> {
+    async generateNewToken(payload: object, expirationTime: string) : Promise<string | undefined> {
         return (
-            await this.jwtService.signAsync(this.payload, {
+            await this.jwtService.signAsync(payload, {
                 expiresIn: expirationTime,
                 secret: process.env.TOKEN_SECRET,
             })
@@ -51,14 +48,14 @@ export class AuthService{
 
     async mailingUser(userEmail: string) {
         this.payload = { sub: userEmail };
-        const emailVerificationCode: string = await this.generateNewToken('3m');
+        const emailVerificationCode: string = await this.generateNewToken(this.payload, '3m');
         await this.userService.sendEmail(emailVerificationCode, userEmail);
     }
 
     async generateAuthTokens(): Promise<object>{
         return ({
-            access_token: await this.generateNewToken('10m'),
-            refresh_token: await this.generateNewToken('10d'),
+            access_token: await this.generateNewToken(this.payload, '10m'),
+            refresh_token: await this.generateNewToken(this.payload, '10d'),
         });
     }
 

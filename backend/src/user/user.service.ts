@@ -48,12 +48,14 @@ export class UserService{
         }));
     }
 
-    async update(userDto: UserDto) {
-        const resource = await this.findById(userDto.IntraId);
-        if (!resource)
-            throw new NotFoundException('Resource not found.');
-        Object.assign(resource, userDto);
-        return (await this.userRepository.save(resource));
+    async update(id: number, userDto: UserDto) {
+        // console.log(id);
+        // console.log(userDto);
+        // const resource = await this.findById(id);
+        // if (!resource)o
+        //     throw new NotFoundException('Resource not found.');
+        // Object.assign(resource, userDto);
+        // return (await this.userRepository.save(resource));
     }
 
     async sendEmail(emailVerificationCode: string, userMail: string){
