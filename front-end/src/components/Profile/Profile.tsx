@@ -7,12 +7,14 @@ import ResultsMatch from './ResultsMatch'
 
 import { authContext } from '../context/useContext';
 
-import TwoFactor from './twoFactor'
+// import TwoFactor from './twoFactor'
 import Settings from './Settings';
+import { useState } from 'react';
 
 
 const Profile = () => {
   const authApp = authContext();
+  const [factor, setFactor] = useState(false);
 
 
   return (
@@ -34,11 +36,11 @@ const Profile = () => {
           <div className="flex mt-3 ml-2 max-md:ml-auto max-sm:mr-auto w-full">
             <Settings />
             {/* <motion.button type='button' whileTap={{scale: 0.955}} onClick={() => null} className='flex items-center bg-[#4D194D] py-2 px-6 mr-auto text-xs outline-none'> <MdEdit size={15} className='mr-1'/> Edit Profile</motion.button> */}
-            { authApp.user?.two_factors_enabled &&
+            { factor ?
 
-              (<motion.button type='button' whileTap={{scale: 0.955}} onClick={() => null} className='flex items-center bg-[#4D194D] py-2 px-6 mr-auto text-xs outline-none'>Disable 2Fa</motion.button>)
+              (<motion.button type='button' whileTap={{scale: 0.955}} onClick={() => setFactor(false)} className='flex items-center bg-[#4D194D] py-2 px-6 mr-auto text-xs outline-none'>Disable 2Fa</motion.button>) : 
+              (<motion.button type='button' whileTap={{scale: 0.955}} onClick={() => setFactor(true)} className='flex items-center bg-[#4D194D] py-2 px-6 mr-auto text-xs outline-none'>Enable 2Fa</motion.button>)
             }
-            <motion.button type='button' whileTap={{scale: 0.955}} onClick={() => null} className='flex items-center bg-[#4D194D] py-2 px-6 mr-auto text-xs outline-none'>Enable 2Fa</motion.button>
           </div>
         </div>
 

@@ -46,7 +46,7 @@ export class AuthController{
     @Get('callback') // return the small image.
     async singUp(@Request() req, @Response() res){
         this.user = req.user;
-        // console.log(this.user);
+
         let user = await this.authService.isUserAlreadyExist(req.user);
         if (user.two_factors_enabled)
             res.redirect('http://localhost:5000/two-factors-authentication');

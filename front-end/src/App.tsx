@@ -49,10 +49,11 @@ const App = () => {
         
         {authApp.isAuthenticated && <Navbar />}
 
-          {!authApp.isAuthenticated && <SignIn />
-          }
+        {!authApp.isAuthenticated && <SignIn />
+        }
         <Routes>
           <Route path='/' >
+                
             <Route index element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
             <Route path='Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
             <Route path='Profile' element={(<ProtectedRoute> <Profile /> </ProtectedRoute>)}/>
