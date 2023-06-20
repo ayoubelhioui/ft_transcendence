@@ -26,6 +26,7 @@ interface AuthContextType {
     isAuthenticated: boolean;
     refreshAccessToken: (accessTokenParam: string | null, refreshTokenParam: string | null) => Promise<void>;
     user: User | null;
+    accessToken: string | null;
 
 }
 
@@ -36,20 +37,16 @@ const AuthContext = createContext<AuthContextType>({
     isAuthenticated: false,
     refreshAccessToken: () => Promise.resolve(),
     user: null,
+    accessToken: null,
 });
 
 
 export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
 
-    const [accessToken, setAccessToken] = useState<any | null>(null);
-    const [refreshToken, setRefreshToken] = useState<any | null>(null);
+    const [accessToken, setAccessToken] = useState<string | null>(null);
+    const [refreshToken, setRefreshToken] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState<User | null>(null);
-
-
-    // const [cookie, setCookie, removeCookie] = useCookies(["accessTokenCookie", "refreshTokenCookie"]);
-
-    // const navigate = useNavigate();
 
     
     const refreshAccessToken = async (accessTokenParam: string | null, refreshTokenParam: string | null) => {
@@ -66,6 +63,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
             Cookies.set('access_token', newAccessToken);
 
         } catch (error) {
+            setIsAuthenticated(false);
             ///////// if the refresh token has expired... // we need to do something /////////////
         }
     };
@@ -100,15 +98,16 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                   Authorization: `Bearer ${accessToken}`,
                 },
                 'username': username,
+                'two_factor': twoFactor,
                 
             });
-                // setUser(prevUser => (
-                // {
-                //     ...prevUser!,
-                //     username: response.data.username,
-                //     avatar: response.data.avatar,
-                // }
-                // ));
+            setUser(prevUser => (
+            {
+                ...prevUser!,
+                username: response.data.username,
+                two_factors_enabled: response.data.two_factors_enabled,
+            }
+            ));
             
         } catch (error) {
             console.error(error);
@@ -119,9 +118,6 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
         const checkAuthentication = async () => {
             const access_Token = Cookies.get('access_token');
             const refresh_Token = Cookies.get('refresh_token');
-            
-            // setAccessToken(access_Token)
-            // setRefreshToken(refresh_Token);
 
             try {
                 if (!access_Token)
@@ -149,7 +145,6 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                     setAccessToken(null);
                     await refreshAccessToken(access_Token ?? null, refresh_Token ?? null);
                     setIsAuthenticated(false);
-
                 }
             }
         }
@@ -158,7 +153,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     }, [accessToken]);
     
     return (
-        <AuthContext.Provider value={{logout, isAuthenticated, refreshAccessToken, user, updateUser}}>
+        <AuthContext.Provider value={{logout, isAuthenticated, refreshAccessToken, user, updateUser, accessToken}}>
             {children}
         </AuthContext.Provider>
     )
