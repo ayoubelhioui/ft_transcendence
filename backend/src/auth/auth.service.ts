@@ -54,7 +54,7 @@ export class AuthService{
 
     async generateAuthTokens(): Promise<object>{
         return ({
-            access_token: await this.generateNewToken(this.payload, '10s'),
+            access_token: await this.generateNewToken(this.payload, '20m'),
             refresh_token: await this.generateNewToken(this.payload, '10d'),
         });
     }

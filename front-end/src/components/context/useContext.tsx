@@ -21,11 +21,12 @@ interface User {
 }
 
 interface AuthContextType {
-    updateUser: (data?: FormData) => Promise<void>;
+    updateUser: (username?: string, twoFactor?: boolean) => Promise<void>;
     logout: () => void;
     isAuthenticated: boolean;
     refreshAccessToken: (accessTokenParam: string | null, refreshTokenParam: string | null) => Promise<void>;
     user: User | null;
+
 }
 
   
@@ -92,12 +93,14 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
         }
     }
 
-    const updateUser = async (data?: FormData) => {
+    const updateUser = async (username?: string, twoFactor?: boolean) => {
         try {
-            const response = await axios.post(`http://localhost:3000/user/3`, data, {
+            const response = await axios.post(`http://localhost:3000/user/update`, {
                 headers: {
                   Authorization: `Bearer ${accessToken}`,
-                }
+                },
+                'username': username,
+                
             });
                 // setUser(prevUser => (
                 // {
@@ -106,49 +109,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                 //     avatar: response.data.avatar,
                 // }
                 // ));
-            // if (newUsername !== undefined && newAvatar !== undefined) {
-                
-            //     const response = await axios.post(`http://localhost:3000/user/3`, {
-            //         username: newUsername,
-            //         avatar: newAvatar,
-            //         headers: {
-            //             'Content-Type': 'multipart/form-data'
-            //         },
-            //     });
-            //     // setUser(prevUser => (
-            //     // {
-            //     //     ...prevUser!,
-            //     //     username: response.data.username,
-            //     //     avatar: response.data.avatar,
-            //     // }
-            //     // ));
-            // }
-            // else if (newUsername === undefined) {
-            //     const response = await axios.post(`http://localhost:3000/user/3`, {
-            //         avatar: newAvatar,
-            //         headers: {
-            //             'Content-Type': 'multipart/form-data'
-            //         },
-            //     });
-            //     setUser(prevUser => (
-            //     {
-            //         ...prevUser!,
-            //         avatar: response.data.avatar,
-            //     }
-            //     ));
-            // }
-            // else {
-            //     const response = await axios.post(`http://localhost:3000/user/${user?.intraId}`, {
-            //         username: newUsername,
-                    
-            //     });
-            //     setUser(prevUser => (
-            //     {
-            //         ...prevUser!,
-            //         avatar: response.data.username,
-            //     }
-            //     ));
-            // }
+            
         } catch (error) {
             console.error(error);
         }
