@@ -1,7 +1,7 @@
-import { IsInt, Min, Max, IsString } from 'class-validator';
+import { IsInt, Min, Max, IsString, IsUUID } from 'class-validator';
 
 export class GameResultDto {
-  @IsString()
+  @IsUUID()
   token: string;
 
   @IsInt()

@@ -6,6 +6,7 @@ import { GameService } from './game.service';
 import { Injectable, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { WebSocketExceptionFilter } from '../socket/websocket-exception.filter';
 import { AuthSocketGuard } from '../auth/guards/auth-socket.guard';
+import { InviteToGameDto } from './dto/invite-to-game.dto';
 
 @UseFilters(WebSocketExceptionFilter)
 @UsePipes(new ValidationPipe({
@@ -39,7 +40,7 @@ export class GameGateway {
   
   //make GenerateInviteLink + Invite user (getFriends)
   @SubscribeMessage ('invite_to_game')
-  handleSendInviteEvent(client: Socket, payload: any) {
+  handleSendInviteEvent(client: Socket, payload: InviteToGameDto) {
     // Handle invite event logic
     console.log('Received invite event:', payload);
     const user : User =  this.socketService.getUser(client);

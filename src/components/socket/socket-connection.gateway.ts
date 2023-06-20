@@ -65,6 +65,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   private async handleOnlineStatus(client: Socket) {
     const user : User = this.socketService.getUser(client);
     const onlineFriendsSockets : Socket[] = await this.getOnlineFriendsSocket(user);
+
     this.server
       .to(onlineFriendsSockets
       .map(socket => socket.id))
@@ -76,7 +77,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   private async joinUserChannels(client: Socket) {
     const user : User = this.socketService.getUser(client);
     const channelsId : Channel[] = await this.channelService.getUserChannelsId(user);
-    console.log(channelsId);
+    // console.log(channelsId);
     channelsId.forEach( element => {
       const channelRoom : string = 'channel_' + element.id;
       client.join(channelRoom);

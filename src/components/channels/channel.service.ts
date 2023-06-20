@@ -174,7 +174,6 @@ export class ChannelService {
         const userRole : ChannelUserRole = channelUser.userRole;
         await this.channelGateway.leaveChannel(user, channel, "left the channel");
         if (userRole == ChannelUserRole.owner) {
-            console.log(user.id);
             const nextOwner = await this.channelUsersRepository.getNextOwner(channel, user.id);
             if (!nextOwner) {
                 return (this.deleteChannel(channel));
@@ -204,7 +203,6 @@ export class ChannelService {
 
     //if not muted
     async createMessage(user : User, channel : Channel, message : string) : Promise <ChannelMessages | undefined> {
-        console.log(user);
         const createdMessage : ChannelMessages = await this.channelMessagesRepository.create({
             user,
             channel,

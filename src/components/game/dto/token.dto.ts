@@ -1,7 +1,7 @@
-import { IsString, Length } from 'class-validator';
+import { IsString, IsUUID, Length } from 'class-validator';
 
 export class TokenDto {
-  @IsString()
+  @IsUUID()
   @Length(0, 200)
   token: string;
 }

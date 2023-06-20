@@ -18,30 +18,24 @@ class FriendsRepository extends ABaseRepository<Friends> implements IFriendsRepo
     super();
   }
 
-async getFriendsOfId(user: User): Promise<User[]> {
-    const friends = await this.findByOptions({
-      where: [
-        {
-          sender: user,
-          status: friendRequestStatus.accepted,
-        },
-        {
-          receiver: user,
-          status: friendRequestStatus.accepted,
-        },
-      ],
-      relations: ['sender', 'receiver'],
-    });
+  async getFriendsOfId(user: User): Promise<User[]> {
+    const friends = await this.entity
+      .createQueryBuilder('friend')
+      .where('(friend.senderId = :userId OR friend.receiverId = :userId)', { userId: user.id })
+      .andWhere('friend.status = :status', { status: friendRequestStatus.accepted })
+      .leftJoinAndSelect('friend.sender', 'sender')
+      .leftJoinAndSelect('friend.receiver', 'receiver')
+      .getMany();
   
     const users: User[] = friends.map((friend) => {
-      if (friend.sender.id === user.id) {
+      if (friend.sender.id === user.id)
         return friend.receiver;
-      } else {
-        return friend.sender;
-      }
+      return friend.sender;
     });
+  
     return users;
   }
+  
 
 async getFriendRequestOfId(user : User) : Promise <Friends[]>
 {

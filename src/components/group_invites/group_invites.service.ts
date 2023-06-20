@@ -53,7 +53,6 @@ export class GroupInvitesService {
         const notificationInfos = {
             message : `${user.username} Joined the Channel`
         }
-        console.log(invite.sender)
         return (Promise.all([
             this.channelInvitesRepository.remove(invite),
             this.notificationService.createNotification(notificationInfos, user, invite.sender),
