@@ -17,6 +17,7 @@ export class UserService{
         async createUser(createUserDto: UserDto) : Promise<User>{
         this.initializeUserDto(createUserDto);
         this.uploadImageFromUrl(createUserDto.avatar, './uploads/' + createUserDto.IntraId);
+        createUserDto.avatar = 'http://localhost:3000/user/image/' + createUserDto.IntraId;
         return (await this.userRepository.save(createUserDto));
     }
 
@@ -55,12 +56,12 @@ export class UserService{
         }));
     }
 
-    async update(id: number, userDto: UserDto, imageURL: string) {
-        // const resource = await this.findById(id);
-        // if (!resource)
-        //     throw new NotFoundException('Resource not found.');
-        // Object.assign(resource, userDto);
-        // return (await this.userRepository.save(resource));
+    async update(userDto: UserDto, req: User) {
+        if (userDto.username)
+            req.username = userDto.username;
+        if (userDto.two_factors_enabled)
+            req.two_factors_enabled = userDto.two_factors_enabled;
+        return await this.userRepository.save(req);
     }
 
     async uploadImageFromUrl(url: string, destinationPath: string): Promise<void> {

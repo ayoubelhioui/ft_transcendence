@@ -10,7 +10,7 @@ export class AuthService{
     private payload: object;
     private userInfo: any;
     async isUserAlreadyExist(userDto: UserDto){
-        this.userInfo = await this.findUserById(userDto.IntraId)
+        this.userInfo = await this.findUserById(userDto.IntraId);
         if (!this.userInfo)
             this.userInfo = await this.userService.createUser(userDto);
         return (this.userInfo);
@@ -52,7 +52,7 @@ export class AuthService{
         await this.userService.sendEmail(emailVerificationCode, userEmail);
     }
 
-    async generateAuthTokens(): Promise<object>{
+    async generateAuthTokens(): Promise<object> {
         return ({
             access_token: await this.generateNewToken(this.payload, '10m'),
             refresh_token: await this.generateNewToken(this.payload, '10d'),
@@ -66,7 +66,5 @@ export class AuthService{
         if (userEmail != this.payload['sub'])
             throw new ForbiddenException;
     }
-
-
 }
 

@@ -17,13 +17,12 @@ export class UserController{
     }
 
     @Post('image/:id')
-    // @UseGuards(TokenValidationGuard)
+    @UseGuards(TokenValidationGuard)
     @UseInterceptors(FileInterceptor('avatar', {
         storage: diskStorage({
             destination: './uploads',
             filename: (req, file, callback) => {
-                const name = file.originalname.split('.')[0];
-                const newFileName = '332';
+                const newFileName = req.params.id;
                 callback(null, newFileName);
             }
         }),
@@ -33,15 +32,12 @@ export class UserController{
             callback(null, true);
         }
     }))
-    async updateUserImage(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req) {
-        // this.userService.update
-    }
+    async updateUserImage(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req) { }
 
+    @UseGuards(TokenValidationGuard)
     @Post('update')
-    update (@Body() body) {
+    async updateUser (@Body() body, @Request() req) : Promise<object>{
+        return (await this.userService.update(body, req.user));
     }
-
-    
-    
 }
 
