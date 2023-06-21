@@ -6,28 +6,31 @@ import { authContext } from '../context/useContext';
 
 import { IoIosNotificationsOutline as NotificationIcon } from 'react-icons/io'
 
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+
 
 
 const links: any = [
   {
     name: "Home",
-    icon: <HomeIcons size={30}/>,
+    icon: <HomeIcons size={30} className='text-white'/>,
   },
   {
     name: "Profile",
-    icon: <AccountIcon size={30}/>,
+    icon: <AccountIcon size={30} className='text-white'/>,
   },
   {
     name: "Chat",
-    icon: <MessageIcon size={30}/>,
+    icon: <MessageIcon size={30} className='text-white'/>,
   },
   {
     name: "Live",
-    icon: <VideoIcon size={30}/>,
+    icon: <VideoIcon size={30} className='text-white'/>,
   },
   {
     name: "Play",
-    icon: <GameIcon size={30}/>,
+    icon: <GameIcon size={30} className='text-white'/>,
   },
 
 ]
@@ -48,6 +51,8 @@ const Navbar = () => {
   //   setIsHovering(false);
   // };
 
+  const hoverStyle = "hover:scale-125 hover:duration-500 ease-in-out";
+
   return (
     <>
     <div className=" text-white back rounded-[0] bg-blue-950 w-[60%] mx-auto my-5">
@@ -59,27 +64,39 @@ const Navbar = () => {
             <img src={authNav.user?.avatar} alt="" className=' cursor-pointer object-cover rounded-full w-[45px] h-[45px]' />
           </NavLink> </li>
 
-        <li>
+        <li className= {hoverStyle}>
           <NavLink to=''>
-            <NotificationIcon size={30} className='ml-6'/>
+            <Tooltip title="Notifications">
+              <IconButton>
+                <NotificationIcon size={30} className='ml-6 text-white'/>
+              </IconButton>
+            </Tooltip>
           </NavLink>
         </li>
 
         <div className="flex mx-auto justify-between w-1/2 max-md:hidden">
         {links.map((link: any, index: number) => (
-          <li className='mx-auto ' key={index} >
+          <li className={`mx-auto ${hoverStyle}`} key={index} >
             <NavLink
               to={`/${link.name}`}
               
               className={`  text-white flex items-center`}>
-                {link.icon}
+                <Tooltip title={`${link.name}`}>
+                  <IconButton>
+                    {link.icon}
+                  </IconButton>
+                </Tooltip>
             </NavLink>
           </li>
         ))}
         </div>
 
         <NavLink to='/logout' className=' text-white cursor-pointer pr-2' onClick={authNav.logout} >
-          <ExitIcon size={35} />
+          <Tooltip title="Logout">
+              <IconButton>
+                <ExitIcon size={35} className='text-white'/>
+              </IconButton>
+          </Tooltip>
           {/* <span className='pl-4'>Logout</span> */}
         </NavLink>
 
