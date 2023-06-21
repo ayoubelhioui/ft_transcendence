@@ -10,6 +10,7 @@ import { IsFriendGuard } from './guards/is-friend.guard';
 import { NotificationModule } from '../notification/notification.module';
 import { ChannelModule } from '../channels/channel.module';
 import { SocketModule } from '../socket/socket.module';
+import { FriendsGateway } from './friends.gateway';
 
 
 @Module({
@@ -32,7 +33,8 @@ import { SocketModule } from '../socket/socket.module';
     provide : "MyBlockedUsersRepository",
     useClass : BlockedUsersRepository
   },
-  IsFriendGuard
+  IsFriendGuard,
+  FriendsGateway
 ],
   controllers: [FriendsController, FriendRequestsController],
   exports: [FriendsService]

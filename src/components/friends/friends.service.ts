@@ -6,6 +6,7 @@ import { friendRequestStatus } from 'src/global/types';
 import { DeleteResult } from 'typeorm';
 import { NotificationService } from '../notification/notification.service';
 import { ChannelService } from '../channels/channel.service';
+import { FriendsGateway } from './friends.gateway';
 
 
 
@@ -19,7 +20,8 @@ export class FriendsService {
         @Inject("MyFriendsRepository") private readonly friendsRepository : IFriendsRepository,
         @Inject("MyBlockedUsersRepository") private readonly blockedUsersRepository : IBlockedUsersRepository,
         private readonly channelService : ChannelService,
-        private readonly notificationService : NotificationService
+        private readonly notificationService : NotificationService,
+        private readonly friendsGateway: FriendsGateway
         ){}
 
     
@@ -137,7 +139,8 @@ export class FriendsService {
             await  Promise.all([
                 this.friendsRepository.save(existingRequest),
                 this.notificationService.createNotification(notificationInfos,receiver, Sender),
-                this.notificationService.createNotification(notificationInfos,Sender, receiver)
+                this.notificationService.createNotification(notificationInfos,Sender, receiver),
+                this.friendsGateway.new_friends_connect(Sender,receiver)
             ])
                 return(
                 {
@@ -197,7 +200,8 @@ export class FriendsService {
             existingRequest.accepted_time = new Date();
             existingRequest.channel = await this.channelService.createDmChannel(user , sender ,`${sender.username} - ${user.username} DM`);
             await Promise.all([this.friendsRepository.save(existingRequest),
-                this.notificationService.createNotification(notificationInfos,user, sender)
+                this.notificationService.createNotification(notificationInfos,user, sender),
+                this.friendsGateway.new_friends_connect(user,sender)
             ]
             );
             return {
@@ -215,10 +219,12 @@ export class FriendsService {
     async deleteFriend(user  : User, friend  : User)
     {
         //they already friends
-        const deleteResult : DeleteResult  = await this.friendsRepository.deleteFriend(user,friend);
+        const affectedRows = await this.friendsRepository.deleteFriend(user,friend)
+        if(affectedRows)
+            await this.friendsGateway.old_friends_disconnect(user,friend)
         return ({
-            message : deleteResult.affected ?"friend deleted" : "delete failure",
-            deletedRows : deleteResult.affected ? deleteResult.affected : 0,
+            message : affectedRows ?"friend deleted" : "delete failure",
+            deletedRows : affectedRows ? affectedRows : 0,
         })
     };
 

@@ -52,8 +52,8 @@ async getFriendRequestOfId(user : User) : Promise <Friends[]>
 
 
 
-async deleteFriend(user: User, friend: User) {
-  return await this.entity.createQueryBuilder()
+async deleteFriend(user: User, friend: User) : Promise<number>{
+  const deleteResult =  await this.entity.createQueryBuilder()
     .delete()
     .from(Friends) // Target the table associated with the Friends entity
     .where('status = :status')
@@ -66,6 +66,8 @@ async deleteFriend(user: User, friend: User) {
       }
     )
     .execute();
+
+    return deleteResult.affected ;
 }
 
 

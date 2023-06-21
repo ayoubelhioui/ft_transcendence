@@ -84,6 +84,8 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
     });
   }
 
+
+
   async handleConnection(client: Socket) {
 
     const isAuth : boolean = await this.isAuth(client);

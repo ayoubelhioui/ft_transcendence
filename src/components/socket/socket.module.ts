@@ -16,6 +16,6 @@ import { GameModule } from '../game/game.module';
     forwardRef(() => GameModule)
   ],
   providers: [SocketService,WebSocketExceptionFilter, ConnectionGateway],
-  exports : [SocketService, WebSocketExceptionFilter]
+  exports : [SocketService, WebSocketExceptionFilter, ConnectionGateway,]
 })
 export class SocketModule {}
