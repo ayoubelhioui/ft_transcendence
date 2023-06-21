@@ -1,6 +1,7 @@
 
 import { MdKeyboardDoubleArrowRight as RightArrowIcon, MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
 import { VscAccount as AccountIcon } from 'react-icons/vsc'
+import { useNavigate } from 'react-router-dom'
 
 
 export const Live = () => {
@@ -78,11 +79,17 @@ export const Results = () => {
 
   export const TopPlayers = () => {
 
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+      navigate('/Leaderboard');
+    };
+
     return (
         <div className="flex flex-col top max-sm:mt-12 max-sm:mx-2 max-md:mx-4 max-md:mb-3">
           <div className="flex justify-between ">
             <h1 className='text-white text-2xl mx-4 my-2'>Top Players</h1>
-            <RightArrowIcon size={35} className=' text-white cursor-pointer hover:animate-pulse'/>
+            <RightArrowIcon size={35} onClick={handleClick} className=' text-white cursor-pointer hover:animate-pulse'/>
           </div>
           <div className="flex text-white justify-around mt-4 items-center overflow-x-auto">
             <div className="align">

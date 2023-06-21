@@ -19,7 +19,7 @@ export class AuthController{
     async newAccessToken(@Request() req): Promise<object>{
         const payload = { sub: req.user.IntraId, username: req.user.username };
         return ({
-            access_token: await this.authService.generateNewToken(payload, '20m'),
+            access_token: await this.authService.generateNewToken(payload, '10m'),
         });
     }
 
@@ -48,7 +48,7 @@ export class AuthController{
         this.user = req.user;
         let user = await this.authService.isUserAlreadyExist(this.user);
         if (user.two_factors_enabled)
-            res.redirect('http://localhost:5000/two-factors-authentication');
+            res.redirect('http://localhost:5000/two-factor');
         else
                await this.authService.authenticate(this.user, res);
     }

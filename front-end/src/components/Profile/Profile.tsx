@@ -56,15 +56,19 @@ const Profile = () => {
         console.log(formData.get('avatar'));
 
         const response = await axios.post(`http://localhost:3000/user/${authApp.user?.IntraId}`, formData, {
-          headers: {
-              Authorization: `Bearer ${authApp.accessToken}`
+            headers: {
+                Authorization: `Bearer ${authApp.accessToken}`
+            }
           }
-        }
         );
 
-        console.log( "here is image response:  " + response.data);
+        //? ///////////////////   Temporary Solution In Here   /////////////////////
 
-        // need to take the URI of the image
+        {
+          authApp.user && (authApp.user.avatar = response.data.avatar);
+        }
+
+        console.log( "here is image response:  " + response.data);
 
     } catch (error) {
       console.log(error);
@@ -79,7 +83,7 @@ const Profile = () => {
           <div className="flex items-center max-sm:justify-center max-sm:flex-col">
             <div className="flex justify-start">
               <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[130px] h-[130px]'/>
-              <MdEdit size={20} className='cursor-pointer ' onClick={() => { setOpen(true); console.log(isClicked);}}/>
+              <MdEdit size={20} className='cursor-pointer ' onClick={ () => setOpen(true) }/>
 
               { open &&
                 (

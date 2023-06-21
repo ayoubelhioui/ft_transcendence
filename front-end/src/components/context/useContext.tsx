@@ -6,6 +6,7 @@ import { createContext, useState, useEffect, useContext } from "react";
 // import { useCookies } from "react-cookie";
 
 import Cookies from 'js-cookie';
+import { error } from "@material-tailwind/react/types/components/input";
 
 
 interface User {
@@ -61,8 +62,9 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
             setAccessToken(newAccessToken);
             Cookies.set('access_token', newAccessToken);
 
-        } catch (error) {
-            setIsAuthenticated(false);
+        } catch (error: any) {
+            if (error.response.status === 403)
+                setIsAuthenticated(false);
             ///////// if the refresh token has expired... // we need to do something /////////////
         }
     };

@@ -33,7 +33,7 @@ export class UserController{
     @Post('update')
     @UseGuards(TokenValidationGuard)
     update(@Request() req, @Body() body) {
-        console.log(body.username);
+        // console.log(body.username);
     }
 
     async getUserImage(@Param('id', ParseIntPipe) id : number, @Response() res) {

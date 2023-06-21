@@ -13,7 +13,7 @@ export class TokenValidationGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     try {
         this.token = request.headers.authorization.replace('Bearer ', '');
-        console.log(this.token);
+        
         this.payload = await this.jwtService.verifyAsync(this.token, {
           secret: process.env.TOKEN_SECRET, 
       });

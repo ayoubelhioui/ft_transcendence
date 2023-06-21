@@ -1,12 +1,11 @@
 import { motion } from 'framer-motion'
 
-import { authContext } from './context/useContext';
+// import { authContext } from './context/useContext';
 
 
 const SignIn = () => {
-  const authSign = authContext();
+  // const authSign = authContext();
 
-  const handleSignIn = () => { authSign.checkAuth() };
   
   return (
     <div className=" w-full flex justify-center items-center p-4 bg-profile-bg bg-cover bg-center backdrop-blur-md h-screen">
