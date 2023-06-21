@@ -65,7 +65,6 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
         } catch (error: any) {
             if (error.response.status === 403)
                 setIsAuthenticated(false);
-            ///////// if the refresh token has expired... // we need to do something /////////////
         }
     };
 
@@ -118,14 +117,14 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
 
     
     useEffect( () => {
-        const access_Token = Cookies.get('access_token');
-        const refresh_Token = Cookies.get('refresh_token');
-    
-        setAccessToken(access_Token || null);
-        setRefreshToken(refresh_Token || null);
-
+        
         const checkAuthentication = async () => {
-
+            
+            const access_Token = Cookies.get('access_token');
+            const refresh_Token = Cookies.get('refresh_token');
+        
+            setAccessToken(access_Token || null);
+            setRefreshToken(refresh_Token || null);
             try {
                 if (!access_Token)
                 {

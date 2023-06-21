@@ -50,8 +50,8 @@ const Navbar = () => {
 
   return (
     <>
-    <div className=" text-white purple_back rounded-[0] bg-blue-950 w-[60%] mx-auto my-5">
-      <ul  className=' py-2 flex items-center max-md:mt-8'>
+    <div className=" text-white back rounded-[0] bg-blue-950 w-[60%] mx-auto my-5">
+      <ul  className=' py-2 flex items-center max-md:mt-1 max-md:justify-between '>
 
         
         <li className=' pl-3 max-sm:pl-1'>
@@ -65,7 +65,7 @@ const Navbar = () => {
           </NavLink>
         </li>
 
-        <div className="flex mx-auto justify-between w-1/2">
+        <div className="flex mx-auto justify-between w-1/2 max-md:hidden">
         {links.map((link: any, index: number) => (
           <li className='mx-auto ' key={index} >
             <NavLink

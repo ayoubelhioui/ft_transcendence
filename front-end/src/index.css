@@ -126,10 +126,10 @@ h1 {
 
 .purple_back {
   /* outline: 2px solid #300152; */
-  background: rgba(10, 73, 159, 0.4);
-  border-radius: 5px;
+  background: rgba(48, 1, 82, 0.6);
+  border-radius: 10px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(5px);
   border: 1px solid rgba(10, 73, 159, 0.13);
   /* padding-bottom: 7rem; */
