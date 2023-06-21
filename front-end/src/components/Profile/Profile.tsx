@@ -23,11 +23,10 @@ import axios from 'axios';
 const Profile = () => {
   const authApp = authContext();
 
+  // console.log(authApp.user?.IntraId);
+
   const [NewAvatar, setNewAvatar] = useState<File | null>(null);
 
-  const formData = new FormData();
-            
-  formData.append('avatar', NewAvatar as File);
 
   const handleImage = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
@@ -40,18 +39,28 @@ const Profile = () => {
 
   const handleClose = () => {
     
-    setOpen(false)
+    setOpen(false);
   };
 
 
-  const handleClick = async () => {
+  const handleClick = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
+    setOpen(false);
     try {
-        const response = await axios.post(`http://localhost:3000/user/${authApp.user?.intraId}`, formData, {
+
+        const formData = new FormData();
+        
+        formData.append('avatar', NewAvatar as File);
+
+        console.log(formData.get('avatar'));
+
+        const response = await axios.post(`http://localhost:3000/user/${authApp.user?.IntraId}`, formData, {
           headers: {
               Authorization: `Bearer ${authApp.accessToken}`
           }
-        });
+        }
+        );
 
         console.log( "here is image response:  " + response.data);
 
@@ -70,18 +79,21 @@ const Profile = () => {
           <div className="flex items-center max-sm:justify-center max-sm:flex-col">
             <div className="flex justify-start">
               <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[130px] h-[130px]'/>
-              <MdEdit size={20} className='cursor-pointer ' onClick={() => setIsClicked(true)}/>
+              <MdEdit size={20} className='cursor-pointer ' onClick={() => { setOpen(true); console.log(isClicked);}}/>
 
-              { isClicked &&
+              { open &&
                 (
-                  <Dialog onClose={handleClose} open={open}>
-                    <DialogTitle>Image Upload</DialogTitle>
-                    <DialogContent>
-                      <form onSubmit={handleClick}>
-                        <input type="file" accept="image/*" onChange={handleImage} />
-                        <button type='submit' className='outline-none'>Submit</button>
-                      </form>
-                    </DialogContent>
+                  
+                  <Dialog open={open} onClose={handleClose} className="outline-none flex h-full w-full items-center justify-center">
+                    <div className=" w-[25rem] bg-[#0e3c80] text-white">
+                      <DialogTitle className='text-center'>Image Upload</DialogTitle>
+                      <DialogContent>
+                        <form onSubmit={handleClick} className='flex items-center flex-col'>
+                          <input type="file" accept="image/*" onChange={handleImage} />
+                          <button className="text-[#072964] flex items-center justify-center bg-white my-4 py-2 px-6" type="submit">Submit</button>
+                        </form>
+                      </DialogContent>
+                    </div>
                   </Dialog>
                 )
               }

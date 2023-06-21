@@ -16,7 +16,7 @@ interface User {
     loss: number;
     winrate: number;
     two_factors_enabled: boolean;
-    intraId: number
+    IntraId: number
     // Add any other relevant user information
 }
 
@@ -51,7 +51,6 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     
     const refreshAccessToken = async (accessTokenParam: string | null, refreshTokenParam: string | null) => {
         try {
-            console.log(accessTokenParam, refreshTokenParam)
             const response = await axios.get("http://localhost:3000/auth/refresh-token", {
                 headers: {
                   Authorization: `Bearer ${refreshTokenParam}`,
@@ -92,6 +91,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     }
 
     const updateUser = async (username?: string, twoFactor?: boolean) => {
+    
         try {
             const response = await axios.post(`http://localhost:3000/user/update`, {
                 headers: {
@@ -114,10 +114,15 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
         }
     };
 
+    
     useEffect( () => {
+        const access_Token = Cookies.get('access_token');
+        const refresh_Token = Cookies.get('refresh_token');
+    
+        setAccessToken(access_Token || null);
+        setRefreshToken(refresh_Token || null);
+
         const checkAuthentication = async () => {
-            const access_Token = Cookies.get('access_token');
-            const refresh_Token = Cookies.get('refresh_token');
 
             try {
                 if (!access_Token)
