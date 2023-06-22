@@ -34,7 +34,7 @@ const HomePage = () => {
 
           </div> */}
 
-          <div className=" text-white flex text-center w-[90%] mx-auto mt-[3rem] max-md:w-[85%] max-md:flex-col max-md:mt-3">
+          <div className=" text-white flex text-center w-[90%] mx-auto mt-[3rem] max-md:w-[85%] max-md:flex-col max-md:mt-3 ">
             <Live />
             <Results />
           </div>

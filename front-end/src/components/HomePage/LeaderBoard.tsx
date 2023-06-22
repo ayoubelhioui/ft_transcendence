@@ -18,6 +18,9 @@ const LeaderBoard = () => {
       
   const authAvatar = authContext();
 
+
+  //? need to check if the array is empty and if it is then i will display there is nothing to show in here or something like that
+
   return (
 
     <div className="flex flex-col purple_back mt-[5%] w-[60%] mx-auto h-[60vh] max-md:mt-[3%] max-md:w-[85%] pb-5 max-sm:pb-0">
@@ -109,46 +112,8 @@ const LeaderBoard = () => {
             </div>
             <div className="w-1/4 text-center">42%</div>
           </div>
-          <div className="flex mt-1 items-center justify-between bg-[#4D194D] py-2 px-4 rounded-[10px]">
-            <div className="w-1/4">2</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">John</div>
-            </div>
-            <div className="w-1/4 text-center">38%</div>
-          </div>
-          <div className="flex mt-1 items-center justify-between bg-[#3b063b] py-2 px-4 rounded-[10px]">
-            <div className="w-1/4">3</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">Jane</div>
-            </div>
-            <div className="w-1/4 text-center">35%</div>
-          </div>
-          <div className="flex mt-1 items-center justify-between bg-[#3b063b] py-2 px-4 rounded-[10px]">
-            <div className="w-1/4">1</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">Mouad</div>
-            </div>
-            <div className="w-1/4 text-center">42%</div>
-          </div>
-          <div className="flex mt-1 items-center justify-between bg-[#4D194D] py-2 px-4 rounded-[10px]">
-            <div className="w-1/4">2</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">John</div>
-            </div>
-            <div className="w-1/4 text-center">38%</div>
-          </div>
-          <div className="flex mt-1 items-center justify-between bg-[#3b063b] py-2 px-4 rounded-[10px]">
-            <div className="w-1/4">3</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">Jane</div>
-            </div>
-            <div className="w-1/4 text-center">35%</div>
-          </div>
+         
+      
           
           
         </div>

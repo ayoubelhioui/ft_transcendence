@@ -30,9 +30,9 @@ const App = () => {
   const authApp = authContext();
 
   return (
-    <div className=' h-[1020px]'>
+    <div className=' h-[1020px] max-md:h-[1300px]'>
       <div className=' w-full flex absolute top-1/2 -translate-y-1/2 max-sm:top-0 max-sm:-translate-y-0 '>
-        <div className=" flex flex-col bg-profile-bg bg-cover bg-center rounded-[10px] max-sm:rounded-none w-[70%] mx-auto max-w-[1600px] h-[85vh] max-md:w-[95%] max-sm:w-full max-sm:bg-none max-sm:drop-shadow-none max-sm:h-screen ">
+        <div className=" flex flex-col bg-profile-bg bg-cover bg-center rounded-[10px] max-sm:rounded-none w-[70%] mx-auto max-w-[1600px] h-[85vh] max-md:w-[95%] max-sm:w-full max-sm:drop-shadow-none max-md:h-screen max-md:mt-3 max-sm:max-w-[1800px]">
          
         { !authApp.isAuthenticated && <SignIn /> }
         

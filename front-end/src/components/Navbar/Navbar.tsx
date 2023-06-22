@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { RxHamburgerMenu } from 'react-icons/rx'
+
 import { NavLink } from 'react-router-dom'
 import { VscAccount as AccountIcon, VscHome as HomeIcons } from "react-icons/vsc";
 import { MdSource as MessageIcon, MdVideoLibrary as VideoIcon, MdSportsEsports as GameIcon, MdExitToApp as ExitIcon } from "react-icons/md";
@@ -64,7 +65,7 @@ const Navbar = () => {
             <img src={authNav.user?.avatar} alt="" className=' cursor-pointer object-cover rounded-full w-[45px] h-[45px]' />
           </NavLink> </li>
 
-        <li className= {hoverStyle}>
+        <li className= {`max-md:hidden ${hoverStyle}`}>
           <NavLink to=''>
             <Tooltip title="Notifications">
               <IconButton>
@@ -91,7 +92,7 @@ const Navbar = () => {
         ))}
         </div>
 
-        <NavLink to='/logout' className=' text-white cursor-pointer pr-2' onClick={authNav.logout} >
+        <NavLink to='/logout' className=' text-white cursor-pointer pr-2 max-md:hidden' onClick={authNav.logout} >
           <Tooltip title="Logout">
               <IconButton>
                 <ExitIcon size={35} className='text-white'/>
@@ -99,6 +100,8 @@ const Navbar = () => {
           </Tooltip>
           {/* <span className='pl-4'>Logout</span> */}
         </NavLink>
+
+        <RxHamburgerMenu size={30} className=' mr-4 hidden max-md:block max-sm:mr-2'/>
 
       </ul>
     </div>
