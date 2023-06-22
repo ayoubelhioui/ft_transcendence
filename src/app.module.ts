@@ -11,13 +11,13 @@ import { FriendsModule } from './components/friends/friends.module';
 import { ChannelModule } from './components/channels/channel.module';
 import { AddUserMiddleware } from './global/middlewares/add-default-user.middleware';
 import { SocketModule } from './components/socket/socket.module';
-
 const ENV_PATH : string = './src/.env'; 
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ENV_PATH }),
-    TypeOrmModule.forRootAsync(typeOrmConfigs()),
+    TypeOrmModule.forRootAsync(typeOrmConfigs())
+    ,
     UserModule,
     ChannelModule,
     GameModule,

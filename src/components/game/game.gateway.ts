@@ -7,6 +7,7 @@ import { Injectable, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@ne
 import { WebSocketExceptionFilter } from '../socket/websocket-exception.filter';
 import { AuthSocketGuard } from '../auth/guards/auth-socket.guard';
 import { InviteToGameDto } from './dto/invite-to-game.dto';
+import { GameSessions } from './game-sessions.service';
 
 @UseFilters(WebSocketExceptionFilter)
 @UsePipes(new ValidationPipe({
@@ -19,8 +20,9 @@ export class GameGateway {
    
   constructor(
     private readonly socketService: SocketService,
-
-    ){}
+    private readonly gameSession : GameSessions
+    
+    ){} 
   
   @WebSocketServer()
   server: Server;
@@ -55,6 +57,12 @@ export class GameGateway {
       socketToSend.emit('invitationToGame',payloadToSend );
     })
   }
+
+  @SubscribeMessage ('join_game')
+  joinGame(client: Socket, payload: any) {
+    this.gameSession.addPlayer(payload, client)
+  }
+
 
   //refuse / close button to close popup
 

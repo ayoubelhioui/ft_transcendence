@@ -10,7 +10,7 @@ import { GameGateway } from './game.gateway';
 import { SocketModule } from '../socket/socket.module';
 import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
-
+import { GameSessions } from './game-sessions.service';
 
 @Module({
   imports: [
@@ -37,8 +37,10 @@ import { JwtModule } from '@nestjs/jwt';
     },
     /*** guards */
     GameExistsGuard,
-    GameGateway
+    GameGateway,
+    GameSessions
   ],
-  exports : [GameService]
+  exports : [GameService, GameSessions]
 })
 export class GameModule {}
+

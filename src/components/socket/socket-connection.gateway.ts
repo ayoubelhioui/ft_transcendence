@@ -8,6 +8,7 @@ import { WebSocketExceptionFilter } from './websocket-exception.filter';
 import { ChannelService } from '../channels/channel.service';
 import { FriendsService } from '../friends/friends.service';
 import { GameService } from '../game/game.service';
+import { GameSessions } from '../game/game-sessions.service';
 
 @WebSocketGateway()
 @UseFilters(WebSocketExceptionFilter)
@@ -23,8 +24,8 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
     private readonly jwtService : JwtService,
     private readonly channelService : ChannelService,
     private readonly friendsService : FriendsService,
-    private readonly gameService : GameService
-
+    private readonly gameService : GameService,
+    private readonly gameSessions : GameSessions
     ) {}
 
 
@@ -87,7 +88,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
 
 
   async handleConnection(client: Socket) {
-
+      console.log(client.handshake)
     const isAuth : boolean = await this.isAuth(client);
     if (!isAuth)
     {
@@ -128,6 +129,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   {
     console.log("disconnected")
     const user : User = this.socketService.getUser(client);
+    this.gameSessions.removePlayer(client);
     if (user)
     {
       this.socketService.removeSocket(user.id, client);
