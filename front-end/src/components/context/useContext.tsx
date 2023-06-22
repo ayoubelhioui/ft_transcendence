@@ -6,7 +6,6 @@ import { createContext, useState, useEffect, useContext } from "react";
 // import { useCookies } from "react-cookie";
 
 import Cookies from 'js-cookie';
-import { error } from "@material-tailwind/react/types/components/input";
 
 
 interface User {
@@ -50,7 +49,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     const [user, setUser] = useState<User | null>(null);
 
     
-    const refreshAccessToken = async (accessTokenParam: string | null, refreshTokenParam: string | null) => {
+    const refreshAccessToken = async (refreshTokenParam: string | null) => {
         try {
             const response = await axios.get("http://localhost:3000/auth/refresh-token", {
                 headers: {
@@ -76,18 +75,19 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
             accessToken: accessToken,
             refreshToken: refreshToken
         };
+
+        console.log(accessToken, refreshToken);
         
         try {
-            const res = await axios.post("http://localhost:3000/logout", jResponse);
+            const res = await axios.post("http://localhost:3000/auth/logout", jResponse);
 
             console.log(res);
 
-            // removeCookie('accessTokenCookie', { path: '/' });
-            // removeCookie('refreshTokenCookie', { path: '/' });
+            // Cookies.remove('access_token', accessToken );
             
             setIsAuthenticated(false);
         } catch (error) {
-            
+            console.log(error);
         }
     }
 
@@ -117,6 +117,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
 
     
     useEffect( () => {
+        
         
         const checkAuthentication = async () => {
             
@@ -149,8 +150,8 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                 if (error.response.status === 403)
                 {
                     setAccessToken(null);
-                    await refreshAccessToken(access_Token ?? null, refresh_Token ?? null);
-                    setIsAuthenticated(false);
+                    await refreshAccessToken(refresh_Token ?? null);
+                    // setIsAuthenticated(false);
                 }
             }
         }

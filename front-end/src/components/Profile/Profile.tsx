@@ -15,7 +15,7 @@ import DialogContent from '@mui/material/DialogContent';
 
 import { authContext } from '../context/useContext';
 import Settings from './Settings';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 
@@ -34,7 +34,8 @@ const Profile = () => {
         }
   };
 
-  const [isClicked, setIsClicked] = useState(false);
+  // const [isClicked, setIsClicked] = useState(false);
+
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -62,7 +63,7 @@ const Profile = () => {
           }
         );
 
-        //? ///////////////////   Temporary Solution In Here   /////////////////////
+        // ///////////////////   Temporary Solution In Here   /////////////////////
 
         {
           authApp.user && (authApp.user.avatar = response.data.avatar);

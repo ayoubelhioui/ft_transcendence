@@ -1,4 +1,4 @@
-import { RxHamburgerMenu } from 'react-icons/rx'
+import { RiMenu3Line, RiCloseLine } from 'react-icons/ri'
 
 import { NavLink } from 'react-router-dom'
 import { VscAccount as AccountIcon, VscHome as HomeIcons } from "react-icons/vsc";
@@ -9,6 +9,9 @@ import { IoIosNotificationsOutline as NotificationIcon } from 'react-icons/io'
 
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+
+import { useState } from 'react';
+import Notifications from "./Notifications.tsx";
 
 
 
@@ -42,24 +45,16 @@ const links: any = [
 const Navbar = () => {
   const authNav = authContext();
 
-  // const [isHovering, setIsHovering] = useState(false);
+  const [handleMenu, setHandleMenu] = useState(false);
+  const [handleNotif, setHandleNotif] = useState(false);
 
-  // const handleMouseOver = () => {
-  //   setIsHovering(true);
-  // };
 
-  // const handleMouseOut = () => {
-  //   setIsHovering(false);
-  // };
-
-  const hoverStyle = "hover:scale-125 hover:duration-500 ease-in-out";
+  const hoverStyle: string = "hover:scale-125 hover:duration-500 ease-in-out";
 
   return (
     <>
-    <div className=" text-white back rounded-[0] bg-blue-950 w-[60%] mx-auto my-5">
+    <div className=" z-[999] text-white back rounded-[0] bg-blue-950 w-[60%] mx-auto my-5">
       <ul  className=' py-2 flex items-center max-md:mt-1 max-md:justify-between '>
-
-        
         <li className=' pl-3 max-sm:pl-1'>
           <NavLink to="/Profile">
             <img src={authNav.user?.avatar} alt="" className=' cursor-pointer object-cover rounded-full w-[45px] h-[45px]' />
@@ -69,10 +64,12 @@ const Navbar = () => {
           <NavLink to=''>
             <Tooltip title="Notifications">
               <IconButton>
-                <NotificationIcon size={30} className='ml-6 text-white'/>
+                <NotificationIcon size={30} className='ml-6 text-white' onClick={() => setHandleNotif(!handleNotif)}/>
               </IconButton>
             </Tooltip>
           </NavLink>
+
+          { handleNotif && <Notifications />  }
         </li>
 
         <div className="flex mx-auto justify-between w-1/2 max-md:hidden">
@@ -95,13 +92,38 @@ const Navbar = () => {
         <NavLink to='/logout' className=' text-white cursor-pointer pr-2 max-md:hidden' onClick={authNav.logout} >
           <Tooltip title="Logout">
               <IconButton>
-                <ExitIcon size={35} className='text-white'/>
+                <ExitIcon size={35} className='text-white' onClick={authNav.logout}/>
               </IconButton>
           </Tooltip>
           {/* <span className='pl-4'>Logout</span> */}
         </NavLink>
+        
+        { !handleMenu ?
+        <RiMenu3Line className=' hidden max-md:block mr-4' color='#fff' size={27} onClick={() => setHandleMenu(true)}/>
+        : <RiCloseLine className=' hidden max-md:block mr-4' color='#fff' size={27} onClick={() => setHandleMenu(false)}/>
+        }
 
-        <RxHamburgerMenu size={30} className=' mr-4 hidden max-md:block max-sm:mr-2'/>
+
+        { handleMenu && (
+          <div className=" absolute top-[4rem] h-screen -right-[34%] bg-[#070757] w-screen ">
+            <div className="flex flex-col justify-center h-full px-4 py-2 ">
+              {links.map((link: any, index: number) => (
+                  <li className={`mx-auto ${hoverStyle} pt-12 text-2xl text-left`} key={index} >
+                    <NavLink
+                        to={`/${link.name}`}
+
+                        className={`  text-white flex items-center`} onClick={ () => setHandleMenu(false)}>
+                      {link.name}
+                    </NavLink>
+                  </li>
+              ))}
+              <NavLink to="/logout" onClick={authNav.logout} className={`mx-auto ${hoverStyle} pt-12 text-2xl text-left`}>
+                Logout
+              </NavLink>
+            </div>
+          </div>
+          )
+        }
 
       </ul>
     </div>
