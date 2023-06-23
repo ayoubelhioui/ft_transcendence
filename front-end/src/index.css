@@ -38,6 +38,10 @@ body {
   font-family: var(--outfit);
 }
 
+::-webkit-file-upload-button {
+  display: none;
+}
+
 input {
   border-radius: var(--radius-10);
   background-color: var(--all-bg);
