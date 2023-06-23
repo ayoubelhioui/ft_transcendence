@@ -41,7 +41,7 @@ const App = () => {
 
           <Routes>
 
-            { authApp.user?.two_factors_enabled && <Route path='two-factor' element={(<ProtectedRoute> <TwoFactor /> </ProtectedRoute>)}/>}
+            {/* { authApp.user?.two_factors_enabled && <Route path='two-factor' element={(<ProtectedRoute> <TwoFactor /> </ProtectedRoute>)}/>} */}
 
             <Route path='/' >
               <Route index element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>

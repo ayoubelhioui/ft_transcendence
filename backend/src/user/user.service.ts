@@ -4,6 +4,8 @@ import { User } from 'src/entities';
 import { Repository } from 'typeorm';
 import { UserDto } from 'src/dto/user.dto';
 import TokenBlacklist from 'src/entities/token_blacklist';
+import axios from 'axios';
+import { createWriteStream } from 'fs';
 const nodemailer = require('nodemailer');
 
 @Injectable()
@@ -12,7 +14,7 @@ export class UserService{
     constructor(@InjectRepository(User) private readonly userRepository: Repository<User>,
         @InjectRepository(TokenBlacklist) private readonly tokenBlacklistRepository: Repository<TokenBlacklist>) {}
 
-        async createUser(createUserDto: UserDto) : Promise<User>{ 
+        async createUser(createUserDto: UserDto) : Promise<User>{
         this.initializeUserDto(createUserDto);
         return (await this.userRepository.save(createUserDto));
     }
@@ -33,8 +35,8 @@ export class UserService{
         return (user);
     }
 
-    generateImageURL (userId: number) : string{
-        return ('http://localhost:3000/user/images/' + userId);
+    generateImageURL (userId: number, imageExtension: string) : string{
+        return ('http://localhost:3000/user/images/' + userId + "." + imageExtension);
     }
 
     async addTokenToBlacklist(token: string)
@@ -52,12 +54,24 @@ export class UserService{
         }));
     }
 
-    async update(id: number, userDto: UserDto, imageURL: string) {
-        // const resource = await this.findById(id);
-        // if (!resource)
-        //     throw new NotFoundException('Resource not found.');
-        // Object.assign(resource, userDto);
-        // return (await this.userRepository.save(resource));
+    async update(userDto: UserDto, req: User) {
+        if (userDto.username)
+            req.username = userDto.username;
+        if (userDto.two_factors_enabled)
+            req.two_factors_enabled = userDto.two_factors_enabled;
+        return await this.userRepository.save(req);
+    }
+
+    async uploadImageFromUrl(url: string, destinationPath: string): Promise<void> {
+        const response = await axios.get(url, { responseType: 'stream' });
+    
+        const writer = createWriteStream(destinationPath);
+        response.data.pipe(writer);
+    
+        return new Promise((resolve, reject) => {
+          writer.on('finish', resolve);
+          writer.on('error', reject);
+        });
     }
 
     async sendEmail(emailVerificationCode: string, userMail: string){

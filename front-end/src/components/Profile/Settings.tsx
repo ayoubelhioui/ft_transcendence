@@ -32,12 +32,14 @@ const Settings = () => {
 
 
         if (newUsername.trim() !== '') {
+
             
             setOpen(false);
             try {
                 await settingContext.updateUser(newUsername, factor);
-
+                
             } catch(error) {
+                console.log("here is submit");
                 console.log(error);
             }
         }
@@ -76,7 +78,7 @@ const Settings = () => {
 
                                 (<motion.button type='button' whileTap={{scale: 0.955}} onClick={() => setFactor(false)} className='flex items-center border border-white border-solid py-2 px-6 mr-auto text-xs outline-none'>Disable 2Fa</motion.button>) :
 
-                                (<motion.button type='button' whileTap={{scale: 0.955}} onClick={() => setFactor(true)} className='flex items-center border border-white border-solid py-2 px-6 mr-auto text-xs outline-none '>Enable 2Fa</motion.button>)
+                                (<motion.button type='button' whileTap={{scale: 0.955}} onClick={() => setFactor(false)} className='flex items-center border border-white border-solid py-2 px-6 mr-auto text-xs outline-none '>Enable 2Fa</motion.button>)
                             }
                             <button className="text-[#072964] flex items-end justify-end bg-white mt-10  py-2 px-6" type="submit">Submit</button>
                         </form>

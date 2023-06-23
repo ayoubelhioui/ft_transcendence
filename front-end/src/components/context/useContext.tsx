@@ -24,7 +24,7 @@ interface AuthContextType {
     updateUser: (username?: string, twoFactor?: boolean) => Promise<void>;
     logout: () => void;
     isAuthenticated: boolean;
-    refreshAccessToken: (accessTokenParam: string | null, refreshTokenParam: string | null) => Promise<void>;
+    refreshAccessToken: (refreshTokenParam: string | null) => Promise<void>;
     user: User | null;
     accessToken: string | null;
 
@@ -93,14 +93,17 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     }
 
     const updateUser = async (username?: string, twoFactor?: boolean) => {
-    
+        
+        const dataResponse = {
+            username: username,
+            two_factors_enabled: twoFactor
+        };
+
         try {
-            const response = await axios.post(`http://localhost:3000/user/update`, {
+            const response = await axios.post("http://localhost:3000/user/update", dataResponse, {
                 headers: {
                   Authorization: `Bearer ${accessToken}`,
-                },
-                'username': username,
-                'two_factor': twoFactor,
+                }
                 
             });
             setUser(prevUser => (
@@ -112,6 +115,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
             ));
             
         } catch (error) {
+
             console.error(error);
         }
     };

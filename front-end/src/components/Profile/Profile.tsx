@@ -54,7 +54,7 @@ const Profile = () => {
 
         console.log(formData.get('avatar'));
 
-        const response = await axios.post(`http://localhost:3000/user/${authApp.user?.IntraId}`, formData, {
+        const response = await axios.post(`http://localhost:3000/user/image/${authApp.user?.IntraId}`, formData, {
             headers: {
                 Authorization: `Bearer ${authApp.accessToken}`
             }
@@ -80,13 +80,13 @@ const Profile = () => {
         <div className="flex flex-col">
           <div className="flex items-center max-sm:justify-center max-sm:flex-col">
             <div className="flex justify-start">
-              <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[130px] h-[130px]'/>
+              <img src={'http://localhost:3000/user/image/' + authApp.user?.IntraId} alt='avatar' className=' object-cover rounded-full w-[130px] h-[130px]'/>
               <MdEdit size={20} className='cursor-pointer ' onClick={ () => setOpen(true) }/>
 
               { open &&
                 (
                   
-                  <Dialog open={open} onClose={handleClose} className="outline-none flex h-full w-full items-center justify-center">
+                  <Dialog open={open} onClose={handleClose}className="outline-none flex h-full w-full items-center justify-center">
                     <div className=" w-[25rem] bg-[#0e3c80] text-white">
                       <DialogTitle className='text-center'>Image Upload</DialogTitle>
                       <DialogContent>

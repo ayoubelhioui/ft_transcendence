@@ -1,7 +1,9 @@
 backend/node_modules
+backend/uploads
 backend/src/.env
 backend/example.http
 backend/potgresql/.env
 backend/dist
 front-end/node_modules
 front-end/dist
+.DS_Store

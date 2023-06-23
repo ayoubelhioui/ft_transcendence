@@ -1,23 +1,28 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UploadedFiles, UseGuards, UseInterceptors, UsePipes, Response, Request } from '@nestjs/common'
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UploadedFiles, UseGuards, UseInterceptors, UsePipes, Response, Request, Req } from '@nestjs/common'
 import { TokenValidationGuard } from 'src/auth/guards/acces-token.guard';
 import { UserService } from './user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as fs from 'fs';
+
 @Controller('user')
 export class UserController{
 
     constructor(private userService: UserService) {}
+    
+    @Get('image/:id')
+    async getUserImage(@Param('id', ParseIntPipe) id : number, @Response() res) {
+        const stream = fs.createReadStream('./uploads/' + id);  
+        stream.pipe(res);
+    }
 
-    @Post(':id')
+    @Post('image/:id')
     @UseGuards(TokenValidationGuard)
     @UseInterceptors(FileInterceptor('avatar', {
         storage: diskStorage({
             destination: './uploads',
             filename: (req, file, callback) => {
-                const name = file.originalname.split('.')[0];
-                const extension = file.originalname.split('.')[1];
-                const newFileName = ':id.' + extension;
+                const newFileName = req.params.id;
                 callback(null, newFileName);
             }
         }),
@@ -27,21 +32,15 @@ export class UserController{
             callback(null, true);
         }
     }))
-    async userUpdate(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req) {
-    }
+    async updateUserImage(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req) { }
 
-    @Post('update')
     @UseGuards(TokenValidationGuard)
-    update(@Request() req, @Body() body) {
-        // console.log(body.username);
+    @Post('update')
+    async updateUser (@Body() body, @Request() req) : Promise<object>{
+        console.log('helloWorld');
+        const User = await this.userService.update(body, req.user);
+        console.log(User);
+        return (User);
     }
-
-    async getUserImage(@Param('id', ParseIntPipe) id : number, @Response() res) {
-        res.setHeader('Content-Type', 'image/jpeg');
-        const stream = fs.createReadStream('./uploads/' + id);
-        stream.pipe(res);
-    }
-
-    
 }
 
