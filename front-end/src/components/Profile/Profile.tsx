@@ -34,8 +34,6 @@ const Profile = () => {
         }
   };
 
-  // const [isClicked, setIsClicked] = useState(false);
-
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -68,7 +66,6 @@ const Profile = () => {
         {
           authApp.user && (authApp.user.avatar = response.data.avatar);
         }
-
         console.log( "here is image response:  " + response.data);
 
     } catch (error) {

@@ -61,10 +61,10 @@ const Navbar = () => {
           </NavLink> </li>
 
         <li className= {`max-md:hidden ${hoverStyle}`}>
-          <NavLink to=''>
+          <NavLink to='' onClick={() => setHandleNotif(!handleNotif)}>
             <Tooltip title="Notifications">
               <IconButton>
-                <NotificationIcon size={30} className='ml-6 text-white' onClick={() => setHandleNotif(!handleNotif)}/>
+                <NotificationIcon size={30} className='ml-6 text-white' />
               </IconButton>
             </Tooltip>
           </NavLink>
@@ -89,13 +89,14 @@ const Navbar = () => {
         ))}
         </div>
 
-        <NavLink to='/logout' className=' text-white cursor-pointer pr-2 max-md:hidden' onClick={authNav.logout} >
+        <NavLink to='/' className=' text-white cursor-pointer pr-2 max-md:hidden' onClick={authNav.logout} >
+
           <Tooltip title="Logout">
               <IconButton>
-                <ExitIcon size={35} className='text-white' onClick={authNav.logout}/>
+                <ExitIcon size={35} className='text-white'/>
               </IconButton>
           </Tooltip>
-          {/* <span className='pl-4'>Logout</span> */}
+
         </NavLink>
         
         { !handleMenu ?
@@ -117,7 +118,7 @@ const Navbar = () => {
                     </NavLink>
                   </li>
               ))}
-              <NavLink to="/logout" onClick={authNav.logout} className={`mx-auto ${hoverStyle} pt-12 text-2xl text-left`}>
+              <NavLink to="/" onClick={authNav.logout} className={`mx-auto ${hoverStyle} pt-12 text-2xl text-left`}>
                 Logout
               </NavLink>
             </div>

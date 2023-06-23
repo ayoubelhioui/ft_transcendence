@@ -83,8 +83,9 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
 
             console.log(res);
 
-            // Cookies.remove('access_token', accessToken );
-            
+            Cookies.remove('access_token', accessToken );
+            Cookies.remove('refresh_token', refreshToken );
+
             setIsAuthenticated(false);
         } catch (error) {
             console.log(error);
