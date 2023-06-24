@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 const SignIn = () => {
   // const authSign = authContext();
 
+    console.log("here");
   
   return (
     <div className=" w-full flex justify-center items-center p-4 bg-profile-bg bg-cover bg-center backdrop-blur-md h-screen">

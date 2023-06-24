@@ -57,8 +57,7 @@ export class UserService{
     async update(userDto: UserDto, req: User) {
         if (userDto.username)
             req.username = userDto.username;
-        if (userDto.two_factors_enabled)
-            req.two_factors_enabled = userDto.two_factors_enabled;
+        req.two_factors_enabled = userDto.two_factors_enabled;
         return await this.userRepository.save(req);
     }
 

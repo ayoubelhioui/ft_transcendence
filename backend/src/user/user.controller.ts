@@ -37,7 +37,7 @@ export class UserController{
     @UseGuards(TokenValidationGuard)
     @Post('update')
     async updateUser (@Body() body, @Request() req) : Promise<object>{
-        console.log('helloWorld');
+        console.log(body);
         const User = await this.userService.update(body, req.user);
         console.log(User);
         return (User);

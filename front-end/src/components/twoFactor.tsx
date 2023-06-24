@@ -1,11 +1,11 @@
-import { motion } from 'framer-motion'
+// import { motion } from 'framer-motion'
 
-import { authContext } from './context/useContext';
+// import { authContext } from './context/useContext';
 import { useState } from 'react';
 
 
 const twoFactor = () => {
-  const authFactor = authContext();
+  // const authFactor = authContext();
 
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');

@@ -27,6 +27,7 @@ interface AuthContextType {
     refreshAccessToken: (refreshTokenParam: string | null) => Promise<void>;
     user: User | null;
     accessToken: string | null;
+    isTwoFactorEnabled: boolean;
 
 }
 
@@ -38,6 +39,7 @@ const AuthContext = createContext<AuthContextType>({
     refreshAccessToken: () => Promise.resolve(),
     user: null,
     accessToken: null,
+    isTwoFactorEnabled: false,
 });
 
 
@@ -47,6 +49,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     const [refreshToken, setRefreshToken] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState<User | null>(null);
+    const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false);
 
     
     const refreshAccessToken = async (refreshTokenParam: string | null) => {
@@ -93,29 +96,32 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     }
 
     const updateUser = async (username?: string, twoFactor?: boolean) => {
-        
         const dataResponse = {
             username: username,
-            two_factors_enabled: twoFactor
+            two_factors_enabled: twoFactor,
         };
 
+        console.log(dataResponse);
+
         try {
-            const response = await axios.post("http://localhost:3000/user/update", dataResponse, {
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
+            const response = await axios.post(
+                "http://localhost:3000/user/update",
+                dataResponse,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
                 }
-                
-            });
-            setUser(prevUser => (
-            {
+            );
+            setUser((prevUser) => ({
                 ...prevUser!,
                 username: response.data.username,
                 two_factors_enabled: response.data.two_factors_enabled,
-            }
-            ));
-            
-        } catch (error) {
+            }));
+            console.log(response.data.two_factors_enabled);
+            setIsTwoFactorEnabled(response.data.two_factors_enabled);
 
+        } catch (error) {
             console.error(error);
         }
     };
@@ -165,7 +171,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     }, [accessToken]);
     
     return (
-        <AuthContext.Provider value={{logout, isAuthenticated, refreshAccessToken, user, updateUser, accessToken}}>
+        <AuthContext.Provider value={{logout, isAuthenticated, refreshAccessToken, user, updateUser, accessToken, isTwoFactorEnabled}}>
             {children}
         </AuthContext.Provider>
     )
