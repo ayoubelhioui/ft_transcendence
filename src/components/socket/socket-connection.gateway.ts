@@ -88,7 +88,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
 
 
   async handleConnection(client: Socket) {
-      console.log(client.handshake)
+      //console.log(client.handshake)
     const isAuth : boolean = await this.isAuth(client);
     if (!isAuth)
     {
@@ -129,7 +129,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   {
     console.log("disconnected")
     const user : User = this.socketService.getUser(client);
-    this.gameSessions.removePlayer(client);
+    await this.gameSessions.removePlayer(client);
     if (user)
     {
       this.socketService.removeSocket(user.id, client);

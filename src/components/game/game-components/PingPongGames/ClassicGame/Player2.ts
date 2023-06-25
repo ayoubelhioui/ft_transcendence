@@ -1,11 +1,12 @@
-const params = require('./Params')
-const Paddle = require('./Paddle')
+import { Game } from "./Game"
+import { Paddle } from "./Paddle"
+import { params } from "./Params"
 
-module.exports = class Player2 extends Paddle {
-    constructor(game) {
+export class Player2 extends Paddle {
+    constructor(game : Game) {
         super(game)
 
-        this.position.set(params.sceneDim.x / 2 - params.paddleDim.x / 2, 0, 0)
+        this.position.set(params.sceneDim.x / 2 - params.paddleDim.x / 2, 0)
         this.setPos(this.position)
     }
 

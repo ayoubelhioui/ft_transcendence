@@ -1,15 +1,36 @@
-const THREE = require('three')
-const params = require('./Params')
+import { Game } from "./Game"
 
-module.exports = class Ball {
-    constructor(game) {
+
+import * as THREE from 'three'
+import { params } from "./Params"
+
+const initSpeed = 8
+
+export class Ball {
+
+    game : Game
+
+    timeStep : number = params.timeStep
+    ballDim : number = params.ballDim
+    position : THREE.Vector2 = new THREE.Vector2()
+    velocity : THREE.Vector2 = new THREE.Vector2()
+    speed : number = initSpeed
+    maxSpeed : number = 12
+
+    info = {
+        lose : false,
+        init: true,
+        turn : 0
+    }
+
+    constructor(game : Game) {
         this.game = game
         this.timeStep = params.timeStep
         this.ballDim = params.ballDim
 
         this.position = new THREE.Vector2()
         this.velocity = new THREE.Vector2()
-        this.speed = 6
+        this.speed = 8
         this.maxSpeed = 12
 
         this.info = {
@@ -23,18 +44,18 @@ module.exports = class Ball {
 
     //=================================
 
-    reset() {
+    async reset() {
         if (Math.abs(this.position.x) > params.sceneDim.x / 2) {
             if (this.position.x < 0)
-                this.game.changeScore([0, 1])
+                await this.game.changeScore([0, 1])
             else if (this.position.x > 0)
-                this.game.changeScore([1, 0])
+                await this.game.changeScore([1, 0])
             
             this.init(this)
         }
     }
 
-    init(ball) {
+    init(ball : Ball) {
         function perform() {
             // let rx = Math.random() * ((ball.info.turn % 2) * 2 - 1) * 0.5
             // let ry = (Math.random() * 2 - 1) * 0.5
@@ -43,11 +64,12 @@ module.exports = class Ball {
             // if (Math.abs(ry) < 0.2)
             //     ry = 0.2 * Math.sign(ry)
             ball.info.turn++
-            ball.velocity.set(-1 * ((ball.info.turn % 2) * 2 - 1), 0, 0)
+            ball.velocity.set(-1 * ((ball.info.turn % 2) * 2 - 1), 0)
             ball.velocity.normalize()
             ball.info.lose = false
+            ball.speed = initSpeed
         }
-        ball.position.set(0, 0, 0)
+        ball.position.set(0, 0)
         ball.info.lose = true
         setTimeout(perform, 1000)
     }
@@ -106,20 +128,20 @@ module.exports = class Ball {
             velocity: this.velocity,
             speed: this.speed
         }
-        this.game.room.sendBallInfoClassic(data)
+        this.game.room.sendBallInfo(data)
     }
 
     addSpeed() {
         this.speed += (params.frame * params.timeStep) / 1200
-        console.log(this.speed)
+        // console.log(this.speed)
         if (this.speed > this.maxSpeed)
             this.speed = this.maxSpeed
     }
 
-    update() {
+    async update() {
         if (this.info.lose === false) {
             this.move()
-            this.reset()
+            await this.reset()
             this.addSpeed()
         }
         this.#socketSendBallInfo()

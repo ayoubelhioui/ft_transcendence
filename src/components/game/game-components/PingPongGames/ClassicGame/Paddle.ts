@@ -1,21 +1,32 @@
-const params = require("./Params")
-const THREE = require("three")
+import { Game } from "./Game"
+import { params } from "./Params"
+import * as THREE from 'three'
+import { Vec2 } from "./interfaces/vec2.interface"
 
-module.exports = class Paddle {
-    constructor(game) {
+export class Paddle {
+    
+    game : Game
+
+    speed : number = 4
+    addedSpeed : number = 0
+    maxAdd : number = 12
+    dir : number = 0
+    timeStep : number = params.timeStep
+    position : THREE.Vector2 = new THREE.Vector2(0, 0)
+    oldY : number = 0
+    counter : number = 0
+    cx : number = 0
+    x1 : number = 0
+    x2 : number = 0
+    cy : number = 0
+    y1 : number = 0
+    y2 : number = 0
+
+    constructor(game : Game) {
         this.game = game
-        this.speed = 4
-        this.addedSpeed = 0
-        this.maxAdd = 12
-        this.dir = 0
-        this.timeStep = params.timeStep
-        this.position = new THREE.Vector3(0, 0)
-        this.oldY = 0
-        this.counter = 0
     }
 
-
-    isIn(pos) {
+    isIn(pos : Vec2) {
         if (pos.y <= this.y1 && pos.y >= this.y2)
             return (true)
         return (false)
@@ -39,7 +50,8 @@ module.exports = class Paddle {
         this.counter = 0
     }
 
-    setPos(pos, e = 0)
+    
+    setPos(pos : Vec2, e : number = 0)
     {
         this.#addSpeed()
         this.position.y += (this.speed + this.addedSpeed) * this.timeStep * e
@@ -62,11 +74,21 @@ module.exports = class Paddle {
         }
     }
 
-    sendPos(id) {
+
+    botSetPos(posY : number) {
+        let newPos = {
+            x: this.position.x,
+            y: posY
+        }
+        this.position.y = posY
+        this.setPos(newPos)
+    }
+
+    sendPos(id : number) {
         this.game.room.sendPaddleMove({id : id, y: this.position.y})
     }
 
-    receivePos(data) {
-        this.setPos(this.position, data.e)
+    receivePos(payload : any) {
+        this.setPos(this.position, payload.e)
     } 
 }

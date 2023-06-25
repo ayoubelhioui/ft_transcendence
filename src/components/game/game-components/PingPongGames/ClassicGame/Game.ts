@@ -1,30 +1,30 @@
-const Ball = require('./Ball')
-const Bot = require('./Bot')
-const params = require('./Params')
-const Player1 = require('./Player1')
-const Player2 = require('./Player2')
+import { ClassicRoom } from '../../Room/ClassicRoom'
+import { Ball } from './Ball'
+import { Bot } from './Bot'
+import { params } from './Params'
+import { Player1 } from './Player1'
+import { Player2 } from './Player2'
 
 export class Game {
-    constructor() {
-        this.room = undefined
-        this.botObj = undefined
-        this.ballObj = undefined
-        this.paddleP1 = undefined
-        this.paddleP2 = undefined
 
-        this.totalTime = 0
-        this.gameInfo = {
-            turn: 0, //the player that will shot the ball
-            initTurn: 0,
-            scorePlayer1: 0,
-            scorePlayer2: 0,
-            start: false,
-            isBot: false
-        }
-
+    room : ClassicRoom
+    botObj : Bot | undefined = undefined
+    ballObj : Ball
+    player1 : Player1
+    player2 : Player2
+    interval : NodeJS.Timer
+    
+    totalTime : number = 0
+    gameInfo = {
+        turn: 0, //the player that will shot the ball
+        initTurn: 0,
+        scorePlayer1: 0,
+        scorePlayer2: 0,
+        start: false,
+        isBot: false
     }
 
-    init(room, botMode = false) {
+    constructor(room : ClassicRoom, botMode : boolean) {
         this.room = room
         this.player1 = new Player1(this)
         this.player2 = new Player2(this)
@@ -33,26 +33,27 @@ export class Game {
             this.botObj = new Bot(this)
     }
 
-    start(data) {
+    start(payload : any) {
         console.log("Game is started ...")
-        this.gameInfo.turn = data.turn
-        this.gameInfo.initTurn = data.turn
+        this.gameInfo.turn = payload.turn
+        this.gameInfo.initTurn = payload.turn
         this.gameInfo.start = true
     }
 
-    changeScore(p) {
+    async changeScore(p : number[]) {
         this.gameInfo.scorePlayer1 += p[0]
         this.gameInfo.scorePlayer2 += p[1]
         console.log(" Score1: ", this.gameInfo.scorePlayer1, " Score2: ", this.gameInfo.scorePlayer2)
         this.changeTurn(this.getTurnInit())
-        this.room.sendGameScoreClassic({
-            score: [this.gameInfo.scorePlayer1, this.gameInfo.scorePlayer2]
+        await this.room.sendGameScore({
+            player1Score : this.gameInfo.scorePlayer1,
+            player2Score : this.gameInfo.scorePlayer2
         })
     }
 
     getTurnInit() {
-        //0->player1 1->player2
-        let a = (this.gameInfo.initTurn) + parseInt((this.gameInfo.scorePlayer1 + this.gameInfo.scorePlayer2) / 2)
+        let b = (this.gameInfo.scorePlayer1 + this.gameInfo.scorePlayer2) / 2
+        let a = (this.gameInfo.initTurn) + Math.floor(b)
         return (a % 2)
     }
 
@@ -67,9 +68,9 @@ export class Game {
         })
     }
 
-    update() {
+    async update() {
         let t = performance.now()
-        this.ballObj.update()
+        await this.ballObj.update()
         this.player1.update()
         this.player2.update()
         this?.botObj?.update()
@@ -87,4 +88,5 @@ export class Game {
         clearInterval(this.interval)
     }
 
+    
 }

@@ -1,37 +1,41 @@
-const params = require('./Params')
-const THREE = require('three')
+import { Ball } from './Ball'
+import { Game } from './Game'
+import { params } from './Params'
+import * as THREE from 'three'
 
-module.exports = class Bot {
+export class Bot {
+    game : Game
+    ballObj : Ball
 
-    constructor (game) {
+
+    timeStep : number = params.timeStep
+    gravityForce : number = params.gravityForce
+    step : number = 0
+    performInit : boolean = false
+    moveToInfo = {
+        status : 0,
+        lose : false
+    }
+
+    
+    velocity = new THREE.Vector3()
+    position = new THREE.Vector3(-20, 0, 0)
+    botTarget = new THREE.Vector3(0, 0, 0)
+    target = new THREE.Vector3(0, 0, 0)
+    limit = {
+        x: {
+            a : - params.planeDim.x * 0.8,
+            b : - params.planeDim.x * 0.4
+        },
+        y : {
+            a: - params.planeDim.y * 0.7,
+            b: + params.planeDim.y * 0.7
+        }
+    }
+
+    constructor (game : Game) {
         this.game = game
-      
-        
         this.ballObj = this.game.ballObj
-        this.timeStep = params.timeStep
-        this.gravityForce = params.gravityForce
-        
-        this.step = 0
-        this.performInit = false
-        this.moveToInfo = {
-            status : 0,
-            lose : false
-        }
-        
-        this.velocity = new THREE.Vector3()
-        this.position = new THREE.Vector3()
-        this.botTarget = new THREE.Vector3(0, 0, 0)
-        this.target = new THREE.Vector3(0, 0, 0)
-        this.limit = {
-            x: {
-                a : - params.planeDim.x * 0.8,
-                b : - params.planeDim.x * 0.4
-            },
-            y : {
-                a: - params.planeDim.y * 0.7,
-                b: + params.planeDim.y * 0.7
-            }
-        }
     }
 
 
@@ -69,7 +73,7 @@ module.exports = class Bot {
         })
     }
 
-    moveTo(time) {
+    moveTo(time : number) {
         if (this.moveToInfo.status === 1) {
             this.botTarget.y += -2
             this.velocity = new THREE.Vector3().copy(this.botTarget).sub(this.position).multiplyScalar(1 / time)
@@ -125,7 +129,11 @@ module.exports = class Bot {
         if (this.performInit === true)
             return 
         
-        function perform(obj) {
+        //? reset the position of the bot
+        this.position.set(-params.planeDim.x / 2 - 1, this.position.y, 0)
+        this.#socketSendPosition()
+
+        function perform(obj : Bot) {
             let r = (Math.random() * 2 - 1) * params.planeDim.y * 0.2
             obj.performInit = false
             obj.ballObj.directSetVelocity(12, 3, r)

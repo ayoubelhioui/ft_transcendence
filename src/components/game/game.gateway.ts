@@ -59,31 +59,32 @@ export class GameGateway {
   }
 
   @SubscribeMessage ('join_game')
-  joinGame(client: Socket, payload: any) {
-    this.gameSession.addPlayer(payload, client)
+  async joinGame(client: Socket, payload: any) {
+    payload.user = this.socketService.getUser(client);
+    await this.gameSession.addPlayer(payload, client)
   }
 
+  @SubscribeMessage ('moveRacket')
+  racketMove(client: Socket, payload: any) {
+    //payload.user = this.socketService.getUser(client);
+    this.gameSession.racketMove(payload, client.id)
+  }
+
+  @SubscribeMessage ('hitBall')
+  hitBall(client: Socket, payload: any) {
+    //payload.user = this.socketService.getUser(client);
+    this.gameSession.hitBall(payload, client.id)
+  }
+
+  @SubscribeMessage ('movePaddle')
+  paddleMove(client: Socket, payload: any) {
+    //payload.user = this.socketService.getUser(client);
+    this.gameSession.paddleMove(payload, client.id)
+  }
 
   //refuse / close button to close popup
 
   // @SubscribeMessage ('accept')
-  async gameAcceptInvite(game: Game) { 
 
-    // const game = await this.gameService.joinGame(user,gameId);
-    const player1Socket = this.socketService.getSocket(game.player1.id);
-    const player2Socket = this.socketService.getSocket(game.player2.id);
-    const payloadToSend = {
-      gameId : game.token,
-      message : "Game invite accepted"
-    }
-    player1Socket.forEach(socket => {
-      socket.emit('invite_accepted',payloadToSend);
-    });
-  
-    player2Socket.forEach(socket => {
-      socket.emit('game_accepted',payloadToSend);
-    });
-    //redirect
-  }
 
 }

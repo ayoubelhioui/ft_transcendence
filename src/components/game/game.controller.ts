@@ -4,7 +4,7 @@ import { PaginationDto } from 'src/global/dto/pagination.dto';
 import { GetUser } from '../user/decorators/user.decorator';
 import { User } from 'src/database/entities';
 import { GameResultDto } from './dto/set-game-result.dto';
-import { BooleanDto } from 'src/global/dto/boolean.dto';
+import { TypeDto } from 'src/global/dto/boolean.dto';
 import { gameTypes, gameTypesNames } from 'src/global/types/game-types';
 import { TokenDto } from './dto/token.dto';
 import { GameGateway } from './game.gateway';
@@ -42,7 +42,7 @@ export class GameController {
 
     @Post(':type')
     @UsePipes(ValidationPipe)
-    async createGame(@GetUser() user : User, @Param() typeDto : BooleanDto){
+    async createGame(@GetUser() user : User, @Param() typeDto : TypeDto){
         let type;
         if(typeDto.type === gameTypesNames[0])
             type = 0;

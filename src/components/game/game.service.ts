@@ -5,6 +5,7 @@ import { IsNull, MoreThan, Not } from 'typeorm';
 import { FriendsService } from '../friends/friends.service';
 import { pl } from 'date-fns/locale';
 import { GameGateway } from './game.gateway';
+import { GameSessions } from './game-sessions.service';
 
 @Injectable()
 export class GameService {
@@ -14,7 +15,6 @@ export class GameService {
         @Inject("MyUserRepository") private readonly userRepository : IUserRepository,
         @Inject("MyGamesRepository") private readonly gamesRepository : IGamesRepository,
         private readonly friendsService: FriendsService,
-        private readonly  gameGateway : GameGateway
         ){}
     
     //user exists guard
@@ -63,6 +63,7 @@ export class GameService {
             type : gameType
         });
         return ({
+            message : "game created",
             inviteId : game.token
         })
 
@@ -108,16 +109,20 @@ export class GameService {
         )
         if(!game)
             throw new NotFoundException("game finished Or doesn't exist")
+            console.log("1")
         if(game.player2)
             throw new UnauthorizedException("game is full");
+            console.log("2")
+
         if(game.player1.id === player2.id)
             throw new UnauthorizedException("can't join your own games");
+            console.log("3")
+
         const inaccessible = await this.friendsService.blocking_exists(game.player1,player2);
         if(inaccessible)
             throw new UnauthorizedException("user innacessible");
         game.player2 = player2;
-        await Promise.all([this.gamesRepository.save(game),
-        this.gameGateway.gameAcceptInvite(game)]);
+        await this.gamesRepository.save(game)
         return game;
 
     }

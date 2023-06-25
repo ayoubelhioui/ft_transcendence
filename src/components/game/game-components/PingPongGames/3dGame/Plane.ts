@@ -1,11 +1,24 @@
-module.exports = class Plane {
-    constructor(a, b, c) {
+import { Vec3 } from "./interfaces/vec3.interface"
+
+export class Plane {
+    a : Vec3
+    b : Vec3
+    c : Vec3
+    ab : Vec3
+    ac : Vec3
+    A : number
+    B : number
+    C : number
+    D : number
+
+    constructor(a : Vec3, b : Vec3, c : Vec3) {
         //a b c  are three points
 
         this.a = a
         this.b = b
         this.c = c
         
+
         let ab = {
             x: b.x - a.x,
             y: b.y - a.y,

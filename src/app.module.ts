@@ -11,6 +11,7 @@ import { FriendsModule } from './components/friends/friends.module';
 import { ChannelModule } from './components/channels/channel.module';
 import { AddUserMiddleware } from './global/middlewares/add-default-user.middleware';
 import { SocketModule } from './components/socket/socket.module';
+import { AddBotMiddleware } from './global/middlewares/add-bot-user.middleware';
 const ENV_PATH : string = './src/.env'; 
 
 @Module({
@@ -32,6 +33,6 @@ const ENV_PATH : string = './src/.env';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AddUserMiddleware).forRoutes('*');
+    consumer.apply(AddBotMiddleware,AddUserMiddleware).forRoutes('*');
   }
 }

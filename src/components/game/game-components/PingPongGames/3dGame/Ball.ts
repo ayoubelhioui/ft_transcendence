@@ -1,64 +1,73 @@
-const params = require('./Params')
-const THREE = require('three')
-const Ray = require('./Ray')
-const Plane = require('./Plane')
+import { params } from './Params'
+import * as THREE from 'three'
+import { Ray } from './Ray'
+import {Plane} from './Plane'
+import { Game } from './Game'
+import { Vec3 } from './interfaces/vec3.interface'
+import { BallInfo } from './interfaces/ball-info.interface'
 
-module.exports = class Ball {
+export class Ball {
     
     static LOSE_OUT_OF_BOUND = 0
     static LOSE_NET = 1
     static LOSE_DOUBLE_BOUNCE = 2
     static LOSE_NO_BOUNCE = 3
 
-    constructor(game) {
+    game : Game
+
+    timeStep : number = params.timeStep
+    ballDim : number = params.ballDim
+    ray = new Ray()
+    velocity = new THREE.Vector3()
+    position = new THREE.Vector3()
+    
+    gravityForce : number = params.gravityForce
+    tablePlaneObj = new Plane({x: 0, y: 0, z : 0}, {x: 1, y: 0, z: 0}, {x: 0, y: 0, z: 1})
+    netPlaneObj = new Plane({x: 0, y: 0, z : 0}, {x: 0, y: 1, z: 0}, {x: 0, y: 0, z: 1})
+    bounce = 0
+    initialize = true
+    lose = false
+
+    groundInfo = {
+        //used by bot
+        v : new THREE.Vector3(), // velocity
+        p : new THREE.Vector3() // position
+    }
+    ballInfo = {
+        net : false,
+        spot : false,
+        init: true
+    }
+
+    limit = {
+        x: {
+            a : - params.planeDim.x * 0.05,
+            b : - params.planeDim.x * 0.45
+        },
+        y : {
+            a: - params.planeDim.y * 0.46,
+            b: + params.planeDim.y * 0.46
+        },
+
+        botX: {
+            a : params.planeDim.x * 0.1,
+            b : params.planeDim.x * 0.45
+        },
+        botY : {
+            a: - params.planeDim.y * 0.46,
+            b: + params.planeDim.y * 0.46
+        }
+    }
+
+
+
+
+
+
+    constructor(game : Game) {
         this.game = game
-        this.timeStep = params.timeStep
-        this.ballDim = params.ballDim
-        this.ray = new Ray()
-        this.velocity = new THREE.Vector3()
-        this.position = new THREE.Vector3()
-        
-        this.gravityForce = params.gravityForce
-        this.groundInfo = {
-            //used by bot
-            v : new THREE.Vector3(), // velocity
-            p : new THREE.Vector3() // position
-        }
-        this.ballInfo = {
-            net : false,
-            spot : false,
-            init: true
-        }
-
-        this.limit = {
-            x: {
-                a : - params.planeDim.x * 0.05,
-                b : - params.planeDim.x * 0.45
-            },
-            y : {
-                a: - params.planeDim.y * 0.46,
-                b: + params.planeDim.y * 0.46
-            },
-
-            botX: {
-                a : params.planeDim.x * 0.1,
-                b : params.planeDim.x * 0.45
-            },
-            botY : {
-                a: - params.planeDim.y * 0.46,
-                b: + params.planeDim.y * 0.46
-            }
-        }
-
-        this.tablePlaneObj = new Plane({x: 0, y: 0, z : 0}, {x: 1, y: 0, z: 0}, {x: 0, y: 0, z: 1})
-        this.netPlaneObj = new Plane({x: 0, y: 0, z : 0}, {x: 0, y: 1, z: 0}, {x: 0, y: 0, z: 1})
-
-        this.bounce = 0
-        this.initialize = true
-        this.lose = false
-
+    
         this.#init()
-
     }
 
    
@@ -70,7 +79,7 @@ module.exports = class Ball {
         this.#loseInit(this)
     }
 
-    #loseInit(obj) {    
+    #loseInit(obj : Ball) {    
         obj.initialize = true
         obj.lose = false
         obj.position.y = 5
@@ -81,7 +90,7 @@ module.exports = class Ball {
         obj.bounce = 0
     }
 
-    #getLoseReason(cause) {
+    #getLoseReason(cause : number) {
         let arr = {}
        
         arr[Ball.LOSE_OUT_OF_BOUND] = "out of bound"
@@ -92,14 +101,14 @@ module.exports = class Ball {
     }
 
 
-    #loseFunction(cause, time) {
+    async #loseFunction(cause : number, time : number = 0) {
         if (this.lose === true)
             return 
         this.lose = true
         let p = [0, 1, 0, this.#getLoseReason(cause)]
         if (this.position.x < 0)
             p = [1, 0, 1, this.#getLoseReason(cause)]
-        this.game.changeScore(p)
+        await this.game.changeScore(p)
         if (time) {
             setTimeout(this.#loseInit, time, this)
         } else {
@@ -107,9 +116,9 @@ module.exports = class Ball {
         }
     }
 
-    #reset() {
+    async #reset() {
         if (this.position.y <= -3 || this.position.y > 80) {
-           this.#loseFunction(Ball.LOSE_OUT_OF_BOUND)
+           await this.#loseFunction(Ball.LOSE_OUT_OF_BOUND)
         }
     }
 
@@ -134,7 +143,7 @@ module.exports = class Ball {
         )
     }
 
-    #getDiscreteSpeed(posX) {
+    #getDiscreteSpeed(posX : number) {
         let discreteSpeed = [0.75, 1, 1.25]
         let range = (params.planeDim.x * 0.5) / discreteSpeed.length
         for (let i = 0; i < discreteSpeed.length; i++) {
@@ -145,7 +154,7 @@ module.exports = class Ball {
         return (discreteSpeed[0])
     }
 
-    #getDiscretePosX(x) {
+    #getDiscretePosX(x : number) {
         // 0 <= x <= 1
         if (x > 0.92)
             x = 0.8
@@ -165,7 +174,7 @@ module.exports = class Ball {
         this.game.changeTurn()
     }
 
-    directSetVelocity(x, y, z) {
+    directSetVelocity(x : number, y : number, z : number) {
         if (this.lose === true)
             return
         this.velocity.set(x, y, z)
@@ -181,11 +190,11 @@ module.exports = class Ball {
         }
     }
 
-    botSetVelocity(posX, posZ, speed) {
+    botSetVelocity(posX : number, posZ : number, speed : number) {
         this.#setVelocity(posX, posZ, speed)
     }
 
-    #setVelocity(posX, posZ, speed) {
+    #setVelocity(posX : number, posZ : number, speed : number) {
         if (this.lose === true)
             return
         //speed < 0 => distance.x < 0 => time > 0
@@ -217,7 +226,7 @@ module.exports = class Ball {
     }
 
 
-    #hit(x, y, playerType) {
+    #hit(x : number, y : number, playerType : number) {
         // 0 <= x <= 1 || -1 <= y <= 1
         console.log("playerType", playerType)
         if (x > 0 || Math.sign(playerType) === Math.sign(this.position.x) 
@@ -235,7 +244,7 @@ module.exports = class Ball {
         return (this.#setVelocity(posX, posY, speed))
     }
 
-    #initHit(x, y, playerType, racketPos) {
+    #initHit(x : number, y : number, playerType : number, racketPos : Vec3) {
         let dist = (racketPos.x - this.position.x)
         console.log("Hit in dist", dist)
         if (Math.sign(x) === -1) {
@@ -324,42 +333,47 @@ module.exports = class Ball {
             this.#move()      
     }
 
-    socketReceiveHit(data) {
+    socketReceiveHit(payload : any) {
         if (!this.initialize) {
-            this.#hit(data.distX, data.distY, data.playerType)
+            this.#hit(payload.distX, payload.distY, payload.playerType)
         } else {
             let racketPos = (this.game.getTurnInit() === 0 ? this.game.racketP1 : this.game.racketP2)
-            this.#initHit(data.distX, data.distY, data.playerType, racketPos)
+            this.#initHit(payload.distX, payload.distY, payload.playerType, racketPos)
         }
     }
 
     #socketSendBallInfo() {
         if (params.frame % 3 !== 0)
             return
-        let data = {
-            position: this.position,
-            velocity: this.velocity,
-            init : this.initialize
-        }
+        
+        let data = new BallInfo()
+
+
+        data.position = this.position
+        data.velocity = this.velocity
+        data.init = this.initialize
+        data.net = this.ballInfo.net
         data.spotPos = undefined
+
+        if (this.ballInfo.net) {
+            this.ballInfo.net = false
+        }
         if (this.ballInfo.spot) {
             data.spotPos = this.groundInfo.p
             this.ballInfo.spot = false
         }
-        data.net = this.ballInfo.net
-        if (this.ballInfo.net) {
-            this.ballInfo.net = false
-        }
+        
+        
         this.game.room.sendBallInfo(data)
     }
 
-    update() {
+    async update() {
         if (!this.initialize) {
             this.#ballPhy()
         } else {
             this.#initBall()
         }
-        this.#reset()
+        await this.#reset()
         this.#socketSendBallInfo()    
     }
 }

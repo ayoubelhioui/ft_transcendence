@@ -15,7 +15,7 @@ export class AddUserMiddleware implements NestMiddleware {
     async use(req: Request, res: Response, next: NextFunction) {
       console.log('middleware')
         const users : User[] | undefined = await this.userService.findAll();
-        const id = 1;
+        const id = 2;
         // console.log(users);
         // let user : User = null;
         // user = await this.userService.findUserById(id);
@@ -34,7 +34,7 @@ export class AddUserMiddleware implements NestMiddleware {
         //   user = users[0];
         else
         {
-          (req as any).user = users[0];
+          (req as any).user = users[1];
           // (req as any).targetedUser = users[0];
         }
 

@@ -1,16 +1,21 @@
-module.exports = class MyRay {
+import { Plane } from './Plane'
+import { Vec3 } from './interfaces/vec3.interface'
+
+export class Ray {
+
+    position : Vec3 | undefined = undefined
+    normalizedVector : Vec3 | undefined = undefined
+    far : number = Infinity
+
     constructor() {
-        this.position = undefined
-        this.normalizedVector = undefined
-        this.far = Infinity
     }
 
-    set(pos, normalizedVector) {
+    set(pos : Vec3, normalizedVector : Vec3) {
         this.position = pos
         this.normalizedVector = normalizedVector
     }
 
-    intersectObjects(arrObj) {
+    intersectObjects(arrObj : Plane[]) {
         const res = []
         if (this.position === undefined || this.normalizedVector === undefined)
             return (res)

@@ -1,4 +1,4 @@
-const params = {
+export const params = {
     timeStep : 1 / 60,
     ballDim: 0.1,
     frame: 0,
@@ -11,5 +11,3 @@ const params = {
         y: 12.5
     }
 }
-
-module.exports = params
