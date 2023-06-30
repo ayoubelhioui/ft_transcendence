@@ -147,28 +147,29 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                 }
 
                 else {
-                    const response = await axios.get('http://localhost:3000/auth/user', {
-                        headers: {
-                            Authorization: `Bearer ${access_Token}`
+					
+					const response = await axios.get('http://localhost:3000/auth/user', {
+						headers: {
+							Authorization: `Bearer ${access_Token}`
                         }
                     });
-
+					
                     setUser(response.data.user);
                     
-                    setIsAuthenticated(true);
+					setIsAuthenticated(true);
                 }
             } catch (error: any) {
                 if (error.response.status === 403)
                 {
                     setAccessToken(null);
                     await refreshAccessToken(refresh_Token ?? null);
-                    // setIsAuthenticated(false);
+					
                 }
             }
         }
 
         checkAuthentication();
-    }, [accessToken]);
+    }, [accessToken, isAuthenticated]);
     
     return (
         <AuthContext.Provider value={{logout, isAuthenticated, refreshAccessToken, user, updateUser, accessToken, isTwoFactorEnabled}}>

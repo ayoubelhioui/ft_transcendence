@@ -93,23 +93,24 @@ const Friends = () => {
 
   return (
     <div className="flex flex-col top_1 w-[300px] text-gray-400 max-md:w-[95%] bg-red-700">
+		
       <h1 className="text-2xl p-2">Friends List</h1>
       
       <div className="flex flex-col">
 
         <div className="flex items-center justify-between">
 
-          <div className="flex relative justify-between">
-            <input type="search" className="shadow border-0" placeholder="Search a friend..." />
-            <button type="button" onClick={() => null} className='absolute left-[65%] mt-3 mr-4'>
+          <div className="flex relative justify-between items-center">
+            <input type="search" className="shadow border-0 my-4 mx-2 w-[230px]" placeholder="Search a friend..." />
+            <button type="button" onClick={() => null} className='absolute left-[67%] mt-1 mr-0'>
               <BiSearchAlt2 size={20} />
             </button>
           </div>
 
           <div className="flex flex-col relative">
 
-              <button type='button' className='outline-none' onClick={() => setOpen(!IsOpen)}>
-                <BsThreeDotsVertical size={20} />
+              <button type='button' className='outline-none p-0' onClick={() => setOpen(!IsOpen)}>
+                <BsThreeDotsVertical size={22} />
               </button>
 
             {IsOpen && (

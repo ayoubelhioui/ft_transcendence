@@ -47,9 +47,9 @@ export class AuthController{
     async singUp(@Request() req, @Response() res){
         this.user = req.user;
         let user = await this.authService.isUserAlreadyExist(this.user);
-        if (user.two_factors_enabled)
-            res.redirect('http://localhost:5000/two-factor');
-        else
-               await this.authService.authenticate(this.user, res);
+        // if (user.two_factors_enabled)
+        //     res.redirect('http://localhost:5000/two-factor');
+        // else
+        await this.authService.authenticate(this.user, res);
     }
 }
