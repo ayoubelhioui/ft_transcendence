@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+// import { motion } from 'framer-motion'
 
 import { authContext } from './context/useContext';
 import { Navigate } from 'react-router-dom';

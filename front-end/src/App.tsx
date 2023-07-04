@@ -1,5 +1,5 @@
 
-import { Navbar, HomePage, Profile, SignIn, Chat, LeaderBoard, ResultsMatchHome} from './components/index'
+import { Navbar, HomePage, Profile, SignIn, Chat, LeaderBoard, ResultsLatestHome} from './components/index'
 import { authContext } from './components/context/useContext';
 
 import { Navigate } from "react-router-dom";
@@ -42,17 +42,23 @@ const App = () => {
             <Route path='/sign-in' element={<SignIn />} />
 
             <Route path='/' >
+
+
               	<Route index element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
+
               	<Route path='Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
+
               	<Route path='Profile' element={(<ProtectedRoute> <Profile /> </ProtectedRoute>)}/>
+
               	<Route path='Chat' element={(<ProtectedRoute> <Chat /> </ProtectedRoute>)}/>
+
               	<Route path='Leaderboard' element={(<ProtectedRoute> <LeaderBoard /> </ProtectedRoute>)}/>
-				<Route path='results' element={ (<ProtectedRoute> <ResultsMatchHome /> </ProtectedRoute>)} />
+
+				        <Route path='results' element={ (<ProtectedRoute> <ResultsLatestHome/> </ProtectedRoute>)} />
+
             </Route>
 
           {/* check when the user type the url of /two-factor then i need to prevent him from accessing it unless he is logged out or something...  */}
-
-            
 
           </Routes>
         </div>
