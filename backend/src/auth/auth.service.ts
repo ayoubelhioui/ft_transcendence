@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException, Redirect } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt"
 import { UserDto } from "src/dto/user.dto";
 import TokenBlacklist from "src/entities/token_blacklist";
@@ -12,12 +12,14 @@ export class AuthService{
     async isUserAlreadyExist(userDto: UserDto){
         this.userInfo = await this.findUserById(userDto.IntraId);
         if (!this.userInfo)
+        {
             this.userInfo = await this.userService.createUser(userDto);
-        this.userService.uploadImageFromUrl(userDto.avatar, './uploads/' + userDto.IntraId);
+            this.userService.uploadImageFromUrl(userDto.avatar, './uploads/' + userDto.IntraId);
+        }
         return (this.userInfo);
     }
 
-    async authenticate(userDto: UserDto, res: any) {
+    async authenticate(userDto: UserDto, res: any) : Promise<void>{
         this.payload = { sub: userDto.IntraId, username: userDto.username };
         const tokens = await this.generateAuthTokens();
         res.cookie('access_token', tokens['access_token']);

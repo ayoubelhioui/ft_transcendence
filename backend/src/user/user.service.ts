@@ -73,7 +73,8 @@ export class UserService{
         });
     }
 
-    async sendEmail(emailVerificationCode: string, userMail: string){
+    async sendEmail(emailVerificationCode: string, userEmail: string){
+        console.log(userEmail);
          const transporter = await nodemailer.createTransport({
             service: 'outlook',
             auth: {
@@ -83,7 +84,7 @@ export class UserService{
           });
           const mailOptions = {
             from: 'ayoubelhioui@outlook.com',
-            to: userMail,
+            to: userEmail,
             subject: 'Two-Factor Authentication Code',
             text: `Thank you for using Your TRANSCENDENCE. To complete your login and ensure the security of your account, \
 please enter the following verification code: \

@@ -56,8 +56,6 @@ input {
   border-radius: 15px;
   
   padding: .8rem 1rem;
-  /* border-radius: 0; */
-
 }
 
 h2 {
@@ -67,6 +65,18 @@ h2 {
 .nav-animate {
   transform: translateX(-100%);
   animation: slide 1.7s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+.hide {
+  transform: translateY(-100%);
+  animation-name: slideDown;
+  animation-duration: 2s;
+  animation-timing-function: cubic-bezier(0.165, 0.84, 50.44, 1);
+  animation-fill-mode: forwards;
+}
+
+.mask {
+  overflow: hidden;
 }
 
 /* .nav {

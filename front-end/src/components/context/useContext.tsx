@@ -26,9 +26,6 @@ interface AuthContextType {
     isAuthenticated: boolean;
     refreshAccessToken: (refreshTokenParam: string | null) => Promise<void>;
     user: User | null;
-    accessToken: string | null;
-    isTwoFactorEnabled: boolean;
-
 }
 
   
@@ -38,19 +35,22 @@ const AuthContext = createContext<AuthContextType>({
     isAuthenticated: false,
     refreshAccessToken: () => Promise.resolve(),
     user: null,
-    accessToken: null,
-    isTwoFactorEnabled: false,
 });
 
 
 export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
 
+
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [refreshToken, setRefreshToken] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState<User | null>(null);
-    const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false);
+    // const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false);
+    // const [isSigned, setIsSigned] = useState(false);
 
+    
+
+    
     
     const refreshAccessToken = async (refreshTokenParam: string | null) => {
         try {
@@ -84,8 +84,6 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
         try {
             const res = await axios.post("http://localhost:3000/auth/logout", jResponse);
 
-            console.log(res);
-
             Cookies.remove('access_token', accessToken );
             Cookies.remove('refresh_token', refreshToken );
 
@@ -118,8 +116,6 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                 username: response.data.username,
                 two_factors_enabled: response.data.two_factors_enabled,
             }));
-            console.log(response.data.two_factors_enabled);
-            setIsTwoFactorEnabled(response.data.two_factors_enabled);
 
         } catch (error) {
             console.error(error);
@@ -130,29 +126,32 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     useEffect( () => {
         
         
+        
         const checkAuthentication = async () => {
             
             const access_Token = Cookies.get('access_token');
             const refresh_Token = Cookies.get('refresh_token');
-        
+                
             setAccessToken(access_Token || null);
             setRefreshToken(refresh_Token || null);
+            
             try {
-                if (!access_Token)
+                if (!accessToken)
                 {
+                    
                     console.log("No Tokeeen");
                     setIsAuthenticated(false);
-
+                    
                     return ;
                 }
-
+                
                 else {
                     const response = await axios.get('http://localhost:3000/auth/user', {
                         headers: {
-                            Authorization: `Bearer ${access_Token}`
+                            Authorization: `Bearer ${accessToken}`
                         }
                     });
-
+                    
                     setUser(response.data.user);
                     
                     setIsAuthenticated(true);
@@ -161,17 +160,17 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                 if (error.response.status === 403)
                 {
                     setAccessToken(null);
-                    await refreshAccessToken(refresh_Token ?? null);
+                    await refreshAccessToken(refreshToken ?? null);
                     // setIsAuthenticated(false);
                 }
             }
         }
 
         checkAuthentication();
-    }, [accessToken]);
+    }, [accessToken, isAuthenticated]);
     
     return (
-        <AuthContext.Provider value={{logout, isAuthenticated, refreshAccessToken, user, updateUser, accessToken, isTwoFactorEnabled}}>
+        <AuthContext.Provider value={{logout, isAuthenticated, refreshAccessToken, user, updateUser}}>
             {children}
         </AuthContext.Provider>
     )

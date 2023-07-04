@@ -21,8 +21,18 @@ const HomePage = () => {
       <div className=" rounded-[10px]">
         
         <div className="mt-4 mx-4 h-[calc(300px_-_2rem)] max-sm:h-[calc(200px_-_1rem)] bg-image-bg bg-cover rounded-[25px]">
-          <div className=" backdrop-blur-md h-[calc(300px_-_2rem)] max-sm:h-[calc(200px_-_1rem)] flex justify-end w-[60%] ml-auto">
-            <img src={img} className=' -mt-[1.7rem] h-[350px] w-[350px] max-sm:h-[220px] max-sm:w-[220px] max-sm:mt-0'/>
+          <div className="   flex flex-row-reverse items-center justify-around max-sm:backdrop-blur-md">
+            <div className="flex backdrop-blur-md w-[60%] max-sm:backdrop-blur-0 align-bottom  h-[calc(300px_-_2rem)] max-sm:h-[calc(200px_-_1rem)]">
+              <img src={img} className=' -mt-[1rem] h-[350px] w-[350px] max-sm:h-[220px] max-sm:w-[220px] max-sm:mt-0 ml-auto'/>
+            </div>
+            <div className="flex flex-col text-center items-center gap-4 uppercase">
+              <div className="text-white mask">
+                <h1 className='hide text-4xl max-sm:text-base'>You Wanna Play Now! Click The Play Button Below</h1>
+              </div>
+              <div className="text-white mask mt-5 max-sm:mt-1">
+                <a href="/Play" className=' bg-purple-900 flex rounded-[10px] py-[12px] px-[40px] uppercase hide delay-[3s] max-sm:py-[7px] max-sm:px-[20px]'>Play Now!</a>
+              </div>
+            </div>
           </div>
         </div>
           {/* <div className=" rounded-t-[10px] h-[200px] contrast-75 saturate-75 bg-cover bg-no-repeat bg-center w-full bg-image-bg object-cover">

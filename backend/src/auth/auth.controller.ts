@@ -3,12 +3,14 @@ import { AuthService } from "./auth.service";
 import { AuthGuard } from '@nestjs/passport';
 import { TokenValidationGuard } from "./guards/acces-token.guard";
 import { UserDto } from "src/dto/user.dto";
+import { access } from "fs";
+import { CorsGuard } from "./guards/cors.guard";
 
 @Controller('auth')
 export class AuthController{
     constructor(private authService: AuthService){}
     private user: UserDto;
-
+    private a: string;
     @Post('logout')
     async logOut(@Body() body){
         await this.authService.removeTokens(body.refreshToken, body.accessToken);
@@ -31,25 +33,24 @@ export class AuthController{
         });
     }
     
+    @UseGuards(CorsGuard)
     @Post('verify-two-factors')
-    async verifyTwoFactors(@Body() body, @Response() res) {
+    async verifyTwoFactors(@Body() body, @Response() res) : Promise<void> {
         await this.authService.twoFactors(body.token, body.userEmail);
-        await this.authService.authenticate(this.user, res);
+        await this.authService.authenticate(body, res);
     }
 
     @Post('two-factors')
     async twoFactorsAuth(@Body() body) : Promise<void> {
-        await this.authService.mailingUser(body.userEmail);
+        await this.authService.mailingUser(body.userEmail); 
     }
-
     @UseGuards(AuthGuard('42'))
-    @Get('callback') 
-    async singUp(@Request() req, @Response() res){
-        this.user = req.user;
-        let user = await this.authService.isUserAlreadyExist(this.user);
-        if (user.two_factors_enabled)
-            res.redirect('http://localhost:5000/two-factor');
+    @Get('callback')
+    async singUp(@Request() req, @Response() res) {
+        this.user = await this.authService.isUserAlreadyExist(req.user);
+        if (this.user.two_factors_enabled)
+            res.redirect(`http://localhost:5000/two-factor?id=${req.user.IntraId}&username=${req.user.username}`); 
         else
-               await this.authService.authenticate(this.user, res);
+            await this.authService.authenticate(this.user, res);
     }
 }
