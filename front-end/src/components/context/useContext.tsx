@@ -154,7 +154,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                     
                     setUser(response.data.user);
                     
-                    setIsAuthenticated(true);
+					setIsAuthenticated(true);
                 }
             } catch (error: any) {
                 if (error.response.status === 403)

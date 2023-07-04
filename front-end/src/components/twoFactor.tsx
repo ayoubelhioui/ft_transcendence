@@ -1,11 +1,11 @@
 
-import { authContext } from './context/useContext';
+// import { authContext } from './context/useContext';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 
 const twoFactor = () => {
-  const authFactor = authContext();
+  // const authFactor = authContext();
 
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');

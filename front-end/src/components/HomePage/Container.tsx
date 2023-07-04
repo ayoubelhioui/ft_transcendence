@@ -2,7 +2,7 @@
 
 import { MdKeyboardDoubleArrowRight as RightArrowIcon, MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
 import { VscAccount as AccountIcon } from 'react-icons/vsc'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, redirect, useNavigate } from 'react-router-dom'
 
 
 export const Live = () => {
@@ -44,6 +44,13 @@ export const Live = () => {
 }
 
 export const Results = () => {
+
+	const navigate = useNavigate();
+
+const handleClick = () => {
+	navigate('/results');
+};
+	
     return (
         <div className=' max-md:mt-4 relative back min-h-[350px] max-md:min-h-[270px] rounded-[10px] flex-1 shadow-md flex flex-col justify-between overflow-x-auto'>
           <h1 className="text-2xl p-2">Latest Results</h1>
@@ -70,9 +77,9 @@ export const Results = () => {
               <AccountIcon size={50}/>
             </div>
           </div>
-          <div className="flex justify-center cursor-pointer hover:animate-bounce">
+		  <div className="flex justify-center cursor-pointer hover:animate-bounce" onClick={handleClick}>
             <span className='pb-[7px]'>See More</span>
-            <SingleArrow size={25}/>
+			<SingleArrow size={25} />
           </div>
         </div>
     )
