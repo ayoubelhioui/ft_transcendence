@@ -31,7 +31,7 @@ const App = () => {
   return (
     <div className=' h-[1250px] max-md:h-[1300px]'>
       <div className='h-full flex'>
-        <div className="flex flex-col my-auto bg-profile-bg bg-cover bg-center rounded-[10px] max-sm:rounded-none w-[70%] mx-auto max-w-[1650px] h-[1100px] max-md:w-[100%] max-md:max-w-[1800px] max-sm:drop-shadow-none max-md:h-[100%] max-md:mt-3 max-sm:mt-0 max-sm:max-w-[1800px]">
+        <div className="flex flex-col my-auto bg-profile-bg bg-cover bg-center rounded-[10px] max-sm:rounded-none w-[60%] mx-auto max-w-[1650px] h-[1100px] max-md:w-[100%] max-md:max-w-[1800px] max-sm:drop-shadow-none max-md:h-[100%] max-md:mt-3 max-sm:mt-0 max-sm:max-w-[1800px]">
         
         { authApp.isAuthenticated && <Navbar /> }
 

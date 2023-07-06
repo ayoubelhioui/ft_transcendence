@@ -14,7 +14,7 @@ const HomePage = () => {
 
   return (
     <>
-      <div className=" rounded-[10px]">
+      <div className=" rounded-[10px] w-[1400px]">
         
         <div className="mt-4 mx-4 h-[calc(300px_-_2rem)] max-sm:h-[calc(200px_-_1rem)] bg-image-bg bg-cover rounded-[25px]">
           <div className="   flex flex-row-reverse items-center justify-around max-sm:backdrop-blur-md">

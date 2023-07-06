@@ -40,17 +40,17 @@ const ChatFooter = () => {
 const Sender = () => {
   return (
       <div className="flex flex-col">
-          <span className='text-white text-sm text-right'>You</span>
+          <span className='text-white opacity-60 text-sm text-right pr-4 gap-1'>You</span>
           <div className="h-min text-lg text-white back max-w-[200px] p-[10px] rounded-[10px] ml-auto">
-            <p className=''>Hello, Im Mouad and You ?</p>
+            <p className=' break-words'>Hello, Im Mouad and You ?</p>
           </div>
       </div>
   )
 }
 const Receiver = () => {
   return (
-      <div className="flex flex-col">
-          <span className='text-white text-sm text-left'>Other</span>
+      <div className="flex flex-col gap-1">
+          <span className='text-white opacity-60 text-sm text-left pl-4'>Other</span>
           <div className="text-lg text-white back max-w-[200px] h-min p-[10px] rounded-[10px] overflow-y-scroll">
             <p className=' break-words'>rgfderrfcvgrwdsTrgdfvchagdfchtdgbvnrgfrsdcks</p>
           </div>
@@ -97,9 +97,6 @@ const Conversations = () => {
             <Receiver />
             <Sender />
             <Receiver />
-            <Sender />
-            <Receiver />
-            
         </div>
 
         <ChatFooter />
