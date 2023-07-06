@@ -29,7 +29,7 @@ const ENV_PATH : string = './src/.env';
     }),
   ],
   controllers: [],
-  providers: [],
+  providers: [], 
 })
 
 

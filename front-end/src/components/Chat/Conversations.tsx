@@ -37,6 +37,27 @@ const ChatFooter = () => {
   )
 }
 
+const Sender = () => {
+  return (
+      <div className="flex flex-col">
+          <span className='text-white text-sm text-right'>You</span>
+          <div className="h-min text-lg text-white back max-w-[200px] p-[10px] rounded-[10px] ml-auto">
+            <p className=''>Hello, Im Mouad and You ?</p>
+          </div>
+      </div>
+  )
+}
+const Receiver = () => {
+  return (
+      <div className="flex flex-col">
+          <span className='text-white text-sm text-left'>Other</span>
+          <div className="text-lg text-white back max-w-[200px] h-min p-[10px] rounded-[10px] overflow-y-scroll">
+            <p className=' break-words'>rgfderrfcvgrwdsTrgdfvchagdfchtdgbvnrgfrsdcks</p>
+          </div>
+      </div>
+  )
+}
+
 const Conversations = () => {
   const authApp = authContext();
 
@@ -68,7 +89,17 @@ const Conversations = () => {
             }
           </div>
         </div>
-        <div className="w-full h-full flex ">
+
+        {/* Body Of The Conversation */}
+ 
+        <div className="w-full h-full px-4 mt-8 overflow-y-scroll">
+            <Sender />
+            <Receiver />
+            <Sender />
+            <Receiver />
+            <Sender />
+            <Receiver />
+            
         </div>
 
         <ChatFooter />

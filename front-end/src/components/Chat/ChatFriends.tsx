@@ -6,6 +6,8 @@ import {VscSettings} from 'react-icons/vsc'
 import { authContext } from '../context/useContext';
 import { useState } from 'react';
 
+import GroupTypes from './GroupTypes';
+
 const UserMessages = () => {
   const authApp = authContext();
   
@@ -41,16 +43,7 @@ const UserFriends = () => {
 const ChannelsGroup = () => {
   return (
     <div className="flex mt-3 flex-col h-[550px] overflow-y-scroll scroll-smooth">
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
+        <GroupTypes />
     </div>
   )
 }
@@ -65,7 +58,7 @@ const ChatFriends = () => {
 
   return (
     <div className="top_2 col-span-1 row-span-2 max-sm:hidden h-[750px] ">
-        <div className="pt-4 flex w-full justify-between items-center">
+        <div className="pt-1 flex w-full justify-between items-center">
             <input type="search" className="shadow border-0 text-white w-full" placeholder="Search a friend..." />
             {/* <button type="button" onClick={() => null} className='absolute left-[65%] mt-3 mr-4'>
               <BiSearchAlt2 size={20} />

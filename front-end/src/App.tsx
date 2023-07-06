@@ -42,8 +42,7 @@ const App = () => {
             <Route path='/sign-in' element={<SignIn />} />
 
             <Route path='/' >
-
-
+              
               	<Route index element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
 
               	<Route path='Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>

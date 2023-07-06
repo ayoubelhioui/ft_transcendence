@@ -63,9 +63,9 @@ const Navbar = () => {
 
           <li className= {`max-md:hidden`}>
             
-            <IconButton onClick={() => setHandleNotif(!handleNotif)}>
-              <NotificationIcon size={30} className='ml-6 text-white' />
-            </IconButton>
+            
+              <NotificationIcon size={30} className='ml-6 text-white cursor-pointer' onClick={() => setHandleNotif(!handleNotif)}/>
+           
 
             { handleNotif && <Notifications />  }
           </li>

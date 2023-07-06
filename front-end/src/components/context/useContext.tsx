@@ -78,8 +78,6 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
             accessToken: accessToken,
             refreshToken: refreshToken
         };
-
-        console.log(accessToken, refreshToken);
         
         try {
             const res = await axios.post("http://localhost:3000/auth/logout", jResponse);
