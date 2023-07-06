@@ -58,16 +58,14 @@ const Navbar = () => {
           <li className=' pl-3 max-sm:pl-1'>
             <NavLink to="/Profile">
               <img src={'http://localhost:3000/user/image/' + authNav.user?.IntraId} alt="" className=' cursor-pointer object-cover rounded-full w-[45px] h-[45px]' />
-            </NavLink> </li>
+            </NavLink>
+          </li>
 
           <li className= {`max-md:hidden`}>
-            <NavLink to='' onClick={() => setHandleNotif(!handleNotif)}>
-              <Tooltip title="Notifications">
-                <IconButton>
-                  <NotificationIcon size={30} className='ml-6 text-white' />
-                </IconButton>
-              </Tooltip>
-            </NavLink>
+            
+            <IconButton onClick={() => setHandleNotif(!handleNotif)}>
+              <NotificationIcon size={30} className='ml-6 text-white' />
+            </IconButton>
 
             { handleNotif && <Notifications />  }
           </li>

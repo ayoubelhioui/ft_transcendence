@@ -1,5 +1,7 @@
-import { useState } from 'react';
 import { authContext } from '../context/useContext';
+
+import { useState } from 'react';
+
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdSend } from 'react-icons/md'
 
@@ -9,6 +11,8 @@ const ChatFooter = () => {
 
   const handleMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    console.log(message);
 
     // Temporary setter
     setMessage('');
@@ -24,8 +28,8 @@ const ChatFooter = () => {
           onChange={(e) => setMessage(e.target.value)}
         />
 
-        <button type='button' className=' outline-none p-0'>
-          <MdSend size={25} className=' text-gray-400' onClick={handleMessage}/>
+        <button type='submit' className=' outline-none p-0'>
+          <MdSend size={25} className=' text-gray-400' />
         </button>
 
       </form>
@@ -36,19 +40,35 @@ const ChatFooter = () => {
 const Conversations = () => {
   const authApp = authContext();
 
+  const [isOpened, setIsOpened] = useState(false);
+
   const isBool: boolean = false;
 
   return (
     !isBool ? (
-      <div className="flex flex-col justify-between top_2 col-span-2 h-[950px] row-span-2 ">
-        <div className="flex justify-between mx-6 mt-3 items-center">
-          {/* <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[50px] h-[50px]'/> */}
-          <h2 className='text-lg text-white w-full text-center'>NameofTheGroup</h2>
-          <BsThreeDotsVertical size={25} className='text-white cursor-pointer'/>
-          {/* <span className='w-[100%] h-[1px] bg-gray-500 opacity-80 mt-2'></span> */}
+      <div className="flex flex-col justify-between top_2 col-span-2 h-[850px] row-span-2 ">
+        <div className="flex justify-between mx-6 mt-3 items-center pt-2">
+          <div className="flex flex-col items-center mx-auto ">
+            {/* <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[55px] h-[55px]'/> */}
+            <h2 className='text-sm text-white w-full text-center'>NameofTheGroup</h2>
+          </div>
+          <div className="flex flex-col relative">
+            <BsThreeDotsVertical size={20} className='text-white cursor-pointer' onClick={() => setIsOpened(!isOpened)}/>
+
+            { isOpened && 
+              <div className="flex flex-col bg-blue-950 rounded-[10px] absolute top-[3rem] -left-[6rem] w-[120px] h-[130px] items-center justify-center text-white">
+                
+                {/* I need to check if the user is an admin, and if he is then i will have to display block and mute and add */}
+                
+                <span className='text-sm my-3 cursor-pointer border-b hover:text-gray-300 hover:border-gray-300' >Add a Friend</span>
+                <span className='text-sm my-3 cursor-pointer border-b hover:text-gray-300 hover:border-gray-300' >Block Someone</span>
+                <span className='text-sm my-3 cursor-pointer border-b hover:text-gray-300 hover:border-gray-300' >Mute Someone</span>
+
+              </div>
+            }
+          </div>
         </div>
         <div className="w-full h-full flex ">
-          gfedfgcefg
         </div>
 
         <ChatFooter />

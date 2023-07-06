@@ -1,6 +1,8 @@
 // import { BiSearchAlt2 } from 'react-icons/bi';
 
 import { AiOutlinePlusCircle as PlusCircle } from 'react-icons/ai'
+import {VscSettings} from 'react-icons/vsc'
+
 import { authContext } from '../context/useContext';
 import { useState } from 'react';
 
@@ -8,12 +10,13 @@ const UserMessages = () => {
   const authApp = authContext();
   
   return (
-    <div className="flex mt-8 items-center ml-12 cursor-pointer" onClick={() => null}>
-        <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[65px] h-[65px]'/>
-        <div className="flex flex-col ml-4">
+    <div className="flex mt-8 items-center mx-6" onClick={() => null}>
+        <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[65px] h-[65px] cursor-pointer'/>
+        <div className="flex flex-col ml-4 cursor-pointer">
           <h2 className='text-white'>loginName</h2>
           <p className='pt-1 pl-2 text-gray-600'>user's message</p>
         </div>
+        <VscSettings size={25} className='text-white ml-auto cursor-pointer'/>
     </div>
   )
 }

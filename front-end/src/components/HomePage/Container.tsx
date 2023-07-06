@@ -77,9 +77,9 @@ const handleClick = () => {
               <AccountIcon size={50}/>
             </div>
           </div>
-		  <div className="flex justify-center cursor-pointer hover:animate-bounce" onClick={handleClick}>
+		      <div className="flex justify-center cursor-pointer hover:animate-bounce" onClick={handleClick}>
             <span className='pb-[7px]'>See More</span>
-			<SingleArrow size={25} />
+			      <SingleArrow size={25} />
           </div>
         </div>
     )

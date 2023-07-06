@@ -60,10 +60,10 @@ const ChannelCreation = () => {
                                     { selected || 'Select Type'}
                                     <RiArrowDropDownLine size={25}/>
                                 </div>
-                                <ul className={`rounded-[10px] bg-white text-center flex flex-col text-blue-950 font-semibold                               ${isOpen ? 'block' : 'hidden'} w-full p-2`}>
-                                    <li className='mt-2 hover:outline hover:outline-sky-700 cursor-pointer' onClick={() =>                                      setSelected('Public')}>Public</li>
-                                    <li className='mt-2 hover:outline hover:outline-sky-700 cursor-pointer' onClick={() =>                                      setSelected('Protected')}>Protected</li>
-                                    <li className='mt-2 hover:outline hover:outline-sky-700 cursor-pointer' onClick={() =>                                      setSelected('Private')}>Private</li>
+                                <ul className={`rounded-[10px] bg-white text-center flex flex-col text-blue-950 font-semibold ${isOpen ? 'block' : 'hidden'} w-full p-2`}>
+                                    <li className='mt-2 hover:outline hover:outline-sky-700 cursor-pointer' onClick={() => setSelected('Public')}>Public</li>
+                                    <li className='mt-2 hover:outline hover:outline-sky-700 cursor-pointer' onClick={() => setSelected('Protected')}>Protected</li>
+                                    <li className='mt-2 hover:outline hover:outline-sky-700 cursor-pointer' onClick={() => setSelected('Private')}>Private</li>
                                 </ul>
                             </div>
                             <button type='submit' className='py-2 px-6 mt-12 bg-white text-blue-950 font-semibold mx-3' onClick={(event) => event.preventDefault()}>Create</button>

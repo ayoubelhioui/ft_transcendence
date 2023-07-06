@@ -1,5 +1,45 @@
 import { authContext } from '../context/useContext';
 
+import { MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
+
+type ImageProp = {
+  image: string;
+}
+
+const ChannelMembers = ({image}: ImageProp) => {
+  return (
+    <>
+      <div className="flex items-center mt-5 ml-5 gap-2">
+        <img src={image} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
+        <h2 className='text-white text-sm'>logiName</h2>
+      </div>
+      <div className="flex items-center mt-5 ml-5 gap-2">
+        <img src={image} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
+        <h2 className='text-white text-sm'>logiName</h2>
+      </div>
+      <div className="flex items-center mt-5 ml-5 gap-2">
+        <img src={image} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
+        <h2 className='text-white text-sm'>logiName</h2>
+      </div>
+    </>
+  )
+}
+
+const AdminMembers = ({image}: ImageProp) => {
+  return (
+    <>
+        <div className="flex items-center mt-5 ml-5 gap-2">
+          <img src={image} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
+          <h2 className='text-white text-sm'>logiName</h2>
+        </div>
+        <div className="flex items-center mt-5 ml-5 gap-2">
+          <img src={image} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
+          <h2 className='text-white text-sm'>logiName</h2>
+        </div>
+    </>
+  )
+}
+
 const ChannelInfo = () => {
   const authApp = authContext();
 
@@ -14,34 +54,34 @@ const ChannelInfo = () => {
 
         {/* Admins Element */}
 
-        <div className="flex mt-8 w-[80%] mx-auto flex-col items-start text-white overflow-y-scroll"> 
-          <h2 className=' text-lg tracking-wide'>ADMINS</h2>
-          <div className="flex items-center mt-5 ml-5 gap-2">
-            <img src={authApp.user?.avatar} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
-            <h2 className='text-white text-sm'>logiName</h2>
+        <div className="flex mt-8 w-[80%] mx-auto flex-col items-start text-white overflow-y-scroll">
+          <div className="flex justify-between w-full items-center">
+
+            <h2 className=' text-lg tracking-wide'>ADMINS</h2>
+            <div className="flex justify-center cursor-pointer text-gray-400">
+              <span className='text-sm'>See all</span>
+              <SingleArrow size={20} />
+            </div>
+
           </div>
-          <div className="flex items-center mt-5 ml-5 gap-2">
-            <img src={authApp.user?.avatar} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
-            <h2 className='text-white text-sm'>logiName</h2>
-          </div>
+
+          {authApp.user?.avatar && <AdminMembers image={authApp.user.avatar} />}
         </div>
 
         {/* Members Element ,, possibly adding how many members,Admins in the channel*/}
 
         <div className="flex flex-col w-[80%] text-white mt-12 mx-auto overflow-y-scroll">
-          <h2 className='text-lg tracking-wide'>MEMBERS</h2>
-          <div className="flex items-center mt-5 ml-5 gap-2">
-            <img src={authApp.user?.avatar} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
-            <h2 className='text-white text-sm'>logiName</h2>
+          <div className="flex justify-between w-full items-center">
+
+            <h2 className='text-lg tracking-wide'>MEMBERS</h2>
+            <div className="flex justify-center cursor-pointer text-gray-400">
+              <span className='text-sm'>See all</span>
+              <SingleArrow size={20} />
+            </div>
+
           </div>
-          <div className="flex items-center mt-5 ml-5 gap-2">
-            <img src={authApp.user?.avatar} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
-            <h2 className='text-white text-sm'>logiName</h2>
-          </div>
-          <div className="flex items-center mt-5 ml-5 gap-2">
-            <img src={authApp.user?.avatar} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
-            <h2 className='text-white text-sm'>logiName</h2>
-          </div>
+
+          {authApp.user?.avatar && <ChannelMembers image={authApp.user?.avatar} />}
           
         </div>
     </div>
