@@ -8,6 +8,26 @@ import { useState } from 'react';
 
 import GroupTypes from './GroupTypes';
 
+import Avatar from '@mui/material/Avatar';
+
+const FriendSectionChat = () => {
+  const authApp = authContext();
+
+  return (
+    <div className="flex my-auto items-center gap-2 pt-2 bg-slate-400 opacity-50 rounded-[10px] w-[60px]">
+
+      <Avatar alt="Avatar" src={'http://localhost:3000/user/image/' + authApp.user?.IntraId} sx={{ width: 30, height: 30 }} />
+      <Avatar alt="Avatar" src={'http://localhost:3000/user/image/' + authApp.user?.IntraId} sx={{ width: 30, height: 30 }} />
+      <Avatar alt="Avatar" src={'http://localhost:3000/user/image/' + authApp.user?.IntraId} sx={{ width: 30, height: 30 }} />
+      <Avatar alt="Avatar" src={'http://localhost:3000/user/image/' + authApp.user?.IntraId} sx={{ width: 30, height: 30 }} />
+      <Avatar alt="Avatar" src={'http://localhost:3000/user/image/' + authApp.user?.IntraId} sx={{ width: 30, height: 30 }} />
+      <Avatar alt="Avatar" src={'http://localhost:3000/user/image/' + authApp.user?.IntraId} sx={{ width: 30, height: 30 }} />
+      <Avatar alt="Avatar" src={'http://localhost:3000/user/image/' + authApp.user?.IntraId} sx={{ width: 30, height: 30 }} />
+
+    </div>
+  )
+}
+
 const UserMessages = () => {
   const authApp = authContext();
   
@@ -57,7 +77,8 @@ const ChatFriends = () => {
   };
 
   return (
-    <div className="top_2 col-span-1 row-span-2 max-sm:hidden h-[750px] ">
+    <div className="top_2 col-span-1 row-span-2 max-sm:hidden h-[750px] max-middle:w-[300px] max-middle:hidden ">
+        
         <div className="pt-1 flex w-full justify-between items-center">
             <input type="search" className="shadow border-0 text-white w-full" placeholder="Search a friend..." />
             {/* <button type="button" onClick={() => null} className='absolute left-[65%] mt-3 mr-4'>
@@ -71,7 +92,7 @@ const ChatFriends = () => {
 
             <div className="flex text-white justify-around items-center w-full border-solid border-y-[1px] border-y-gray-500 text-xl text-center">
             <h2
-              className={`cursor-pointer ease duration-300 p-4 w-full ${
+              className={`cursor-pointer ease duration-300 p-4 w-full max-middle:p-2 ${
                 activeTab === 'Friends' ? 'active_btn' : ''
               }`}
               onClick={() => handleTabClick('Friends')}
@@ -79,7 +100,7 @@ const ChatFriends = () => {
                 Friends
             </h2>
               <h2
-                className={`cursor-pointer ease duration-300 p-4 w-full ${
+                className={`cursor-pointer ease duration-300 p-4 w-full max-middle:p-2 ${
                   activeTab === 'Channels' ? 'active_btn' : ''
                 }`}
                 onClick={() => handleTabClick('Channels')}>
