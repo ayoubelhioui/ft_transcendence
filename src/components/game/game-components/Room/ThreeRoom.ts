@@ -109,7 +109,8 @@ export class ThreeRoom extends Room {
         const res = await this.gameScoreTrigger(payload)
         if (res) {
             console.log("end-game")
-            this.broadCast("end_game", {}, {})
+            const player1IsWin = (payload.player1Score > payload.player2Score)
+            this.broadCast("end_game", {isWin : player1IsWin}, {isWin : !player1IsWin})
             this.game.stop()
         }
     }
