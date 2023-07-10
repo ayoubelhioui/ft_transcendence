@@ -4,6 +4,7 @@ import { MyCamera } from './MyCamera'
 import { params } from '../Utils/Params'
 import { SocketManager } from "../Utils/SocketManager";
 import { GameParams } from "../../../interfaces/interface.game.params";
+import { GameState } from "../../../GameState";
  
 export class Game {
 
@@ -14,6 +15,7 @@ export class Game {
     token : string
     isBotMode : boolean
     canvas : any
+    callBack : (state: number) => void
 
     gameInfo = {
         scorePlayer1: 0,
@@ -32,7 +34,9 @@ export class Game {
         this.socketMgr = new SocketManager(this)
         this.token = gameParams.gameToken
         this.isBotMode = gameParams.isBotMode
+        this.callBack = gameParams.callBack
 
+        this.scene.visible = false
         this.#events(this)
     }
 
@@ -43,9 +47,21 @@ export class Game {
     start(payload : any) {
         console.log("Game is started ...")
         this.gameInfo.turn = payload.turn
+        this.scene.visible = true
         this.gameInfo.start = true
         this.scene.scoreP1.set(0)
         this.scene.scoreP2.set(0)
+        this.callBack(GameState.gameStarted)
+    }
+
+    end(payload : any) {
+        console.log("Game is Ended ...")
+        this.scene.visible = false
+        this.gameInfo.start = false
+        if (payload.isWin)
+            this.callBack(GameState.gameEndedWin)
+        else
+            this.callBack(GameState.gameEndedLoss)
     }
 
     changeScore(payload : any) {

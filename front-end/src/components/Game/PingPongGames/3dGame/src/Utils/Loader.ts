@@ -3,7 +3,6 @@ import * as THREE from "three";
 
 import wallsTex from '../../assets/images/2.jpg'
 import groundTex from '../../assets/images/4.jpg'
-import { LoaderResult } from '../interfaces/interface.load.result';
 
 
 

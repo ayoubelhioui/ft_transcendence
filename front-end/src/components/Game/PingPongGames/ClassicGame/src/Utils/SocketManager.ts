@@ -45,7 +45,7 @@ export class SocketManager {
             console.log(a)
             token = a
         }
-        const socket = io("http://192.168.1.9:3001", {
+        const socket = io("http://10.11.2.10:3001", {
             extraHeaders: {
                 Authorization: `Bearer ${token}`
             }
@@ -67,16 +67,12 @@ export class SocketManager {
         })
     
         socket.on("start", (data) => {
-            // data.turn
-            console.log(data)
             game.start(data)
         })
     
     
-        socket.on("end_game", () => {
-            console.log("end-game")
-            game.gameInfo.start = false
-            //!end game
+        socket.on("end_game", (data) => {
+            game.end(data)
         })
     
         socket.on("ballInfo", (data) => {

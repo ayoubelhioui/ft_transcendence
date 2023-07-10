@@ -16,6 +16,7 @@ import { Net } from "./Net";
 import { SpotLight } from "./SpotLight";
 import { Player2 } from "./Player2";
 import { GameParams } from "../../../interfaces/interface.game.params";
+import { GameState } from "../../../GameState";
 
 
 export class Game {
@@ -32,6 +33,7 @@ export class Game {
     isBotMode : boolean
     resources : LoaderResult
     canvas : any
+    callBack : (state: number) => void
 
     //objs
     ambientLightObj : AmbientLight
@@ -57,6 +59,7 @@ export class Game {
         this.isBotMode = gameParams.isBotMode
         this.token = gameParams.gameToken
         this.canvas = gameParams.canvas
+        this.callBack = gameParams.callBack
         this.resources = resources
         this.renderer = this.#setUpRenderer()
         this.scene = new MyScene(this)
@@ -83,6 +86,7 @@ export class Game {
         
         this.orbit = new OrbitControls(this.camera, this.renderer.domElement)
         this.guiParams = new GuiParams(this)
+        this.scene.visible = false
         this.#events(this)
 
     }
@@ -91,6 +95,18 @@ export class Game {
         console.log("Game is started ...")
         this.gameInfo.turn = payload.turn
         this.gameInfo.start = true
+        this.scene.visible = true
+        this.callBack(GameState.gameStarted)
+    }
+
+    end(payload : any) {
+        console.log("Game is Ended ...")
+        this.gameInfo.start = false
+        this.scene.visible = false
+        if (payload.isWin)
+            this.callBack(GameState.gameEndedWin)
+        else
+            this.callBack(GameState.gameEndedLoss)
     }
 
     getTurn() {

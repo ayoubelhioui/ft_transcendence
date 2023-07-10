@@ -5,7 +5,6 @@ import { Player1 } from "./Player1";
 import { Player2 } from "./Player2";
 import { ScoreNbr } from "./ScoreNbr";
 import { Game } from "./Game";
-import { LoadingPage } from "./LoadingPage";
 
 
 export class MyScene extends THREE.Scene {
@@ -16,21 +15,23 @@ export class MyScene extends THREE.Scene {
     ballObj : Ball
     player1 : Player1
     player2 : Player2
-    loadingPage : LoadingPage
-
     constructor (game : Game) {
         super()
 
         this.game = game
         this.game.scene = this
+
+        this.scoreP1 = new ScoreNbr(-4, + params.sceneDim.y / 2 - 0.1)
+        this.scoreP2 = new ScoreNbr(2.5, + params.sceneDim.y / 2 - 0.1)
+        
+        this.#setEnvironment()
+
         this.ballObj = new Ball(game)
         this.player1 = new Player1(game)
         this.player2 = new Player2(game)
-        this.scoreP1 = new ScoreNbr(-4, + params.sceneDim.y / 2 - 0.1)
-        this.scoreP2 = new ScoreNbr(2.5, + params.sceneDim.y / 2 - 0.1)
-        this.loadingPage = new LoadingPage(game)
 
-        //this.#setEnvironment()
+
+        
     }
 
     #setEnvironment() {
@@ -91,7 +92,6 @@ export class MyScene extends THREE.Scene {
     }
 
     update() {
-        this.loadingPage.update()
         if (!this.game.gameInfo.start)
            return
         this.ballObj.update()
