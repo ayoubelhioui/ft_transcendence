@@ -45,7 +45,7 @@ export class SocketManager {
             console.log(a)
             token = a
         }
-        const socket = io("http://10.12.5.9:3001", {
+        const socket = io("http://192.168.1.9:3001", {
             extraHeaders: {
                 Authorization: `Bearer ${token}`
             }

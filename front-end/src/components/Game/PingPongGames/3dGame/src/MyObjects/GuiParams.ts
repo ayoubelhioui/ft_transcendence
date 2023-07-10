@@ -1,13 +1,16 @@
 import * as dat from 'dat.gui'
 import {params} from '../Utils/Params'
+import { Game } from './Game'
 
 export class GuiParams {
 
+    game : Game
     isExist = new Map()
     gui = new dat.GUI()
 
+    constructor(game : Game) {
+        this.game = game
 
-    constructor() {
         this.setUp()
     }
 
@@ -32,5 +35,34 @@ export class GuiParams {
             this.isExist.set(name, dic)
         }
         return (this.isExist.get(name))
+    }
+
+    guiChangeValues() {
+        this.game.orbit.enabled = params.enableOrbit
+
+        let bloom = this.getVal("bloom", {threshold: 0.6, strength:0.35, radius:0}, 0, 10, 0.01)
+        this.game.bloomPass.threshold = bloom.threshold;
+        this.game.bloomPass.strength = bloom.strength;
+        this.game.bloomPass.radius = bloom.radius;
+
+        //light
+        let light = this.getVal("light", {
+            spotIntensity: 1.6, 
+            penumbra:0.45,
+            angle:0,
+            amIntensity: 1,
+        }, 0, 10, 0.01)
+    
+        //this.game.this.gameInfo.start = true; this.game.ballObj.position.y = 0; this.game.ballObj.velocity.y = 15
+        //this.game.tableColor.material.color = new THREE.Color(params.color)
+
+        this.game.spotLight.intensity = light.spotIntensity
+        this.game.spotLight.penumbra = light.penumbra
+        this.game.spotLight.angle = light.angle
+        this.game.ambientLightObj.intensity = light.amIntensity
+    }
+
+    update() {
+        this.guiChangeValues()
     }
 }

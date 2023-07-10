@@ -28,7 +28,7 @@ export class Ball extends THREE.Object3D{
         this.game = game
         this.scene = game.scene
         this.camera = game.camera
-        this.netObj = this.scene.netObj
+        this.netObj = this.game.netObj
       
 
     
@@ -94,7 +94,7 @@ export class Ball extends THREE.Object3D{
         if (payload.spotPos)
             this.spot.hit(payload.spotPos)
         if (payload.net)
-            this.game.scene.netObj.hit()
+            this.game.netObj.hit()
     }
 
     update() {

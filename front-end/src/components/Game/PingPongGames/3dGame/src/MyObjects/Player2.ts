@@ -33,7 +33,7 @@ export class Player2 extends THREE.Object3D {
         this.game = game
         this.scene = game.scene
         this.camera = game.camera
-        this.ballObj = this.scene.ballObj
+        this.ballObj = this.game.ballObj
         this.velocity = new THREE.Vector3()
         this.timeStep = params.timeStep
         this.botTarget = new THREE.Vector3(0, 0, 0)
@@ -51,7 +51,7 @@ export class Player2 extends THREE.Object3D {
     }
 
     getObject() {
-        const racketModel = this.scene.racketModel.clone()
+        const racketModel = this.game.racketModel.clone()
         //racketModel.scale.set(0.15, 0.15, 0.3)
         racketModel.rotation.y = Math.PI
 

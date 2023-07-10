@@ -9,6 +9,14 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { SocketManager } from "../Utils/SocketManager";
 import { LoaderResult } from "../interfaces/interface.load.result";
+import { AmbientLight } from "./AmbientLight";
+import { Ball } from "./Ball";
+import { Racket } from "./Racket";
+import { Net } from "./Net";
+import { SpotLight } from "./SpotLight";
+import { Player2 } from "./Player2";
+import { GameParams } from "../../../interfaces/interface.game.params";
+
 
 export class Game {
 
@@ -23,6 +31,17 @@ export class Game {
     token : string
     isBotMode : boolean
     resources : LoaderResult
+    canvas : any
+
+    //objs
+    ambientLightObj : AmbientLight
+    spotLight : SpotLight
+    netObj : Net
+    ballObj : Ball
+    racketObj : Racket
+    player2 : Player2
+    tableModel : THREE.Group
+    racketModel : THREE.Group
 
     gameInfo = {
         turn: 0, //the player that will shot the ball
@@ -32,29 +51,38 @@ export class Game {
     }
 
 
-    constructor(token : string, isBotMode : boolean, resources : LoaderResult) {
-      
+    constructor(gameParams : GameParams, resources : LoaderResult) {
+        this.tableModel = resources.models.table.scene
+        this.racketModel = resources.models.racket.scene
+        this.isBotMode = gameParams.isBotMode
+        this.token = gameParams.gameToken
+        this.canvas = gameParams.canvas
+        this.resources = resources
         this.renderer = this.#setUpRenderer()
         this.scene = new MyScene(this)
         this.camera = new MyCamera()
-        this.guiParams = new GuiParams()
         this.socketMgr = new SocketManager(this)
-        this.token = token
-        this.isBotMode = isBotMode
-        this.resources = resources
 
+        this.ambientLightObj = new AmbientLight(this)
+        this.spotLight = new SpotLight(this)
+        this.netObj = new Net(this)
+        this.ballObj = new Ball(this)
+        this.racketObj = new Racket(this)
+        this.player2 = new Player2(this)
+        
         const bloom = this.#setUpBloomRenderer()
         this.bloomComposer = bloom.bloomComposer
         this.bloomPass = bloom.bloomPass
-
+        
         this.gameInfo = {
             turn: 0, //the player that will shot the ball
             scorePlayer1: 0,
             scorePlayer2: 0,
             start: false
         }
-
+        
         this.orbit = new OrbitControls(this.camera, this.renderer.domElement)
+        this.guiParams = new GuiParams(this)
         this.#events(this)
 
     }
@@ -69,6 +97,16 @@ export class Game {
         return this.gameInfo.turn
     }
 
+    update() {
+        this.guiParams.update()
+        if (!this.gameInfo.start)
+           return
+        this.netObj.update()
+        this.ballObj.update()
+        this.racketObj.update()
+        this.player2.update()
+    }
+
 
     //===========================================
     //===========================================
@@ -76,7 +114,7 @@ export class Game {
     #setUpRenderer() {
         //THREE.ColorManagement.enabled = true;
         const renderer = new THREE.WebGLRenderer({
-            //canvas: canvas,
+            canvas: this.canvas,
             alpha : true,
             antialias: true,
         })

@@ -49,7 +49,7 @@ export class SocketManager {
             token = a
         }
     
-        const socket = io("http://10.12.5.9:3001" , {
+        const socket = io("http://192.168.1.9:3001" , {
             extraHeaders: {
                 Authorization: `Bearer ${token}`
             }
@@ -83,19 +83,19 @@ export class SocketManager {
         })
         
         socket.on("ballInfo", (data) => {
-            game.scene.ballObj.socketGetBallInfo(data)
+            game.ballObj.socketGetBallInfo(data)
         })
     
         // socket.on("player2Event", (data) => {
         //     //data.ballPosition
         //     //data.ballVelocity
-        //     game.scene.player2.socketReceive(data)
+        //     game.player2.socketReceive(data)
         // })
     
         socket.on("moveRacket", (data) => {
             //data.position
             //console.log(data)
-            game.scene.player2.socketMoveRacket(data)
+            game.player2.socketMoveRacket(data)
         })
     
         socket.on("gameScore", (data) => {
@@ -109,7 +109,7 @@ export class SocketManager {
         })
     
         // socket.on("loseEvent", (data) => {
-        //     game.scene.ballObj.socketLose(data)
+        //     game.ballObj.socketLose(data)
         // })
     
         socket.on("opponentLeft", (data) => {

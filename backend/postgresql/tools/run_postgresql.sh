@@ -9,4 +9,4 @@ psql -c "CREATE DATABASE $DB_NAME;"
 service postgresql stop
 
 postgres -D /etc/postgresql/15/main 
-# tail -f
+#tail -f

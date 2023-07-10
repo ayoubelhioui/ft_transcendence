@@ -42,7 +42,7 @@ export class Racket extends THREE.Object3D {
         this.game = game
         this.scene = game.scene
         this.camera = game.camera
-        this.ballObj = game.scene.ballObj
+        this.ballObj = game.ballObj
         this.rayMouseCamera = new THREE.Raycaster()
 
 
@@ -86,7 +86,7 @@ export class Racket extends THREE.Object3D {
     }
 
     getRacketObj() {
-        const racketModel = this.scene.racketModel
+        const racketModel = this.game.racketModel
         //racketModel.scale.set(0.9, 0.9, 0.9)
         //racketModel.rotation.set(Math.PI, 0, Math.PI / 2)
         //racketModel.position.y = 0

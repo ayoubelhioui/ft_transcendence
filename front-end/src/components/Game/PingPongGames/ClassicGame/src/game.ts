@@ -2,8 +2,8 @@ import { Game } from './MyObjects/Game'
 import { GameParams } from '../../interfaces/interface.game.params'
 import { params } from './Utils/Params'
 
-async function startGame(gameParams : GameParams) {
-    const game = new Game(gameParams.gameToken, gameParams.isBotMode)
+async function classicGameStart(gameParams : GameParams) {
+    const game = new Game(gameParams)
   
     function gameLoop()
     {
@@ -14,4 +14,4 @@ async function startGame(gameParams : GameParams) {
     game.renderer.setAnimationLoop(gameLoop)
 }
 
-export default startGame
+export default classicGameStart

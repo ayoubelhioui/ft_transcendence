@@ -3,6 +3,7 @@ import { MyScene } from "./MyScene";
 import { MyCamera } from './MyCamera'
 import { params } from '../Utils/Params'
 import { SocketManager } from "../Utils/SocketManager";
+import { GameParams } from "../../../interfaces/interface.game.params";
  
 export class Game {
 
@@ -12,6 +13,7 @@ export class Game {
     socketMgr : SocketManager
     token : string
     isBotMode : boolean
+    canvas : any
 
     gameInfo = {
         scorePlayer1: 0,
@@ -21,15 +23,16 @@ export class Game {
     }
 
 
-    constructor(token : string, isBotMode : boolean) {
+    constructor(gameParams : GameParams) {
       
+        this.canvas = gameParams.canvas
         this.renderer = this.#setUpRenderer()
         this.scene = new MyScene(this)
         this.camera = new MyCamera()
         this.socketMgr = new SocketManager(this)
-        this.token = token
-        this.isBotMode = isBotMode
-        
+        this.token = gameParams.gameToken
+        this.isBotMode = gameParams.isBotMode
+
         this.#events(this)
     }
 
@@ -59,9 +62,8 @@ export class Game {
 
 
     #setUpRenderer() {
-        //const canvas = document.getElementsByTagName("canvas")[0];
         const renderer = new THREE.WebGLRenderer({
-           // canvas: canvas
+           canvas: this.canvas
         })
 
         renderer.setSize(window.innerWidth, window.innerHeight)

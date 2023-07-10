@@ -1,6 +1,18 @@
 import { Vector2, Vector3 } from "three"
 import { PlanePoints } from "../interfaces/interface.plane.points"
-import { PlayerInfo } from "../interfaces/interface.player.info"
+//import { PlayerInfo } from "../interfaces/interface.player.info"
+
+class AA {
+    p1 = new Vector2()
+    p2 = new Vector2()
+    p3 = new Vector2()
+    matrix = {a: 0, b : 0, c : 0, d : 0}
+    invMatrix = {a: 0, b : 0, c : 0, d : 0}
+
+    constructor() {
+
+    }
+}
 
 export const params = {
 //Used with gui
@@ -87,13 +99,14 @@ export const params = {
         speed : 0.02
     },
 
-    player : playerInfo()
+    player : new AA(),
 }
-
 
 // x_f = - 0.5 g.t^2 + v_0.t + x_0
 // v_f ^ 2 = v_s ^ 2 + 2.g.h
-function playerInfo () : PlayerInfo {
+
+
+function setPlayerInfo () {
     function getPlaneProperties(points : PlanePoints)  {
         const p1 = points.p1
         const p2 = points.p2
@@ -134,18 +147,15 @@ function playerInfo () : PlayerInfo {
 
     const planeProperties = getPlaneProperties(planePoints)
 
-    return {
-        p1: planePoints.p1,
-        p2: planePoints.p2,
-        p3: planePoints.p3,
-        matrix: planeProperties.matrix,
-        invMatrix: planeProperties.invMatrix
-    }
+   
+    const res = new AA()
+    res.p1 = planePoints.p1,
+    res.p2 = planePoints.p2,
+    res.p3 = planePoints.p3,
+    res.matrix = planeProperties.matrix,
+    res.invMatrix = planeProperties.invMatrix
+    return res
 }
 
-// ======================================= 
-// ======================================= 
-// ======================================= 
-// ======================================= 
-
+params.player = setPlayerInfo()
 

@@ -1,52 +1,31 @@
 import * as THREE from "three";
 import {params} from '../Utils/Params'
-
-import { AmbientLight } from "./AmbientLight";
-import { Ball } from "./Ball";
-import { Racket } from "./Racket";
-import { Net } from "./Net";
-import { SpotLight } from "./SpotLight";
-import { Player2 } from "./Player2";
 import { Game } from "./Game";
+
+
 
 
 export class MyScene extends THREE.Scene {
    
     game : Game
-    ambientLightObj : AmbientLight
-    spotLight : SpotLight
-    netObj : Net
-    ballObj : Ball
-    racketObj : Racket
-    player2 : Player2
-    tableModel : any
-    racketModel : any
+ 
     tableColor : THREE.Color = new THREE.Color(0)
 
     constructor (game : Game) {
         super()
 
         this.game = game
-        this.ambientLightObj = new AmbientLight(game)
-        this.spotLight = new SpotLight(game)
-        this.netObj = new Net(game)
-        this.ballObj = new Ball(game)
-        this.racketObj = new Racket(game)
-        this.player2 = new Player2(game)
+       
 
-        //const wallsObj = this.#wallsObj()
-        const models = this.#modelsObj()
+        this.#modelsObj()
 
-        if (params.loadTex) {
-            const environmentSceneObj = this.#environmentScene()
-            this.add(environmentSceneObj)
-        }
+       
+        const environmentSceneObj = this.#environmentScene()
+        this.add(environmentSceneObj)
+
         
-        this.tableModel = models.tableModel
-        this.add(this.tableModel)
 
-        //used
-        this.racketModel = models.racketModel
+        
     }
 
    
@@ -99,7 +78,7 @@ export class MyScene extends THREE.Scene {
     }
 
     #modelsObj() {
-        const tableModel = this.game.resources.models.table.scene
+        const tableModel = this.game.tableModel
         //console.log(loaderResult.models.table)
         tableModel.traverse((node) => {
             const meshNode = node as THREE.Mesh;
@@ -133,7 +112,7 @@ export class MyScene extends THREE.Scene {
         /***************************************** */
 
         //console.log(loaderResult.models.racket)
-        const racketModel = this.game.resources.models.racket.scene
+        const racketModel = this.game.racketModel
         racketModel.traverse((node) => {
             const meshNode = node as THREE.Mesh;
             //console.log(node)
@@ -168,21 +147,7 @@ export class MyScene extends THREE.Scene {
         // const mesh = new THREE.Mesh(geo, mat)
         // mesh.rotation.set(-Math.PI / 2, 0, 0)
         // this.add(mesh)
-
-        return {
-            tableModel,
-            racketModel
-        }
-    }
-
-
-    update() {
-        if (!this.game.gameInfo.start)
-           return
-        this.netObj.update()
-        this.ballObj.update()
-        this.racketObj.update()
-        this.player2.update()
+        this.add(tableModel)
     }
 
 }

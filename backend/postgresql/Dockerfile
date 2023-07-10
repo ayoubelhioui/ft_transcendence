@@ -18,6 +18,8 @@ RUN apt install postgresql-15 -y \
 COPY ./tools/run_postgresql.sh /home
 RUN chmod +x /home/run_postgresql.sh
 
+RUN chown -R postgres:postgres /etc/postgresql/15
+
 USER postgres
 
 COPY ./config/postgresql.conf /etc/postgresql/15/main/
