@@ -10,6 +10,6 @@ async function bootstrap() {
       whitelist : true,
       transform : true
   }));
-  await app.listen(3001,"10.12.5.9"); 
+  await app.listen(3001,"192.168.1.6"); 
 }
 bootstrap();
