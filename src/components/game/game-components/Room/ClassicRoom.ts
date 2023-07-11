@@ -39,7 +39,7 @@ export class ClassicRoom extends Room {
         //console.log(this.game)
         this.game.stop()
         if (this.isBotMode === false) {
-            this.sendToOther("end_game", socket, {})
+            this.sendToOther("end_game", socket, { isWin : true })
         }
     }
 

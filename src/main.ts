@@ -10,6 +10,9 @@ async function bootstrap() {
       whitelist : true,
       transform : true
   }));
-  await app.listen(3001,"10.11.2.10"); 
+  const address = process.env.SERVER_HOST || 'localhost'
+  const port = +process.env.SERVER_PORT || 3001
+  console.log("Server started on: ", address, ":", port)
+  await app.listen(port, address); 
 }
 bootstrap();
