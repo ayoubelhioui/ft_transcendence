@@ -55,7 +55,7 @@ export class Game {
     }
 
     end(payload : any) {
-        console.log("Game is Ended ...")
+        console.log("Game is Ended ...", payload)
         this.scene.visible = false
         this.gameInfo.start = false
         if (payload.isWin)

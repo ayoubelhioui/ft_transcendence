@@ -21,7 +21,7 @@ const r = (state: number): JSX.Element => {
 
 const Game = () => {
     const isLoaded = useRef(false)
-    const [state, setState] = useState(GameState.gameEndedLoss)
+    const [state, setState] = useState(GameState.gameLoading)
     const canvasRef = useRef(null);
 
     const gameCallBack = (state : number) => {
@@ -31,7 +31,7 @@ const Game = () => {
     let isClassic = true
     let params : GameParams = {
         gameToken : "",
-        isBotMode : true,
+        isBotMode : false,
         canvas : canvasRef.current,
         callBack : gameCallBack
     }

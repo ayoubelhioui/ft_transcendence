@@ -16,7 +16,7 @@
 
     /* /goinfre/aben-ham/js/client/front-end/src/assets/game-bg.jpg */
     display:block ;
-    background-image: url("src/assets/neon.jpg");
+    background-image: url("/src/assets/neon.jpg");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     justify-items: center;

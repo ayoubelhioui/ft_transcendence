@@ -4,8 +4,12 @@ import { Socket, io } from 'socket.io-client'
 export class SocketManager {
 
     socket : Socket
+    socketAddr : string
 
     constructor(game : Game) {
+        const host = import.meta.env.VITE_HOST || 'localhost'
+        const port = import.meta.env.VITE_SERVER_PORT || '80'
+        this.socketAddr = `http://${host}:${port}`
         this.socket = this.getSocket(game)
     }
 
@@ -45,7 +49,7 @@ export class SocketManager {
             console.log(a)
             token = a
         }
-        const socket = io("http://10.11.2.10:3001", {
+        const socket = io(this.socketAddr, {
             extraHeaders: {
                 Authorization: `Bearer ${token}`
             }
