@@ -67,7 +67,7 @@ const Conversations = () => {
 
   return (
     !isBool ? (
-      <div className="flex flex-col justify-between top_2 col-span-2 h-[850px] row-span-2 max-middle:w-[100%] max-middle:mx-auto max-middle:h-[1000px]">
+      <div className="flex flex-col justify-between top_2 col-span-2 h-[850px] row-span-2 ">
         <div className="flex justify-between mx-6 mt-3 items-center pt-2">
           <div className="flex flex-col items-center mx-auto ">
             {/* <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[55px] h-[55px]'/> */}

@@ -7,10 +7,6 @@ export default {
   theme: {
 
     extend: {
-      screens: {
-        'custom': '1700px',
-        'middle': '1030px',
-      },
       gridTemplateColumns: {
         'column-layout': 'repeat(auto-fit, minmax(320px, 1fr))',
       },

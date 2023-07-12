@@ -1,18 +1,15 @@
 
 // import { motion } from 'framer-motion'
-
+import { NavLink } from 'react-router-dom';
 import { Live, Results, TopPlayers } from './Container'
 import img from "../../assets/ping-pong-player-darkbg.png"
-
 import FriendSection from '../FriendSection'
-
-
 import { authContext } from '../context/useContext'
+// import { Navigate } from 'react-router-dom'
 
 
 const HomePage = () => {
   const authUser = authContext();
-
 
   return (
     <>
@@ -29,7 +26,7 @@ const HomePage = () => {
                   <h1 className='hide text-4xl max-sm:text-lg'>You Wanna Play Now! Click The Play Button Below</h1>
                 </div>
                 <div className="text-white mask mt-5 max-sm:mt-1">
-                  <a href="/Play" className=' bg-purple-900 flex rounded-[10px] py-[12px] px-[40px] uppercase hide delay-[3s] max-sm:py-[7px] max-sm:px-[20px]'>Play Now!</a>
+                  <NavLink to="/Playthrough" className=' bg-purple-900 flex rounded-[10px] py-[12px] px-[40px] uppercase hide delay-[3s] max-sm:py-[7px] max-sm:px-[20px]'>Play Now!</NavLink>
                 </div>
               </div>
             </div>

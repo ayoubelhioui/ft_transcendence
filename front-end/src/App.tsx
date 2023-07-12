@@ -5,6 +5,7 @@ import { authContext } from './components/context/useContext';
 import { Navigate } from "react-router-dom";
 
 import TwoFactor from './components/twoFactor';
+import ChooseGame from './components/ChooseGame';
 
 import React from 'react';
 
@@ -14,6 +15,8 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
+
+
 export const ProtectedRoute: React.FC<{children: any}> = ( { children } ) => {
   const auth = authContext();
 
@@ -30,8 +33,8 @@ const App = () => {
 
   return (
     <div className=' h-[1250px] max-md:h-[1300px]'>
-      <div className='h-full flex'>
-        <div className="flex flex-col my-auto bg-profile-bg bg-cover bg-center rounded-[10px] max-sm:rounded-none w-[60%] mx-auto max-w-[1650px] h-[1100px] max-custom:w-[90%] max-md:w-full max-md:max-w-[1800px] max-sm:drop-shadow-none max-md:mt-3 max-sm:mt-0 max-sm:max-w-[1800px] max-middle:h-[100vh] max-middle:w-full">
+      <div className='h-screen flex items-center'>
+        <div className="flex flex-col my-auto bg-profile-bg bg-cover bg-center rounded-[10px] max-sm:rounded-none w-[60%] mx-auto max-w-[1650px] h-[1100px] max-md:w-[100%] max-md:max-w-[1800px] max-sm:drop-shadow-none max-md:h-[100%] max-md:mt-3 max-sm:mt-0 max-sm:max-w-[1800px] max-h-[100%]">
         
         { authApp.isAuthenticated && <Navbar /> }
 
@@ -54,6 +57,7 @@ const App = () => {
               	<Route path='Leaderboard' element={(<ProtectedRoute> <LeaderBoard /> </ProtectedRoute>)}/>
 
 				        <Route path='results' element={ (<ProtectedRoute> <ResultsLatestHome/> </ProtectedRoute>)} />
+				        <Route path='Playthrough' element={ (<ProtectedRoute> <ChooseGame /> </ProtectedRoute>)} />
 
             </Route>
 

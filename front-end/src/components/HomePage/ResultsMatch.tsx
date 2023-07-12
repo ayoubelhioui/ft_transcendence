@@ -32,9 +32,9 @@ const ResultsLatestHome = () => {
 	const auth = authContext();
   	
 	return (
-		<div className="flex flex-col purple_back mt-[5%] w-[65%] mx-auto h-[60vh] max-md:mt-[3%] max-md:w-[85%] pb-5 max-sm:pb-0">
+		<div className="flex flex-col purple_back mt-[5%] w-[70%] mx-auto h-[60vh] max-md:mt-[3%] max-md:w-[85%] pb-5 max-sm:pb-0">
 			<h1 className="text-white text-2xl mx-5 mt-5">Latest Results</h1>
-			<div className="flex flex-wrap mt-12 mx-5 gap-5 overflow-x-scroll">
+			<div className="flex flex-wrap mt-12 mx-5 gap-12 overflow-x-scroll">
 				<MatchDiv image={'http://localhost:3000/user/image/' + auth.user?.IntraId} />
 				<MatchDiv image={'http://localhost:3000/user/image/' + auth.user?.IntraId} />
 				<MatchDiv image={'http://localhost:3000/user/image/' + auth.user?.IntraId} />

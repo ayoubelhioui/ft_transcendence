@@ -44,7 +44,7 @@ const ChannelInfo = () => {
   const authApp = authContext();
 
   return (
-    <div className="flex top_2 col-span-1 row-span-2 max-sm:hidden h-[750px] w-full flex-col max-middle:hidden">
+    <div className="flex top_2 col-span-1 row-span-2 max-sm:hidden h-[750px] w-full flex-col">
         <div className="flex flex-col items-center w-full mt-20">
           <img src={authApp.user?.avatar} alt='ChannelS Avatar' className=' object-cover rounded-full w-[110px] h-[110px]'/>
           <h2 className='text-white text-sm pt-2'>NameOfChannel</h2>
