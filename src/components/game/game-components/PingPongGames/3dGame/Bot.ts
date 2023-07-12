@@ -113,7 +113,7 @@ export class Bot {
 
     randomLose() {
         let r = Math.random()
-        if (r > 1) {
+        if (r > 0.2) {
             console.log("Lose")
             let z = (Math.random() * 2 - 1) * 2
             let y = (Math.random() * 2 - 1) * 2

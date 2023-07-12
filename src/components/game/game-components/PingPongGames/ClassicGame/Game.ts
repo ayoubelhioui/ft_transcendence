@@ -21,6 +21,7 @@ export class Game {
         scorePlayer1: 0,
         scorePlayer2: 0,
         start: false,
+        end : false,
         isBot: false
     }
 
@@ -70,13 +71,20 @@ export class Game {
 
     async update() {
         let t = performance.now()
-        await this.ballObj.update()
-        this.player1.update()
-        this.player2.update()
-        this?.botObj?.update()
-        params.frame++
-        t = performance.now() - t
-        this.totalTime += t 
+        if (this.gameInfo.end) {
+            this.ballObj.endInit()
+            await this.ballObj.update()
+            console.log("Game End")
+            clearInterval(this.interval)
+        } else {
+            await this.ballObj.update()
+            this.player1.update()
+            this.player2.update()
+            this?.botObj?.update()
+            params.frame++
+            t = performance.now() - t
+            this.totalTime += t 
+        }
         //console.log(t, this.totalTime / params.frame)
     }
 
@@ -85,7 +93,7 @@ export class Game {
     }
 
     stop() {
-        clearInterval(this.interval)
+        this.gameInfo.end = true
     }
 
     

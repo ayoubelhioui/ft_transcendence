@@ -55,6 +55,11 @@ export class Ball {
         }
     }
 
+    endInit() {
+        this.position.set(0, 0)
+        this.info.lose = true
+    }
+
     init(ball : Ball) {
         function perform() {
             // let rx = Math.random() * ((ball.info.turn % 2) * 2 - 1) * 0.5

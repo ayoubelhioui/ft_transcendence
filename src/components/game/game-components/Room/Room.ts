@@ -60,12 +60,12 @@ export class Room {
     }
 
     async gameScoreTrigger(scores : PlayerScores) {
-        let maxScore = 7
+        let maxScore = 1
         if(scores.player1Score == maxScore || scores.player2Score == maxScore)
         {
             // return await this.gameService.setGameResult(this.player1.id, this.gameToken ,
             //     scores.player1Score, scores.player2Score);
-            return (false) //! end game
+            return (true) //! end game
         }
         return (false)
     }

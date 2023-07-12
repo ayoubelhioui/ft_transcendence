@@ -14,6 +14,7 @@ export class ThreeRoom extends Room {
     }
 
     start() {
+        
         this.game = new ThreeGame(this, this.isBotMode)
         this.game.gameLoop()
 

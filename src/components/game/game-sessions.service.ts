@@ -70,7 +70,8 @@ export class GameSessions {
                 this.clientRooms.set(socketId, newBotRoom)
                 let m = clc.green(`Start playing between ${socketId} and Bot room ${newBotRoom.roomId} => nbRooms ${this.clientRooms.size / 2}`)
                 console.log(m)
-                newBotRoom.start()
+                //newBotRoom.start()
+                setTimeout((r : ClassicRoom | ThreeRoom) => r.start(), 500, newBotRoom)
             } else {
                 let room = payload.isClassic === true ? this.classicRoom : this.threeRoom
                 console.log(`Client ${socketId} added to room nb ${room.toString()}`)
@@ -88,7 +89,8 @@ export class GameSessions {
                     }
                     let m = clc.green(`Start playing between ${room.player1.id} and ${room.player2.id} room ${room.roomId} => nbRooms ${this.clientRooms.size / 2}`)
                     console.log(m)
-                    room.start()
+                    // room.start()
+                    setTimeout((r : ClassicRoom | ThreeRoom) => r.start(), 500, room)
                     
                     if (payload.isClassic)
                         this.classicRoom = new ClassicRoom(!botGame, this.gameService)

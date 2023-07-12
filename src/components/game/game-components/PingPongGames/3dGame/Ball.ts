@@ -367,6 +367,13 @@ export class Ball {
         this.game.room.sendBallInfo(data)
     }
 
+    end() {
+        this.position.set(0, 5, 0)
+        this.velocity.set(0, 0, 0)
+        this.initialize = false
+        this.#socketSendBallInfo()
+    }
+
     async update() {
         if (!this.initialize) {
             this.#ballPhy()

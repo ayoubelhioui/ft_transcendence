@@ -18,6 +18,7 @@ export class Game {
         scorePlayer1: 0,
         scorePlayer2: 0,
         start: false,
+        end : false,
         isBot: false
     }
     interval : NodeJS.Timer
@@ -77,9 +78,14 @@ export class Game {
 
 
     async update() {
-        await this.ballObj.update()
-        this?.botObj?.update()
-        params.frame++
+        if (this.gameInfo.end === true) {
+            this.ballObj.end()
+            clearInterval(this.interval)
+        } else {
+            await this.ballObj.update()
+            this?.botObj?.update()
+            params.frame++
+        }
     }
 
     gameLoop() {
@@ -87,7 +93,7 @@ export class Game {
     }
 
     stop() {
-        clearInterval(this.interval)
+        this.gameInfo.end = true
     }
 }
     
