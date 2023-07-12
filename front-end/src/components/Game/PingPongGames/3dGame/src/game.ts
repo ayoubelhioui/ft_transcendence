@@ -13,8 +13,8 @@ async function threeGameStart(gameParams : GameParams) {
     {
         game.update()
         params.frame++
-        //game.renderer.render(game.scene, game.camera)
-        game.bloomComposer.render()
+        //game.bloomComposer.render()
+        game.renderer.render(game.scene, game.camera)
     }
 
     game.renderer.setAnimationLoop(gameLoop)

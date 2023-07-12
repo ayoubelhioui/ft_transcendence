@@ -25,10 +25,11 @@ const Game = () => {
     const canvasRef = useRef(null);
 
     const gameCallBack = (state : number) => {
-        setState(state)
+        setTimeout(setState, 2000, state)
+        //setState(state)
     }
 
-    let isClassic = true
+    let isClassic = false
     let params : GameParams = {
         gameToken : "",
         isBotMode : false,

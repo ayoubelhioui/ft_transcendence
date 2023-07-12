@@ -1,6 +1,7 @@
 import * as dat from 'dat.gui'
 import {params} from '../Utils/Params'
 import { Game } from './Game'
+import * as THREE from "three";
 
 export class GuiParams {
 
@@ -60,6 +61,19 @@ export class GuiParams {
         this.game.spotLight.penumbra = light.penumbra
         this.game.spotLight.angle = light.angle
         this.game.ambientLightObj.intensity = light.amIntensity
+
+
+        const tableModel = this.game.tableModel
+        tableModel.traverse((node) => {
+            const meshNode = node as THREE.Mesh
+            if (meshNode.isMesh) {
+                const mat = meshNode.material as THREE.MeshStandardMaterial
+                if (meshNode.id === 15) {
+                    //table color
+                    mat.color = new THREE.Color(params.color)
+                }
+            }
+        })
     }
 
     update() {

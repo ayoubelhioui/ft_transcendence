@@ -1,6 +1,5 @@
 import { Game } from "../MyObjects/Game";
 import { Socket, io } from 'socket.io-client'
-import { params } from './Params'
 
 export class SocketManager {
 
@@ -64,7 +63,7 @@ export class SocketManager {
         
             //after connecting
             socket.emit("join_game", ({
-                isBotMode : params.botSocket,
+                isBotMode : game.isBotMode,
                 isClassic : false,
             }))
         
@@ -94,9 +93,7 @@ export class SocketManager {
         })
     
         socket.on("gameScore", (data) => {
-            game.gameInfo.scorePlayer1 = data.score[0]
-            game.gameInfo.scorePlayer2 = data.score[1]
-            console.log("game score", game.gameInfo)
+            game.changeScore(data)
         })
     
         socket.on("turn", (data) => {

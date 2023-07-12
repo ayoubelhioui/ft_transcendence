@@ -100,7 +100,6 @@ export class SocketManager {
         })
     
         socket.on("gameScore", (data) => {
-            console.log("game score", game.gameInfo)
             game.changeScore(data)
         })
     

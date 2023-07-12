@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import {params} from '../Utils/Params'
 import { Game } from "./Game";
+import { ScoreNbr } from "./ScoreNbr";
 
 
 
@@ -8,6 +9,8 @@ import { Game } from "./Game";
 export class MyScene extends THREE.Scene {
    
     game : Game
+    scoreP1 : ScoreNbr
+    scoreP2 : ScoreNbr
  
     tableColor : THREE.Color = new THREE.Color(0)
 
@@ -15,7 +18,14 @@ export class MyScene extends THREE.Scene {
         super()
 
         this.game = game
-       
+        this.scoreP1 = new ScoreNbr(2, 5, -10)
+        this.scoreP2 = new ScoreNbr(2, 5, 10)
+        this.scoreP1.set(0)
+        this.scoreP2.set(0)
+        this.scoreP1.rotation.set(0, Math.PI / 2, 0)
+        this.scoreP2.rotation.set(0, Math.PI / 2, 0)
+        this.add(this.scoreP1)
+        this.add(this.scoreP2)
 
         this.#modelsObj()
 
