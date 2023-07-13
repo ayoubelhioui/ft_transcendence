@@ -32,7 +32,7 @@ const Game = () => {
     let isClassic = false
     let params : GameParams = {
         gameToken : "",
-        isBotMode : false,
+        isBotMode : true,
         canvas : canvasRef.current,
         callBack : gameCallBack
     }
