@@ -5,6 +5,7 @@ import { Live, Results, TopPlayers } from './Container'
 import img from "../../assets/ping-pong-player-darkbg.png"
 import FriendSection from '../FriendSection'
 import { authContext } from '../context/useContext'
+import { address } from '../../Const';
 // import { Navigate } from 'react-router-dom'
 
 
@@ -47,7 +48,7 @@ const HomePage = () => {
             <TopPlayers />
         </div>
 
-        <FriendSection image={'http://localhost:3000/user/image/' + authUser.user?.IntraId}/>
+        <FriendSection image={`http://${address}/user/image/` + authUser.user?.IntraId}/>
 
       </div>
     </>

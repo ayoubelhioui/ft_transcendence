@@ -13,6 +13,8 @@ import Tooltip from '@mui/material/Tooltip';
 import { useState } from 'react';
 import Notifications from "./Notifications.tsx";
 
+import { address } from '../../Const';
+
 
 
 const links: any = [
@@ -57,7 +59,7 @@ const Navbar = () => {
         <ul  className=' py-2 flex items-center max-md:mt-1 max-md:justify-between '>
           <li className=' pl-3 max-sm:pl-1'>
             <NavLink to="/Profile">
-              <img src={'http://localhost:3000/user/image/' + authNav.user?.IntraId} alt="" className=' cursor-pointer object-cover rounded-full w-[45px] h-[45px]' />
+              <img src={`http://${address}/user/image/` + authNav.user?.IntraId} alt="" className=' cursor-pointer object-cover rounded-full w-[45px] h-[45px]' />
             </NavLink>
           </li>
 

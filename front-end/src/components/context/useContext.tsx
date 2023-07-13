@@ -1,11 +1,13 @@
 import React from "react";
-import axios from "axios";
+
 import { createContext, useState, useEffect, useContext } from "react";
 // import { Navigate } from "react-router-dom";
 
 // import { useCookies } from "react-cookie";
 
 import Cookies from 'js-cookie';
+import axiosInstance from "../api/axios";
+import axios from "axios";
 
 
 interface User {
@@ -54,7 +56,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     
     const refreshAccessToken = async (refreshTokenParam: string | null) => {
         try {
-            const response = await axios.get("http://localhost:3000/auth/refresh-token", {
+            const response = await axiosInstance.get("/auth/refresh-token", {
                 headers: {
                   Authorization: `Bearer ${refreshTokenParam}`,
             }, });
@@ -80,7 +82,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
         };
         
         try {
-            const res = await axios.post("http://localhost:3000/auth/logout", jResponse);
+            const res = await axiosInstance.post("/auth/logout", jResponse);
 
             Cookies.remove('access_token', accessToken );
             Cookies.remove('refresh_token', refreshToken );
@@ -100,8 +102,8 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
         console.log(dataResponse);
 
         try {
-            const response = await axios.post(
-                "http://localhost:3000/user/update",
+            const response = await axiosInstance.post(
+                "/user/update",
                 dataResponse,
                 {
                     headers: {
@@ -144,7 +146,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                 }
                 
                 else {
-                    const response = await axios.get('http://localhost:3000/auth/user', {
+                    const response = await axiosInstance.get('/auth/user', {
                         headers: {
                             Authorization: `Bearer ${accessToken}`
                         }

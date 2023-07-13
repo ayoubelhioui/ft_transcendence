@@ -5,6 +5,8 @@ import { TokenValidationGuard } from "./guards/acces-token.guard";
 import { UserDto } from "src/dto/user.dto";
 import { access } from "fs";
 import { CorsGuard } from "./guards/cors.guard";
+import { client_address } from "src/Const";
+
 
 @Controller('auth')
 export class AuthController{
@@ -47,9 +49,10 @@ export class AuthController{
     @UseGuards(AuthGuard('42'))
     @Get('callback')
     async singUp(@Request() req, @Response() res) {
+        console.log('helloWorld');
         this.user = await this.authService.isUserAlreadyExist(req.user);
         if (this.user.two_factors_enabled)
-            res.redirect(`http://localhost:5000/two-factor?id=${req.user.IntraId}&username=${req.user.username}`); 
+            res.redirect(`http://${client_address}/two-factor?id=${req.user.IntraId}&username=${req.user.username}`); 
         else
             await this.authService.authenticate(this.user, res);
     }

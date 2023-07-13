@@ -6,6 +6,7 @@ import { UserDto } from 'src/dto/user.dto';
 import TokenBlacklist from 'src/entities/token_blacklist';
 import axios from 'axios';
 import { createWriteStream } from 'fs';
+import { server_address } from 'src/Const';
 const nodemailer = require('nodemailer');
 
 @Injectable()
@@ -36,7 +37,7 @@ export class UserService{
     }
 
     generateImageURL (userId: number, imageExtension: string) : string{
-        return ('http://localhost:3000/user/images/' + userId + "." + imageExtension);
+        return (`http://${server_address}/user/images/` + userId + "." + imageExtension);
     }
 
     async addTokenToBlacklist(token: string)

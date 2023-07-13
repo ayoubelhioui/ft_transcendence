@@ -1,5 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException, Redirect } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt"
+import { client_address } from "src/Const";
 import { UserDto } from "src/dto/user.dto";
 import TokenBlacklist from "src/entities/token_blacklist";
 import { UserService } from "src/user/user.service";
@@ -24,7 +25,7 @@ export class AuthService{
         const tokens = await this.generateAuthTokens();
         res.cookie('access_token', tokens['access_token']);
         res.cookie('refresh_token', tokens['refresh_token']);
-        res.redirect('http://localhost:5000/');
+        res.redirect(`http://${client_address}/`);
     }
     
     async generateNewToken(payload: object, expirationTime: string) : Promise<string | undefined> {

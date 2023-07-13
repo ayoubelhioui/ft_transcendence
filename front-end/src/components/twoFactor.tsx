@@ -1,6 +1,6 @@
 
 // import { authContext } from './context/useContext';
-import axios from 'axios';
+import axiosInstance from './api/axios';
 import { useEffect, useState } from 'react';
 
 
@@ -44,7 +44,7 @@ const twoFactor = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/auth/two-factors", emailObj);
+      const response = await axiosInstance.post("/auth/two-factors", emailObj);
       
       setNextStep(true);
 
@@ -67,7 +67,7 @@ const twoFactor = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/auth/verify-two-factors", codeObj);
+      const response = await axiosInstance.post("/auth/verify-two-factors", codeObj);
 
       
       console.log();
