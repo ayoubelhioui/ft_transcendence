@@ -54,6 +54,9 @@ export class AuthController{
         if (this.user.two_factors_enabled)
             res.redirect(`http://${client_address}/two-factor?id=${req.user.IntraId}&username=${req.user.username}`); 
         else
+        {
             await this.authService.authenticate(this.user, res);
+
+        }
     }
 }

@@ -51,8 +51,8 @@ const Game = () => {
 
     return (
         <>
-            {/* {r(state)} */}
-            <canvas ref={canvasRef} />
+            {r(state)}
+            <canvas ref={canvasRef} className='absolute top-0 bottom-0 left-0 right-0 m-auto translate-x-50 translate-y-50'/>
         </>
     )
         

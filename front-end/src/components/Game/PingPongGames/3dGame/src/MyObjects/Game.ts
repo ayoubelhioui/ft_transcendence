@@ -86,9 +86,10 @@ export class Game {
         
         this.orbit = new OrbitControls(this.camera, this.renderer.domElement)
         this.guiParams = new GuiParams(this)
-        this.scene.visible = false
+        this.scene.visible = true
         this.#events(this)
 
+        //!remove it
         window.game = this
     }
 
