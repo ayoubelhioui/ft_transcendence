@@ -27,6 +27,7 @@ export class Ball {
     bounce = 0
     initialize = true
     lose = false
+    perform_init = false
 
     groundInfo = {
         //used by bot
@@ -108,6 +109,7 @@ export class Ball {
         let p = [0, 1, 0, this.#getLoseReason(cause)]
         if (this.position.x < 0)
             p = [1, 0, 1, this.#getLoseReason(cause)]
+        console.log(p)
         await this.game.changeScore(p)
         if (time) {
             setTimeout(this.#loseInit, time, this)
@@ -244,17 +246,24 @@ export class Ball {
         return (this.#setVelocity(posX, posY, speed))
     }
 
-    #initHit(x : number, y : number, playerType : number, racketPos : Vec3) {
-        let dist = (racketPos.x - this.position.x)
-        console.log("Hit in dist", dist)
-        if (Math.sign(x) === -1) {
-            this.#ballIsHit()
-            let r = Math.random() * params.planeDim.y * -0.2 * Math.sign(this.position.z)
-            this.velocity.set(-8 * Math.sign(this.position.x), 4, r)
-        }
+    // #initHit(x : number, y : number, playerType : number, racketPos : Vec3) {
+    //     let dist = (racketPos.x - this.position.x)
+    //     console.log("Hit in dist", dist)
+    //     if (Math.sign(x) === -1) {
+    //         this.#ballIsHit()
+    //         let r = Math.random() * params.planeDim.y * -0.2 * Math.sign(this.position.z)
+    //         this.velocity.set(-8 * Math.sign(this.position.x), 4, r)
+    //     }
+    // }
+
+    #initHit() {
+        console.log("Hit in dist")
+  
+        this.#ballIsHit()
+        this.perform_init = false
+        let r = Math.random() * params.planeDim.y * -0.2 * Math.sign(this.position.z)
+        this.velocity.set(-8 * Math.sign(this.position.x), 4, r)
     }
-
-
     
     /*******************************
     *            Update            
@@ -264,6 +273,13 @@ export class Ball {
         let turn = this.game.getTurnInit()
         let racketPos = (turn === 0 ? this.game.racketP1 : this.game.racketP2)
         this.position.set(-params.planeDim.x / 2 * Math.sign(turn * 2 - 1), 3, racketPos.z)
+        
+        if (this.perform_init || this.position.x < 0 && this.game.botObj)
+            return
+        this.perform_init = !this.perform_init
+        setTimeout(() => {
+            this.#initHit()
+        }, 2000, this)
     }
 
     #move() {
@@ -336,10 +352,11 @@ export class Ball {
     socketReceiveHit(payload : any) {
         if (!this.initialize) {
             this.#hit(payload.distX, payload.distY, payload.playerType)
-        } else {
-            let racketPos = (this.game.getTurnInit() === 0 ? this.game.racketP1 : this.game.racketP2)
-            this.#initHit(payload.distX, payload.distY, payload.playerType, racketPos)
         }
+        // else {
+        //     let racketPos = (this.game.getTurnInit() === 0 ? this.game.racketP1 : this.game.racketP2)
+        //     this.#initHit(payload.distX, payload.distY, payload.playerType, racketPos)
+        // }
     }
 
     #socketSendBallInfo() {
