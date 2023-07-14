@@ -12,6 +12,7 @@ import { UserService } from '../user/user.service';
 import { Room } from './game-components/Room/Room';
 import { User } from 'src/database/entities';
 import { WebSocketExceptionFilter } from '../socket/websocket-exception.filter';
+import { PlayerJoin } from './interfaces/play-join.interface';
 
 
 const botGame = true;
@@ -24,6 +25,7 @@ export class GameSessions {
     BOT : User | undefined = undefined;
     clients : string[] = []
     clientRooms = new Map()
+    roomsIdMap = new Map()
     classicRoom : ClassicRoom;
     threeRoom : ThreeRoom;
     constructor(
@@ -36,11 +38,10 @@ export class GameSessions {
 
     //!test dto
     //!game finish, set result
+    //! async >> await the function
+    //!when the room is created it will generate the game token it will be the roomId
+    //!end-point to get the token
 
-   //! async >> await the function
-
-
-   
 
     async init()
     {
@@ -48,68 +49,101 @@ export class GameSessions {
             this.BOT = await this.userService.findUserById(1);
     }
 
-   
-    async addPlayer(payload : PlayerJoinDto, client : Socket) {
+    //####################################################################
+    //####################################################################
+    //########### Add
+    //####################################################################
+    //####################################################################
+
+    async addPlayerToBotRoom(payload : PlayerJoin) {
+        let newBotRoom = payload.isClassic ? new ClassicRoom(botGame, this.gameService) : new ThreeRoom(botGame, this.gameService)
+        return (newBotRoom)
+    }
+
+    async addPlayerToMultiPlayerRoom(payload : PlayerJoin) {
+        let room = payload.isClassic === true ? this.classicRoom : this.threeRoom
+        if (payload.userToInvite) {
+           room = payload.isClassic === true ? new ClassicRoom(!botGame, this.gameService) : new ThreeRoom(!botGame, this.gameService)
+           //!send the game token to the other plater
+        } else if (payload.token) {
+            if (this.roomsIdMap.has(payload.token)) {
+                //!check the client is the same as the user the supposed to be invited
+                if (true) {
+                    
+                } else {
+                    //!error 5ona is not the same as the user that supposed to be invited 
+                }
+            } else {
+                //!error the room not found
+            }
+        }
+        
+        
+        if (payload.token && this.roomsIdMap.has(payload.token)) {
+            room = this.roomsIdMap.get(payload.token)
+        } else if (payload.token) {
+            //!Error the room not exited
+        }
+
+        if (room.closed === true) {
+            if (payload.isClassic)
+                this.classicRoom = new ClassicRoom(!botGame, this.gameService)
+            else
+                this.threeRoom = new ThreeRoom(!botGame, this.gameService)
+        }
+        return room
+    }
+
+    async addClientToWatch(payload : PlayerJoin, client : Socket) {
+
+    }
+
+    async addClient(payload : PlayerJoin, client : Socket) {
         await this.init();
+
         const socketId = client.id
         if (!(socketId in this.clients)) {
-
-            
-            console.log(clc.blue("Adding Player: "), client.id)
-            if (payload.isBotMode === true) {
-                let newBotRoom = payload.isClassic ? new ClassicRoom(botGame, this.gameService) : new ThreeRoom(botGame, this.gameService)
-                //!bot game create >> creates game token
-                {
-                    // const {inviteId} = await this.gameService.createGame(payload.user,payload.isClassic);
-                    // await this.gameService.joinGame(this.BOT, payload.token);
-                    // newBotRoom.gameToken = inviteId;
-                }
-                console.log(`Client ${socketId} added to Bot room nb ${newBotRoom.roomId}`)
-                newBotRoom.add(payload, client)
-                this.clients.push(socketId)
-                this.clientRooms.set(socketId, newBotRoom)
-                let m = clc.green(`Start playing between ${socketId} and Bot room ${newBotRoom.roomId} => nbRooms ${this.clientRooms.size / 2}`)
-                console.log(m)
-                //newBotRoom.start()
-                setTimeout((r : ClassicRoom | ThreeRoom) => r.start(), 500, newBotRoom)
+            console.log(
+                clc.blue("Adding new Client => "), 
+                "socket Id", client.id,
+                "Info: Bot", payload.isBotMode,
+                "IsClassic: ", payload.isClassic,
+                "IsWatchMode: ", payload.isWatchMode,
+                "IsInvite: ", payload.isInvite,
+                "token", payload.token,
+                "userId", payload.user.id
+            )
+            if (payload.isWatchMode === true) {
+                this.addClientToWatch(payload, client)
             } else {
-                let room = payload.isClassic === true ? this.classicRoom : this.threeRoom
-                console.log(`Client ${socketId} added to room nb ${room.toString()}`)
+                let room : ClassicRoom | ThreeRoom
+                if (payload.isBotMode === true) {
+                    room = await this.addPlayerToBotRoom(payload)
+                } else {
+                    room = await this.addPlayerToMultiPlayerRoom(payload)
+                }
                 room.add(payload, client)
                 this.clientRooms.set(socketId, room)
                 this.clients.push(socketId)
-                
-
-                //console.log("Room is Closed => ", room.closed)
-                if (room.closed === true) {
-                    console.log("Room is Closed => ", room.toString())
-                    //!join >> give game token to join
-                    {
-                        // await this.gameService.joinGame(payload.user, payload.token);
-                    }
-                    let m = clc.green(`Start playing between ${room.player1.id} and ${room.player2.id} room ${room.roomId} => nbRooms ${this.clientRooms.size / 2}`)
+                this.roomsIdMap.set(room.roomId, room)
+                if (room.closed) {
+                    let m = clc.green(`Start playing`)
                     console.log(m)
-                    // room.start()
                     setTimeout((r : ClassicRoom | ThreeRoom) => r.start(), 500, room)
-                    
-                    if (payload.isClassic)
-                        this.classicRoom = new ClassicRoom(!botGame, this.gameService)
-                    else
-                        this.threeRoom = new ThreeRoom(!botGame, this.gameService)
-                } else {
-                    //!create
-                    {
-                        // const {inviteId} = await this.gameService.createGame(payload.user,payload.isClassic);
-                        // console.log(clc.red(inviteId))
-                        // room.gameToken = inviteId;
-                    }
                 }
             }
         }
     }
 
 
-    async removePlayer(client : Socket) {
+    //####################################################################
+    //####################################################################
+    //########### Remove
+    //####################################################################
+    //####################################################################
+
+
+    async removeClient(client : Socket) {
         let room : ClassicRoom | ThreeRoom = this.clientRooms.get(client.id)
         if (room) {
             if (room.isBotMode === true) {

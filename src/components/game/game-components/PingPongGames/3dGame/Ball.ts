@@ -359,8 +359,8 @@ export class Ball {
         // }
     }
 
-    #socketSendBallInfo() {
-        if (params.frame % 3 !== 0)
+    #socketSendBallInfo(force : boolean, end : boolean | undefined) {
+        if (params.frame % 3 !== 0 && !force)
             return
         
         let data = new BallInfo()
@@ -371,6 +371,8 @@ export class Ball {
         data.init = this.initialize
         data.net = this.ballInfo.net
         data.spotPos = undefined
+        data.end = end
+
 
         if (this.ballInfo.net) {
             this.ballInfo.net = false
@@ -380,15 +382,15 @@ export class Ball {
             this.ballInfo.spot = false
         }
         
-        
         this.game.room.sendBallInfo(data)
     }
 
+
     end() {
-        this.position.set(0, 5, 0)
+        this.position.set(0, 2, 0)
         this.velocity.set(0, 0, 0)
         this.initialize = false
-        this.#socketSendBallInfo()
+        this.#socketSendBallInfo(true, true)
     }
 
     async update() {
@@ -398,6 +400,6 @@ export class Ball {
             this.#initBall()
         }
         await this.#reset()
-        this.#socketSendBallInfo()    
+        this.#socketSendBallInfo(false, undefined)    
     }
 }

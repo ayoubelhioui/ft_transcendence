@@ -129,7 +129,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   {
     console.log("disconnected")
     const user : User = this.socketService.getUser(client);
-    await this.gameSessions.removePlayer(client);
+    await this.gameSessions.removeClient(client);
     if (user)
     {
       this.socketService.removeSocket(user.id, client);

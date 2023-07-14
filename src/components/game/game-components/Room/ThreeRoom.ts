@@ -50,6 +50,8 @@ export class ThreeRoom extends Room {
         //data.init
         //data.spotPos
         //data.net
+        //data.end
+
         let player2Data = {
             position : {
                 x: -payload.position.x,
@@ -63,7 +65,8 @@ export class ThreeRoom extends Room {
             },
             init : payload.init,
             net : payload.net,
-            spotPos : undefined
+            spotPos : undefined,
+            end : payload.end
         }
         if (payload.spotPos) {
             player2Data.spotPos = {
@@ -72,6 +75,7 @@ export class ThreeRoom extends Room {
                 z: -payload.spotPos.z
             }
         }
+    
         this.broadCast("ballInfo", payload, player2Data)
     }
 
@@ -93,7 +97,7 @@ export class ThreeRoom extends Room {
     sendBotRacketInfo(payload : any) {
         if (this.closed === false)
             return
-        console.log(`Send to ${this.player1.socket}`)
+        //console.log(`Send to ${this.player1.socket}`)
         this.player1.socket.emit("moveRacket", payload)
     }
 
@@ -126,6 +130,8 @@ export class ThreeRoom extends Room {
 //=============== Receive
 
     receiveHitBall(payload : any, socketId : string) {
+        if (this.game.gameInfo.end)
+            return
         let playerType = (this.player1.socket.id === socketId ? -1 : 1)
         payload.playerType = playerType
         this.game.ballObj.socketReceiveHit(payload)

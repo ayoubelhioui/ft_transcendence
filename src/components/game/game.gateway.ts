@@ -8,6 +8,7 @@ import { WebSocketExceptionFilter } from '../socket/websocket-exception.filter';
 import { AuthSocketGuard } from '../auth/guards/auth-socket.guard';
 import { InviteToGameDto } from './dto/invite-to-game.dto';
 import { GameSessions } from './game-sessions.service';
+import { PlayerJoinDto } from './dto/play-join.dto';
 
 @UseFilters(WebSocketExceptionFilter)
 @UsePipes(new ValidationPipe({
@@ -59,9 +60,9 @@ export class GameGateway {
   }
 
   @SubscribeMessage ('join_game')
-  async joinGame(client: Socket, payload: any) {
+  async joinGame(client: Socket, payload: PlayerJoinDto) {
     payload.user = this.socketService.getUser(client);
-    await this.gameSession.addPlayer(payload, client)
+    await this.gameSession.addClient(payload, client)
   }
 
   @SubscribeMessage ('moveRacket')

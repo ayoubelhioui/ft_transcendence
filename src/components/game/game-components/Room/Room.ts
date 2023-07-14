@@ -2,6 +2,7 @@ import { Socket } from 'socket.io';
 import { Player } from './player.interface';
 import { PlayerScores } from '../../dto/player-scores.dto';
 import { GameService } from '../../game.service';
+import { PlayerJoin } from '../../interfaces/play-join.interface';
 
 export class Room {
 
@@ -25,7 +26,7 @@ export class Room {
     }
 
 
-    add(payload: any, socket : Socket) {
+    add(payload: PlayerJoin, socket : Socket) {
         let newPlayer : Player = {
             id : payload.user.id,
             socket : socket,
@@ -60,7 +61,7 @@ export class Room {
     }
 
     async gameScoreTrigger(scores : PlayerScores) {
-        let maxScore = 11
+        let maxScore = 1
         if(scores.player1Score == maxScore || scores.player2Score == maxScore)
         {
             // return await this.gameService.setGameResult(this.player1.id, this.gameToken ,

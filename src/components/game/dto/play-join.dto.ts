@@ -1,5 +1,4 @@
 import { IsBoolean, IsNotEmpty, IsOptional, IsUUID } from "class-validator";
-import { SocketService } from "src/components/socket/socket.service";
 import { User } from "src/database/entities";
 
 export class PlayerJoinDto{
@@ -11,6 +10,14 @@ export class PlayerJoinDto{
     @IsBoolean()
     isBotMode : boolean;
 
+    @IsBoolean()
+    @IsNotEmpty()
+    isWatchMod : boolean;
+
+    @IsUUID()
+    @IsOptional()
+    userToInvite : string;
+
     @IsNotEmpty()
     user : User;
    
@@ -19,4 +26,4 @@ export class PlayerJoinDto{
     token? : string;
 }
 
-s : SocketService
+//s : SocketService

@@ -6,4 +6,5 @@ export class BallInfo {
     init : boolean
     net : boolean
     spotPos : Vec3 | undefined
+    end : boolean | undefined
 }

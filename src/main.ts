@@ -12,7 +12,8 @@ async function bootstrap() {
   }));
   const address = process.env.SERVER_HOST || 'localhost'
   const port = +process.env.SERVER_PORT || 3001
-  console.log("Server started on: ", address, ":", port)
-  await app.listen(port, address); 
+  await app.listen(port, address, () => {
+    console.log("Server started on: ", address, ":", port)
+  }); 
 }
 bootstrap();
