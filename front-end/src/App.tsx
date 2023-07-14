@@ -4,7 +4,7 @@
 import { Navbar, HomePage, Profile, SignIn, Chat } from './components/index'
 import { authContext } from './components/context/useContext';
 
-import { Navigate } from "react-router-dom";
+
 
 import React from 'react';
 
@@ -14,6 +14,9 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
+
+
+
 import Game from './components/Game/Game';
 
 export const ProtectedRoute: React.FC<{children: any}> = ( { children } ) => {
@@ -46,19 +49,22 @@ const App = () => {
 
   return (
    
-       
-          <Routes>
-            <Route path='/' >
-                  
-              <Route index element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
-              <Route path='Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
-              <Route path='Profile' element={(<ProtectedRoute> <Profile /> </ProtectedRoute>)}/>
-              <Route path='Chat' element={(<ProtectedRoute> <Chat /> </ProtectedRoute>)}/>
-              <Route path='Play' element={(<ProtectedRoute> <Game /> </ProtectedRoute>)}/>
-
-            </Route>
+ 
+        <Routes>
+          <Route path='/' >
+                
+            <Route index element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
+            <Route path='Home' element={(<ProtectedRoute> <HomePage /> </ProtectedRoute>)}/>
+            <Route path='Profile' element={(<ProtectedRoute> <Profile /> </ProtectedRoute>)}/>
+            <Route path='Chat' element={(<ProtectedRoute> <Chat /> </ProtectedRoute>)}/>
+            <Route path='Play/:type/:id' element={(<ProtectedRoute> <Game /> </ProtectedRoute>)}/>
             
-          </Routes>
+          </Route>
+          
+        </Routes>
+
+ 
+        
       
   )
 }

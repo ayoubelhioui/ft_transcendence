@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState} from 'react'
 import { GameParams } from './PingPongGames/interfaces/interface.game.params'
+import { useParams } from 'react-router-dom';
+
 import classicGameStart from './PingPongGames/ClassicGame/src/game'
 import threeGameStart from './PingPongGames/3dGame/src/game'
 
@@ -20,18 +22,29 @@ const r = (state: number): JSX.Element => {
 };
 
 const Game = () => {
+    const { type, id } = useParams();
+
+    console.log("type: ", type, "id: ", id)
+    if (type === "watch" || type === "play") {
+        console.log("watch ...")
+    }
+    else
+        return <div></div>
+        
+
     const isLoaded = useRef(false)
     const [state, setState] = useState(GameState.gameLoading)
     const canvasRef = useRef(null);
 
     const gameCallBack = (state : number) => {
-        setTimeout(setState, 2000, state)
+        setTimeout(setState, 500, state)
         //setState(state)
     }
 
-    let isClassic = false
+    let isClassic = true
     let params : GameParams = {
-        gameToken : "",
+        type : type === "watch" ? GameState.watchGame : GameState.playGame,
+        gameToken : id!,
         isBotMode : true,
         canvas : canvasRef.current,
         callBack : gameCallBack

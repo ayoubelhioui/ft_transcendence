@@ -62,6 +62,7 @@ export class SocketManager {
             socket.emit("join_game", ({
                 isBotMode : game.isBotMode,
                 isClassic : true,
+                isWatchMod : game.isWatchMod
                 //! token
             }))
         
