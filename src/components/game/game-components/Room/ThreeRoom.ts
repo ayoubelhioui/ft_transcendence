@@ -138,7 +138,7 @@ export class ThreeRoom extends Room {
     }
 
     toString() {
-        let a = this.isBotMode ? "Bot" : "Ply"
+        let a = this.isBotMode ? "Bot" : "Multi"
         return `${a} Three Room ${this.roomId}`
     }
 

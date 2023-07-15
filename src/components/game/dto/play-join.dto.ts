@@ -1,6 +1,9 @@
 import { IsBoolean, IsNotEmpty, IsOptional, IsUUID } from "class-validator";
 import { User } from "src/database/entities";
 
+//!check if isWatchMod = true => token is exist
+//!check if userToInvite = true => token is undefined w 3akss (optional)
+
 export class PlayerJoinDto{
     @IsBoolean()
     @IsNotEmpty()
@@ -12,7 +15,7 @@ export class PlayerJoinDto{
 
     @IsBoolean()
     @IsNotEmpty()
-    isWatchMod : boolean;
+    isWatchMode : boolean;
 
     @IsUUID()
     @IsOptional()

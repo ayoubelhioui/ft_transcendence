@@ -1,8 +1,10 @@
 import { Socket } from 'socket.io';
-import { Player } from './player.interface';
+import { Player } from '../../interfaces/player.interface';
 import { PlayerScores } from '../../dto/player-scores.dto';
 import { GameService } from '../../game.service';
 import { PlayerJoin } from '../../interfaces/play-join.interface';
+import { Client } from 'socket.io/dist/client';
+import { Watcher } from '../../interfaces/watcher.interface';
 
 export class Room {
 
@@ -13,6 +15,7 @@ export class Room {
     isBotMode : boolean
     player1 : Player | undefined = undefined;
     player2 : Player | undefined = undefined;
+    watchers : Map<string, Watcher> = new Map()
     closed : Boolean = false
     gameToken : string; //!game token
     protected gameService : GameService
@@ -39,6 +42,19 @@ export class Room {
         if (this.player1 && this.player2) {
             this.closed = true
         }
+    }
+
+    addClientToWatch(payload : PlayerJoin, socket : Socket) {
+        let newPlayer : Watcher = {
+            id : payload.user.id,
+            socket : socket,
+            user : payload.user
+        }
+        this.watchers.set(newPlayer.socket.id, newPlayer)
+    }
+
+    removeClientFromWatch(socket : Socket) {
+        this.watchers.delete(socket.id)
     }
 
     getPlayer2Id(socketId : string) : Socket {

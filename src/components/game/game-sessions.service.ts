@@ -13,6 +13,7 @@ import { Room } from './game-components/Room/Room';
 import { User } from 'src/database/entities';
 import { WebSocketExceptionFilter } from '../socket/websocket-exception.filter';
 import { PlayerJoin } from './interfaces/play-join.interface';
+import { Player } from './interfaces/player.interface';
 
 
 const botGame = true;
@@ -55,21 +56,25 @@ export class GameSessions {
     //####################################################################
     //####################################################################
 
+    createNewMultiPlayerRoom(isClassic : boolean) {
+        return (isClassic === true ? new ClassicRoom(!botGame, this.gameService) : new ThreeRoom(!botGame, this.gameService))
+    }
+
     async addPlayerToBotRoom(payload : PlayerJoin) {
-        let newBotRoom = payload.isClassic ? new ClassicRoom(botGame, this.gameService) : new ThreeRoom(botGame, this.gameService)
-        return (newBotRoom)
+        let room = payload.isClassic ? new ClassicRoom(botGame, this.gameService) : new ThreeRoom(botGame, this.gameService)
+        return (room)
     }
 
     async addPlayerToMultiPlayerRoom(payload : PlayerJoin) {
         let room = payload.isClassic === true ? this.classicRoom : this.threeRoom
         if (payload.userToInvite) {
-           room = payload.isClassic === true ? new ClassicRoom(!botGame, this.gameService) : new ThreeRoom(!botGame, this.gameService)
+           room = this.createNewMultiPlayerRoom(payload.isClassic)
            //!send the game token to the other plater
         } else if (payload.token) {
             if (this.roomsIdMap.has(payload.token)) {
                 //!check the client is the same as the user the supposed to be invited
                 if (true) {
-                    
+                    room = this.roomsIdMap.get(payload.token)
                 } else {
                     //!error 5ona is not the same as the user that supposed to be invited 
                 }
@@ -77,25 +82,18 @@ export class GameSessions {
                 //!error the room not found
             }
         }
-        
-        
-        if (payload.token && this.roomsIdMap.has(payload.token)) {
-            room = this.roomsIdMap.get(payload.token)
-        } else if (payload.token) {
-            //!Error the room not exited
-        }
-
-        if (room.closed === true) {
-            if (payload.isClassic)
-                this.classicRoom = new ClassicRoom(!botGame, this.gameService)
-            else
-                this.threeRoom = new ThreeRoom(!botGame, this.gameService)
-        }
         return room
     }
 
     async addClientToWatch(payload : PlayerJoin, client : Socket) {
-
+        if (this.roomsIdMap.has(payload.token)) {
+            const socketId = client.id
+            const room = this.roomsIdMap.get(payload.token) as Room
+            room.addClientToWatch(payload, client)
+            this.clientRooms.set(socketId, room)
+            this.clients.push(socketId)
+            this.roomsIdMap.set(room.roomId, room)
+        }
     }
 
     async addClient(payload : PlayerJoin, client : Socket) {
@@ -109,7 +107,7 @@ export class GameSessions {
                 "Info: Bot", payload.isBotMode,
                 "IsClassic: ", payload.isClassic,
                 "IsWatchMode: ", payload.isWatchMode,
-                "IsInvite: ", payload.isInvite,
+                "IsInvite: ", payload.userToInvite,
                 "token", payload.token,
                 "userId", payload.user.id
             )
@@ -122,6 +120,7 @@ export class GameSessions {
                 } else {
                     room = await this.addPlayerToMultiPlayerRoom(payload)
                 }
+                console.log(clc.bgBlue("Player Enter To Room: "), room.toString())
                 room.add(payload, client)
                 this.clientRooms.set(socketId, room)
                 this.clients.push(socketId)
@@ -129,7 +128,13 @@ export class GameSessions {
                 if (room.closed) {
                     let m = clc.green(`Start playing`)
                     console.log(m)
-                    setTimeout((r : ClassicRoom | ThreeRoom) => r.start(), 500, room)
+                    if (payload.isBotMode === false) {
+                        if (payload.isClassic)
+                            this.classicRoom = new ClassicRoom(!botGame, this.gameService)
+                        else
+                            this.threeRoom = new ThreeRoom(!botGame, this.gameService)
+                    }
+                    setTimeout((r : ClassicRoom | ThreeRoom) => r.start(), 1000, room)
                 }
             }
         }
@@ -142,69 +147,59 @@ export class GameSessions {
     //####################################################################
     //####################################################################
 
-
-    async removeClient(client : Socket) {
-        let room : ClassicRoom | ThreeRoom = this.clientRooms.get(client.id)
-        if (room) {
-            if (room.isBotMode === true) {
-                let player1 = room.player1
-
-                if (player1) {
-                    room.playerLeft(client)
-                    //!bot room is closed , player1 surrender
-                    {
-                        // await this.gameService.setGameResult(player1.id, room.gameToken ,0,5);
-                    }
-                    console.log(`Client ${player1.id} removed, bot room nb ${room.roomId}`)
-                    this.clients.splice(this.clients.indexOf(player1.socket.id), 1);
-                    this.clientRooms.delete(player1.socket.id)
-                }
-            } else {
-                console.log("removing: ", client.id, "Room =>  ", room.closed)
-                let player1 = room.player1
-                let player2 = room.player2
-                let userGone = player1.socket.id === client.id ? player1 : player2
-        
-                room.playerLeft(client)
-                //!client surrender if player2 is defined 
-                //!if player2 undefined, just delete game
-                if(player1 && player2)
-                {
-                    // await this.gameService.setGameResult(userGone.id, room.gameToken ,0,5);
-                }
-                else if(!player2)
-                {
-                    const existingGame = await this.gameService.findGame(room.gameToken);
-                    if(existingGame)
-                        this.gameService.deleteGame(existingGame);
-                }
-            
-                if (player1) {
-                    console.log(`Client ${player1.socket.id} removed, room nb ${room.roomId}`)
-                    this.clients.splice(this.clients.indexOf(player1.socket.id), 1);
-                    this.clientRooms.delete(player1.socket.id)
-                    if (room === this.classicRoom) {
-                        this.classicRoom.player1 = undefined
-                    }
-                    if (room === this.threeRoom) {
-                        this.threeRoom.player1 = undefined
-                    }
-                }
-                if (player2) {
-                    console.log(`Client ${player2.id} removed, room nb ${room.roomId}`)
-                    this.clients.splice(this.clients.indexOf(player2.socket.id), 1);
-                    this.clientRooms.delete(player2.socket.id)
-                    if (room === this.classicRoom) {
-                        this.classicRoom.player2 = undefined
-                    }
-                    if (room === this.threeRoom) {
-                        this.threeRoom.player2 = undefined
-                    }
-                }
-            }
+    removeClientFromList(room : Room, player : Player) {
+        console.log(clc.red("Remove Player"))
+        this.clients.splice(this.clients.indexOf(player.socket.id), 1);
+        this.clientRooms.delete(player.socket.id)
+        this.roomsIdMap.delete(room.roomId)
+        if (room === this.classicRoom || room === this.threeRoom) {
+            if (room.player1 === player)
+                room.player1 = undefined
         }
     }
 
+    removeClientFromWatchers(room : ClassicRoom | ThreeRoom, client : Socket) {
+        room.removeClientFromWatch(client)
+        this.clientRooms.delete(client.id)
+        this.clients.splice(this.clients.indexOf(client.id), 1);
+        this.roomsIdMap.delete(room.roomId)
+    }
+
+    async removePlayers(room : ClassicRoom | ThreeRoom, client : Socket) {
+        room.playerLeft(client)
+        if (room.isBotMode === true) {
+            //!bot room is closed , player1 surrender
+            // await this.gameService.setGameResult(player1.id, room.gameToken ,0,5);
+            this.removeClientFromList(room, room.player1)
+        } else {
+            let player1 = room.player1
+            let player2 = room.player2
+            if(player1 && player2)
+            {
+                //! set game result
+                // await this.gameService.setGameResult(userGone.id, room.gameToken ,0,5);
+            }
+            else if (!player2) {
+                //!remove the game
+                // const existingGame = await this.gameService.findGame(room.gameToken);
+                // if(existingGame)
+                //     this.gameService.deleteGame(existingGame);
+            }
+            player1 && this.removeClientFromList(room, room.player1)
+            player2 && this.removeClientFromList(room, room.player2)
+        }
+    }
+
+    async removeClient(client : Socket) {
+        if (this.clientRooms.has(client.id)) {
+            let room : ClassicRoom | ThreeRoom = this.clientRooms.get(client.id)
+            if (room.watchers.has(client.id)) {
+                this.removeClientFromWatchers(room, client)
+            } else {
+                this.removePlayers(room, client)
+            }
+        }
+    }
 
     //=====================================
 
