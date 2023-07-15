@@ -26,11 +26,11 @@ const Game = () => {
 
     console.log("type: ", type, "id: ", id)
     if (type === "watch" || type === "play") {
-        console.log("watch ...")
+        console.log("watch | play ...")
     }
     else
         return <div></div>
-        
+    let isWatchMode = type === "watch" ? true : false
 
     const isLoaded = useRef(false)
     const [state, setState] = useState(GameState.gameLoading)
@@ -43,8 +43,9 @@ const Game = () => {
 
     let isClassic = true
     let params : GameParams = {
-        type : type === "watch" ? GameState.watchGame : GameState.playGame,
+        isWatchMode : isWatchMode,
         gameToken : id!,
+        userToInvite : "",
         isBotMode : true,
         canvas : canvasRef.current,
         callBack : gameCallBack
@@ -54,8 +55,9 @@ const Game = () => {
     useEffect(() => {
     if (!isLoaded.current) {
         params.canvas = canvasRef.current
-        if (isClassic)
+        if (isClassic) {
             classicGameStart(params)
+        }
         else
             threeGameStart(params)
         isLoaded.current = true;

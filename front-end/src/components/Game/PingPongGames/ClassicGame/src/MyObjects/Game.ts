@@ -15,7 +15,8 @@ export class Game {
     token : string
     isBotMode : boolean
     canvas : any
-    isWatchMod : boolean
+    isWatchMode : boolean
+    userToInvite : string
     callBack : (state: number) => void
 
     gameInfo = {
@@ -28,10 +29,11 @@ export class Game {
 
     constructor(gameParams : GameParams) {
         this.canvas = gameParams.canvas
-        this.isWatchMod = (gameParams.type === GameState.watchGame)
+        this.isWatchMode = gameParams.isWatchMode
         this.token = gameParams.gameToken
         this.isBotMode = gameParams.isBotMode
         this.callBack = gameParams.callBack
+        this.userToInvite = gameParams.userToInvite
         this.renderer = this.#setUpRenderer()
         this.scene = new MyScene(this)
         this.camera = new MyCamera()

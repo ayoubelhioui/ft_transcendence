@@ -5,6 +5,5 @@ export class GameState {
     static gameEndedLoss = 2
 
 
-    static watchGame = 0
-    static playGame = 1
+   
 }

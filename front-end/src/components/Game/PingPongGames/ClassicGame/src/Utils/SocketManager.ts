@@ -62,8 +62,9 @@ export class SocketManager {
             socket.emit("join_game", ({
                 isBotMode : game.isBotMode,
                 isClassic : true,
-                isWatchMod : game.isWatchMod
-                //! token
+                isWatchMode : game.isWatchMode,
+                token : game.token,
+                userToInvite : game.userToInvite,
             }))
         
             // socket.on('disconnected', () => {
