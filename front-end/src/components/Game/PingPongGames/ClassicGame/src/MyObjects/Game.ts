@@ -36,7 +36,7 @@ export class Game {
         this.isBotMode = gameParams.isBotMode
         this.callBack = gameParams.callBack
 
-        this.scene.visible = false
+        this.scene.visible = true
         this.#events(this)
     }
 

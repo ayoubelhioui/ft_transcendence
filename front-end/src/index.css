@@ -29,12 +29,12 @@
 
 body {
   /* min-height: 100vh; */
-  background: radial-gradient(circle, #1780A1 -40%, #4D194D 100%);
 }
 
 #root {
   /* background: linear-gradient(190deg, #5C4D7D 0.52%, #4D194D 100%); */
 
+  background: radial-gradient(circle, #1780A1 -40%, #4D194D 100%);
   
   min-height: 100vh;
 

@@ -29,7 +29,7 @@ const Game = () => {
         //setState(state)
     }
 
-    let isClassic = false
+    let isClassic = true
     let params : GameParams = {
         gameToken : "",
         isBotMode : true,
@@ -52,7 +52,7 @@ const Game = () => {
     return (
         <>
             {r(state)}
-            <canvas ref={canvasRef} className='absolute top-0 bottom-0 left-0 right-0 m-auto translate-x-50 translate-y-50'/>
+            <canvas ref={canvasRef} className='absolute top-0 bottom-0 left-0 right-0 m-auto overflow-hidden translate-x-50 translate-y-50'/>
         </>
     )
         
