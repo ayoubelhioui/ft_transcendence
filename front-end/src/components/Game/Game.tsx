@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState} from 'react'
+import axios from "axios";
+
 import { GameParams } from './PingPongGames/interfaces/interface.game.params'
-import { useParams } from 'react-router-dom';
 
 import classicGameStart from './PingPongGames/ClassicGame/src/game'
 import threeGameStart from './PingPongGames/3dGame/src/game'
@@ -9,7 +10,6 @@ import './Game.css'
 import LoadingPage from './LoadingPage'
 import EndGame from './EndGame'
 import { GameState } from './PingPongGames/GameState'
-
 const r = (state: number): JSX.Element => {
     if (state === GameState.gameStarted) {
       return <div></div>
@@ -21,17 +21,74 @@ const r = (state: number): JSX.Element => {
     return <LoadingPage />;
 };
 
-const Game = () => {
-    const { type, id } = useParams();
 
-    console.log("type: ", type, "id: ", id)
-    if (type === "watch" || type === "play") {
-        console.log("watch | play ...")
+async function loadData(params : GameParams) {
+    // try {
+    //     const host = import.meta.env.VITE_HOST || 'localhost'
+    //     const port = import.meta.env.VITE_SERVER_PORT || '80'
+    //     const socketAddr = `http://${host}:${port}`
+    //     const response = fetch(`${socketAddr}/users`)
+    //     console.log(response)
+
+    // } catch (error) {
+    //     console.log(`Can't get users => ${error}`)
+    // }
+
+    try {
+        const host = import.meta.env.VITE_HOST || 'localhost'
+        const port = import.meta.env.VITE_SERVER_PORT || '80'
+        const socketAddr = `http://${host}:${port}`
+        const userId = params.userId
+        const availableUsers = await axios.get(`${socketAddr}/users`)
+        availableUsers.data = availableUsers.data.filter((item : any) => item.username !== "bot")
+        const usersIds = availableUsers.data.map((item : any) => item.id)
+        console.log(usersIds)
+        const response = await axios.post(`${socketAddr}/auth/${userId}`)
+        console.log(`using user ${userId} token => `, response)
+
+    } catch (error) {
+        console.log(`Can't get users => ${error}`)
     }
-    else
-        return <div></div>
-    let isWatchMode = type === "watch" ? true : false
+}
 
+async function runGame(params : GameParams) {
+        await loadData(params)
+      
+        if (params.isClassic) {
+            classicGameStart(params)
+        }
+        else
+            threeGameStart(params)
+       
+    
+}
+
+function getUrlParams() {
+    const searchParams = new URLSearchParams(window.location.search);
+
+    // Get individual parameters by their names
+    const testType = searchParams.get('watch');
+    console.log(testType)
+
+
+    //console.log("urls params : ?userId=1&isBotMode=false&isClassic=true&isWatchMode=false&gameToken=1&userToInvite=2")
+    console.log("urls params : ?userId=1&isWatchMode=false&gameToken=1&userToInvite=2")
+    return {
+        isWatchMode : searchParams.get('isWatchMode') === 'true',
+        gameToken : searchParams.get('gameToken') as string,
+        userId : searchParams.get('userId') as string,
+        userToInvite : searchParams.get('userToInvite') as string,
+        // isBotMode : searchParams.get('isBotMode') === 'true',
+        // isClassic : searchParams.get('isClassic') === 'true',
+        isBotMode : false,
+        isClassic : true,
+    }
+}
+
+const Game =  () => {
+    
+    let urlParams = getUrlParams()
+    console.log(urlParams)
     const isLoaded = useRef(false)
     const [state, setState] = useState(GameState.gameLoading)
     const canvasRef = useRef(null);
@@ -41,27 +98,24 @@ const Game = () => {
         //setState(state)
     }
 
-    let isClassic = true
     let params : GameParams = {
-        isWatchMode : isWatchMode,
-        gameToken : id!,
-        userToInvite : "",
-        isBotMode : true,
+        isWatchMode : urlParams.isWatchMode,
+        gameToken : urlParams.gameToken,
+        userToInvite :urlParams.userToInvite,
+        userId : urlParams.userId,
+        isClassic : urlParams.isClassic,
+        isBotMode : urlParams.isBotMode,
         canvas : canvasRef.current,
         callBack : gameCallBack
     }
 
 
     useEffect(() => {
-    if (!isLoaded.current) {
-        params.canvas = canvasRef.current
-        if (isClassic) {
-            classicGameStart(params)
+        if (!isLoaded.current) {
+            params.canvas = canvasRef.current
+            runGame(params)
+            isLoaded.current = true;
         }
-        else
-            threeGameStart(params)
-        isLoaded.current = true;
-    }
     }, [])
 
     return (
