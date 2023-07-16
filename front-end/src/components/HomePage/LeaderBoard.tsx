@@ -23,7 +23,7 @@ const LeaderBoard = () => {
 
   return (
 
-    <div className="flex flex-col purple_back mt-[5%] w-[60%] mx-auto h-[65vh] max-md:mt-[3%] max-md:w-[85%] pb-5 max-sm:pb-0">
+    <div className="flex flex-col purple_back mt-[5%] w-[60%] mx-auto h-[65vh] max-md:mt-[3%] max-md:w-[85%] pb-5 max-sm:h-[80vh] max-sm:pb-4 max-custom-md:h-[70vh] max-custom-md:w-[85%]">
       <h1 className="text-white text-2xl mx-5 mt-5">LeaderBoard</h1>
       <div className="flex flex-col w-full pt-12 px-5 overflow-x-scroll">
         <div className="flex items-center justify-between back text-white py-2 px-4">

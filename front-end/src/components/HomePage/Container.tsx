@@ -6,6 +6,13 @@ import { Navigate, redirect, useNavigate } from 'react-router-dom'
 
 
 export const Live = () => {
+
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/Live');
+  };
+
   return (
     <div className=' min-h-[350px] max-md:min-h-[270px] back rounded-[10px] flex-1 mr-16 flex flex-col justify-between shadow-md max-md:mr-0'>
           <h1 className="text-2xl p-2">Live Games</h1>
@@ -35,7 +42,7 @@ export const Live = () => {
               <AccountIcon size={50}/>
             </div>
           </div>
-          <div className="flex justify-center cursor-pointer hover:animate-bounce">
+          <div className="flex justify-center cursor-pointer hover:animate-bounce" onClick={handleClick}>
             <span className='pb-[7px]'>See More</span>
             <SingleArrow size={25}/>
           </div>
@@ -47,9 +54,9 @@ export const Results = () => {
 
 	const navigate = useNavigate();
 
-const handleClick = () => {
-	navigate('/results');
-};
+  const handleClick = () => {
+    navigate('/results');
+  };
 	
     return (
         <div className=' max-md:mt-4 relative back min-h-[350px] max-md:min-h-[270px] rounded-[10px] flex-1 shadow-md flex flex-col justify-between overflow-x-auto'>

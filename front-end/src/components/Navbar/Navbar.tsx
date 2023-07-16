@@ -55,7 +55,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="  text-white back rounded-[0] bg-blue-950 w-[60%] mx-auto my-5">
+      <div className="  text-white back rounded-[0] bg-blue-950 w-[60%] mx-auto my-5 z-20">
         <ul  className=' py-2 flex items-center max-md:mt-1 max-md:justify-between '>
           <li className=' pl-3 max-sm:pl-1'>
             <NavLink to="/Profile">

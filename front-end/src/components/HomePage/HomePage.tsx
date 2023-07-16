@@ -17,7 +17,7 @@ const HomePage = () => {
       <div className="flex">
         <div className=" rounded-[10px] w-[1400px] mx-auto">
           
-          <div className="mt-4 mx-4 h-[calc(300px_-_2rem)] max-sm:h-[calc(200px_-_1rem)] bg-image-bg bg-cover rounded-[25px]">
+          <div className="mt-4 mx-4 max-sm:mx-1 h-[calc(300px_-_2rem)] max-sm:h-[calc(200px_-_1rem)] bg-image-bg bg-cover rounded-[25px]">
             <div className="   flex flex-row-reverse items-center justify-around max-sm:backdrop-blur-md">
               <div className="flex backdrop-blur-md w-[60%] max-sm:backdrop-blur-0 align-bottom  h-[calc(300px_-_2rem)] max-sm:h-[calc(200px_-_1rem)]">
                 <img src={img} className=' -mt-[1rem] h-[350px] w-[350px] max-sm:h-[220px] max-sm:w-[220px] max-sm:-mt-2 ml-auto'/>
@@ -27,7 +27,7 @@ const HomePage = () => {
                   <h1 className='hide text-4xl max-sm:text-lg'>You Wanna Play Now! Click The Play Button Below</h1>
                 </div>
                 <div className="text-white mask mt-5 max-sm:mt-1">
-                  <NavLink to="/Playthrough" className=' bg-purple-900 flex rounded-[10px] py-[12px] px-[40px] uppercase hide delay-[3s] max-sm:py-[7px] max-sm:px-[20px]'>Play Now!</NavLink>
+                  <NavLink to="/Playthrough" className=' bg-purple-900 flex rounded-[10px] py-[12px] px-[40px] uppercase hide delay-[3s] max-sm:py-[7px] max-sm:px-[20px] max-sm:text-xs'>Play Now!</NavLink>
                 </div>
               </div>
             </div>
@@ -41,7 +41,7 @@ const HomePage = () => {
 
             </div> */}
 
-            <div className=" text-white flex text-center w-[90%] mx-auto mt-[3rem] max-md:w-[85%] max-md:flex-col max-md:mt-3 ">
+            <div className=" text-white flex text-center w-[90%] mx-auto mt-[3rem] max-md:w-[85%] max-md:flex-col max-md:mt-3 max-sm:w-[95%]">
               <Live />
               <Results />
             </div>

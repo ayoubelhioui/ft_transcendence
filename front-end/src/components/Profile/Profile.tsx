@@ -74,7 +74,7 @@ const Profile = () => {
 
   return (
     <>
-      <div className="flex text-white mt-14 mx-8 justify-between max-md:flex-col max-md:mt-8 max-sm:mt-14 backdrop-blur-md py-4 max-md:backdrop-blur-0">
+      <div className="flex text-white mt-14 mx-8 justify-between max-md:flex-col max-md:mt-8 max-sm:mt-14 backdrop-blur-md py-4 max-md:backdrop-blur-0 max-custom-md:w-full max-custom-md:mx-2">
 
         <div className="flex flex-col">
           <div className="flex items-center max-sm:justify-center max-sm:flex-col">
@@ -99,7 +99,7 @@ const Profile = () => {
                 )
               }
             </div>
-            <div className=" ml-8 max-sm:ml-2 flex flex-col text-gray-400 text-sm">
+            <div className=" ml-8 max-sm:ml-0 max-sm:pt-2 flex flex-col text-gray-400 text-sm">
               <span className='max-sm:hidden'>Welcome</span>
               <h1 className='text-4xl m-1 pl-4 text-white max-sm:text-2xl max-sm:pl-0 max-sm:m-0'>{authApp.user?.username}</h1>
               <p className='max-sm:hidden'>Hey, {authApp.user?.username} ! how are you doing</p>
@@ -136,12 +136,12 @@ const Profile = () => {
 
       </div>
 
-      <div className="flex my-auto gap-4 flex-row-reverse mx-4 max-md:flex-col max-md:w-full max-md:gap-2 max-md:my-18 overflow-x-auto">
-        <div className="flex flex-col w-[70%] flex-1 max-md:w-[95%]">
+      <div className="flex my-auto gap-4 flex-row-reverse mx-4 max-md:flex-col max-md:w-full max-custom-md:gap-6 max-md:gap-2 max-md:my-18 overflow-x-auto max-custom-md:flex-col ">
+        <div className="flex flex-col gap-6 w-[70%] flex-1 max-custom-md:w-[100%]">
           <ResultsMatch />
           <Achievements />
         </div>
-        <div className="flex flex-2">
+        <div className="flex flex-2 ">
           <Friends />
         </div>
       </div>

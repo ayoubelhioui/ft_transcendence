@@ -59,7 +59,7 @@ const Settings = () => {
             <motion.button type='button' whileTap={{scale: 0.955}} onClick={handleOpen} className='flex items-center bg-[#4D194D] py-2 px-6 mx-auto text-xs outline-none'> <MdEdit size={15} className='mr-1'/> Edit Username</motion.button>
 
             <Dialog open={open} onClose={handleClose} className="outline-none flex h-full w-full items-center justify-center">
-                <div className=" w-[27rem] h-[18rem] bg-[#0e3c80] text-white">
+                <div className=" w-[27rem] h-[18rem] bg-[#0e3c80] text-white max-sm:w-[25rem]">
                     
                     <DialogTitle className=" text-center text-lg font-extrabold">Edit Your Profile</DialogTitle>
                     <DialogContent>

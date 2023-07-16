@@ -29,6 +29,7 @@
 
 body {
   /* min-height: 100vh; */
+  
 }
 
 #root {
@@ -193,12 +194,13 @@ h1 {
 }
 
 ::-webkit-scrollbar {
-  width: 1px;
+  width: .4em;
+  height: 100%;
 }
  
 ::-webkit-scrollbar-thumb {
-  background-color: rgb(12, 12, 94);
-  outline: 1px solid slategrey;
+  /* background-color: rgb(12, 12, 94); */
+  border: 1px solid slategrey;
 }
 
 .align {
