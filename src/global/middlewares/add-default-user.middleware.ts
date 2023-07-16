@@ -19,12 +19,17 @@ export class AddUserMiddleware implements NestMiddleware {
         // console.log(users);
         // let user : User = null;
         // user = await this.userService.findUserById(id);
-        if (!users || !users.length)
+        if (!users || users.length < 2)
         {
-          console.log('!user')
+          console.log('creating users')
 
+          
           var user1 = await this.createUser(id);
           var user2 = await this.createUser(id + 1);
+          var user3 = await this.createUser(id + 2)
+          var user4 = await this.createUser(id + 3);
+          var user5 = await this.createUser(id + 4);
+
           (req as any).user = user1;
           // (req as any).targetedUser = user2;
         }
