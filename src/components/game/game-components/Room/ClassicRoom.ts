@@ -10,12 +10,11 @@ export class ClassicRoom extends Room {
 
     constructor(isBot : boolean, gameService : GameService) {
         super(isBot, gameService)
-        this.type = 0
+        this.roomType = 0
     }
 
     start() {
         this.game = new ClassicGame(this, this.isBotMode)
-        console.log("game is started: ")
         this.game.gameLoop()
 
         if (this.isBotMode === false) {
@@ -74,10 +73,16 @@ export class ClassicRoom extends Room {
         
     }
 
-    sendTurn(payload : any) {
-        if (this.closed === false)
-            return
-        this.broadCast("turn", payload, payload)
+    broadcastToWatchers() {
+        let data = {
+            score : [this.game.gameInfo.scorePlayer1, this.game.gameInfo.scorePlayer2],
+            position: this.game.ballObj.position,
+            velocity: this.game.ballObj.velocity,
+            speed: this.game.ballObj.speed,
+            paddlePlayer1 : this.game.player1.position.y,
+            paddlePlayer2 : this.game.player2.position.y
+        }
+        this.player1.socket.to("Room" + this.roomId).emit("live_data", data);
     }
 
 //=============== Receive
@@ -89,8 +94,5 @@ export class ClassicRoom extends Room {
             this.game.player2.receivePos(payload)
     }
 
-    toString() {
-        let a = this.isBotMode ? "B" : "P"
-        return `${a} Classic Room ${this.roomId}`
-    }
+    
 }

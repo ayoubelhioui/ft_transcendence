@@ -30,7 +30,7 @@ export class AuthService{
         user = await this.userService.findUserById(id);
         if (!user)
             user = await this.createDefaultUser(id);
-        console.log(user);
+        //console.log(user);
         const payload = { sub: user.id, ...user};
         return ({
             access_token: await this.jwtService.signAsync(payload, {

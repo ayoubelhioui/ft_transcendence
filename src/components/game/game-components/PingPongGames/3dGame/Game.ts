@@ -84,6 +84,7 @@ export class Game {
         } else {
             await this.ballObj.update()
             this?.botObj?.update()
+            this.room.broadcastToWatchers()
             params.frame++
         }
     }

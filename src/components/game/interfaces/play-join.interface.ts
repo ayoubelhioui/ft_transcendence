@@ -4,9 +4,9 @@ export class PlayerJoin{
     isClassic : boolean;
     isBotMode : boolean;
     isWatchMode : boolean;
-    userToInvite? : string;
+    userToInvite? : number;
     user : User;
-    token? : string;
+    token? : number;
 }
 
 //s : SocketService

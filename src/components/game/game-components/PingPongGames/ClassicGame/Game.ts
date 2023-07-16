@@ -64,9 +64,6 @@ export class Game {
 
     changeTurn(to = undefined) {
         this.gameInfo.turn = to ?? (this.gameInfo.turn + 1) % 2
-        this.room.sendTurn({
-            turn: this.gameInfo.turn
-        })
     }
 
     async update() {
@@ -81,6 +78,7 @@ export class Game {
             this.player1.update()
             this.player2.update()
             this?.botObj?.update()
+            this.room.broadcastToWatchers()
             params.frame++
             t = performance.now() - t
             this.totalTime += t 

@@ -11,14 +11,20 @@ export class Room {
     static roomId : number = 0
 
     roomId = Room.roomId
-    type : number = -1
+    roomType : number = -1
     isBotMode : boolean
     player1 : Player | undefined = undefined;
     player2 : Player | undefined = undefined;
     watchers : Map<string, Watcher> = new Map()
     closed : Boolean = false
-    gameToken : string; //!game token
+    gameToken : string; //!game token is the same as roomId
     protected gameService : GameService
+
+    inviteInfo = {
+        isInviteRoom : false,
+        player1Id : -1,
+        player2Id : -1,
+    }
 
     constructor(isBotMode : boolean, gameService : GameService) {
         this.isBotMode = isBotMode
@@ -28,6 +34,11 @@ export class Room {
         Room.roomId++
     }
 
+    setAsInviteRoom(player1Id : number, player2Id : number) {
+        this.inviteInfo.player1Id = player1Id
+        this.inviteInfo.player2Id = player2Id
+        this.inviteInfo.isInviteRoom = true
+    }
 
     add(payload: PlayerJoin, socket : Socket) {
         let newPlayer : Player = {
@@ -51,6 +62,7 @@ export class Room {
             user : payload.user
         }
         this.watchers.set(newPlayer.socket.id, newPlayer)
+        socket.join("Room" + this.roomId)
     }
 
     removeClientFromWatch(socket : Socket) {
@@ -77,13 +89,20 @@ export class Room {
     }
 
     async gameScoreTrigger(scores : PlayerScores) {
-        let maxScore = 1
+        let maxScore = 11
         if(scores.player1Score == maxScore || scores.player2Score == maxScore)
         {
             // return await this.gameService.setGameResult(this.player1.id, this.gameToken ,
             //     scores.player1Score, scores.player2Score);
-            return (true) //! end game
+            return (false) //! end game
         }
         return (false)
+    }
+
+    toString() {
+        let type = this.roomType === 0 ? "Classic" : "Three"
+        let invite = this.inviteInfo.isInviteRoom ? `Invite (${this.inviteInfo.player1Id}, ${this.inviteInfo.player2Id})` : ""
+        let bot = this.isBotMode ? "Bot" : "Multi"
+        return `${type} Room ${this.roomId} Type : ${bot} ${invite}`
     }
 }

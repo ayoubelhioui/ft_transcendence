@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsUUID } from "class-validator";
+import { IsBoolean, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from "class-validator";
 import { User } from "src/database/entities";
 
 //!check if isWatchMod = true => token is exist
@@ -17,16 +17,21 @@ export class PlayerJoinDto{
     @IsNotEmpty()
     isWatchMode : boolean;
 
-    @IsUUID()
+    @IsNumber()
     @IsOptional()
-    userToInvite : string;
+    userToInvite : number;
 
     @IsNotEmpty()
+    @IsOptional()
     user : User;
    
-    @IsUUID()
+    @IsNumber()
     @IsOptional()
-    token? : string;
+    token : number;
+
+    // @IsUUID()
+    // @IsOptional()
+    // token? : string; //!token should create with room
 }
 
 //s : SocketService

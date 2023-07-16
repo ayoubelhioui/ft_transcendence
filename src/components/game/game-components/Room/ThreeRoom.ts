@@ -10,7 +10,7 @@ export class ThreeRoom extends Room {
 
     constructor(isBot : boolean, gameService : GameService) {
         super(isBot, gameService)
-        this.type = 1
+        this.roomType = 1
     }
 
     start() {
@@ -126,6 +126,26 @@ export class ThreeRoom extends Room {
         this.broadCast("turn", payload, payload)
     }
 
+    broadcastToWatchers() {
+        let data = {
+            score : [this.game.gameInfo.scorePlayer1, this.game.gameInfo.scorePlayer2],
+            ballInfo : {
+                position : this.game.ballObj.position,
+                velocity : this.game.ballObj.velocity,
+                init : this.game.ballObj.initialize,
+                net : this.game.ballObj.ballInfo,
+                spotPos : undefined,
+                end : undefined
+            },
+            racketPlayer1Pos : this.game.racketP1,
+            racketPlayer2Pos : this.game.racketP2
+        }
+        if (this.game.ballObj.ballInfo.spot) {
+            data.ballInfo.spotPos = this.game.ballObj.groundInfo.p
+        }
+        this.player1.socket.to("Room" + this.roomId).emit("live_data", data);
+    }
+
 
 //=============== Receive
 
@@ -137,9 +157,6 @@ export class ThreeRoom extends Room {
         this.game.ballObj.socketReceiveHit(payload)
     }
 
-    toString() {
-        let a = this.isBotMode ? "Bot" : "Multi"
-        return `${a} Three Room ${this.roomId}`
-    }
+   
 
 }
