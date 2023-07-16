@@ -29,11 +29,11 @@ export class Game {
     guiParams : GuiParams
     orbit : OrbitControls
     socketMgr : SocketManager
-    token : string
-    isBotMode : boolean
     resources : LoaderResult
-    canvas : any
-    callBack : (state: number) => void
+    // canvas : any
+    // token : string
+    // isBotMode : boolean
+    // callBack : (state: number) => void
 
     //objs
     ambientLightObj : AmbientLight
@@ -44,6 +44,7 @@ export class Game {
     player2 : Player2
     tableModel : THREE.Group
     racketModel : THREE.Group
+    gameParams : GameParams
 
     gameInfo = {
         turn: 0, //the player that will shot the ball
@@ -54,12 +55,9 @@ export class Game {
 
 
     constructor(gameParams : GameParams, resources : LoaderResult) {
+        this.gameParams = gameParams
         this.tableModel = resources.models.table.scene
         this.racketModel = resources.models.racket.scene
-        this.isBotMode = gameParams.isBotMode
-        this.token = gameParams.gameToken
-        this.canvas = gameParams.canvas
-        this.callBack = gameParams.callBack
         this.resources = resources
         this.renderer = this.#setUpRenderer()
         this.scene = new MyScene(this)
@@ -89,6 +87,10 @@ export class Game {
         this.scene.visible = false
         this.#events(this)
 
+        if (this.gameParams.isWatchMode) {
+            this.start({})
+        }
+
         window.game = this
     }
 
@@ -99,7 +101,7 @@ export class Game {
         this.scene.visible = true
         this.scene.scoreP1.set(0)
         this.scene.scoreP2.set(0)
-        this.callBack(GameState.gameStarted)
+        this.gameParams.callBack(GameState.gameStarted)
     }
 
     end(payload : any) {
@@ -107,9 +109,9 @@ export class Game {
         //this.gameInfo.start = false
         //this.scene.visible = false
         if (payload.isWin)
-            this.callBack(GameState.gameEndedWin)
+            this.gameParams.callBack(GameState.gameEndedWin)
         else
-            this.callBack(GameState.gameEndedLoss)
+            this.gameParams.callBack(GameState.gameEndedLoss)
     }
 
     changeScore(payload : any) {
@@ -131,7 +133,8 @@ export class Game {
            return
         this.netObj.update()
         this.ballObj.update()
-        this.racketObj.update()
+        if (!this.gameParams.isWatchMode)
+            this.racketObj.update()
         this.player2.update()
     }
 
@@ -142,7 +145,7 @@ export class Game {
     #setUpRenderer() {
         //THREE.ColorManagement.enabled = true;
         const renderer = new THREE.WebGLRenderer({
-            canvas: this.canvas,
+            canvas: this.gameParams.canvas,
             alpha : true,
             antialias: true,
         })

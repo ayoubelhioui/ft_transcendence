@@ -12,12 +12,13 @@ export class Game {
     scene : MyScene
     camera : MyCamera
     socketMgr : SocketManager
-    token : string
-    isBotMode : boolean
-    canvas : any
-    isWatchMode : boolean
-    userToInvite : string
-    callBack : (state: number) => void
+    gameParams : GameParams
+    // token : string
+    // isBotMode : boolean
+    // canvas : any
+    // isWatchMode : boolean
+    // userToInvite : string
+    // callBack : (state: number) => void
 
     gameInfo = {
         scorePlayer1: 0,
@@ -28,21 +29,18 @@ export class Game {
 
 
     constructor(gameParams : GameParams) {
-        this.canvas = gameParams.canvas
-        this.isWatchMode = gameParams.isWatchMode
-        this.token = gameParams.gameToken
-        this.isBotMode = gameParams.isBotMode
-        this.callBack = gameParams.callBack
-        this.userToInvite = gameParams.userToInvite
+        this.gameParams = gameParams
         this.renderer = this.#setUpRenderer()
         this.scene = new MyScene(this)
         this.camera = new MyCamera()
         this.socketMgr = new SocketManager(this)
 
-        
-
         this.scene.visible = false
         this.#events(this)
+
+        if (this.gameParams.isWatchMode) {
+            this.start({})
+        }
     }
 
     isStarted() {
@@ -56,7 +54,7 @@ export class Game {
         this.gameInfo.start = true
         this.scene.scoreP1.set(0)
         this.scene.scoreP2.set(0)
-        this.callBack(GameState.gameStarted)
+        this.gameParams.callBack(GameState.gameStarted)
     }
 
     end(payload : any) {
@@ -64,9 +62,9 @@ export class Game {
         //this.scene.visible = false
         //this.gameInfo.start = false
         if (payload.isWin)
-            this.callBack(GameState.gameEndedWin)
+            this.gameParams.callBack(GameState.gameEndedWin)
         else
-            this.callBack(GameState.gameEndedLoss)
+            this.gameParams.callBack(GameState.gameEndedLoss)
     }
 
     changeScore(payload : any) {
@@ -85,7 +83,7 @@ export class Game {
 
     #setUpRenderer() {
         const renderer = new THREE.WebGLRenderer({
-           canvas: this.canvas
+           canvas: this.gameParams.canvas
         })
 
         renderer.setSize(window.innerWidth, window.innerHeight)

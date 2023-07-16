@@ -23,17 +23,6 @@ const r = (state: number): JSX.Element => {
 
 
 async function loadData(params : GameParams) {
-    // try {
-    //     const host = import.meta.env.VITE_HOST || 'localhost'
-    //     const port = import.meta.env.VITE_SERVER_PORT || '80'
-    //     const socketAddr = `http://${host}:${port}`
-    //     const response = fetch(`${socketAddr}/users`)
-    //     console.log(response)
-
-    // } catch (error) {
-    //     console.log(`Can't get users => ${error}`)
-    // }
-
     try {
         const host = import.meta.env.VITE_HOST || 'localhost'
         const port = import.meta.env.VITE_SERVER_PORT || '80'
@@ -44,23 +33,24 @@ async function loadData(params : GameParams) {
         const usersIds = availableUsers.data.map((item : any) => item.id)
         console.log(usersIds)
         const response = await axios.post(`${socketAddr}/auth/${userId}`)
-        console.log(`using user ${userId} token => `, response)
+        const authToken = response.data.access_token
+        console.log(`using user ${userId} token => `, authToken)
+        return (authToken)
 
     } catch (error) {
         console.log(`Can't get users => ${error}`)
     }
+    return ""
 }
 
 async function runGame(params : GameParams) {
-        await loadData(params)
+        params.authToken = await loadData(params)
       
         if (params.isClassic) {
             classicGameStart(params)
         }
         else
             threeGameStart(params)
-       
-    
 }
 
 function getUrlParams() {
@@ -81,7 +71,7 @@ function getUrlParams() {
         // isBotMode : searchParams.get('isBotMode') === 'true',
         // isClassic : searchParams.get('isClassic') === 'true',
         isBotMode : false,
-        isClassic : true,
+        isClassic : false,
     }
 }
 
@@ -100,12 +90,13 @@ const Game =  () => {
 
     let params : GameParams = {
         isWatchMode : urlParams.isWatchMode,
-        gameToken : urlParams.gameToken,
-        userToInvite :urlParams.userToInvite,
-        userId : urlParams.userId,
+        gameToken : +urlParams.gameToken,
+        userToInvite : +urlParams.userToInvite,
+        userId : +urlParams.userId,
         isClassic : urlParams.isClassic,
         isBotMode : urlParams.isBotMode,
         canvas : canvasRef.current,
+        authToken : "",
         callBack : gameCallBack
     }
 

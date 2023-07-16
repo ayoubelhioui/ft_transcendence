@@ -16,7 +16,7 @@ class AA {
 
 export const params = {
 //Used with gui
-    enableOrbit : true,
+    enableOrbit : false,
     color: 0x302f7a,
 
 

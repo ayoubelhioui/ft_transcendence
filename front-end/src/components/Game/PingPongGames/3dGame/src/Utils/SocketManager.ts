@@ -1,5 +1,6 @@
 import { Game } from "../MyObjects/Game";
 import { Socket, io } from 'socket.io-client'
+import { LiveData } from "../interfaces/interface.live.data";
 
 export class SocketManager {
 
@@ -42,19 +43,51 @@ export class SocketManager {
     //###########################################
     //###########################################
 
-    getSocket(game : Game) {
-        let token = ""
+    socketOn(socket : Socket, game : Game) {
+        if (!game.gameParams.isWatchMode) {
+            socket.on("start", (data) => {
+                game.start(data)
+            })
         
-        //localStorage.setItem("lastname", "Smith");
-        let a = localStorage.getItem("token");
-        if (a) {
-            console.log(a)
-            token = a
+            socket.on("end_game", (data) => {
+                game.end(data)
+            })
+            
+            socket.on("ballInfo", (data) => {
+                game.ballObj.socketGetBallInfo(data)
+            })
+        
+        
+            socket.on("moveRacket", (data) => {
+                game.player2.socketMoveRacket(data)
+            })
+        
+            socket.on("gameScore", (data) => {
+                game.changeScore(data)
+            })
+        
+            socket.on("turn", (data) => {
+                game.gameInfo.turn = data.turn
+            })
+        
+        } else {
+
+            socket.on("live_data", (data : LiveData) => {
+                game.changeScore({
+                    score : data.score
+                })
+                game.ballObj.socketGetBallInfo(data.ballInfo)
+                game.player2.socketMoveRacket({position: data.racketPlayer1Pos})
+                game.racketObj.socketMoveRacket({position: data.racketPlayer2Pos})
+            })
+
         }
-    
+    }
+
+    getSocket(game : Game) {
         const socket = io(this.socketAddr , {
             extraHeaders: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${game.gameParams.authToken}`
             }
         })
         
@@ -63,8 +96,11 @@ export class SocketManager {
         
             //after connecting
             socket.emit("join_game", ({
-                isBotMode : game.isBotMode,
                 isClassic : false,
+                isBotMode : game.gameParams.isBotMode,
+                isWatchMode : game.gameParams.isWatchMode,
+                token : game.gameParams.gameToken,
+                userToInvite : game.gameParams.userToInvite,
             }))
         
             // socket.on('disconnected', () => {
@@ -73,42 +109,7 @@ export class SocketManager {
         })
     
         
-        socket.on("start", (data) => {
-            game.start(data)
-        })
-    
-        socket.on("end_game", (data) => {
-            game.end(data)
-        })
-        
-        socket.on("ballInfo", (data) => {
-            game.ballObj.socketGetBallInfo(data)
-        })
-    
-    
-        socket.on("moveRacket", (data) => {
-            //data.position
-            //console.log(data)
-            game.player2.socketMoveRacket(data)
-        })
-    
-        socket.on("gameScore", (data) => {
-            game.changeScore(data)
-        })
-    
-        socket.on("turn", (data) => {
-            game.gameInfo.turn = data.turn
-        })
-    
-        // socket.on("loseEvent", (data) => {
-        //     game.ballObj.socketLose(data)
-        // })
-    
-        socket.on("opponentLeft", (data) => {
-            console.log("opponentLeft ", data)
-            game.gameInfo.start = false
-            alert("Game End!!!")
-        })
+        this.socketOn(socket, game)
     
         return (socket)
     }

@@ -270,6 +270,20 @@ export class Racket extends THREE.Object3D {
                 this.position.y +=step
         }
     }
+
+    rotateObj() {
+        //racket rotation
+        let b = (this.position.z / params.planeDim.y * 2 + 1) * 0.5
+        const newAngle =  Math.PI * 1.5 * (b * 2 - 1)
+        if (newAngle > - Math.PI / 2 && newAngle < Math.PI / 2){
+            this.racketParent.rotation.x = newAngle
+        }
+    }
+    
+    socketMoveRacket(payload : any) {
+        this.position.copy(payload.position)
+        this.rotateObj()
+    }
      
     //=============================================
     //=============================================
