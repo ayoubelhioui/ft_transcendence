@@ -1,7 +1,7 @@
 import { authContext } from "../context/useContext";
-import {address} from '../../Const'
+// import {address} from '../../Const'
 
-import Avatar from '@mui/material/Avatar';
+// import Avatar from '@mui/material/Avatar';
 
 
 const LiveDiv = ({ image }: {image: string}) => {

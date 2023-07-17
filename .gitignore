@@ -3,6 +3,7 @@ backend/uploads
 backend/src/.env
 backend/example.http
 backend/potgresql/.env
+.env
 backend/dist
 front-end/node_modules
 front-end/dist

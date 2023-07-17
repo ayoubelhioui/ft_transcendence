@@ -7,7 +7,7 @@ async function bootstrap() {
 
     app.enableCors({
       origin: [
-      `http://${client_address}`,
+      `http://${client_address}`, 
     ]
     });
 

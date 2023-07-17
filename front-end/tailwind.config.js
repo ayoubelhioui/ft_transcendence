@@ -8,7 +8,7 @@ export default {
 
     extend: {
       screens: {
-        'custom-md':'900px',
+        'custom-md':'970px',
       },
       gridTemplateColumns: {
         'column-layout': 'repeat(auto-fit, minmax(320px, 1fr))',

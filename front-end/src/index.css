@@ -117,6 +117,8 @@ h1 {
 }
 
 .sign-animation {
+  background: rgba(48, 1, 82, 0.7);
+
   /* transform: translateY(-300%);
   animation: slideDown 1.7s cubic-bezier(0.165, 0.84, 0.74, 1) forwards; */
 }
