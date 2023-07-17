@@ -1,4 +1,4 @@
-import { Room } from "./Room";
+import { CallBackFun, Room } from "./Room";
 import { Socket } from 'socket.io';
 import { Game as ClassicGame } from '../PingPongGames/ClassicGame/Game'
 import { PlayerScores } from "../../dto/player-scores.dto";
@@ -8,8 +8,8 @@ export class ClassicRoom extends Room {
 
     game : ClassicGame
 
-    constructor(isBot : boolean, gameService : GameService) {
-        super(isBot, gameService)
+    constructor(isBot : boolean, gameService : GameService, callBack : CallBackFun) {
+        super(isBot, gameService, callBack)
         this.roomType = 0
     }
 

@@ -5,6 +5,10 @@ import { GameService } from '../../game.service';
 import { PlayerJoin } from '../../interfaces/play-join.interface';
 import { Client } from 'socket.io/dist/client';
 import { Watcher } from '../../interfaces/watcher.interface';
+import { ClassicRoom } from './ClassicRoom';
+import { ThreeRoom } from './ThreeRoom';
+
+export type CallBackFun = (room : ThreeRoom | ClassicRoom) => void
 
 export class Room {
 
@@ -17,6 +21,7 @@ export class Room {
     player2 : Player | undefined = undefined;
     watchers : Map<string, Watcher> = new Map()
     closed : Boolean = false
+    callBack : CallBackFun
     gameToken : string; //!game token is the same as roomId
     protected gameService : GameService
 
@@ -26,9 +31,12 @@ export class Room {
         player2Id : -1,
     }
 
-    constructor(isBotMode : boolean, gameService : GameService) {
+    
+
+    constructor(isBotMode : boolean, gameService : GameService, callBack : CallBackFun) {
         this.isBotMode = isBotMode
         this.gameService = gameService
+        this.callBack = callBack
         if (this.isBotMode)
             this.closed = true
         Room.roomId++
@@ -66,6 +74,7 @@ export class Room {
     }
 
     removeClientFromWatch(socket : Socket) {
+        socket.leave("Room" + this.roomId)
         this.watchers.delete(socket.id)
     }
 

@@ -33,8 +33,8 @@ export class GameSessions {
         private readonly gameService: GameService,
         private readonly userService: UserService
         ) {
-        this.classicRoom = new ClassicRoom(!botGame, this.gameService);
-        this.threeRoom = new ThreeRoom(!botGame, this.gameService);
+        this.classicRoom = this.createNewRoom(true, !botGame) as ClassicRoom;
+        this.threeRoom = this.createNewRoom(false, !botGame) as ThreeRoom;
     }
 
     //!test dto
@@ -57,13 +57,17 @@ export class GameSessions {
     //####################################################################
     //####################################################################
 
-    createNewMultiPlayerRoom(isClassic : boolean) {
-        return (isClassic === true ? new ClassicRoom(!botGame, this.gameService) : new ThreeRoom(!botGame, this.gameService))
+    createNewRoom(isClassic : boolean, isBotMode : boolean) {
+        let callBack = (room : ClassicRoom | ThreeRoom) => {
+            //!game End
+            this.removeClient(room.player1.socket)
+        }
+        return (isClassic === true ? new ClassicRoom(isBotMode, this.gameService, callBack) : new ThreeRoom(isBotMode, this.gameService, callBack))
     }
 
 
     async addPlayerToBotRoom(payload : PlayerJoin) {
-        let room = payload.isClassic ? new ClassicRoom(botGame, this.gameService) : new ThreeRoom(botGame, this.gameService)
+        let room = this.createNewRoom(payload.isClassic, botGame)
         return (room)
     }
 
@@ -71,7 +75,7 @@ export class GameSessions {
         let room = payload.isClassic === true ? this.classicRoom : this.threeRoom
         //!userToInvite sameTime token
         if (payload.userToInvite) {
-           room = this.createNewMultiPlayerRoom(payload.isClassic)
+           room = this.createNewRoom(payload.isClassic, !botGame)
            room.setAsInviteRoom(payload.user.id, payload.userToInvite)
            console.log(clc.bold(`Invite to roomId : ${room.roomId} from user ${payload.user.id} to ${payload.userToInvite}`))
            //!send the game token to the other player
@@ -143,10 +147,11 @@ export class GameSessions {
                         let m = clc.green(`Start playing ${room.toString()}`)
                         console.log(m)
                         if (payload.isBotMode === false) {
+                            const newRoom = this.createNewRoom(payload.isClassic, !botGame)
                             if (payload.isClassic)
-                                this.classicRoom = new ClassicRoom(!botGame, this.gameService)
+                                this.classicRoom = newRoom as ClassicRoom
                             else
-                                this.threeRoom = new ThreeRoom(!botGame, this.gameService)
+                                this.threeRoom = newRoom as ThreeRoom
                         }
                         setTimeout((r : ClassicRoom | ThreeRoom) => r.start(), 1000, room)
                     }
@@ -200,6 +205,11 @@ export class GameSessions {
             let player2 = room.player2
             if(player1 && player2)
             {
+                if (room.game.gameInfo.end) {
+
+                } else {
+
+                }
                 //! set game result
                 // await this.gameService.setGameResult(userGone.id, room.gameToken ,0,5);
             }

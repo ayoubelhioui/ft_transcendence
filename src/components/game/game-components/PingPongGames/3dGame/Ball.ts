@@ -271,8 +271,8 @@ export class Ball {
 
     #initBall() {
         let turn = this.game.getTurnInit()
-        let racketPos = (turn === 0 ? this.game.racketP1 : this.game.racketP2)
-        this.position.set(-params.planeDim.x / 2 * Math.sign(turn * 2 - 1), 3, racketPos.z)
+        //let racketPos = (turn === 0 ? this.game.racketP1 : this.game.racketP2)
+        this.position.set(-params.planeDim.x / 2 * Math.sign(turn * 2 - 1), 3, 0)
         
         if (this.perform_init || this.position.x < 0 && this.game.botObj)
             return
