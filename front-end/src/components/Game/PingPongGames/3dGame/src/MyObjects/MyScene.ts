@@ -18,8 +18,8 @@ export class MyScene extends THREE.Scene {
         super()
 
         this.game = game
-        this.scoreP1 = new ScoreNbr(2, 5, -10)
-        this.scoreP2 = new ScoreNbr(2, 5, 10)
+        this.scoreP1 = new ScoreNbr(2, 5, -10, 0xff0000)
+        this.scoreP2 = new ScoreNbr(2, 5, 10, 0x0000ff)
         this.scoreP1.set(0)
         this.scoreP2.set(0)
         this.scoreP1.rotation.set(0, Math.PI / 2, 0)

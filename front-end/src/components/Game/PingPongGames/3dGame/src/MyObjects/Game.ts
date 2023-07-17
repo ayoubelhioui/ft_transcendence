@@ -88,6 +88,7 @@ export class Game {
         this.#events(this)
 
         if (this.gameParams.isWatchMode) {
+            params.enableOrbit = true
             this.start({})
         }
 

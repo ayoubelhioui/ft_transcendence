@@ -4,10 +4,12 @@ export class ScoreNbr extends THREE.Object3D {
     size : number = 5
     arr : THREE.Mesh[][][]
     nbr : number[][][]
+    color : number
     
-    constructor(x : number, y : number, z : number) {
+    constructor(x : number, y : number, z : number, color : number) {
         super()
 
+        this.color = color
         this.size = 5
         this.arr = [
             this.#scoreNumber(0),
@@ -23,7 +25,7 @@ export class ScoreNbr extends THREE.Object3D {
 
     #getRect(x: number, y: number, width: number, height: number) {
         const mat = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
+            color: this.color,
             side: THREE.DoubleSide
         })
         const geo = new THREE.PlaneGeometry(width, height)

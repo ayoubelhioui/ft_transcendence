@@ -74,7 +74,7 @@ export class SocketManager {
 
             socket.on("live_data", (data : LiveData) => {
                 game.changeScore({
-                    score : data.score
+                    score : data.score.reverse()
                 })
                 game.ballObj.socketGetBallInfo(data.ballInfo)
                 game.player2.socketMoveRacket({position: data.racketPlayer1Pos})
