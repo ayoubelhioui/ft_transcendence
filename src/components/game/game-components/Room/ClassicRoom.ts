@@ -3,6 +3,7 @@ import { Socket } from 'socket.io';
 import { Game as ClassicGame } from '../PingPongGames/ClassicGame/Game'
 import { PlayerScores } from "../../dto/player-scores.dto";
 import { GameService } from "../../game.service";
+import { MovePaddleI } from "../../interfaces/move-paddle.interface";
 
 export class ClassicRoom extends Room {
 
@@ -90,7 +91,7 @@ export class ClassicRoom extends Room {
 
 //=============== Receive
 
-    receivePaddleMove(payload : any, socketId : string) {
+    receivePaddleMove(payload : MovePaddleI, socketId : string) {
         if (socketId === this.player1.socket.id)
             this.game.player1.receivePos(payload)
         else if (socketId === this.player2.socket.id)

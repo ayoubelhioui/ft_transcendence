@@ -6,14 +6,14 @@ import { Server, Socket} from 'socket.io';
 import { ClassicRoom } from './game-components/Room/ClassicRoom';
 import { ThreeRoom } from './game-components/Room/ThreeRoom';
 import * as clc from 'cli-color';
-import { PlayerJoinDto } from './dto/play-join.dto';
-import { gameTypesNames } from 'src/global/types/game-types';
 import { UserService } from '../user/user.service';
 import { Room } from './game-components/Room/Room';
 import { User } from 'src/database/entities';
-import { WebSocketExceptionFilter } from '../socket/websocket-exception.filter';
 import { PlayerJoin } from './interfaces/play-join.interface';
 import { Player } from './interfaces/player.interface';
+import { RacketMoveI } from './interfaces/racket-move.interface';
+import { HitBallI } from './interfaces/hit-ball.interface';
+import { MovePaddleI } from './interfaces/move-paddle.interface';
 
 
 const botGame = true;
@@ -242,17 +242,17 @@ export class GameSessions {
 
     //=====================================
 
-    hitBall(payload : any, socketId : string) {
+    hitBall(payload : HitBallI, socketId : string) {
         let room : ThreeRoom = this.clientRooms.get(socketId)
         room?.receiveHitBall(payload, socketId)
     }
 
-    racketMove(payload : any, socketId : string) {
+    racketMove(payload : RacketMoveI, socketId : string) {
         let room : ThreeRoom = this.clientRooms.get(socketId)
         room?.sendRacketMove(payload, socketId)
     }
 
-    paddleMove(payload : any, socketId : string) {
+    paddleMove(payload : MovePaddleI, socketId : string) {
         let room : ClassicRoom = this.clientRooms.get(socketId)
         room?.receivePaddleMove(payload, socketId)
     }

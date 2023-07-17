@@ -5,6 +5,7 @@ import {Plane} from './Plane'
 import { Game } from './Game'
 import { Vec3 } from './interfaces/vec3.interface'
 import { BallInfo } from './interfaces/ball-info.interface'
+import { HitBallI } from 'src/components/game/interfaces/hit-ball.interface'
 
 export class Ball {
     
@@ -349,9 +350,9 @@ export class Ball {
             this.#move()      
     }
 
-    socketReceiveHit(payload : any) {
+    socketReceiveHit(payload : HitBallI) {
         if (!this.initialize) {
-            this.#hit(payload.distX, payload.distY, payload.playerType)
+            this.#hit(payload.distX, payload.distY, payload.playerType!)
         }
         // else {
         //     let racketPos = (this.game.getTurnInit() === 0 ? this.game.racketP1 : this.game.racketP2)

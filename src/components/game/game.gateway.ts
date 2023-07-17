@@ -10,6 +10,8 @@ import { InviteToGameDto } from './dto/invite-to-game.dto';
 import { GameSessions } from './game-sessions.service';
 import { PlayerJoinDto } from './dto/play-join.dto';
 import { RacketMoveDto } from './dto/racket-move.dto';
+import { HitBallDto } from './dto/hit-ball.dto';
+import { MovePaddleDto } from './dto/move-paddle.dto';
 
 @UseFilters(WebSocketExceptionFilter)
 @UsePipes(new ValidationPipe({
@@ -72,12 +74,12 @@ export class GameGateway {
   }
 
   @SubscribeMessage ('hitBall')
-  hitBall(client: Socket, payload: any) {
+  hitBall(client: Socket, payload: HitBallDto) {
     this.gameSession.hitBall(payload, client.id)
   }
 
   @SubscribeMessage ('movePaddle')
-  paddleMove(client: Socket, payload: any) {
+  paddleMove(client: Socket, payload: MovePaddleDto) {
     this.gameSession.paddleMove(payload, client.id)
   }
 

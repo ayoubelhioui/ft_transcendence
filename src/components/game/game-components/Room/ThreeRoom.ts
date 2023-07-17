@@ -3,6 +3,8 @@ import { Socket } from 'socket.io';
 import { Game as ThreeGame } from '../PingPongGames/3dGame/Game'
 import { PlayerScores } from "../../dto/player-scores.dto";
 import { GameService } from "../../game.service";
+import { RacketMoveI } from "../../interfaces/racket-move.interface";
+import { HitBallI } from "../../interfaces/hit-ball.interface";
 
 export class ThreeRoom extends Room {
 
@@ -84,7 +86,7 @@ export class ThreeRoom extends Room {
         this.broadCast("ballInfo", payload, player2Data)
     }
 
-    sendRacketMove(payload : any, socketId : string) {
+    sendRacketMove(payload : RacketMoveI, socketId : string) {
         if (this.isBotMode)
             return
         let player2 = this.getPlayer2Id(socketId)
@@ -144,7 +146,7 @@ export class ThreeRoom extends Room {
 
 //=============== Receive
 
-    receiveHitBall(payload : any, socketId : string) {
+    receiveHitBall(payload : HitBallI, socketId : string) {
         let playerType = (this.player1.socket.id === socketId ? -1 : 1)
         payload.playerType = playerType
         this.game.ballObj.socketReceiveHit(payload)

@@ -2,6 +2,7 @@ import { Game } from "./Game"
 import { params } from "./Params"
 import * as THREE from 'three'
 import { Vec2 } from "./interfaces/vec2.interface"
+import { MovePaddleI } from "src/components/game/interfaces/move-paddle.interface"
 
 export class Paddle {
     
@@ -88,7 +89,7 @@ export class Paddle {
         this.game.room.sendPaddleMove({id : id, y: this.position.y})
     }
 
-    receivePos(payload : any) {
+    receivePos(payload : MovePaddleI) {
         this.setPos(this.position, payload.e)
     } 
 }
