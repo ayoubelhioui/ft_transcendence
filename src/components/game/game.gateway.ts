@@ -9,6 +9,7 @@ import { AuthSocketGuard } from '../auth/guards/auth-socket.guard';
 import { InviteToGameDto } from './dto/invite-to-game.dto';
 import { GameSessions } from './game-sessions.service';
 import { PlayerJoinDto } from './dto/play-join.dto';
+import { RacketMoveDto } from './dto/racket-move.dto';
 
 @UseFilters(WebSocketExceptionFilter)
 @UsePipes(new ValidationPipe({
@@ -66,20 +67,17 @@ export class GameGateway {
   }
 
   @SubscribeMessage ('moveRacket')
-  racketMove(client: Socket, payload: any) {
-    //payload.user = this.socketService.getUser(client);
+  racketMove(client: Socket, payload: RacketMoveDto) {
     this.gameSession.racketMove(payload, client.id)
   }
 
   @SubscribeMessage ('hitBall')
   hitBall(client: Socket, payload: any) {
-    //payload.user = this.socketService.getUser(client);
     this.gameSession.hitBall(payload, client.id)
   }
 
   @SubscribeMessage ('movePaddle')
   paddleMove(client: Socket, payload: any) {
-    //payload.user = this.socketService.getUser(client);
     this.gameSession.paddleMove(payload, client.id)
   }
 

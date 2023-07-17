@@ -33,6 +33,6 @@ const ENV_PATH : string = './src/.env';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AddBotMiddleware,AddUserMiddleware).forRoutes('*');
+    consumer.apply(AddBotMiddleware, AddUserMiddleware).forRoutes('*');
   }
 }

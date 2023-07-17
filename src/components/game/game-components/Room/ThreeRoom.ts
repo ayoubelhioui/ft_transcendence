@@ -11,6 +11,16 @@ export class ThreeRoom extends Room {
     constructor(isBot : boolean, gameService : GameService, callBack : CallBackFun) {
         super(isBot, gameService, callBack)
         this.roomType = 1
+    
+   
+        this.sendBallInfo = this.wrapMethod(this.sendBallInfo)
+        this.sendRacketMove = this.wrapMethod(this.sendRacketMove)
+        this.sendBotRacketInfo = this.wrapMethod(this.sendBotRacketInfo)
+        this.sendGameScore = this.wrapMethod(this.sendGameScore)
+        this.sendTurn = this.wrapMethod(this.sendTurn)
+        this.broadcastToWatchers = this.wrapMethod(this.broadcastToWatchers)
+        this.receiveHitBall = this.wrapMethod(this.receiveHitBall)
+
     }
 
     start() {
@@ -42,16 +52,11 @@ export class ThreeRoom extends Room {
         }
     }
 
+
+
 //=============== Send
 
     sendBallInfo(payload : any) {
-        //data.position
-        //data.velocity
-        //data.init
-        //data.spotPos
-        //data.net
-        //data.end
-
         let player2Data = {
             position : {
                 x: -payload.position.x,
@@ -79,11 +84,7 @@ export class ThreeRoom extends Room {
         this.broadCast("ballInfo", payload, player2Data)
     }
 
-    
     sendRacketMove(payload : any, socketId : string) {
-        if (this.closed === false) {
-            return
-        }
         if (this.isBotMode)
             return
         let player2 = this.getPlayer2Id(socketId)
@@ -95,15 +96,10 @@ export class ThreeRoom extends Room {
     }
     
     sendBotRacketInfo(payload : any) {
-        if (this.closed === false)
-            return
-        //console.log(`Send to ${this.player1.socket}`)
         this.player1.socket.emit("moveRacket", payload)
     }
 
     async sendGameScore(payload : PlayerScores) {
-        if (this.closed === false)
-            return
         let p = {
             score: [payload.player1Score, payload.player2Score]
         }
@@ -111,18 +107,17 @@ export class ThreeRoom extends Room {
             score : p.score.reverse()
         }
         this.broadCast("gameScore", p, player2Data)
-        const res = await this.gameScoreTrigger(payload)
+        const res = this.gameScoreTrigger(payload)
         if (res) {
             console.log("end-game")
             const player1IsWin = (payload.player1Score > payload.player2Score)
             this.broadCast("end_game", {isWin : player1IsWin}, {isWin : !player1IsWin})
             this.game.stop()
+            await this.callBack(this)
         }
     }
 
     sendTurn(payload : any) {
-        if (this.closed === false)
-            return
         this.broadCast("turn", payload, payload)
     }
 
@@ -150,8 +145,6 @@ export class ThreeRoom extends Room {
 //=============== Receive
 
     receiveHitBall(payload : any, socketId : string) {
-        if (this.game.gameInfo.end)
-            return
         let playerType = (this.player1.socket.id === socketId ? -1 : 1)
         payload.playerType = playerType
         this.game.ballObj.socketReceiveHit(payload)

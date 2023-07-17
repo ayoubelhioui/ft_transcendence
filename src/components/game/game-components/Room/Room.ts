@@ -8,7 +8,7 @@ import { Watcher } from '../../interfaces/watcher.interface';
 import { ClassicRoom } from './ClassicRoom';
 import { ThreeRoom } from './ThreeRoom';
 
-export type CallBackFun = (room : ThreeRoom | ClassicRoom) => void
+export type CallBackFun = (room : ThreeRoom | ClassicRoom) => Promise<void>
 
 export class Room {
 
@@ -40,6 +40,16 @@ export class Room {
         if (this.isBotMode)
             this.closed = true
         Room.roomId++
+    }
+
+    wrapMethod(originalMethod: any) {
+        return function (...args: any[]) {
+            if (this.closed === false || !this.game || this.game.gameInfo.end === true) {
+                //console.log("no")
+                return
+            }
+            return originalMethod.apply(this, args);
+        };
     }
 
     setAsInviteRoom(player1Id : number, player2Id : number) {
@@ -97,13 +107,11 @@ export class Room {
         player2.emit(event, payload)
     }
 
-    async gameScoreTrigger(scores : PlayerScores) {
-        let maxScore = 11
+    gameScoreTrigger(scores : PlayerScores) {
+        let maxScore = 1
         if(scores.player1Score == maxScore || scores.player2Score == maxScore)
         {
-            // return await this.gameService.setGameResult(this.player1.id, this.gameToken ,
-            //     scores.player1Score, scores.player2Score);
-            return (false) //! end game
+            return (false)
         }
         return (false)
     }

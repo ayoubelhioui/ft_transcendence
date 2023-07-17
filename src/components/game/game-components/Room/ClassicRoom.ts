@@ -11,6 +11,13 @@ export class ClassicRoom extends Room {
     constructor(isBot : boolean, gameService : GameService, callBack : CallBackFun) {
         super(isBot, gameService, callBack)
         this.roomType = 0
+
+        this.sendBallInfo = this.wrapMethod(this.sendBallInfo)
+        this.sendPaddleMove = this.wrapMethod(this.sendPaddleMove)
+        this.sendGameScore = this.wrapMethod(this.sendGameScore)
+        this.broadcastToWatchers = this.wrapMethod(this.broadcastToWatchers)
+        this.receivePaddleMove = this.wrapMethod(this.receivePaddleMove)
+
     }
 
     start() {
@@ -35,7 +42,6 @@ export class ClassicRoom extends Room {
     playerLeft(socket : Socket) {
         if (this.closed === false)
             return
-        //console.log(this.game)
         this.game.stop()
         if (this.isBotMode === false) {
             this.sendToOther("end_game", socket, { isWin : true })
@@ -45,14 +51,10 @@ export class ClassicRoom extends Room {
 //=============== Send
 
     sendBallInfo(payload : any) {
-        //data.position
-        //data.velocity
         this.broadCast("ballInfo", payload, payload)
     }
 
     sendPaddleMove(payload : any) {
-        
-        //console.log("paddleMove", payload)
         this.broadCast("paddleMove", payload, payload)
     }
 
@@ -63,12 +65,13 @@ export class ClassicRoom extends Room {
         if (this.closed === false)
             return
         this.broadCast("gameScore", p, p)
-        let res = await this.gameScoreTrigger(payload)
+        let res = this.gameScoreTrigger(payload)
         if (res) {
             console.log("end-game")
             const player1IsWin = (payload.player1Score > payload.player2Score)
             this.broadCast("end_game", {isWin : player1IsWin}, {isWin : !player1IsWin})
             this.game.stop()
+            await this.callBack(this)
         }
         
     }

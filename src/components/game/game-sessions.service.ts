@@ -58,9 +58,10 @@ export class GameSessions {
     //####################################################################
 
     createNewRoom(isClassic : boolean, isBotMode : boolean) {
-        let callBack = (room : ClassicRoom | ThreeRoom) => {
+        let callBack = async (room : ClassicRoom | ThreeRoom) => {
             //!game End
-            this.removeClient(room.player1.socket)
+            console.log("end-game callback")
+            await this.gameEndRemoveClients(room)
         }
         return (isClassic === true ? new ClassicRoom(isBotMode, this.gameService, callBack) : new ThreeRoom(isBotMode, this.gameService, callBack))
     }
@@ -205,12 +206,8 @@ export class GameSessions {
             let player2 = room.player2
             if(player1 && player2)
             {
-                if (room.game.gameInfo.end) {
-
-                } else {
-
-                }
                 //! set game result
+                //! One of the players disconnected, resulting in this player being marked as surrendered.
                 // await this.gameService.setGameResult(userGone.id, room.gameToken ,0,5);
             }
             else if (!player2) {
@@ -222,6 +219,14 @@ export class GameSessions {
             player1 && this.removeClientFromList(room, room.player1)
             player2 && this.removeClientFromList(room, room.player2)
         }
+    }
+
+    async gameEndRemoveClients(room : ClassicRoom | ThreeRoom) {
+        //!set the game result
+        // return await this.gameService.setGameResult(this.player1.id, this.gameToken ,
+        //     scores.player1Score, scores.player2Score);
+        room.player1 && this.removeClientFromList(room, room.player1)
+        room.player2 && this.removeClientFromList(room, room.player2)
     }
 
     async removeClient(client : Socket) {

@@ -14,8 +14,7 @@ export class UserService {
         @Inject('MyUserRepository') private readonly userRepository: IUserRepository) {}
 
     async createUser(createUserDto: CreateUserDto): Promise<User | undefined>{
-
-        return  (this.userRepository.create(createUserDto));
+        return (this.userRepository.create(createUserDto));
     }
     
     async findUserById(id: number, relations: any = {}): Promise<User | undefined> {
@@ -23,7 +22,6 @@ export class UserService {
         if (!user)
             throw new NotFoundException("user Not Found");
         return (user);
-
     }
 
     async findAll()
