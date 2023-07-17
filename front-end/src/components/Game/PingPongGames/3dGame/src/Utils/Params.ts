@@ -35,8 +35,8 @@ export const params = {
     aspect : window.innerWidth /  window.innerHeight,
 
     //spotLight
-    penumbra : 0.45,
-    intensity : 1.6,
+    penumbra : 0.65,
+    intensity : 1.1,
     angle : 1.1,
 
     //light
