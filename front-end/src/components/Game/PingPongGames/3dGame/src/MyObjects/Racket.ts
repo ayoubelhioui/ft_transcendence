@@ -281,6 +281,9 @@ export class Racket extends THREE.Object3D {
     }
     
     socketMoveRacket(payload : any) {
+        // !slowdown the racket
+        if (params.frame % 6 === 0)
+            return
         this.position.copy(payload.position)
         this.rotateObj()
     }

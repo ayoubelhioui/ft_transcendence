@@ -15,14 +15,6 @@ export class SocketManager {
         this.socket = this.getSocket(game)
     }
 
-    hitBall(payload : any) {
-        if (!this.socket)
-            return
-        //payload.distX
-        //payload.distY
-        this.socket.emit("hitBall", payload)
-    }
-
     lose(payload : any) {
         if (!this.socket)
             return
@@ -32,8 +24,6 @@ export class SocketManager {
     racketMove(payload : any) {
         if (!this.socket)
             return
-        //payload.e
-        //payload.id
         this.socket.emit("movePaddle", payload)
     }
 

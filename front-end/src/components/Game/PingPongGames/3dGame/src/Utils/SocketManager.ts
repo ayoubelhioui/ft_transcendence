@@ -17,8 +17,6 @@ export class SocketManager {
     hitBall(payload : any) {
         if (!this.socket)
             return
-        //payload.distX
-        //payload.distY
         this.socket.emit("hitBall", payload)
     }
 
