@@ -1,30 +1,25 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, PrimaryColumn, Index } from 'typeorm';
 
 import {User, Channel} from './index';
+import { ChannelUserRole } from 'src/global/types/channel-user-roles';
 
 
-
-
-enum channelUserRole
-{
-    owner,
-    admin,
-    member
-}
 
 @Entity()
+@Index(['user', 'channel'], {unique : true})
+
 class ChannelUsers{
     @PrimaryGeneratedColumn()
-    public id: number;
+    public id?: number;
 
-    @ManyToOne(() => User, user => user.channelUsers, { cascade: true })
-    user: User;
+    @ManyToOne(() => User, user => user.channelUsers)
+    public user: User;
 
-    @ManyToOne(() => Channel, channel => channel.channelUsers, { cascade: true })
-    channel: Channel;
+    @ManyToOne(() => Channel, channel => channel.channelUsers)
+    public channel: Channel;
 
     @Column()
-    public userRole : channelUserRole;
+    public userRole : ChannelUserRole;
 
 }
 

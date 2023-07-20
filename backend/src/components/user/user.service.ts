@@ -1,42 +1,4 @@
-<<<<<<< HEAD
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import {CreateUserDto} from './dto/user.dto';
-import { User } from 'src/database/entities';
-import { IUserRepository } from 'src/components/repositories/repositories_interfaces';
-import UserRepository from '../repositories/user.repository';
-import ABaseRepository from 'src/components/repositories/repositories_interfaces/base/base.repository.abstract';
-import { Repository } from 'typeorm';
-import { ChannelGateway } from '../channels/channel.gateway';
-
-
-@Injectable()
-export class UserService {
-    constructor(
-        @Inject('MyUserRepository') private readonly userRepository: IUserRepository) {}
-
-    async createUser(createUserDto: CreateUserDto): Promise<User | undefined>{
-        return (this.userRepository.create(createUserDto));
-    }
-    
-    async findUserById(id: number, relations: any = {}): Promise<User | undefined> {
-        const user : User  = await this.userRepository.findOneByIdWithRelations(id, relations);
-        if (!user)
-            throw new NotFoundException("user Not Found");
-        return (user);
-    }
-
-    async findAll()
-    {
-        return  (this.userRepository.findAll());
-    }
-
-    async removeUser(userId : number)
-    {
-        return (this.userRepository.delete(userId));
-    }
-}
-=======
-import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/database/entities';
 import { Repository } from 'typeorm';
@@ -45,15 +7,16 @@ import TokenBlacklist from 'src/database/entities/token_blacklist';
 import axios from 'axios';
 import { createWriteStream } from 'fs';
 import { server_address } from 'src/Const';
+import { IUserRepository } from '../repositories/repositories_interfaces';
 const nodemailer = require('nodemailer');
 
 @Injectable()
 export class UserService{
 
-    constructor(@InjectRepository(User) private readonly userRepository: Repository<User>,
+    constructor(@Inject('MyUserRepository') private readonly userRepository: IUserRepository,
         @InjectRepository(TokenBlacklist) private readonly tokenBlacklistRepository: Repository<TokenBlacklist>) {}
 
-        async createUser(createUserDto: UserDto) : Promise<User>{
+    async createUser(createUserDto: UserDto) : Promise<User>{
         this.initializeUserDto(createUserDto);
         return (await this.userRepository.save(createUserDto));
     }
@@ -65,13 +28,31 @@ export class UserService{
         createUserDto.two_factors_enabled = false;
     }
 
+
+    async findUserById(id: number, relations: any = {}): Promise<User | undefined> {
+        const user : User  = await this.userRepository.findOneByIdWithRelations(id, relations);
+        if (!user)
+            throw new NotFoundException("user Not Found");
+        return (user);
+    }
+
     async findById(IntraId: number): Promise<User | undefined>{
-        const user = await this.userRepository.findOne({
+        const user = await this.userRepository.findOneByOptions({
             where : {
                 IntraId: IntraId,
             },
         });
         return (user);
+    }
+
+    async findAll()
+    {
+        return  (this.userRepository.findAll());
+    }
+
+    async removeUser(userId : number)
+    {
+        return (this.userRepository.delete(userId));
     }
 
     generateImageURL (userId: number, imageExtension: string) : string{
@@ -143,4 +124,3 @@ TRANSCENDENCE TEAM`
         });
     }
 }
->>>>>>> b36cea380faae77c18a8cf996efcb31e72927633

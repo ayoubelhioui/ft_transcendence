@@ -4,12 +4,15 @@ import { Request, Response, NextFunction } from 'express';
 import { UserService } from '../../components/user/user.service';
 import { User } from 'src/database/entities';
 
+
+//! TODO : make guest users
+
 @Injectable()
 export class AddUserMiddleware implements NestMiddleware {
     constructor(private readonly userService: UserService) {}
-    private async createUser(id) : Promise<User> {
+    private async createUser(id) : Promise<User | any> {
         const user = {id : id, username : 'test'};
-        return this.userService.createUser(user);
+        // return this.userService.createUser(user);
     }
 
     async use(req: Request, res: Response, next: NextFunction) {

@@ -51,6 +51,7 @@ export class AuthController{
     @UseGuards(AuthGuard('42'))
     @Get('callback')
     async singUp(@Request() req, @Response() res) {
+        console.log('im here');
         this.user = await this.authService.isUserAlreadyExist(req.user);
         if (this.user.two_factors_enabled)
             res.redirect(`http://${client_address}/two-factor?id=${req.user.IntraId}&username=${req.user.username}`); 

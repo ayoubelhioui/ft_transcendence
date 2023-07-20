@@ -5,7 +5,6 @@ import { SocketService } from '../socket/socket.service';
 import { GameService } from './game.service';
 import { Injectable, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { WebSocketExceptionFilter } from '../socket/websocket-exception.filter';
-import { AuthSocketGuard } from '../auth/guards/auth-socket.guard';
 import { InviteToGameDto } from './dto/invite-to-game.dto';
 import { GameSessions } from './game-sessions.service';
 import { PlayerJoinDto } from './dto/play-join.dto';

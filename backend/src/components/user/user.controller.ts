@@ -1,20 +1,27 @@
-<<<<<<< HEAD
-import { Controller, Get, Post, Body, UsePipes, ValidationPipe, Param, UseGuards, Delete } from '@nestjs/common';
 import { CreateUserDto } from "./dto/user.dto";
-import { UserService } from "./user.service";
 import { Channel, ChannelUsers, User } from 'src/database/entities';
 import { ChannelService } from '../channels/channel.service';
 import { GetUser } from './decorators/user.decorator';
 import { ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard, UserInChannelGuard} from '../channels/guards';
 import { GetChannel, GetChannelUsers } from '../channels/decorators';
 import { JoinChannelDto } from '../channels/dto';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UploadedFiles, UseGuards, UseInterceptors, UsePipes, Response, Request, Req, Delete } from '@nestjs/common'
+import { TokenValidationGuard } from 'src/components/auth/guards/acces-token.guard';
+import { UserService } from './user.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import * as fs from 'fs';
+import { UserDto } from 'src/global/dto/user.dto';
+
 
 @Controller('users')
 export class UserController{
+
     constructor(
         private readonly userService: UserService,
         private readonly channelService : ChannelService
         ) {}
+
 
     @Get('')
     async getUsers(): Promise < User[] | undefined > {
@@ -29,11 +36,11 @@ export class UserController{
     }
 
 
-    @UsePipes(ValidationPipe)
-    @Post()
-    async createUsers(@Body() createUserDto: CreateUserDto): Promise< User | undefined>  {
-        return (await this.userService.createUser(createUserDto));
-    }
+    // @UsePipes(ValidationPipe)
+    // @Post()
+    // async createUsers(@Body() createUserDto: UserDto): Promise< User | undefined>  {
+    //     return (await this.userService.createUser(createUserDto));
+    // }
 
     @Get('me/channels')
     async getMyChannels(@GetUser() user: User) : Promise< Channel[] | undefined > {
@@ -49,18 +56,9 @@ export class UserController{
             message : "user leave  successfully"
         }; 
     };
-=======
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UploadedFiles, UseGuards, UseInterceptors, UsePipes, Response, Request, Req } from '@nestjs/common'
-import { TokenValidationGuard } from 'src/components/auth/guards/acces-token.guard';
-import { UserService } from './user.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import * as fs from 'fs';
 
-@Controller('user')
-export class UserController{
 
-    constructor(private userService: UserService) {}
+   
     
     @Get('image/:id')
     async getUserImage(@Param('id', ParseIntPipe) id : number, @Response() res) {
@@ -94,5 +92,4 @@ export class UserController{
         console.log(User);
         return (User);
     }
->>>>>>> b36cea380faae77c18a8cf996efcb31e72927633
 }

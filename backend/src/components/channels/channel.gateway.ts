@@ -2,7 +2,6 @@ import { Injectable, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@ne
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { WebSocketExceptionFilter } from '../socket/websocket-exception.filter';
-import { AuthSocketGuard } from '../auth/guards/auth-socket.guard';
 import { ChannelExistsGuard, UserInChannelGuard, UserMutedGuard } from '../channels/guards';
 import { IsSocket } from '../socket/decorators/is-socket.decorator';
 import { ChannelService } from '../channels/channel.service';

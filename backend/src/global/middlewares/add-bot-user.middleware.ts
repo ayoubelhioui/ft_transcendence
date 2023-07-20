@@ -7,7 +7,7 @@ export class AddBotMiddleware implements NestMiddleware {
   static botCreated :boolean = false;
   constructor(private readonly userService: UserService) {}
   private async createBot() : Promise<User> {
-      const user = {id : 1, username : 'bot'};
+      const user = {id : 1, username : 'bot', IntraId: 0,avatar: "botavatar", wins : 0, loss : 0, winrate : 0, two_factors_enabled: false};
       return this.userService.createUser(user);
   }
 

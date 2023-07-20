@@ -1,5 +1,4 @@
 import { IsNotEmpty } from "class-validator";
-import { Achievement, BlockedUsers, Channel, ChannelMessages, Friends, LiveGames, MatchHistory, UsersMuted } from "src/database/entities";
 
 export class UserDto{
     @IsNotEmpty()

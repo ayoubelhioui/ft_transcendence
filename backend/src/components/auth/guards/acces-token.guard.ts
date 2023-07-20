@@ -9,7 +9,7 @@ export class TokenValidationGuard implements CanActivate {
   private payload: any;
   private token: string;
   private user: object;
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> { 
     const request = context.switchToHttp().getRequest();
     try {
         this.token = request.headers.authorization.replace('Bearer ', '');

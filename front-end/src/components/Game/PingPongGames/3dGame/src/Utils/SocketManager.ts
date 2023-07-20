@@ -1,5 +1,6 @@
 import { Game } from "../MyObjects/Game";
 import { Socket, io } from 'socket.io-client'
+import { address } from "../../../../../../Const";
 
 export class SocketManager {
 
@@ -7,9 +8,7 @@ export class SocketManager {
     socketAddr : string
 
     constructor(game : Game) {
-        const host = import.meta.env.VITE_HOST || 'localhost'
-        const port = import.meta.env.VITE_SERVER_PORT_Khalid || '80'
-        this.socketAddr = `http://${host}:${port}`
+        this.socketAddr = `http://${address}`
         this.socket = this.getSocket(game)
     }
 

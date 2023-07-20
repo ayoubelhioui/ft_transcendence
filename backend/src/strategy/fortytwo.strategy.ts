@@ -6,7 +6,7 @@ import { Strategy } from 'passport-42';
 export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
   constructor() {
     super({
-      clientID: process.env.CLIENT_ID,
+      clientID: process.env.CLIENT_ID, 
       clientSecret: process.env.CLIENT_SECRET,
       callbackURL: process.env.CALLBACK_URL,
     });

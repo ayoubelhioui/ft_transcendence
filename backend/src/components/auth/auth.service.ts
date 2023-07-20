@@ -25,7 +25,6 @@ export class AuthService{
         const tokens = await this.generateAuthTokens();
         res.cookie('access_token', tokens['access_token']);
         res.cookie('refresh_token', tokens['refresh_token']);
-        console.log('helloWorld| => ', `http://${client_address}/`, "=> ", tokens['refresh_token']);
         res.redirect(`http://${client_address}/`);
     }
     
