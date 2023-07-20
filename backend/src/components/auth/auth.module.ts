@@ -7,7 +7,7 @@ import { AuthController } from "./auth.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "src/entities";
 import TokenBlacklist from "src/entities/token_blacklist";
-import { UserModule } from "src/user/user.module";
+import { UserModule } from "src/components/user/user.module";
 
 @Module({
     imports: [

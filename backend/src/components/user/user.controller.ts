@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UploadedFiles, UseGuards, UseInterceptors, UsePipes, Response, Request, Req } from '@nestjs/common'
-import { TokenValidationGuard } from 'src/auth/guards/acces-token.guard';
+import { TokenValidationGuard } from 'src/components/auth/guards/acces-token.guard';
 import { UserService } from './user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';

@@ -4,9 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 // import * as cookieParser from 'cookie-parser';
 import { Achievement, BlockedUsers, Channel, ChannelBlacklist, ChannelMessages, ChannelUsers, Friends, LiveGames, MatchHistory, Notification, UsersMuted } from 'src/entities';
 import User from 'src/entities/user.entity';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './components/auth/auth.module';
 import TokenBlacklist from './entities/token_blacklist';
-import { UserModule } from './user/user.module';
+import { UserModule } from './components/user/user.module';
 
 const ENV_PATH : string = './src/.env'; 
 @Module({

@@ -3,7 +3,7 @@ import { JwtService } from "@nestjs/jwt"
 import { client_address } from "src/Const";
 import { UserDto } from "src/dto/user.dto";
 import TokenBlacklist from "src/entities/token_blacklist";
-import { UserService } from "src/user/user.service";
+import { UserService } from "src/components/user/user.service";
 
 @Injectable()
 export class AuthService{
