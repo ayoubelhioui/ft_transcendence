@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/entities';
+import { User } from 'src/database/entities';
 import { Repository } from 'typeorm';
-import { UserDto } from 'src/dto/user.dto';
-import TokenBlacklist from 'src/entities/token_blacklist';
+import { UserDto } from 'src/global/dto/user.dto';
+import TokenBlacklist from 'src/database/entities/token_blacklist';
 import axios from 'axios';
 import { createWriteStream } from 'fs';
 import { server_address } from 'src/Const';

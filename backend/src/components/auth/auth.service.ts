@@ -1,8 +1,8 @@
 import { ForbiddenException, Injectable, NotFoundException, Redirect } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt"
 import { client_address } from "src/Const";
-import { UserDto } from "src/dto/user.dto";
-import TokenBlacklist from "src/entities/token_blacklist";
+import { UserDto } from "src/global/dto/user.dto";
+import TokenBlacklist from "src/database/entities/token_blacklist";
 import { UserService } from "src/components/user/user.service";
 
 @Injectable()

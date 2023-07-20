@@ -2,7 +2,7 @@ import { Controller, Get, UseGuards, Request, Post, Body, Response } from "@nest
 import { AuthService } from "./auth.service";
 import { AuthGuard } from '@nestjs/passport';
 import { TokenValidationGuard } from "./guards/acces-token.guard";
-import { UserDto } from "src/dto/user.dto";
+import { UserDto } from "src/global/dto/user.dto";
 import { access } from "fs";
 import { CorsGuard } from "./guards/cors.guard";
 import { client_address } from "src/Const";

@@ -5,8 +5,8 @@ import { PassportModule } from "@nestjs/passport";
 import { FortyTwoStrategy } from "src/strategy/fortytwo.strategy";
 import { AuthController } from "./auth.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "src/entities";
-import TokenBlacklist from "src/entities/token_blacklist";
+import { User } from "src/database/entities";
+import TokenBlacklist from "src/database/entities/token_blacklist";
 import { UserModule } from "src/components/user/user.module";
 
 @Module({
