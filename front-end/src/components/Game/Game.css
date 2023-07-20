@@ -1,0 +1,150 @@
+.game {
+    display: inline;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 100%;
+
+    /* /goinfre/aben-ham/js/client/front-end/src/assets/game-bg.jpg */
+    display:block ;
+    background-image: url("/src/assets/neon.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    justify-items: center;
+    align-items: center;
+    
+}
+
+.game-ending-win {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 100%;
+
+    display: block;
+    background-image: url("/src/assets/win.gif");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.game-ending-lose {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 100%;
+
+    display: block;
+    background-image: url("/src/assets/giphy.gif");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+
+p {
+    display: inline-block;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 4em;
+    font-family: arial;
+    font-weight: 600;
+    transform: scale(.5);
+    color: #ffffff;
+    -webkit-text-stroke: 2px gray;
+}
+
+
+
+canvas {
+    width: 100%;
+    height: 100%;
+}
+
+
+
+
+
+
+
+:root {
+    --effect: hover 2.4s linear infinite;
+}
+
+
+  
+
+  
+p:nth-child(1) {
+    animation: var(--effect);
+}
+
+p:nth-child(2) {
+    animation: var(--effect) .4s;
+}
+
+p:nth-child(3) {
+    animation: var(--effect) .8s;
+}
+
+p:nth-child(4) {
+    animation: var(--effect) 1.2s;
+}
+
+p:nth-child(5) {
+    animation: var(--effect) 1.6s;
+}
+
+p:nth-child(6) {
+    animation: var(--effect) 2.0s;
+}
+
+p:nth-child(7) {
+    animation: var(--effect) .75s;
+}
+
+p:nth-child(8) {
+    animation: var(--effect) .85s;
+}
+
+p:nth-child(9) {
+    animation: var(--effect) .95s;
+}
+
+p:nth-child(10) {
+    animation: var(--effect) 1.2s;
+}
+
+@keyframes hover {
+0% {
+    transform: scale(1);
+    color: pink;
+    -webkit-text-stroke: 1px rgb(255, 255, 255);
+}
+
+20% {
+    transform: scale(1);
+    color: pink;
+    -webkit-text-stroke: 2px rgb(0, 0, 0);
+}
+
+50% {
+    transform: scale(1);
+    color: pink;
+    -webkit-text-stroke: 1px rgb(255, 255, 255);
+}
+
+
+}
+  

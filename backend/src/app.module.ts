@@ -1,38 +1,36 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import typeOrmConfigs from './database/configs/db_configs';
+// import * as cookieParser from 'cookie-parser';
+import { Achievement, BlockedUsers, Channel, ChannelBlacklist, ChannelMessages, ChannelUsers, Friends, LiveGames, MatchHistory, Notification, UsersMuted } from 'src/database/entities';
+import User from 'src/database/entities/user.entity';
+import { AuthModule } from './components/auth/auth.module';
+import TokenBlacklist from './database/entities/token_blacklist';
 import { UserModule } from './components/user/user.module';
-import { GameModule } from './components/game/game.module';
-import { ChatModule } from './components/chat/chat.module';
-import { NotificationModule } from './components/notification/notification.module';
-import { GroupInvitesModule } from './components/group_invites/group_invites.module';
-import { FriendsModule } from './components/friends/friends.module';
-import { ChannelModule } from './components/channels/channel.module';
-import { AddUserMiddleware } from './global/middlewares/add-default-user.middleware';
-import { SocketModule } from './components/socket/socket.module';
-import { AddBotMiddleware } from './global/middlewares/add-bot-user.middleware';
-const ENV_PATH : string = './src/.env'; 
 
+const ENV_PATH : string = './src/.env'; 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ENV_PATH }),
-    TypeOrmModule.forRootAsync(typeOrmConfigs())
-    ,
-    UserModule,
-    ChannelModule,
-    GameModule,
-    ChatModule,
-    NotificationModule,
-    GroupInvitesModule,
-    FriendsModule,
-    SocketModule,
+    TypeOrmModule.forRootAsync({
+      imports: [AuthModule, ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type:     'postgres',
+        host:     configService.get('DB_HOST'), 
+        port:     +configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASS'), 
+        database: configService.get('DB_NAME'),
+        entities:       [User, Achievement, Channel, Friends, ChannelMessages, ChannelBlacklist, BlockedUsers, ChannelUsers, LiveGames, MatchHistory, Notification, UsersMuted, TokenBlacklist],
+        synchronize:    true,
+        autoSchemaSync: true,
+      }),
+      inject: [ConfigService],
+    }),
   ],
   controllers: [],
-  providers: [],
+  providers: [], 
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AddBotMiddleware, AddUserMiddleware).forRoutes('*');
-  }
-}
+
+
+export class AppModule{}

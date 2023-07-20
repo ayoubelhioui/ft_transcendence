@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SocketAdapter } from './CorsHelp.class';
+import { host, server_port, client_address } from './Const';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {cors : true});
@@ -10,10 +11,16 @@ async function bootstrap() {
       whitelist : true,
       transform : true
   }));
-  const address = process.env.SERVER_HOST || 'localhost'
-  const port = +process.env.SERVER_PORT || 3001
-  await app.listen(port, address, () => {
-    console.log("Server started on: ", address, ":", port)
-  }); 
+
+  // app.enableCors({
+  //   origin: [
+  //   `http://${client_address}`, 
+  // ]
+  // });
+
+  await app.listen(server_port, host, () => {
+    console.log(`Server is running on ${host}:${server_port}`);
+  });; 
 }
+
 bootstrap();

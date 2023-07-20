@@ -1,5 +1,5 @@
 
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToMany, ManyToOne } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, ManyToMany, ManyToOne, PrimaryColumn } from 'typeorm';
 
 import {Achievement, Channel, ChannelMessages, ChannelUsers, 
     Game,UsersMuted,Notification, Friends, BlockedUsers} from './index'
@@ -11,6 +11,9 @@ import Invites from './channel-invites.entity';
 class User{
     @PrimaryGeneratedColumn()
     public id: number;
+
+    @PrimaryColumn()
+    public IntraId: number;
 
     @Column()
     public username: string;
@@ -26,6 +29,9 @@ class User{
 
     @Column()
     public winrate: number = 0;
+
+    @Column()
+    public two_factors_enabled: boolean;
 
     @ManyToMany(() => Achievement, (achievement) => achievement.users, { cascade: true, onDelete: 'CASCADE' })
     public achievements: Achievement[];

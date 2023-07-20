@@ -1,70 +1,52 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable, OneToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
 
 import {User, ChannelMessages, ChannelUsers} from './index';
 import UsersMuted from './users_muted.entity';
-import Invites from './channel-invites.entity';
-import { ChannelsVisibility } from 'src/global/types/channel-visibility.type';
-import { Exclude } from 'class-transformer';
 
+
+enum ChannelsVisibility 
+{
+    private,
+    public,
+    protected
+};
 
 @Entity()
 class Channel{
-    
-
     @PrimaryGeneratedColumn()
     public id: number;
 
     @Column()
     public name: string;
 
-    @Exclude() // Exclude this property from serialization
-    @Column({nullable: true, type: 'text', select: false})
+    @Column({nullable: true})
     public password: string;
 
-    @ManyToOne(() => User, (user) => user.channels,  { nullable: true})
+    @ManyToOne(() => User, (user) => user.channels,  {cascade : true, nullable: true})
     public owner: User;
 
-    @Column({default : ChannelsVisibility.public})
+    @Column()
     public visibility: ChannelsVisibility;
-    
-    @Column({default : true})
-    public isGroup : boolean;
    
-    
-    @OneToMany(() => ChannelMessages, (channelMessages) => channelMessages.channel, {nullable : true, cascade: true, onDelete: 'CASCADE' })
+    @OneToMany(() => ChannelMessages, (channelMessages) => channelMessages.channel)
     channelMessages: ChannelMessages[];
 
-    @OneToMany(() => ChannelUsers, (channelUsers) => channelUsers.channel, {nullable : true, cascade: true, onDelete: 'CASCADE' })
+    @OneToMany(() => ChannelUsers, (channelUsers) => channelUsers.channel)
     public channelUsers: ChannelUsers[];
 
 
-    @OneToMany(() => UsersMuted, (userMuted) => userMuted.channel, {nullable : true, cascade: true, onDelete: 'CASCADE' })
+    @OneToMany(() => UsersMuted, (userMuted) => userMuted.channel)
     public usersMuted: UsersMuted[];
 
 
-    @ManyToMany(() => User, user => user.forbiddenChannels, {nullable : true })
+    @ManyToMany(() => User, user => user.forbiddenChannels)
     @JoinTable()
     blacklistedUsers: User[];
 
 
-    @ManyToMany(() => User, user => user.channelInvites, {nullable : true})
+    @ManyToMany(() => User, user => user.channelInvites)
     @JoinTable()
     public invitedUsers: User[];
-
-
-    @OneToMany(() => Invites, (invites) => invites.group, {nullable : true, cascade: true, onDelete: 'CASCADE' })
-    public group_invites: Invites[];
-
-    //update on each message sent
-    @OneToOne(() => ChannelMessages,  {nullable : true, cascade: true, onDelete: 'SET NULL' })
-    @JoinColumn()
-    lastMessage: ChannelMessages
-
-    // toJSON () {
-    //     delete this.password;
-    //     return this;
-    // }
-
 }
 
 export default Channel

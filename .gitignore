@@ -1,5 +1,11 @@
+backend/node_modules
+backend/uploads
+backend/src/.env
+backend/example.http
+backend/potgresql/.env
+.env
+backend/dist
+front-end/node_modules
+front-end/dist
 node_modules
-src/.env
-example.http
-potgresql/.env
-dist/
+.DS_Store

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Controller, Get, Post, Body, UsePipes, ValidationPipe, Param, UseGuards, Delete } from '@nestjs/common';
 import { CreateUserDto } from "./dto/user.dto";
 import { UserService } from "./user.service";
@@ -48,4 +49,50 @@ export class UserController{
             message : "user leave  successfully"
         }; 
     };
+=======
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UploadedFiles, UseGuards, UseInterceptors, UsePipes, Response, Request, Req } from '@nestjs/common'
+import { TokenValidationGuard } from 'src/components/auth/guards/acces-token.guard';
+import { UserService } from './user.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import * as fs from 'fs';
+
+@Controller('user')
+export class UserController{
+
+    constructor(private userService: UserService) {}
+    
+    @Get('image/:id')
+    async getUserImage(@Param('id', ParseIntPipe) id : number, @Response() res) {
+        const stream = fs.createReadStream('./uploads/' + id);  
+        stream.pipe(res);
+    }
+
+    @Post('image/:id')
+    @UseGuards(TokenValidationGuard)
+    @UseInterceptors(FileInterceptor('avatar', {
+        storage: diskStorage({
+            destination: './uploads',
+            filename: (req, file, callback) => {
+                const newFileName = req.params.id;
+                callback(null, newFileName);
+            }
+        }),
+        fileFilter: (req, file, callback) => {
+            if (!file.originalname.match(/\.(jpg|jpeg|png)$/))
+                return (callback(null, false));
+            callback(null, true);
+        }
+    }))
+    async updateUserImage(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req) { }
+
+    @UseGuards(TokenValidationGuard)
+    @Post('update')
+    async updateUser (@Body() body, @Request() req) : Promise<object>{
+        console.log(body);
+        const User = await this.userService.update(body, req.user);
+        console.log(User);
+        return (User);
+    }
+>>>>>>> b36cea380faae77c18a8cf996efcb31e72927633
 }
