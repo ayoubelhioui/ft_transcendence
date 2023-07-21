@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { authContext } from "../context/useContext";
+import axios from "axios";
 
 
 // const TableComponent = () => {
@@ -15,6 +17,24 @@ import { authContext } from "../context/useContext";
     //   )
     // }
 const LeaderBoard = () => {
+
+      const [Players, setPlayers] = useState<any>([]);
+
+      const axiosReq = async () => {
+
+        try {
+          const response = await axios.get(`http://${import.meta.env.VITE_HOST}:3000/games/leaderboard`);
+
+          setPlayers(response.data);
+          // console.log("Request Has Been Sent!");
+        } catch (error) {
+          console.log("Error In LeaderBoard");
+        }
+      }
+
+      useEffect(() => {
+        axiosReq();
+      }, []);
       
   const authAvatar = authContext();
 

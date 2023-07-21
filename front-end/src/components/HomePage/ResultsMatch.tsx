@@ -34,8 +34,8 @@ const ResultsLatestHome = () => {
   	
 	return (
 		<div className="flex flex-col purple_back mt-[5%] w-[70%] mx-auto h-[60vh] max-md:mt-[3%] max-md:w-[85%] pb-5 max-sm:pb-0 max-custom-md:w-[85%] max-custom-md:h-[75vh]">
-			<h1 className="text-white text-2xl mx-5 mt-5">Latest Results</h1>
-			<div className="flex flex-wrap mt-12 mx-5 gap-12 overflow-x-scroll">
+			<h1 className="text-white text-3xl text-center mx-5 mt-5">Latest Results</h1>
+			<div className="flex flex-wrap items-center justify-center mt-12 mx-5 gap-12 overflow-x-scroll">
 				<MatchDiv image={`http://${address}/users/image/` + auth.user?.IntraId} />
 				<MatchDiv image={`http://${address}/users/image/` + auth.user?.IntraId} />
 				<MatchDiv image={`http://${address}/users/image/` + auth.user?.IntraId} />

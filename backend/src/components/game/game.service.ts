@@ -224,6 +224,7 @@ export class GameService {
             wins: 'DESC',
           },
         });
+        console.log(leaderboard);
         return leaderboard;
         //highest wr order by games played
     };

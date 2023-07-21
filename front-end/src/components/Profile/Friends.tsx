@@ -92,7 +92,7 @@ const Friends = () => {
 
 
   return (
-    <div className="flex flex-col top_1 w-[300px] text-gray-400 max-custom-md:w-[100%] max-sm:h-[280px] max-custom-md:h-[200px]">
+    <div className="flex flex-col top_1 w-[300px] text-gray-400 max-m-custom-md:w-[100%] max-sm:h-[280px] h-[550px] my-auto max-m-custom-md:h-[200px]">
 		
       <h1 className="text-2xl p-2">Friends List</h1>
       
