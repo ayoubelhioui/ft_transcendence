@@ -48,7 +48,7 @@ const HomePage = () => {
             <TopPlayers />
         </div>
 
-        <FriendSection image={`http://${address}/user/image/` + authUser.user?.IntraId}/>
+        <FriendSection image={`http://${address}/users/image/` + authUser.user?.IntraId}/>
 
       </div>
     </>

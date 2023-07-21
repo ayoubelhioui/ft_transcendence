@@ -1,8 +1,12 @@
 
 
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { MdKeyboardDoubleArrowRight as RightArrowIcon, MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
 import { VscAccount as AccountIcon } from 'react-icons/vsc'
 import { Navigate, redirect, useNavigate } from 'react-router-dom'
+import Avatar from '@mui/material/Avatar';
+
 
 // import axios from 'axios'
 
@@ -95,11 +99,25 @@ export const Results = () => {
   }
 
   export const TopPlayers = () => {
+      const [Players, setPlayers] = useState([]);
 
+      const axiosReq = async () => {
 
-      // const response = await axios.get(`http://${process.meta.env.VITE_HOST}:3001/games/leaderboard`);
+        try {
+          const response = await axios.get(`http://${import.meta.env.VITE_HOST}:3000/games/leaderboard`);
 
-      // const Players = response.data;
+          setPlayers(response.data);
+          // console.log("Request Has Been Sent!");
+        } catch (error) {
+          console.log("Error In LeaderBoard");
+        }
+      }
+
+      useEffect(() => {
+        axiosReq();
+      }, []);
+      
+
       const navigate = useNavigate();
 
       const handleClick = () => {
@@ -112,38 +130,25 @@ export const Results = () => {
               <h1 className='text-white text-2xl mx-4 my-2'>Top Players</h1>
               <RightArrowIcon size={35} onClick={handleClick} className=' text-white cursor-pointer hover:animate-pulse'/>
             </div>
-            <div className="flex text-white justify-around mt-4 items-center overflow-x-auto">
-              <div className="align">
-                <AccountIcon size={80} className='max-sm:w-[75%]'/>
-                <span className="text-center mt-3 max-md:mt-1 text-md">User1</span>
-                <span className=' w-full max-md:w-[55px] h-[1px] bg-white flex'></span>
-                <span className='text-sm max-md:text-xs'>1507Pts</span>
+            {Players.length > 0 ? (
+              <div className="flex text-white justify-around mt-4 items-center overflow-x-auto">
+                {Players.map((player) => (
+                    <div className="align">
+                      {/* <Avatar src={player.avatar}/> */}
+                      <span className="text-center mt-3 max-md:mt-1 text-md">User1</span>
+                      <span className=' w-full max-md:w-[55px] h-[1px] bg-white flex'></span>
+                      <span className='text-sm max-md:text-xs'>1507Pts</span>
+                    </div>
+                ))}
+                
+        
               </div>
-              <div className="align">
-                <AccountIcon size={80} className='max-sm:w-[75%]'/>
-                <span className="text-center mt-3 max-md:mt-1 text-md">User2</span>
-                <span className=' w-full max-md:w-[55px] h-[1px] bg-white flex'></span>
-                <span className='text-sm max-md:text-xs'>1507Pts</span>
-              </div>
-              <div className="align">
-                <AccountIcon size={80} className='max-sm:w-[75%]'/>
-                <span className="text-center mt-3 max-md:mt-1 text-md">User3</span>
-                <span className=' w-full max-md:w-[55px] h-[1px] bg-white flex'></span>
-                <span className='text-sm max-md:text-xs'>1507Pts</span>
-              </div>
-              <div className="align">
-                <AccountIcon size={80} className='max-sm:w-[75%]'/>
-                <span className="text-center mt-3 max-md:mt-1 text-md">User4</span>
-                <span className=' w-full max-md:w-[55px] h-[1px] bg-white flex'></span>
-                <span className='text-sm max-md:text-xs'>1507Pts</span>
-              </div>
-              <div className="align">
-                <AccountIcon size={80} className='max-sm:w-[75%]'/>
-                <span className="text-center mt-3 max-md:mt-1 text-md">User5</span>
-                <span className=' w-full max-md:w-[55px] h-[1px] bg-white flex'></span>
-                <span className='text-sm max-md:text-xs'>1507Pts</span>
-              </div>
-            </div>
+
+            ) : 
+              <h1 className='text-white text-4xl flex justify-center items-center h-full mt-12'>
+                There Is No LeaderBoard Yet!
+              </h1>
+            }
           </div>
       )
   }

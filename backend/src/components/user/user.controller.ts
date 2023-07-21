@@ -62,6 +62,7 @@ export class UserController{
     
     @Get('image/:id')
     async getUserImage(@Param('id', ParseIntPipe) id : number, @Response() res) {
+        console.log('over here');
         const stream = fs.createReadStream('./uploads/' + id);  
         stream.pipe(res);
     }
@@ -82,14 +83,13 @@ export class UserController{
             callback(null, true);
         }
     }))
-    async updateUserImage(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req) { }
+    async updateUserImage(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req) { 
+    }
 
     @UseGuards(TokenValidationGuard)
     @Post('update')
     async updateUser (@Body() body, @Request() req) : Promise<object>{
-        console.log(body);
         const User = await this.userService.update(body, req.user);
-        console.log(User);
         return (User);
     }
 }

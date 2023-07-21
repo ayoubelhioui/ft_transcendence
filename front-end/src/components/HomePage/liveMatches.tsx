@@ -14,12 +14,12 @@ const LiveDiv = ({ image }: {image: string}) => {
             </div>
             <div className="flex justify-between px-2 items-center w-full back h-[40px]">
                 <div className="flex flex-col items-center">
-                    {/* <Avatar alt="Avatar" src={`http://${address}/user/image/` + auth.user?.IntraId} sx={{ width: 30, height: 30 }}/> */}
+                    {/* <Avatar alt="Avatar" src={`http://${address}/users/image/` + auth.user?.IntraId} sx={{ width: 30, height: 30 }}/> */}
                     <span className="text-white text-base">mmounib</span>
 
                 </div>
                 <div className="flex flex-col items-center">
-                     {/* <Avatar alt="Avatar" src={`http://${address}/user/image/` + auth.user?.IntraId} sx={{ width: 30, height: 30 }}/> */}
+                     {/* <Avatar alt="Avatar" src={`http://${address}/users/image/` + auth.user?.IntraId} sx={{ width: 30, height: 30 }}/> */}
                     <span className="text-white text-base">mouad</span>
                 </div>
             </div>

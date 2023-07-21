@@ -28,6 +28,7 @@ interface AuthContextType {
     isAuthenticated: boolean;
     refreshAccessToken: (refreshTokenParam: string | null) => Promise<void>;
     user: User | null;
+    accessToken: string | null;
 }
 
   
@@ -37,6 +38,7 @@ const AuthContext = createContext<AuthContextType>({
     isAuthenticated: false,
     refreshAccessToken: () => Promise.resolve(),
     user: null,
+    accessToken: null,
 });
 
 
@@ -170,7 +172,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
     }, [accessToken, isAuthenticated]);
     
     return (
-        <AuthContext.Provider value={{logout, isAuthenticated, refreshAccessToken, user, updateUser}}>
+        <AuthContext.Provider value={{logout, isAuthenticated, refreshAccessToken, user, updateUser, accessToken}}>
             {children}
         </AuthContext.Provider>
     )
