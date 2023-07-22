@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { authContext } from "../context/useContext";
 import axios from "axios";
+import { address } from "../../Const";
+import { makeGetRequest } from "../../Helpers";
 
 
 // const TableComponent = () => {
@@ -16,27 +18,37 @@ import axios from "axios";
     //     </div>
     //   )
     // }
+
+
+
+const LeaderBoardItem = ({rank, user} : {rank : number, user : any}) => {
+
+  const avatar = `http://${address}/users/image/${user.IntraId}`
+
+  return (
+    <div className="flex mt-3 items-center justify-between bg-[#4D194D] py-3 px-4 rounded-[10px]">
+    <div className="w-1/4">{rank}</div>
+    <div className="flex items-center gap-2 w-full">
+      <img src={avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
+      <div className="w-1/2">{user.username}</div>
+    </div>
+    <div className="w-1/4 text-center">{user.winrate}</div>
+  </div>
+  )
+}
+
 const LeaderBoard = () => {
 
-      const [Players, setPlayers] = useState<any>([]);
+  const [players, req] = makeGetRequest(`http://${address}/games/leaderboard`, (error) => {
+    console.log(error)
+  })
 
-      const axiosReq = async () => {
-
-        try {
-          const response = await axios.get(`http://${import.meta.env.VITE_HOST}:3000/games/leaderboard`);
-
-          setPlayers(response.data);
-          // console.log("Request Has Been Sent!");
-        } catch (error) {
-          console.log("Error In LeaderBoard");
-        }
-      }
-
-      useEffect(() => {
-        axiosReq();
-      }, []);
+  console.log(players);
+  useEffect(() => {
+    req();
+  }, []);
       
-  const authAvatar = authContext();
+
 
 
   //? need to check if the array is empty and if it is then i will display there is nothing to show in here or something like that
@@ -51,92 +63,18 @@ const LeaderBoard = () => {
           <div className="w-[80%]">Name</div>
           <div className="w-1/5 text-center">WinRate</div>
         </div>
-        <div className="flex flex-col shadow-md text-white pt-3 ">
-          <div className="flex mt-1 items-center justify-between bg-[#3b063b] py-3 px-4 rounded-[10px]">
-            <div className="w-1/4">1</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">Mouad</div>
-            </div>
-            <div className="w-1/4 text-center">42%</div>
-          </div>
-          <div className="flex mt-3 items-center justify-between bg-[#4D194D] py-3 px-4 rounded-[10px]">
-            <div className="w-1/4">2</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">John</div>
-            </div>
-            <div className="w-1/4 text-center">38%</div>
-          </div>
-          <div className="flex mt-3 items-center justify-between bg-[#3b063b] py-3 px-4 rounded-[10px]">
-            <div className="w-1/4">3</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">Jane</div>
-            </div>
-            <div className="w-1/4 text-center">35%</div>
-          </div>
-          <div className="flex mt-3 items-center justify-between bg-[#3b063b] py-3 px-4 rounded-[10px]">
-            <div className="w-1/4">1</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">Mouad</div>
-            </div>
-            <div className="w-1/4 text-center">42%</div>
-          </div>
-          <div className="flex mt-3 items-center justify-between bg-[#4D194D] py-3 px-4 rounded-[10px]">
-            <div className="w-1/4">2</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">John</div>
-            </div>
-            <div className="w-1/4 text-center">38%</div>
-          </div>
-          <div className="flex mt-3 items-center justify-between bg-[#3b063b] py-3 px-4 rounded-[10px]">
-            <div className="w-1/4">3</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">Jane</div>
-            </div>
-            <div className="w-1/4 text-center">35%</div>
-          </div>
-          <div className="flex mt-3 items-center justify-between bg-[#3b063b] py-3 px-4 rounded-[10px]">
-            <div className="w-1/4">1</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">Mouad</div>
-            </div>
-            <div className="w-1/4 text-center">42%</div>
-          </div>
-          <div className="flex mt-3 items-center justify-between bg-[#4D194D] py-3 px-4 rounded-[10px]">
-            <div className="w-1/4">2</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">John</div>
-            </div>
-            <div className="w-1/4 text-center">38%</div>
-          </div>
-          <div className="flex mt-3 items-center justify-between bg-[#3b063b] py-3 px-4 rounded-[10px]">
-            <div className="w-1/4">3</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">Jane</div>
-            </div>
-            <div className="w-1/4 text-center">35%</div>
-          </div>
-          <div className="flex mt-3 items-center justify-between bg-[#3b063b] py-3 px-4 rounded-[10px]">
-            <div className="w-1/4">1</div>
-            <div className="flex items-center gap-2 w-full">
-              <img src={authAvatar.user?.avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
-              <div className="w-1/2">Mouad</div>
-            </div>
-            <div className="w-1/4 text-center">42%</div>
-          </div>
+        
          
+      {
+
+        players.map((item : any, index : number) => (
+        
+              <LeaderBoardItem key={index} rank={index + 1} user={item}/> 
+        ))
+
+      }
+          
       
-          
-          
-        </div>
       </div>
     </div>
 

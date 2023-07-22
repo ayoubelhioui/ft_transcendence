@@ -34,6 +34,15 @@ export class GameController {
         
     }
 
+    @Get('/latestResult')
+    @UsePipes(ValidationPipe)
+    async getLatestResult(@Query() page?: PaginationDto) { 
+        if(page && page.page)
+            return await this.gameService.getLatestResult(page.page);
+        return await this.gameService.getLatestResult();   
+    }
+
+
     //add dto
     @Put(":token/join")
     async joinGame(@GetUser() user : User,@Param() token :TokenDto) { 

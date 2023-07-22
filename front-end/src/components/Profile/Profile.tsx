@@ -23,7 +23,7 @@ import { address } from '../../Const';
 
 const Profile = () => {
   const authApp = authContext();
-
+  console.log(authApp.user);
   const [NewAvatar, setNewAvatar] = useState<File | null>(null);
 
 

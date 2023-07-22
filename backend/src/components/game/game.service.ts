@@ -19,11 +19,17 @@ export class GameService {
     
     //user exists guard
     async getUserGamesHistory(user: User) {
-        this.gamesRepository.findByCondition({
+        return this.gamesRepository.findByOptions({
+            take : 10,
             where: [
                 { player1: user, match_time_end: Not(IsNull()) },
                 { player2: user, match_time_end: Not(IsNull()) }
-            ]
+            ],
+            relations: ["player1","player2"]
+            ,
+            order: {
+                match_time_end: 'DESC',
+                },
         });
     }
     
@@ -38,10 +44,29 @@ export class GameService {
              player2 : Not(IsNull()),
              match_time_end: IsNull() 
           },
+          relations : ["player1","player2"]
         });
         return liveGames;
     }
     
+    async getLatestResult(page: number = 1, pageSize: number = 10) {
+        //make it bring only 10 games last started
+
+        const rowsToSkip = (page - 1) * pageSize;
+        const liveGames = await this.gamesRepository.findByOptions({
+          take: pageSize,
+          skip : rowsToSkip, 
+          where : {
+             player2 : Not(IsNull()),
+             match_time_end: Not(IsNull())
+          },
+          order: { 'match_time_end': 'DESC' },
+          relations : ["player1","player2"]
+        });
+        return liveGames;
+    }
+
+
     async deleteGame(existingGame: Game)
     {
         if(existingGame)

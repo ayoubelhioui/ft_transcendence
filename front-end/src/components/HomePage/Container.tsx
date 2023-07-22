@@ -8,93 +8,128 @@ import { Navigate, redirect, useNavigate } from 'react-router-dom'
 import Avatar from '@mui/material/Avatar';
 
 
-import { address } from '../../Const';
+import { address, host, port } from '../../Const';
 import { authContext } from '../context/useContext';
+import { makeGetRequest } from '../../Helpers';
 
 
 export const Live = () => {
-  const auth = authContext();
-
-
   const navigate = useNavigate();
 
   const handleClick = () => {
     navigate('/Live');
   };
 
-  return (
-    <div className=' min-h-[370px] max-md:min-h-[270px] back rounded-[10px] flex-1 mr-16 max-custom-md:mr-0 flex flex-col justify-between shadow-md max-md:mr-0'>
-          <h1 className="text-2xl p-2">Live Games</h1>
-          <div className=" flex gap-4 flex-col justify-center">
-            <div className="flex mx-auto py-2">
-               <Avatar src={`http://${address}/users/image/` + auth.user?.IntraId} sx={{ width: 60, height: 60 }}/>
+
+  const LiveComponenet = ({ player1, player2 }: {player1 : any, player2 : any}) => {
+      return (
+        <div className="flex mx-auto py-2">
+               <Avatar src={`http://${address}/users/image/` + player1.IntraId} sx={{ width: 60, height: 60 }}/>
               <div className=" mx-12 flex items-center gap-2 cursor-pointer">
                 <span className=''>LIVE</span>
                 <span className='w-[11px] h-[12px] rounded-[50%] bg-red-700'></span>
               </div>
-               <Avatar src={`http://${address}/users/image/` + auth.user?.IntraId} sx={{ width: 60, height: 60 }}/>
+               <Avatar src={`http://${address}/users/image/` + player2.IntraId} sx={{ width: 60, height: 60 }}/>
             </div>
-            <div className="flex mx-auto py-2">
-               <Avatar src={`http://${address}/users/image/` + auth.user?.IntraId} sx={{ width: 60, height: 60 }}/>
-              <div className=" mx-12 flex items-center gap-2 cursor-pointer">
-                <span className=''>LIVE</span>
-                <span className='w-[11px] h-[12px] rounded-[50%] bg-red-700'></span>
-              </div>
-               <Avatar src={`http://${address}/users/image/` + auth.user?.IntraId} sx={{ width: 60, height: 60 }}/>
-            </div>
-            <div className="flex mx-auto py-2">
-               <Avatar src={`http://${address}/users/image/` + auth.user?.IntraId} sx={{ width: 60, height: 60 }}/>
-              <div className=" mx-12 flex items-center gap-2 cursor-pointer">
-                <span className=''>LIVE</span>
-                <span className='w-[11px] h-[12px] rounded-[50%] bg-red-700'></span>
-              </div>
-               <Avatar src={`http://${address}/users/image/` + auth.user?.IntraId} sx={{ width: 60, height: 60 }}/>
-            </div>
+      )
+  }
+
+
+  const [lives, req] = makeGetRequest(`http://${address}/games/live`, (error) => {
+        console.log("Error ", error)
+    })
+
+
+
+      useEffect(() => {
+        req();
+      }, []);
+
+      
+  if (lives.length === 0) {
+    return (
+      <div className=' min-h-[370px] max-md:min-h-[270px] back rounded-[10px] flex-1 mr-16 max-custom-md:mr-0 flex flex-col justify-between shadow-md max-md:mr-0'>
+            <h1 className="text-2xl p-2">Live Games</h1>
+            
+            //!center no live
+            <div className="flex mx-auto py-2 "> No Lives </div>
+          
+           
           </div>
-          <div className="flex justify-center cursor-pointer hover:animate-bounce" onClick={handleClick}>
-            <span className='pb-[7px]'>See More</span>
+    )
+  } else {
+    return (
+      <div className=' min-h-[370px] max-md:min-h-[270px] back rounded-[10px] flex-1 mr-16 max-custom-md:mr-0 flex flex-col justify-between shadow-md max-md:mr-0'>
+            <h1 className="text-2xl p-2">Live Games</h1>
+            
+            {
+            lives.slice(0, 3).map((item : any) => (
+                              
+              <LiveComponenet key={item.token} player1={item.player1} player2={item.player2}/>
+    
+                          
+          ))
+          }
+
+          //!see More
+
+          {
+            lives.length > 3 && 
+            <div className="flex justify-center cursor-pointer hover:animate-bounce" onClick={handleClick}>
+              <span className='pb-[7px]'>See More</span>
             <SingleArrow size={25}/>
           </div>
-        </div>
-  )
+          }
+           
+          </div>
+    )
+
+  }
+
 }
 
 export const Results = () => {
 
-  const auth = authContext();
-
+  const ResultComponenet = ({result} : {result: any}) => {
+    return (
+      <div className="flex mx-auto cursor-pointer py-2 items-center bg-opacity-40">
+              <Avatar src={`http://${address}/users/image/` + result.player1.IntraId} sx={{ width: 60, height: 60 }}/>
+              <div className=" mx-12 flex items-center gap-2">
+               <span className='text-2xl px-4'>{result.player1_score} / {result.player2_score} </span>
+              </div>
+              <Avatar src={`http://${address}/users/image/` + result.player2.IntraId} sx={{ width: 60, height: 60 }}/>
+      </div>
+    )
+  }
 	const navigate = useNavigate();
 
   const handleClick = () => {
     navigate('/results');
   };
 	
+
+  const [latestResult, req] = makeGetRequest(`http://${address}/games/latestResult`, (error) => {
+    console.log(error);
+  });
+
+  useEffect(() => {
+    req()
+  }, []); 
     return (
         <div className=' max-md:mt-4 relative back min-h-[370px] max-md:min-h-[270px] rounded-[10px] flex-1 shadow-md flex flex-col justify-between overflow-x-auto'>
           <h1 className="text-2xl p-2">Latest Results</h1>
           <div className="flex gap-4 flex-col justify-center items-center">
-            <div className="flex mx-auto cursor-pointer py-2 items-center bg-opacity-40">
-              <Avatar src={`http://${address}/users/image/` + auth.user?.IntraId} sx={{ width: 60, height: 60 }}/>
-              <div className=" mx-12 flex items-center gap-2">
-               <span className='text-2xl px-4'>1 / 2</span>
-              </div>
-              <Avatar src={`http://${address}/users/image/` + auth.user?.IntraId} sx={{ width: 60, height: 60 }}/>
-            </div>
-            <div className="flex mx-auto cursor-pointer py-2 items-center">
-              <Avatar src={`http://${address}/users/image/` + auth.user?.IntraId} sx={{ width: 60, height: 60 }}/>
-              <div className=" mx-12 flex items-center gap-2">
-               <span className='text-2xl px-4'>1 / 2</span>
-              </div>
-              <Avatar src={`http://${address}/users/image/` + auth.user?.IntraId} sx={{ width: 60, height: 60 }}/>
-            </div>
-            <div className="flex mx-auto cursor-pointer py-2 items-center">
-              <Avatar src={`http://${address}/users/image/` + auth.user?.IntraId} sx={{ width: 60, height: 60 }}/>
-              <div className=" mx-12 flex items-center gap-2">
-               <span className='text-2xl px-4'>3 / 2</span>
-              </div>
-              <Avatar src={`http://${address}/users/image/` + auth.user?.IntraId} sx={{ width: 60, height: 60 }}/>
-            </div>
+            
+          {
+            latestResult.slice(0, 3).map((item: any, index: number) => (
+              <ResultComponenet key = {index} result={item}/>
+            ))
+          
+          }
+
           </div>
+
+
 		      <div className="flex justify-center cursor-pointer hover:animate-bounce" onClick={handleClick}>
             <span className='pb-[7px]'>See More</span>
 			      <SingleArrow size={25} />
@@ -109,7 +144,7 @@ export const Results = () => {
       const axiosReq = async () => {
 
         try {
-          const response = await axios.get(`http://${import.meta.env.VITE_HOST}:3000/games/leaderboard`);
+          const response = await axios.get(`http://${address}/games/leaderboard`);
 
           setPlayers(response.data);
 

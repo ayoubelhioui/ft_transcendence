@@ -1,5 +1,5 @@
 import { CreateUserDto } from "./dto/user.dto";
-import { Channel, ChannelUsers, User } from 'src/database/entities';
+import { Channel, ChannelUsers, Game, User } from 'src/database/entities';
 import { ChannelService } from '../channels/channel.service';
 import { GetUser } from './decorators/user.decorator';
 import { ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard, UserInChannelGuard} from '../channels/guards';
@@ -12,6 +12,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as fs from 'fs';
 import { UserDto } from 'src/global/dto/user.dto';
+import { TargetUserExistGuard } from "./guards/target-user-exists.guard";
+import { GameService } from "../game/game.service";
+import { GetTargetedUser } from "./decorators/targeted-user.decorator";
 
 
 @Controller('users')
@@ -19,6 +22,7 @@ export class UserController{
 
     constructor(
         private readonly userService: UserService,
+        private readonly gameService: GameService,
         private readonly channelService : ChannelService
         ) {}
 
@@ -35,6 +39,12 @@ export class UserController{
         return (user);
     }
 
+    @UseGuards(TargetUserExistGuard)
+    @Get(':id/matchhistory')
+    async getMatchHistory( @GetTargetedUser() targettedUser : User ): Promise< Game[] | undefined> {
+        const games : Game[] = await this.gameService.getUserGamesHistory(targettedUser);
+        return (games);
+    }
 
     // @UsePipes(ValidationPipe)
     // @Post()
