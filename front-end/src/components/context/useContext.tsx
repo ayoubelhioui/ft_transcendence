@@ -84,7 +84,11 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
         };
         
         try {
-            const res = await axiosInstance.post("/auth/logout", jResponse);
+            const res = await axiosInstance.post("/auth/logout", jResponse, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
 
             Cookies.remove('access_token', accessToken );
             Cookies.remove('refresh_token', refreshToken );
@@ -161,8 +165,9 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
             } catch (error: any) {
                 if (error.response.status === 403)
                 {
+                    // console.log("403 ====== === ");
                     setAccessToken(null);
-                    await refreshAccessToken(refreshToken ?? null);
+                    await refreshAccessToken(refresh_Token ?? null);
                     // setIsAuthenticated(false);
                 }
             }

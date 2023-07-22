@@ -104,23 +104,28 @@ export const Results = () => {
   }
 
   export const TopPlayers = () => {
-      const [Players, setPlayers] = useState<any>([]);
+    const auth = authContext();
+    const [Players, setPlayers] = useState<any>([]);
 
-      const axiosReq = async () => {
+    const axiosReq = async () => {
 
         try {
-          const response = await axios.get(`http://${import.meta.env.VITE_HOST}:3000/games/leaderboard`);
+          const response = await axios.get(`http://${import.meta.env.VITE_HOST}:3000/games/leaderboard`, {
+            headers: {
+                Authorization: `Bearer ${auth.accessToken}`
+            }
+          });
 
           setPlayers(response.data);
 
         } catch (error) {
           console.log("Error In LeaderBoard");
         }
-      }
+    }
 
-      useEffect(() => {
-        axiosReq();
-      }, []);
+    useEffect(() => {
+      axiosReq();
+    }, []);
       
 
       const navigate = useNavigate();

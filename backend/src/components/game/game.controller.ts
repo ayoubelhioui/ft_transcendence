@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { GameService } from './game.service';
 import { PaginationDto } from 'src/global/dto/pagination.dto';
 import { GetUser } from '../user/decorators/user.decorator';
@@ -8,8 +8,10 @@ import { TypeDto } from 'src/global/dto/boolean.dto';
 import { gameTypes, gameTypesNames } from 'src/global/types/game-types';
 import { TokenDto } from './dto/token.dto';
 import { GameGateway } from './game.gateway';
+import { TokenValidationGuard } from '../auth/guards/acces-token.guard';
 
 @Controller('games')
+// @UseGuards(TokenValidationGuard)
 export class GameController {
 
     constructor(private readonly gameService: GameService,

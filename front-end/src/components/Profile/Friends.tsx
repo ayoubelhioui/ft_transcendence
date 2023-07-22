@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiSearchAlt2 } from 'react-icons/bi';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { RiArrowDropDownLine } from 'react-icons/ri'
@@ -7,7 +7,17 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 
+
+import { address } from '../../Const';
+import axios from 'axios';
+import { authContext } from '../context/useContext';
+
+
 const ChannelCreation = () => {
+  const authApp = authContext();
+
+
+
   const [isCreated, setIsCreated] = useState(true);
 
   const [channelName, setChannelName] = useState('');
@@ -18,14 +28,46 @@ const ChannelCreation = () => {
 
   const [selected, setSelected] = useState('');
 
+  const [isProtected, setProtected] = useState(false);
 
-  const handleSubmit = () => null;
+  // Temporary State ////////////////
+  const [password, setPassword] = useState('');
+
+  const bodyData = {
+    name : channelName,
+    password,
+    NewAvatar,
+    visibility:selected
+  };
+
+  const handleSubmit = (event:React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    axiosReq();
+    setIsCreated(false);
+  };
   const handleChannelName = (event: React.ChangeEvent<HTMLInputElement>) => setChannelName(event.target.value);
 
   const handleImage = (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.files) {
           setNewAvatar(event.target.files[0]);
       }
+  };
+
+  const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value);
+
+
+  const axiosReq = async () => {
+    try {
+      const response = await axios.post(`http://${address}/channels`, bodyData, {
+        headers: {
+          Authorization: `Bearer ${authApp.accessToken}`
+        }
+      });
+      console.log(response.data);
+    }
+    catch(error) {
+      console.log("error in ChannelCreation ", error);
+    }
   };
 
   const HandleClose = () => setIsCreated(false);
@@ -61,12 +103,25 @@ const ChannelCreation = () => {
                                     <RiArrowDropDownLine size={25}/>
                                 </div>
                                 <ul className={`rounded-[10px] bg-white text-center flex flex-col text-blue-950 font-semibold ${isOpen ? 'block' : 'hidden'} w-full p-2`}>
-                                    <li className='mt-2 hover:outline hover:outline-sky-700 cursor-pointer' onClick={() => setSelected('Public')}>Public</li>
-                                    <li className='mt-2 hover:outline hover:outline-sky-700 cursor-pointer' onClick={() => setSelected('Protected')}>Protected</li>
-                                    <li className='mt-2 hover:outline hover:outline-sky-700 cursor-pointer' onClick={() => setSelected('Private')}>Private</li>
+                                    <li className='mt-2 hover:outline hover:outline-sky-700 cursor-pointer' onClick={() => {setSelected('public'); setProtected(false)}}>Public</li>
+                                    <li className='mt-2 hover:outline hover:outline-sky-700 cursor-pointer' onClick={() => {setSelected('protected'); setProtected(!isProtected)}}>Protected</li>
+                                    <li className='mt-2 hover:outline hover:outline-sky-700 cursor-pointer' onClick={() => {setSelected('private'), setProtected(false)}}>Private</li>
                                 </ul>
                             </div>
-                            <button type='submit' className='py-2 px-6 mt-12 bg-white text-blue-950 font-semibold mx-3' onClick={(event) => event.preventDefault()}>Create</button>
+
+                            {isProtected && (
+                              <div className="flex items-start justify-center flex-col mt-6">
+                                  <label htmlFor="name_input" className='flex ml-5 text-white'>Enter Password:</label>
+                                  <input
+                                      type="password"
+                                      className=' py-3 rounded-[10px] w-[90%]'
+                                      placeholder="password"
+                                      value={password}
+                                      onChange={handlePassword}
+                                  />
+                              </div>
+                            )}
+                            <button type='submit' className='py-2 px-6 mt-12 bg-white text-blue-950 font-semibold mx-3'>Create</button>
                         </form>
                     </DialogContent>
                 </div>

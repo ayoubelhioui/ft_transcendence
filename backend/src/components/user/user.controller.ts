@@ -15,6 +15,7 @@ import { UserDto } from 'src/global/dto/user.dto';
 
 
 @Controller('users')
+// @UseGuards(TokenValidationGuard)
 export class UserController{
 
     constructor(
@@ -44,6 +45,7 @@ export class UserController{
 
     @Get('me/channels')
     async getMyChannels(@GetUser() user: User) : Promise< Channel[] | undefined > {
+        console.log('over here');
         return (await this.channelService.getUserChannels(user));
     };
 
@@ -68,7 +70,7 @@ export class UserController{
     }
 
     @Post('image/:id')
-    @UseGuards(TokenValidationGuard)
+    // @UseGuards(TokenValidationGuard)
     @UseInterceptors(FileInterceptor('avatar', {
         storage: diskStorage({
             destination: './uploads',
@@ -86,7 +88,7 @@ export class UserController{
     async updateUserImage(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req) { 
     }
 
-    @UseGuards(TokenValidationGuard)
+    // @UseGuards(TokenValidationGuard)
     @Post('update')
     async updateUser (@Body() body, @Request() req) : Promise<object>{
         const User = await this.userService.update(body, req.user);

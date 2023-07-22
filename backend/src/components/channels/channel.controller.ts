@@ -25,8 +25,10 @@ import {  UserMutedGuard } from './guards/user-muted.guard';
 import { BlacklistedGuard } from './guards/blacklisted.guard';
 import { GroupGuard } from './guards/group.guard';
 import { CreateMessageDto } from './dto/create-message.dto';
+import { TokenValidationGuard } from '../auth/guards/acces-token.guard';
 
 @Controller('channels')
+// @UseGuards(TokenValidationGuard)
 export class ChannelController {
 
     constructor(private readonly channelService: ChannelService) {}
@@ -49,6 +51,7 @@ export class ChannelController {
     
     @Post('')
     async createChannel(@GetUser() user: User, @Body() createChannelDto : CreateChannelDto) : Promise < ReturnedChannelDto | undefined > {
+        console.log("got here")
         return (await this.channelService.createChannel(user,createChannelDto));
     };
 

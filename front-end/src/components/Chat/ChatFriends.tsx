@@ -4,41 +4,75 @@ import { AiOutlinePlusCircle as PlusCircle } from 'react-icons/ai'
 import {VscSettings} from 'react-icons/vsc'
 
 import { authContext } from '../context/useContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import GroupTypes from './GroupTypes';
+import axios from 'axios';
 
 const UserMessages = () => {
   const authApp = authContext();
+
+  const [userMessages, setUserMessages] = useState<any>([]);
+
+  const axiosReq = async () => {
+    try {
+      const response = await axios.get(`http://${import.meta.env.VITE_HOST}:3000/users/me/channels`, {
+        headers: {
+            Authorization: `Bearer ${authApp.accessToken}`
+        }
+      });
+
+      setUserMessages(response.data);
+
+      console.log(response.data);
+    }
+    catch(error) {
+      console.log("error in userMessages");
+    }
+  };
+
+  useEffect(() => {
+    axiosReq();
+  }, []);
+
   
   return (
-    <div className="flex mt-8 items-center mx-6" onClick={() => null}>
-        <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[65px] h-[65px] cursor-pointer'/>
-        <div className="flex flex-col ml-4 cursor-pointer">
-          <h2 className='text-white'>loginName</h2>
-          <p className='pt-1 pl-2 text-gray-600'>user's message</p>
-        </div>
-        <VscSettings size={25} className='text-white ml-auto cursor-pointer'/>
+    <div className="text-white flex flex-col  overflow-y-scroll scroll-smooth">
+      {
+        userMessages.length > 0 ? (
+          userMessages.map((userMessage: any) => (
+            <div className="flex mt-8 items-center mx-6" onClick={() => null}>
+              <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[65px] h-[65px] cursor-pointer'/>
+              <div className="flex flex-col ml-4 cursor-pointer">
+                <h2 className='text-white'>loginName</h2>
+                <p className='pt-1 pl-2 text-gray-600'>user's message</p>
+              </div>
+              <VscSettings size={25} className='text-white ml-auto cursor-pointer'/>
+            </div>
+          ))
+        ) : 
+        <h1>No Users</h1>
+      }
     </div>
   )
 }
 
-const UserFriends = () => {
-  return (
-    <div className="flex mt-3 flex-col h-[550px] overflow-y-scroll scroll-smooth">
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-        <UserMessages />
-    </div>
-  )
-}
+// const UserFriends = () => {
+//   return (
+//     <div className="flex mt-3 flex-col h-[550px] overflow-y-scroll scroll-smooth">
+//         <UserMessages />
+//         {/* <UserMessages />
+//         <UserMessages />
+//         <UserMessages />
+//         <UserMessages />
+//         <UserMessages />
+//         <UserMessages />
+//         <UserMessages />
+//         <UserMessages />
+//         <UserMessages /> */}
+//     </div>
+//   )
+// }
 
 const ChannelsGroup = () => {
   return (
@@ -88,7 +122,7 @@ const ChatFriends = () => {
             </div>
 
             {
-              activeTab === 'Friends' ? <UserFriends /> : <ChannelsGroup />
+              activeTab === 'Friends' ? <UserMessages /> : <ChannelsGroup />
             }
             
         </div>    
