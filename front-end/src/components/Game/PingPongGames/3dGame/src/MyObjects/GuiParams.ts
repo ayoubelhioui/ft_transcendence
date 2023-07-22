@@ -49,9 +49,9 @@ export class GuiParams {
         //light
         let light = this.getVal("light", {
             spotIntensity: 1.6, 
-            penumbra:0.45,
-            angle:0,
-            amIntensity: 1,
+            penumbra:params.penumbra,
+            angle:params.angle,
+            amIntensity: params.intensity,
         }, 0, 10, 0.01)
     
         //this.game.this.gameInfo.start = true; this.game.ballObj.position.y = 0; this.game.ballObj.velocity.y = 15
