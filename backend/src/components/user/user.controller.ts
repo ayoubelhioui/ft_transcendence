@@ -68,8 +68,11 @@ export class UserController{
     };
 
 
-   
-    
+   @Get('me/channels')
+    async getMatchResults(@GetUser() user: User) : Promise< Channel[] | undefined > {
+        return (await this.channelService.getUserChannels(user));
+    };
+
     @Get('image/:id')
     async getUserImage(@Param('id', ParseIntPipe) id : number, @Response() res) {
         console.log('over here');
