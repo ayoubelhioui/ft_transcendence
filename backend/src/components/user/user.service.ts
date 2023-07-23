@@ -30,6 +30,7 @@ export class UserService{
 
 
     async findUserById(id: number, relations: any = {}): Promise<User | undefined> {
+        console.log(relations, id);
         const user : User  = await this.userRepository.findOneByIdWithRelations(id, relations);
         if (!user)
             throw new NotFoundException("user Not Found");
@@ -52,7 +53,7 @@ export class UserService{
 
     async removeUser(userId : number)
     {
-        return (this.userRepository.delete(userId));
+        return (await this.userRepository.delete(userId));
     }
 
     generateImageURL (userId: number, imageExtension: string) : string{
@@ -66,6 +67,13 @@ export class UserService{
         await this.tokenBlacklistRepository.save(newEntity);
     }
 
+    // async getAchievements(id: number) : any {
+    //     return (this.userRepository.findAllWithRelations({
+    //         where: {
+    //             IntraId
+    //         }
+    //     }))
+    // }
     async accessTokenInBlacklist(token: string): Promise<TokenBlacklist | undefined> {
         return (await this.tokenBlacklistRepository.findOne({
             where : {

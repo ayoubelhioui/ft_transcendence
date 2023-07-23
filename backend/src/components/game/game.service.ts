@@ -6,6 +6,7 @@ import { FriendsService } from '../friends/friends.service';
 import { pl } from 'date-fns/locale';
 import { GameGateway } from './game.gateway';
 import { GameSessions } from './game-sessions.service';
+import { GetUser } from '../user/decorators/user.decorator';
 
 @Injectable()
 export class GameService {
@@ -49,6 +50,17 @@ export class GameService {
         return liveGames;
     }
     
+    // async getMatchResults(@GetUser() user: User) : Promise< Game[] | undefined > {
+    //     const matchesResult = await this.gamesRepository.findAllWithRelations({
+    //         where : [
+    //             { player1id : user.IntraId},
+    //             { player2id : user.IntraId} ,
+    //         ],
+    //         relations : ["player1","player2"]
+    //     })
+    //     return (matchesResult);
+    // }
+
     async getLatestResult(page: number = 1, pageSize: number = 10) {
         //make it bring only 10 games last started
 

@@ -15,6 +15,7 @@ import { UserDto } from 'src/global/dto/user.dto';
 import { TargetUserExistGuard } from "./guards/target-user-exists.guard";
 import { GameService } from "../game/game.service";
 import { GetTargetedUser } from "./decorators/targeted-user.decorator";
+import { TargetUserSpecialCaseGuard } from "./guards/target-user-special-case-guard";
 
 
 @Controller('users')
@@ -39,15 +40,22 @@ export class UserController{
         return (user);
     }
 
-    @UseGuards(TargetUserExistGuard)
-    @Get(':id/matchhistory')
+    @UseGuards(TargetUserSpecialCaseGuard)
+    @Get(':targetUserId/matchhistory')
     async getMatchHistory( @GetTargetedUser() targettedUser : User ): Promise< Game[] | undefined> {
         const games : Game[] = await this.gameService.getUserGamesHistory(targettedUser);
         return (games);
     }
 
-    // @UsePipes(ValidationPipe)
-    // @Post()
+
+    @Get(':targetUserId/achievements')
+    @UseGuards(TargetUserSpecialCaseGuard)
+    async getAchievements(@GetTargetedUser() user) {
+        return (this.userService.findUserById(user.id, ["achievements"]));
+    }
+    
+    // @UserGuards(TargetUserSpecialCaseGuard)
+    // @Get('')
     // async createUsers(@Body() createUserDto: UserDto): Promise< User | undefined>  {
     //     return (await this.userService.createUser(createUserDto));
     // }
@@ -68,14 +76,9 @@ export class UserController{
     };
 
 
-   @Get('me/channels')
-    async getMatchResults(@GetUser() user: User) : Promise< Channel[] | undefined > {
-        return (await this.channelService.getUserChannels(user));
-    };
-
+    
     @Get('image/:id')
     async getUserImage(@Param('id', ParseIntPipe) id : number, @Response() res) {
-        console.log('over here');
         const stream = fs.createReadStream('./uploads/' + id);  
         stream.pipe(res);
     }
@@ -96,8 +99,7 @@ export class UserController{
             callback(null, true);
         }
     }))
-    async updateUserImage(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req) { 
-    }
+    async updateUserImage(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req) { }
 
     @UseGuards(TokenValidationGuard)
     @Post('update')
