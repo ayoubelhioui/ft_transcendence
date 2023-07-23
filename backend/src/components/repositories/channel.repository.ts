@@ -21,7 +21,7 @@ class ChannelRepository extends ABaseRepository<Channel> implements IChannelRepo
   private getQueryBlacklistedChannelIdByUserAndChannel
 
   async getChannels(user : User) : Promise < Channel[] | undefined > {
-    const channlesQuery = `select id, name, visibility, "channel"."isGroup" from channel \
+    const channlesQuery = `select id, name, visibility, "channel"."isGroup" , avatar from channel \
       where  \
         channel.visibility IN ('public', 'protected') \
       and \

@@ -142,7 +142,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
             setRefreshToken(refresh_Token || null);
             
             try {
-                if (!accessToken)
+                if (!access_Token)
                 {
                     
                     console.log("No Tokeeen");
@@ -154,7 +154,7 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
                 else {
                     const response = await axiosInstance.get('/auth/user', {
                         headers: {
-                            Authorization: `Bearer ${accessToken}`
+                            Authorization: `Bearer ${access_Token}`
                         }
                     });
                     
@@ -165,16 +165,14 @@ export const AuthProvider: React.FC<{ children: any }> = ( { children } ) => {
             } catch (error: any) {
                 if (error.response.status === 403)
                 {
-                    // console.log("403 ====== === ");
                     setAccessToken(null);
                     await refreshAccessToken(refresh_Token ?? null);
-                    // setIsAuthenticated(false);
                 }
             }
         }
 
         checkAuthentication();
-    }, [accessToken, isAuthenticated]);
+    }, [accessToken, isAuthenticated, refreshToken]);
     
     return (
         <AuthContext.Provider value={{logout, isAuthenticated, refreshAccessToken, user, updateUser, accessToken}}>

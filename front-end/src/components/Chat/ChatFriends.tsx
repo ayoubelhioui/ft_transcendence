@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import GroupTypes from './GroupTypes';
 import axios from 'axios';
 
-const UserMessages = () => {
+const UserMessages = ({setUserName}: any) => {
   const authApp = authContext();
 
   const [userMessages, setUserMessages] = useState<any>([]);
@@ -23,8 +23,6 @@ const UserMessages = () => {
       });
 
       setUserMessages(response.data);
-
-      console.log(response.data);
     }
     catch(error) {
       console.log("error in userMessages");
@@ -33,6 +31,8 @@ const UserMessages = () => {
 
   useEffect(() => {
     axiosReq();
+
+    
   }, []);
 
   
@@ -41,17 +41,16 @@ const UserMessages = () => {
       {
         userMessages.length > 0 ? (
           userMessages.map((userMessage: any) => (
-            <div className="flex mt-8 items-center mx-6" onClick={() => null}>
+            <div key={userMessage.id} className="flex mt-8 items-center mx-6" onClick={() => setUserName(userMessage.name)}>
               <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[65px] h-[65px] cursor-pointer'/>
-              <div className="flex flex-col ml-4 cursor-pointer">
-                <h2 className='text-white'>loginName</h2>
+              <div className="flex flex-col ml-6 cursor-pointer">
+                <h2 className='text-white'>{userMessage.name}</h2>
                 <p className='pt-1 pl-2 text-gray-600'>user's message</p>
               </div>
-              <VscSettings size={25} className='text-white ml-auto cursor-pointer'/>
             </div>
           ))
         ) : 
-        <h1>No Users</h1>
+        <div></div>
       }
     </div>
   )
@@ -82,7 +81,7 @@ const ChannelsGroup = () => {
   )
 }
 
-const ChatFriends = () => {
+const ChatFriends = ({handleStateName}: any) => {
 
   const [activeTab, setActiveTab] = useState('Friends');
 
@@ -94,9 +93,6 @@ const ChatFriends = () => {
     <div className="top_2 col-span-1 row-span-2 max-m-custom-md:w-[300px] max-sm:hidden h-[750px] ">
         <div className="pt-1 flex w-full justify-between items-center">
             <input type="search" className="shadow border-0 text-white w-full" placeholder="Search a friend..." />
-            {/* <button type="button" onClick={() => null} className='absolute left-[65%] mt-3 mr-4'>
-              <BiSearchAlt2 size={20} />
-            </button> */}
             <button type='button' className='outline-none'>
                 <PlusCircle size={30} className='text-white'/>
             </button>
@@ -122,7 +118,7 @@ const ChatFriends = () => {
             </div>
 
             {
-              activeTab === 'Friends' ? <UserMessages /> : <ChannelsGroup />
+              activeTab === 'Friends' ? <UserMessages setUserName={handleStateName}/> : <ChannelsGroup />
             }
             
         </div>    

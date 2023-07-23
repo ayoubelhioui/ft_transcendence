@@ -58,7 +58,7 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
     .leftJoinAndSelect('channel.lastMessage', 'lastMessage')
     .leftJoinAndSelect('lastMessage.user', 'user')
     .where('channelUsers.userId = :id', { id: userId })
-    .select(['channel.id', 'channel.name', 'channel.visibility', 'channel.isGroup'])
+    .select(['channel.id', 'channel.name', 'channel.visibility', 'channel.isGroup', 'channel.avatar'])
     .addSelect('lastMessage.id', 'lastMessage_id')
     .addSelect('lastMessage.message', 'lastMessage_message')
     .addSelect('lastMessage.time', 'lastMessage_time')
@@ -75,7 +75,8 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
           id: result.channel_id,
           name: result.channel_name,
           visibility: result.channel_visibility,
-          isGroup: result.channel_isGroup
+          isGroup: result.channel_isGroup,
+          avatar : result.channel_avatar
         };
 
         if (result.lastMessage_id) {

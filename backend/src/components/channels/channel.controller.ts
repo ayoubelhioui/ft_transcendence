@@ -51,7 +51,6 @@ export class ChannelController {
     
     @Post('')
     async createChannel(@GetUser() user: User, @Body() createChannelDto : CreateChannelDto) : Promise < ReturnedChannelDto | undefined > {
-        console.log("got here")
         return (await this.channelService.createChannel(user,createChannelDto));
     };
 
@@ -81,6 +80,7 @@ export class ChannelController {
     @Post(':id/join')
     @UseGuards(ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard)
     async joinChannel(@GetUser() user : User, @GetChannel() channel : Channel, @Body() joinChannelDto : JoinChannelDto) {
+        console.log(joinChannelDto);
         await this.channelService.joinChannel(user, channel, joinChannelDto);
         return {
             message : "user joined successfully"

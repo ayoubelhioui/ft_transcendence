@@ -31,7 +31,7 @@ class Channel{
     public isGroup : boolean;
 
 
-    @Column({default : "/uploads/defaultGroupAvatar.jpg"})
+    @Column({default : "-1"})
     public avatar: string;
    
     
