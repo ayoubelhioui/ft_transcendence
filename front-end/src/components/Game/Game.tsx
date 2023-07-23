@@ -57,6 +57,7 @@ function getUrlParams() {
 
     //console.log("urls params : ?userId=1&isBotMode=false&isClassic=true&isWatchMode=false&gameToken=1&userToInvite=2")
     console.log("urls params : ?userId=1&isWatchMode=false&gameToken=1&userToInvite=2")
+
     return {
         isWatchMode : searchParams.get('isWatchMode') === 'true',
         gameToken : searchParams.get('gameToken') as string,
@@ -64,7 +65,7 @@ function getUrlParams() {
         userToInvite : searchParams.get('userToInvite') as string,
         // isBotMode : searchParams.get('isBotMode') === 'true',
         // isClassic : searchParams.get('isClassic') === 'true',
-        isBotMode : true,
+        isBotMode : false,
         isClassic : true,
     }
 }
@@ -87,20 +88,27 @@ const Game =  () => {
 
 
     useEffect(() => {
+        const canvasId = "gameCanvasId"
         if (!isLoaded.current) {
 
             function createCanvas(containerElement : any) {
-                const canvas = document.createElement('canvas');
-                canvas.id = "blabla"
-                containerElement.appendChild(canvas);
-                return canvas;
+                let canvas = document.getElementById(canvasId)
+                if (canvas) {
+                    canvas.style.display = 'absolute'
+                    return canvas
+                } else {
+                    canvas = document.createElement('canvas');
+                    canvas.id = canvasId
+                    containerElement.appendChild(canvas);
+                    return canvas;
+                }
             }
 
 
             let params : GameParams = {
                 isWatchMode : urlParams.isWatchMode,
-                gameToken : +urlParams.gameToken,
-                userToInvite : +urlParams.userToInvite,
+                gameToken : urlParams.gameToken,
+                userToInvite : urlParams.userToInvite ? +urlParams.userToInvite : null,
                 userId : +urlParams.userId,
                 isClassic : urlParams.isClassic,
                 isBotMode : urlParams.isBotMode,
@@ -112,6 +120,12 @@ const Game =  () => {
             runGame(params)
             isLoaded.current = true;
         }
+        return () => {
+            const canvas = document.getElementById(canvasId)
+            if (canvas)
+                canvas.style.display = 'none'
+            console.log('Component is about to be destroyed. End Game');
+          };
     }, [])
 
     return (

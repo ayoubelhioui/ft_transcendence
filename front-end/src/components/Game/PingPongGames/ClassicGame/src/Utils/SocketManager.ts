@@ -61,6 +61,16 @@ export class SocketManager {
             socket.on("gameScore", (data) => {
                 game.changeScore(data)
             })
+
+
+            socket.on("new_notification", (data) => {
+                console.log("new notification",  data)
+            })
+
+            socket.on("exception", (data) => {
+                console.log("exception",  data)
+            })
+
         } else {
             socket.on("live_data", (data : LiveData) => {
                 game.scene.player1.receivePos({y : data.paddlePlayer1})
