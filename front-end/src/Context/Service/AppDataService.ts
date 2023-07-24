@@ -10,9 +10,9 @@ export interface AppInterface {
     loaderService : LoaderService
 }
 
-const requestService = new RequestService()
-const socketService = new SocketService(requestService)
 const authService = new AuthService()
+const requestService = new RequestService(authService)
+const socketService = new SocketService(requestService)
 const loaderService = new LoaderService()
 
 const appService : AppInterface = {

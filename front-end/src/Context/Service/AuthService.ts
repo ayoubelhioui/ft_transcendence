@@ -26,6 +26,13 @@ export class AuthService {
 
     constructor() {}
 
+    get getAccessToken() {
+        return this.accessToken
+    }
+
+    //====================================================
+    //====================================================
+
     private async getUser() {
         const response = await axiosInstance.get('/auth/user', {
             headers: {
