@@ -3,7 +3,7 @@ import { AppInterface } from "./Service/AppDataService";
 
 const AppDataContext = createContext<AppInterface | undefined>(undefined)
 
-function useAppDataContext() {
+function useAppServiceContext() {
 
     const appData = useContext(AppDataContext)
 
@@ -16,5 +16,5 @@ function useAppDataContext() {
 
 export {
     AppDataContext,
-    useAppDataContext
+    useAppServiceContext
 }
