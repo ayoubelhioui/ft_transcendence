@@ -71,12 +71,16 @@ export class AuthService {
                                 status : STATUS_ERROR,
                                 message : "Can't get user: " + error,
                             })
+                            Cookies.remove('access_token');
+                            Cookies.remove('refresh_token');
                         }
                     } catch (error : any) {
                         callBack({
                             status : STATUS_ERROR,
                             message : "Can't Refresh Token: " + error,
                         })
+                        Cookies.remove('access_token');
+                        Cookies.remove('refresh_token');
                     }
                 } else {
                     callBack({

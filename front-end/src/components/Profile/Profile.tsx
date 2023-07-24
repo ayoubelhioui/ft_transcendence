@@ -16,7 +16,7 @@ import DialogContent from '@mui/material/DialogContent';
 import { authContext } from '../context/useContext';
 import Settings from './Settings';
 import React, { useState } from 'react';
-import axiosInstance from '../api/axios';
+//import axiosInstance from '../api/axios';
 import { address } from '../../Const';
 
 
