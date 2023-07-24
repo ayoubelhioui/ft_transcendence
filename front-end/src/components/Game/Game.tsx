@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState} from 'react'
 import axios from "axios";
 
+import Cookies from 'js-cookie';
+
 import { GameParams } from './PingPongGames/interfaces/interface.game.params'
 
 import classicGameStart from './PingPongGames/ClassicGame/src/game'
@@ -10,6 +12,7 @@ import './Game.css'
 import LoadingPage from './LoadingPage'
 import EndGame from './EndGame'
 import { GameState } from './PingPongGames/GameState'
+import { authContext } from '../context/useContext';
 const r = (state: number): JSX.Element => {
     if (state === GameState.gameStarted) {
       return <div></div>
@@ -24,18 +27,9 @@ const r = (state: number): JSX.Element => {
 
 async function loadData(params : GameParams) {
     try {
-        const host = import.meta.env.VITE_HOST || 'localhost'
-        const port = import.meta.env.VITE_SERVER_PORT || '80'
-        const socketAddr = `http://${host}:${port}`
-        const userId = params.userId
-        const availableUsers = await axios.get(`${socketAddr}/users`)
-        availableUsers.data = availableUsers.data.filter((item : any) => item.username !== "bot")
-        const usersIds = availableUsers.data.map((item : any) => item.id)
-        console.log(usersIds)
-        const response = await axios.post(`${socketAddr}/auth/${userId}`)
-        const authToken = response.data.access_token
-        console.log(`using user ${userId} token => `, authToken)
-        return (authToken)
+        const access_Token = Cookies.get('access_token');
+        console.log(`using user token => `, access_Token)
+        return (access_Token!)
 
     } catch (error) {
         console.log(`Can't get users => ${error}`)
@@ -63,6 +57,7 @@ function getUrlParams() {
 
     //console.log("urls params : ?userId=1&isBotMode=false&isClassic=true&isWatchMode=false&gameToken=1&userToInvite=2")
     console.log("urls params : ?userId=1&isWatchMode=false&gameToken=1&userToInvite=2")
+
     return {
         isWatchMode : searchParams.get('isWatchMode') === 'true',
         gameToken : searchParams.get('gameToken') as string,
@@ -70,8 +65,8 @@ function getUrlParams() {
         userToInvite : searchParams.get('userToInvite') as string,
         // isBotMode : searchParams.get('isBotMode') === 'true',
         // isClassic : searchParams.get('isClassic') === 'true',
-        isBotMode : true,
-        isClassic : false,
+        isBotMode : false,
+        isClassic : true,
     }
 }
 
@@ -81,38 +76,63 @@ const Game =  () => {
     console.log(urlParams)
     const isLoaded = useRef(false)
     const [state, setState] = useState(GameState.gameLoading)
-    const canvasRef = useRef(null);
+    let threeRootElement : any = undefined;
+    // const canvasRef = useRef(null);
 
     const gameCallBack = (state : number) => {
         setTimeout(setState, 500, state)
         //setState(state)
     }
 
-    let params : GameParams = {
-        isWatchMode : urlParams.isWatchMode,
-        gameToken : +urlParams.gameToken,
-        userToInvite : +urlParams.userToInvite,
-        userId : +urlParams.userId,
-        isClassic : urlParams.isClassic,
-        isBotMode : urlParams.isBotMode,
-        canvas : canvasRef.current,
-        authToken : "",
-        callBack : gameCallBack
-    }
+   
 
 
     useEffect(() => {
+        const canvasId = "gameCanvasId"
         if (!isLoaded.current) {
-            params.canvas = canvasRef.current
+
+            function createCanvas(containerElement : any) {
+                let canvas = document.getElementById(canvasId)
+                if (canvas) {
+                    canvas.style.display = 'absolute'
+                    return canvas
+                } else {
+                    canvas = document.createElement('canvas');
+                    canvas.id = canvasId
+                    containerElement.appendChild(canvas);
+                    return canvas;
+                }
+            }
+
+
+            let params : GameParams = {
+                isWatchMode : urlParams.isWatchMode,
+                gameToken : urlParams.gameToken,
+                userToInvite : urlParams.userToInvite ? +urlParams.userToInvite : null,
+                userId : +urlParams.userId,
+                isClassic : urlParams.isClassic,
+                isBotMode : urlParams.isBotMode,
+                canvas : createCanvas(threeRootElement),
+                authToken : "",
+                callBack : gameCallBack
+            }
+            console.log(params)
             runGame(params)
             isLoaded.current = true;
         }
+        return () => {
+            const canvas = document.getElementById(canvasId)
+            if (canvas)
+                canvas.style.display = 'none'
+            console.log('Component is about to be destroyed. End Game');
+          };
     }, [])
 
     return (
         <>
             {r(state)}
-            <canvas ref={canvasRef} />
+            {/* <canvas ref={element => threeRootElement = element} /> */}
+            <div  ref={element => threeRootElement = element} />
         </>
     )
         

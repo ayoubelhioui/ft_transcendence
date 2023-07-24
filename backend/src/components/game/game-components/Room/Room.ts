@@ -12,9 +12,8 @@ export type CallBackFun = (room : ThreeRoom | ClassicRoom) => Promise<void>
 
 export class Room {
 
-    static roomId : number = 0
 
-    roomId = Room.roomId
+    roomId : string
     roomType : number = -1
     isBotMode : boolean
     player1 : Player | undefined = undefined;
@@ -22,7 +21,7 @@ export class Room {
     watchers : Map<string, Watcher> = new Map()
     closed : Boolean = false
     callBack : CallBackFun
-    gameToken : string; //!game token is the same as roomId
+    //gameToken : string; //!game token is the same as roomId
     protected gameService : GameService
 
     inviteInfo = {
@@ -33,13 +32,13 @@ export class Room {
 
     
 
-    constructor(isBotMode : boolean, gameService : GameService, callBack : CallBackFun) {
+    constructor(roomId : string, isBotMode : boolean, gameService : GameService, callBack : CallBackFun) {
         this.isBotMode = isBotMode
         this.gameService = gameService
         this.callBack = callBack
         if (this.isBotMode)
             this.closed = true
-        Room.roomId++
+        this.roomId = roomId
     }
 
     wrapMethod(originalMethod: any) {

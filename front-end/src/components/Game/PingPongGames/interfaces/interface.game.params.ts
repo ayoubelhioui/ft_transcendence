@@ -1,11 +1,11 @@
 export interface GameParams {
     isWatchMode : boolean,
-    gameToken : number,
     isBotMode : boolean,
     isClassic : boolean,
     userId : number,
     canvas : any,
-    userToInvite : number,
+    gameToken : string | null,
+    userToInvite : number | null,
     authToken : string,
     callBack : (state: number) => void
 }

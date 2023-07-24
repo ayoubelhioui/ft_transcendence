@@ -6,7 +6,7 @@ import { createContext, useState, useEffect, useContext } from "react";
 // import { useCookies } from "react-cookie";
 
 import Cookies from 'js-cookie';
-import axiosInstance from "../api/axios";
+//import axiosInstance from "../api/axios";
 import axios from "axios";
 
 

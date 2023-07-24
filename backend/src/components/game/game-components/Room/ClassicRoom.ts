@@ -9,8 +9,8 @@ export class ClassicRoom extends Room {
 
     game : ClassicGame
 
-    constructor(isBot : boolean, gameService : GameService, callBack : CallBackFun) {
-        super(isBot, gameService, callBack)
+    constructor(roomId : string, isBot : boolean, gameService : GameService, callBack : CallBackFun) {
+        super(roomId, isBot, gameService, callBack)
         this.roomType = 0
 
         this.sendBallInfo = this.wrapMethod(this.sendBallInfo)

@@ -40,7 +40,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
     const token = authToken.replace('Bearer ', '');
     try {
       var payload = await this.jwtService.verify(token, {
-        secret: "khalid",
+        secret: "helloWorld",
       });
     } catch (err) {
       return (false);

@@ -11,6 +11,8 @@ import { PlayerJoinDto } from './dto/play-join.dto';
 import { RacketMoveDto } from './dto/racket-move.dto';
 import { HitBallDto } from './dto/hit-ball.dto';
 import { MovePaddleDto } from './dto/move-paddle.dto';
+import { UserRepository } from '../repositories';
+import { UserService } from '../user/user.service';
 
 @UseFilters(WebSocketExceptionFilter)
 @UsePipes(new ValidationPipe({
@@ -23,7 +25,9 @@ export class GameGateway {
    
   constructor(
     private readonly socketService: SocketService,
-    private readonly gameSession : GameSessions
+    private readonly gameSession : GameSessions,
+    private readonly userService : UserService
+
     
     ){} 
   
@@ -43,27 +47,41 @@ export class GameGateway {
 
 
   
-  //make GenerateInviteLink + Invite user (getFriends)
-  @SubscribeMessage ('invite_to_game')
-  handleSendInviteEvent(client: Socket, payload: InviteToGameDto) {
-    // Handle invite event logic
-    console.log('Received invite event:', payload);
-    const user : User =  this.socketService.getUser(client);
-    const { gameId, targetedUserId} = payload;
+  inviteToGame(targetedUserId: number, gameId : string)
+  {
     const socketsToSend : Socket[] = this.socketService.getSocket(+targetedUserId);
     const payloadToSend = {
-      message: `You've been invited to a game by ${user.username}`,
-      link : `games/${gameId}/join`,
-      method: "Put"
+      gameToken: gameId
     }
     socketsToSend.forEach(socketToSend => {
-      socketToSend.emit('invitationToGame',payloadToSend );
+      socketToSend.emit('invite_to_game',payloadToSend );
     })
+    
   }
+
+  //make GenerateInviteLink + Invite user (getFriends)
+  // @SubscribeMessage ('invite_to_game')
+  // handleSendInviteEvent(client: Socket, payload: InviteToGameDto) {
+  //   // Handle invite event logic
+  //   console.log('Received invite event:', payload);
+  //   const user : User =  this.socketService.getUser(client);
+  //   const { gameId, targetedUserId} = payload;
+  //   const socketsToSend : Socket[] = this.socketService.getSocket(+targetedUserId);
+  //   const payloadToSend = {
+  //     message: `You've been invited to a game by ${user.username}`,
+  //     link : `games/${gameId}/join`,
+  //     method: "Put"
+  //   }
+  //   socketsToSend.forEach(socketToSend => {
+  //     socketToSend.emit('invitationToGame',payloadToSend );
+  //   })
+  // }
 
   @SubscribeMessage ('join_game')
   async joinGame(client: Socket, payload: PlayerJoinDto) {
-    payload.user = this.socketService.getUser(client);
+    const {id} = this.socketService.getUser(client);
+    payload.user = await this.userService.findUserById(id)
+    payload.invite_callback = this.inviteToGame
     await this.gameSession.addClient(payload, client)
   }
 
