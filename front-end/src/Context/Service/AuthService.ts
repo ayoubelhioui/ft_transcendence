@@ -135,7 +135,7 @@ export class AuthService {
             })
         } catch (error : any) {
             callBack({
-                status : STATUS_SUCCESS,
+                status : STATUS_ERROR,
                 message : "Can't logout" + error
             })
         }

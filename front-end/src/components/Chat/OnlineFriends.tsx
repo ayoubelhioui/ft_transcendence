@@ -1,8 +1,9 @@
 // import React from 'react'
-import { authContext } from '../context/useContext';
+import { useAppServiceContext } from '../../Context/Context';
 
 const OnlineFriends = () => {
-    const authApp = authContext();
+  const appService = useAppServiceContext()
+  const authApp = appService.authService;
     
     return (
     <div className="flex flex-col items-center">

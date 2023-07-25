@@ -1,18 +1,25 @@
-import { address, host } from "../../Const";
-import axios from "axios";
-import { authContext } from "../context/useContext";
-import { error } from "console";
-import { useEffect, useState } from "react";
 import { Avatar } from "@mui/material";
-import { makeGetRequest } from "../../Helpers";
-// import {address} from '../../Const'
+import { useNavigate } from "react-router-dom";
+import { MdKeyboardDoubleArrowRight as RightArrowIcon, MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
+import { ReactNode} from "react";
+import { useAppServiceContext } from "../../Context/Context";
+import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../Const";
 
-// import Avatar from '@mui/material/Avatar';
+const Wrapper = ( {children} : {children : ReactNode} ) =>  {
+    return (
+        <div className="flex flex-col purple_back mt-[5%] w-[80%] mx-auto h-[60vh] max-md:mt-[3%] max-md:w-[85%] max-sm:h-screen pb-5 max-sm:pb-0 max-custom-md:w-[85%] max-custom-md:h-[75vh]">
+            <h1 className="text-white text-2xl mx-5 mt-5">Live Games</h1>
+            <div className="flex flex-wrap mt-12 mx-5 gap-12 overflow-x-scroll justify-around">
+                {children}
+            </div>
+        </div>
+    )
+}
 
-
-
-const LiveDiv = ({ isClassic, player1, player2 }: {isClassic: boolean, player1 : any, player2 : any}) => {
-    const auth = authContext();
+const Item = ({payload} : {payload : any}) => {
+    const isClassic : boolean = payload.isClassic
+    const player1 = payload.player1
+    const player2 = payload.player2
 
     const imagePath = isClassic ? "/src/assets/table3d.png" : "src/assets/classic-game.png"
 
@@ -38,54 +45,54 @@ const LiveDiv = ({ isClassic, player1, player2 }: {isClassic: boolean, player1 :
     )
 }
 
-const liveMatches = () => {
-
-    const [lives, req] = makeGetRequest(`http://${address}/games/live`, (error) => {
-        console.log("Error ", error)
-    })
-
-
-    console.log(lives);
-
+const NoContent = () => {
+    return (
+        <Wrapper>
+            <div className="flex mx-auto py-2 "> No Lives </div>
+        </Wrapper>
+    )
+}
 
 
-      useEffect(() => {
-        req();
-      }, []);
+const List = ({lives} : {lives : any}) => {
+    return (
+        <Wrapper>
+            {
+                lives.map((item : any, index : number) => (            
+                    <Item key={item.token} payload={item}/>
+                ))
+            }
+        </Wrapper>
+    )
+}
 
-    
-
-    if (false) {
-        //!center load spinner
-        return (<div></div>)
+const LiveMatches = () => {
+    const appService = useAppServiceContext()
+    const lives = appService.requestService.getLivesRequest()
+  
+        
+    if (lives.status === STATUS_UNDEFINED) {
+      return <div>Loading ...</div>
+    } else if (lives.status === STATUS_ERROR) {
+      return (
+        <>
+        <div> Popup Error </div>
+        <NoContent></NoContent>
+        </>
+      )
+    } else if (lives.status === STATUS_SUCCESS) {
+        if (lives.data.length === 0) {
+            return <NoContent></NoContent>
+        } else {
+            return <List lives={lives.data}></List>
+        }
     } else {
-        return (
-            <div className="flex flex-col purple_back mt-[5%] w-[80%] mx-auto h-[60vh] max-md:mt-[3%] max-md:w-[85%] max-sm:h-screen pb-5 max-sm:pb-0 max-custom-md:w-[85%] max-custom-md:h-[75vh]">
-                <h1 className="text-white text-2xl mx-5 mt-5">Live Games</h1>
-                <div className="flex flex-wrap mt-12 mx-5 gap-12 overflow-x-scroll justify-around">
-    
-
-                    {
-                      
-                    
-                        lives.map((item : any, index  : number) => (
-                            
-                            <LiveDiv key={item.token} isClassic={item.type} player1={item.player1} player2={item.player2}/>
-
-                           
-                        ))
-
-                        
-
-                    }
-
-                    
-
-                </div>
-            </div>
-        )
-
+        throw Error("Unhandled status")
     }
 }
 
-export default liveMatches
+
+export default LiveMatches;
+
+
+

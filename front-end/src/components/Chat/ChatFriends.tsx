@@ -3,13 +3,14 @@
 import { AiOutlinePlusCircle as PlusCircle } from 'react-icons/ai'
 import {VscSettings} from 'react-icons/vsc'
 
-import { authContext } from '../context/useContext';
 import { useState } from 'react';
 
 import GroupTypes from './GroupTypes';
+import { useAppServiceContext } from '../../Context/Context';
 
 const UserMessages = () => {
-  const authApp = authContext();
+  const appService = useAppServiceContext()
+  const authApp = appService.authService;
   
   return (
     <div className="flex mt-8 items-center mx-6" onClick={() => null}>

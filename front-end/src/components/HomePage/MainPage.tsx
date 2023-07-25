@@ -1,21 +1,20 @@
 import { Route, Routes } from "react-router-dom"
-import { HomePage, MainWrapper, Navbar } from ".."
-
-
-
+import { Chat, HomePage, LeaderBoard, LiveMatches, MainWrapper, Navbar, Profile, ResultsLatestHome } from ".."
+import Game from "../Game/Game"
+import ChooseGame from "../Game/ChooseGame"
 
 
 const MainPage = () => {
     return (
         <MainWrapper>
-            {/* <Navbar />  */}
+            <Navbar /> 
             <Routes>
 
                 <Route path='/' >
                 
                     <Route index element={<HomePage />}/>
 
-                    {/* <Route path='Home' element={<HomePage />}/>
+                    <Route path='Home' element={<HomePage />}/>
 
                     <Route path='Profile' element={<Profile />}/>
 
@@ -29,7 +28,7 @@ const MainPage = () => {
 
                     <Route path='Playthrough' element={ <ChooseGame />} />
 
-                    <Route path='Live' element={<LiveMatches />}/> */}
+                    <Route path='Live' element={<LiveMatches />}/>
 
                 </Route>
 

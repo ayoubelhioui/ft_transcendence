@@ -8,11 +8,9 @@ import { GameParams } from './PingPongGames/interfaces/interface.game.params'
 import classicGameStart from './PingPongGames/ClassicGame/src/game'
 import threeGameStart from './PingPongGames/3dGame/src/game'
 
-import './Game.css'
 import LoadingPage from './LoadingPage'
 import EndGame from './EndGame'
 import { GameState } from './PingPongGames/GameState'
-import { authContext } from '../context/useContext';
 const r = (state: number): JSX.Element => {
     if (state === GameState.gameStarted) {
       return <div></div>

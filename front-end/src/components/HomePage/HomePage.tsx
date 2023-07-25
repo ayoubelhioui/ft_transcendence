@@ -2,7 +2,7 @@
 // import { motion } from 'framer-motion'
 import { NavLink } from 'react-router-dom';
 import img from "../../assets/ping-pong-player-darkbg.png"
-import FriendSection from '../FriendSection'
+import FriendSection from './FriendSection'
 import { address } from '../../Const';
 import { useAppServiceContext } from '../../Context/Context';
 import { Live } from './Containers/Live';

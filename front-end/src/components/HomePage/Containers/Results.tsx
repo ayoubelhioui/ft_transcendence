@@ -59,8 +59,8 @@ const List = ({list} : {list : any}) => {
     return (
         <Wrapper>
             {
-                list.slice(0, 3).map((item : any) => (            
-                    <Item key={item.token} payload={item}/>
+                list.slice(0, 3).map((item : any, index : number) => (            
+                    <Item key={index} payload={item}/>
                 ))
             }
 

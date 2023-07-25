@@ -1,9 +1,10 @@
-import { authContext } from '../context/useContext';
+
 
 import { useState } from 'react';
 
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdSend } from 'react-icons/md'
+import { useAppServiceContext } from '../../Context/Context';
 
 
 const ChatFooter = () => {
@@ -59,7 +60,8 @@ const Receiver = () => {
 }
 
 const Conversations = () => {
-  const authApp = authContext();
+  const appService = useAppServiceContext()
+  const authApp = appService.authService;
 
   const [isOpened, setIsOpened] = useState(false);
 

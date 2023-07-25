@@ -5,7 +5,7 @@ import { ReactNode} from "react";
 import { useAppServiceContext } from "../../../Context/Context";
 import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../../Const";
 
-const LiveWrapper = ( {children} : {children : ReactNode} ) =>  {
+const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
         <>
             <div className=' min-h-[370px] max-md:min-h-[270px] back rounded-[10px] flex-1 mr-16 max-custom-md:mr-0 flex flex-col justify-between shadow-md max-md:mr-0'>
@@ -16,7 +16,7 @@ const LiveWrapper = ( {children} : {children : ReactNode} ) =>  {
     )
 }
 
-const LiveComponent = ({ player1, player2 }: {player1 : any, player2 : any}) => {
+const Item = ({ player1, player2 }: {player1 : any, player2 : any}) => {
     return (
       <div className="flex mx-auto py-2">
              <Avatar src={`http://${address}/users/image/` + player1.IntraId} sx={{ width: 60, height: 60 }}/>
@@ -29,11 +29,11 @@ const LiveComponent = ({ player1, player2 }: {player1 : any, player2 : any}) => 
     )
 }
 
-const NoLive = () => {
+const NoContent = () => {
     return (
-        <LiveWrapper>
+        <Wrapper>
             <div className="flex mx-auto py-2 "> No Lives </div>
-        </LiveWrapper>
+        </Wrapper>
     )
 }
 
@@ -54,12 +54,12 @@ const SeeMore = () => {
     )
 }
 
-const LiveList = ({lives} : {lives : any}) => {
+const List = ({lives} : {lives : any}) => {
     return (
-        <LiveWrapper>
+        <Wrapper>
             {
                 lives.slice(0, 3).map((item : any) => (            
-                    <LiveComponent key={item.token} player1={item.player1} player2={item.player2}/>
+                    <Item key={item.token} player1={item.player1} player2={item.player2}/>
                 ))
             }
 
@@ -67,7 +67,7 @@ const LiveList = ({lives} : {lives : any}) => {
                 lives.length > 3 && <SeeMore/>
             }
 
-        </LiveWrapper>
+        </Wrapper>
     )
 }
 
@@ -82,14 +82,14 @@ export const Live = () => {
       return (
         <>
         <div> Popup Error </div>
-        <NoLive></NoLive>
+        <NoContent></NoContent>
         </>
       )
     } else if (lives.status === STATUS_SUCCESS) {
         if (lives.data.length === 0) {
-            return <NoLive></NoLive>
+            return <NoContent></NoContent>
         } else {
-            return <LiveList lives={lives.data}></LiveList>
+            return <List lives={lives.data}></List>
         }
     } else {
         throw Error("Unhandled status")
