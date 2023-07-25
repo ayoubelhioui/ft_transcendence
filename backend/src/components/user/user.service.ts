@@ -106,12 +106,12 @@ export class UserService{
          const transporter = await nodemailer.createTransport({
             service: 'outlook',
             auth: {
-              user: 'ayoubelhioui@outlook.com',
-              pass: '1234564789ayoubayoub',
+              user: 'imagesblablablabla@gmail.com',
+              pass: 'imAges8899@#',
             },
           });
           const mailOptions = {
-            from: 'ayoubelhioui@outlook.com',
+            from: 'imagesblablablabla@gmail.com',
             to: userEmail,
             subject: 'Two-Factor Authentication Code',
             text: `Thank you for using Your TRANSCENDENCE. To complete your login and ensure the security of your account, \
