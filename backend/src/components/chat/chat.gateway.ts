@@ -31,6 +31,7 @@ export class ChatGateway {
   @UseGuards(ChannelExistsGuard, UserInChannelGuard, UserMutedGuard)
   async sendMessage(socket: Socket,  sendMessageDto : sendMessageDto)
   {
+    console.log("emit getted?");
     const user: User  =  this.socketService.getUser(socket);
     const channel : Channel = this.socketService.getChannel(socket);
     const createdMessage : ChannelMessages = await this.channelService.createMessage(user, channel, sendMessageDto.message);

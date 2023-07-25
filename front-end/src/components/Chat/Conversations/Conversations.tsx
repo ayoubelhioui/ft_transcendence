@@ -44,7 +44,7 @@
 
 
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdSend } from 'react-icons/md'
@@ -53,12 +53,19 @@ import { useAppServiceContext } from '../../../Context/Context';
 
 
 const ChatFooter = () => {
+  const appService = useAppServiceContext()
   const [message, setMessage] = useState("");
 
-  const handleMessage = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log(message);
+    //!channel Id 1
+    const payload = {
+      message,
+      channelId : 1
+    }
+    console.log(payload)
+    appService.socketService.socket?.emit("send_message", payload)
 
     // Temporary setter
     setMessage("");
@@ -82,27 +89,27 @@ const ChatFooter = () => {
   );
 };
 
-const Sender = () => {
+const Sender = ({message} : {message : any}) => {
   return (
     <div className="flex flex-col">
       <span className="text-white opacity-60 text-sm text-right pr-4 gap-1">
         You
       </span>
       <div className="h-min text-lg text-white back max-w-[200px] p-[10px] rounded-[10px] ml-auto">
-        <p className=" break-words">Hello, Im Mouad and You ?</p>
+        <p className=" break-words">{message.message}</p>
       </div>
     </div>
   );
 };
-const Receiver = () => {
+const Receiver = ({message} : {message : any}) => {
   return (
     <div className="flex flex-col gap-1">
       <span className="text-white opacity-60 text-sm text-left pl-4">
-        Other
+        {message.user.username}
       </span>
       <div className="text-lg text-white back max-w-[200px] h-min p-[10px] rounded-[10px] overflow-y-scroll">
         <p className=" break-words">
-          rgfderrfcvgrwdsTrgdfvchagdfchtdgbvnrgfrsdcks
+        {message.message}
         </p>
       </div>
     </div>
@@ -113,13 +120,24 @@ const Receiver = () => {
 const Conversations = ({name} : {name : string}) => {
   const appService = useAppServiceContext()
   const authApp = appService.authService;
-
+  //!channel Id 1
+  const messages = appService.requestService.getChannelMessagesRequest(1, undefined)
 
   const [isOpened, setIsOpened] = useState(false);
 
   const isBool: boolean = false;
 
-  return !isBool ? (
+
+  // appService.socketService.on("on_message_send", (payload : any) => {
+
+  // })
+
+  appService.socketService.on("on_message_send", (data : any) => {
+    console.log("Received message", data)
+  })
+
+  console.log("Hi to Conversation")
+  return messages.data ? (
     <div className="flex flex-col justify-between max-m-custom-md:w-[100%] top_2 col-span-2 max-m-custom-md:col-span-1 h-[65vh] max-m-custom-md:h-full row-span-2 ">
       <div className="flex justify-between mx-6 mt-3 items-center pt-2">
         <div className="flex flex-col items-center mx-auto ">
@@ -156,10 +174,12 @@ const Conversations = ({name} : {name : string}) => {
       {/* Body Of The Conversation */}
 
       <div className="w-full h-full px-4 mt-8 overflow-y-scroll">
-        <Sender />
-        <Receiver />
-        <Sender />
-        <Receiver />
+        {
+          messages.data.reverse().map((item : any) => (
+            item.user.id === authApp.user?.id ? <Sender key={item.id} message={item}/> : <Receiver key={item.id} message={item}/>
+          ))
+        }
+  
       </div>
 
       <ChatFooter />

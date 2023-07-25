@@ -2,9 +2,14 @@ import { Route, Routes } from "react-router-dom"
 import { Chat, HomePage, LeaderBoard, LiveMatches, MainWrapper, Navbar, Profile, ResultsLatestHome } from ".."
 import Game from "../Game/Game"
 import ChooseGame from "../Game/ChooseGame"
+import { useAppServiceContext } from "../../Context/Context"
+import { appService } from "../../Context/Service/AppDataService"
 
 
 const MainPage = () => {
+    const appService = useAppServiceContext()
+    appService.socketService.setUpSocket()
+    
     return (
         <MainWrapper>
             <Navbar /> 

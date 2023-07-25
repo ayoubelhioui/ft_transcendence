@@ -152,7 +152,7 @@ export class ChannelController {
 
     @Get(':id/messages')
     @UseGuards(ChannelExistsGuard, UserInChannelGuard)
-    async getChannelMessages(@GetChannel() channel : Channel, @Body() messagesDateDto: MessagesDateDto) : Promise <ChannelMessages[] | undefined>{
+    async getChannelMessages(@GetChannel() channel : Channel, @Query() messagesDateDto: MessagesDateDto) : Promise <ChannelMessages[] | undefined>{
         let date : Date = null;
         if (messagesDateDto.date)
             date = new Date(messagesDateDto.date);

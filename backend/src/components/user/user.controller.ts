@@ -63,7 +63,6 @@ export class UserController{
 
     @Get('me/channels')
     async getMyChannels(@GetUser() user: User) : Promise< Channel[] | undefined > {
-        console.log('over here');
         return (await this.channelService.getUserChannels(user));
     };
 

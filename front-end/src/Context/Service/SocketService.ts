@@ -5,27 +5,34 @@ import { address } from "../../Const";
 
 export class SocketService {
     
-    private socket : Socket
+    socket : Socket | undefined
     private callBack : Map<string, Function | undefined> = new Map()
     private requestService : RequestService
 
     constructor(requestService : RequestService) {
-        this.socket = io(`http://${address}`)
         this.requestService = requestService
+    }
+
+
+    setUpSocket() {
+        this.socket = io(`http://${address}`, {
+            extraHeaders: {
+                Authorization: `Bearer ${this.requestService.getAuthService.getAccessToken}`
+            }
+        })
         this.listen()
     }
 
-    private setEvent(event : string, fun : (data : any) => any) {
-        this.socket.on(event, async (data : any) => {
-            if (this.callBack.has(event)){
-                const received = await fun(data)
-                this.callBack.get(event)?.(received)
-            }
-        });
-    }
+    // on(event : string, callBackFunction : Function | undefined) {
+    //     this.callBack.set(event, callBackFunction)
+    // }
 
-    on(event : string, callBackFunction : Function | undefined) {
-        this.callBack.set(event, callBackFunction)
+    on(event : string, callBack : any) {
+        if (!this.callBack.has(event)) {
+            this.callBack.set(event, callBack)
+            this.socket?.on(event, callBack)
+        }
+
     }
 
     private listen() {
@@ -33,10 +40,16 @@ export class SocketService {
            console.log("Client is connected.")
         });
 
-        this.setEvent('message', async (data : any) => {
-            const a = await this.requestService.socketLoadData(data)
-            return a
-        })
+        this.socket.on("disconnect", () => {
+            console.log("Client has disconnected.");
+        });
+
     }
+
+    sendEvent(event : string, payload : any) {
+        this.socket.emit(event, payload)
+    }
+
+
 
 }

@@ -17,6 +17,10 @@ export class RequestService {
         this.authService = authService
     }
 
+    get getAuthService() {
+        return this.authService
+    }
+
     private static async makeGetRequest(obj : RequestService, url : string) {
         try {
             const response = await AxiosInstance.get(url, {
@@ -120,7 +124,23 @@ export class RequestService {
         return this.getData(RequestService.makeGetRequest, "/channels")
     }
 
-    async postJoinChannelRequest(id : number, payload : any = {}) {
-        return await RequestService.makePostRequest(this,`/channels/${id}/join`, payload)
+    //!channelInfo
+    getChannelUsersRequest(channelId : number) {
+        return this.getData(RequestService.makeGetRequest, `/channels/${channelId}/users`)
+    }
+
+    //!messages
+    getChannelMessagesRequest(channelId : number, date : Date | undefined = undefined) {
+        let a = !date ? "" : `?date=${Date}`
+        return this.getData(RequestService.makeGetRequest, `/channels/${channelId}/messages${a}`)
+    }
+
+    async postJoinChannelRequest(channelId : number, payload : any = {}) {
+        return await RequestService.makePostRequest(this,`/channels/${channelId}/join`, payload)
+    }
+
+    async postMessageRequest(channelId : number, payload : any = {}) {
+        return await RequestService.makePostRequest(this,`/channels/${channelId}/messages`, payload)
     }
 }
+    
