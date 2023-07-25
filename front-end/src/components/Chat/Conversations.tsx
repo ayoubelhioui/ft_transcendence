@@ -1,9 +1,5 @@
-import { authContext } from "../context/useContext";
 
-import { useState } from "react";
 
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { MdSend } from "react-icons/md";
 
 // const Dialog = () => {
 //   const [isOpen, setIsOpen] = useState(false);
@@ -45,6 +41,16 @@ import { MdSend } from "react-icons/md";
 //     </div>
 //   );
 // };
+
+
+
+import { useState } from 'react';
+
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { MdSend } from 'react-icons/md'
+import { useAppServiceContext } from '../../Context/Context';
+
+
 
 const ChatFooter = () => {
   const [message, setMessage] = useState("");
@@ -103,8 +109,11 @@ const Receiver = () => {
   );
 };
 
-const Conversations = ({name} : {name: string}) => {
-  const authApp = authContext();
+
+const Conversations = () => {
+  const appService = useAppServiceContext()
+  const authApp = appService.authService;
+
 
   const [isOpened, setIsOpened] = useState(false);
 
@@ -116,7 +125,9 @@ const Conversations = ({name} : {name: string}) => {
         <div className="flex flex-col items-center mx-auto ">
           {/* <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[55px] h-[55px]'/> */}
           <h2 className="text-sm text-white w-full text-center">
-            {name}
+            {
+            /* //!{name} */
+            }
           </h2>
         </div>
         <div className="flex flex-col relative">

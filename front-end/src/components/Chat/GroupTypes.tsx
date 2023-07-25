@@ -1,18 +1,19 @@
 import { RiArrowDropDownLine } from "react-icons/ri";
-import { authContext } from "../context/useContext";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { address } from "../../Const";
 
 import { VscSettings } from "react-icons/vsc";
 import { Console } from "console";
+import { useAppServiceContext } from "../../Context/Context";
 
 interface GroupTypes {
   data: any;
 }
 
 const PublicGroup = ({ data }: GroupTypes) => {
-  const auth = authContext();
+  const appService = useAppServiceContext()
+  const auth = appService.authService;
 
   const joinToChannel = async (groupId: number) => {
     try {
@@ -21,7 +22,7 @@ const PublicGroup = ({ data }: GroupTypes) => {
         {},
         {
           headers: {
-            Authorization: `Bearer ${auth.accessToken}`,
+            Authorization: `Bearer ${auth.getAccessToken}`,
           },
         }
       );
@@ -67,7 +68,8 @@ const PublicGroup = ({ data }: GroupTypes) => {
 
 const ProtectedGroup = ({ data }: GroupTypes) => {
 
-  const auth = authContext();
+  const appService = useAppServiceContext()
+  const auth = appService.authService;
 
   const [password, setPassword] = useState<string>("");
 
@@ -80,7 +82,7 @@ const ProtectedGroup = ({ data }: GroupTypes) => {
         {password: password},
         {
           headers: {
-            Authorization: `Bearer ${auth.accessToken}`,
+            Authorization: `Bearer ${auth.getAccessToken}`,
           },
         }
       );
@@ -145,7 +147,8 @@ const ProtectedGroup = ({ data }: GroupTypes) => {
   );
 };
 const GroupTypes = () => {
-  const authApp = authContext();
+  const appService = useAppServiceContext()
+  const authApp = appService.authService;
 
   // const [groupData, setGroupData] = useState<any>([]);
 
@@ -160,7 +163,7 @@ const GroupTypes = () => {
         `http://${import.meta.env.VITE_HOST}:3000/channels`,
         {
           headers: {
-            Authorization: `Bearer ${authApp.accessToken}`,
+            Authorization: `Bearer ${authApp.getAccessToken}`,
           },
         }
       );

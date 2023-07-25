@@ -9,10 +9,11 @@ import DialogContent from "@mui/material/DialogContent";
 
 import { address } from "../../Const";
 import axios from "axios";
-import { authContext } from "../context/useContext";
+import { useAppServiceContext } from "../../Context/Context";
 
 const ChannelCreation = () => {
-  const authApp = authContext();
+  const appService = useAppServiceContext()
+  const authApp = appService.authService;
 
   const [isCreated, setIsCreated] = useState(true);
 
@@ -61,7 +62,7 @@ const ChannelCreation = () => {
         bodyData,
         {
           headers: {
-            Authorization: `Bearer ${authApp.accessToken}`,
+            Authorization: `Bearer ${authApp.getAccessToken}`,
           },
         }
       );

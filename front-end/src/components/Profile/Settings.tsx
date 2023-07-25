@@ -9,11 +9,13 @@ import { MdEdit } from 'react-icons/md'
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { authContext } from "../context/useContext";
+import { useAppServiceContext } from "../../Context/Context";
 
 
 const Settings = () => {
-    const settingContext = authContext();
+    const appService = useAppServiceContext()
+    const settingContext = appService.authService;
+
 
 
     const [open, setOpen] = useState(false);
@@ -35,7 +37,7 @@ const Settings = () => {
 
             setOpen(false);
             try {
-                await settingContext.updateUser(newUsername, factor);
+                //!await settingContext.updateUser(newUsername, factor);
                 
             } catch(error) {
                 console.log("here is submit");
@@ -46,7 +48,7 @@ const Settings = () => {
         {
             setOpen(false);
             try {
-                await settingContext.updateUser(undefined, factor);
+                //!await settingContext.updateUser(undefined, factor);
                 
             } catch(error) {
                 console.log(error);

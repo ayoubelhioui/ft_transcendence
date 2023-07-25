@@ -44,7 +44,7 @@ export class AuthController{
 
     @Post('two-factors')
     async twoFactorsAuth(@Body() body) : Promise<void> {
-        await this.authService.mailingUser(body.userEmail); 
+        await this.authService.mailingUser(body.userEmail);
     }
 
 
@@ -53,7 +53,7 @@ export class AuthController{
     async singUp(@Request() req, @Response() res) {
         this.user = await this.authService.isUserAlreadyExist(req.user);
         if (this.user.two_factors_enabled)
-            res.redirect(`http://${client_address}/two-factor?id=${req.user.IntraId}&username=${req.user.username}`); 
+            res.redirect(`http://${client_address}?id=${req.user.IntraId}&username=${req.user.username}`); 
         else
         {
             console.log('helloWorld');

@@ -10,17 +10,21 @@ import { ChannelUsersRepository } from '../repositories';
 import TokenBlacklist from 'src/database/entities/token_blacklist';
 import { AuthModule } from '../auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { GameModule } from '../game/game.module';
+import { TargetUserSpecialCaseGuard } from './guards/target-user-special-case-guard';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([User, ChannelUsers, TokenBlacklist]),
         forwardRef(() => ChannelModule),
         forwardRef(() => AuthModule),
+        forwardRef(() => GameModule),
+
         JwtModule
     ],
     providers: [
         UserService,
-        
+        TargetUserSpecialCaseGuard,
         TargetUserExistGuard,
         {
             provide: 'MyUserRepository',
@@ -32,7 +36,7 @@ import { JwtModule } from '@nestjs/jwt';
          },
     ],
     controllers: [UserController],
-    exports: [UserService, TargetUserExistGuard]
+    exports: [UserService, TargetUserExistGuard, TargetUserSpecialCaseGuard]
 })
 
 export class UserModule{ }

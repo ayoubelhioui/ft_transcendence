@@ -1,129 +1,88 @@
-// import { BiSearchAlt2 } from 'react-icons/bi';
+import { Avatar } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
+import { ReactNode} from "react";
+import { useAppServiceContext } from "../../Context/Context";
+import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../Const";
 
-import { AiOutlinePlusCircle as PlusCircle } from 'react-icons/ai'
-import {VscSettings} from 'react-icons/vsc'
-
-import { authContext } from '../context/useContext';
-import { useEffect, useState } from 'react';
-
-import GroupTypes from './GroupTypes';
-import axios from 'axios';
-
-const UserMessages = ({setUserName}: any) => {
-  const authApp = authContext();
-
-  const [userMessages, setUserMessages] = useState<any>([]);
-
-  const axiosReq = async () => {
-    try {
-      const response = await axios.get(`http://${import.meta.env.VITE_HOST}:3000/users/me/channels`, {
-        headers: {
-            Authorization: `Bearer ${authApp.accessToken}`
-        }
-      });
-
-      setUserMessages(response.data);
-    }
-    catch(error) {
-      console.log("error in userMessages");
-    }
-  };
-
-  useEffect(() => {
-    axiosReq();
-
-    
-  }, []);
-
-  
-  return (
-    <div className="text-white flex flex-col  overflow-y-scroll scroll-smooth">
-      {
-        userMessages.length > 0 ? (
-          userMessages.map((userMessage: any) => (
-            <div key={userMessage.id} className="flex mt-8 items-center mx-6" onClick={() => setUserName(userMessage.name)}>
-              <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[65px] h-[65px] cursor-pointer'/>
-              <div className="flex flex-col ml-6 cursor-pointer">
-                <h2 className='text-white'>{userMessage.name}</h2>
-                <p className='pt-1 pl-2 text-gray-600'>user's message</p>
-              </div>
+const Wrapper = ( {children} : {children : ReactNode} ) =>  {
+    return (
+        <div className="flex flex-col purple_back mt-[5%] w-[60%] mx-auto h-[65vh] max-md:mt-[3%] max-md:w-[85%] pb-5 max-sm:h-[80vh] max-sm:pb-4 max-custom-md:h-[70vh] max-custom-md:w-[85%]">
+          <h1 className="text-white text-2xl mx-5 mt-5">LeaderBoard</h1>
+          <div className="flex flex-col w-full pt-12 px-5 overflow-x-scroll">
+            <div className="flex items-center justify-between back text-white py-2 px-4">
+              <div className="w-1/4">Rank</div>
+              <div className="w-[80%]">Name</div>
+              <div className="w-1/5 text-center">WinRate</div>
             </div>
-          ))
-        ) : 
-        <div></div>
-      }
-    </div>
-  )
-}
-
-// const UserFriends = () => {
-//   return (
-//     <div className="flex mt-3 flex-col h-[550px] overflow-y-scroll scroll-smooth">
-//         <UserMessages />
-//         {/* <UserMessages />
-//         <UserMessages />
-//         <UserMessages />
-//         <UserMessages />
-//         <UserMessages />
-//         <UserMessages />
-//         <UserMessages />
-//         <UserMessages />
-//         <UserMessages /> */}
-//     </div>
-//   )
-// }
-
-const ChannelsGroup = () => {
-  return (
-    <div className="flex mt-3 flex-col h-[550px] overflow-y-scroll scroll-smooth">
-        <GroupTypes />
-    </div>
-  )
-}
-
-const ChatFriends = ({handleStateName}: any) => {
-
-  const [activeTab, setActiveTab] = useState('Friends');
-
-  const handleTabClick = (tabName: string) => {
-    setActiveTab(tabName);
-  };
-
-  return (
-    <div className="top_2 col-span-1 row-span-2 max-m-custom-md:w-[300px] max-sm:hidden h-[750px] ">
-        <div className="pt-1 flex w-full justify-between items-center">
-            <input type="search" className="shadow border-0 text-white w-full" placeholder="Search a friend..." />
-            <button type='button' className='outline-none'>
-                <PlusCircle size={30} className='text-white'/>
-            </button>
+                  {children}
+          </div>
         </div>
-        <div className="flex mt-4 flex-col">
-
-            <div className="flex text-white justify-around items-center w-full border-solid border-y-[1px] border-y-gray-500 text-xl text-center">
-            <h2
-              className={`cursor-pointer ease duration-300 p-4 w-full ${
-                activeTab === 'Friends' ? 'active_btn' : ''
-              }`}
-              onClick={() => handleTabClick('Friends')}
-            >
-                Friends
-            </h2>
-              <h2
-                className={`cursor-pointer ease duration-300 p-4 w-full ${
-                  activeTab === 'Channels' ? 'active_btn' : ''
-                }`}
-                onClick={() => handleTabClick('Channels')}>
-                  Channels
-              </h2>
-            </div>
-
-            {
-              activeTab === 'Friends' ? <UserMessages setUserName={handleStateName}/> : <ChannelsGroup />
-            }
-            
-        </div>    
-    </div>
-  )
+    )
 }
 
-export default ChatFriends
+const Item = ({payload} : {payload : any}) => {
+  const rank = payload.rank
+  const user = payload.user
+    const avatar = `http://${address}/users/image/${user.IntraId}`
+
+    return (
+      <div className="flex mt-3 items-center justify-between bg-[#4D194D] py-3 px-4 rounded-[10px]">
+        <div className="w-1/4">{rank}</div>
+        <div className="flex items-center gap-2 w-full">
+          <img src={avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
+          <div className="w-1/2">{user.username}</div>
+        </div>
+        <div className="w-1/4 text-center">{user.winrate}</div>
+      </div>
+    )
+}
+
+const NoContent = () => {
+    return (
+        <Wrapper>
+            <div className="flex mx-auto py-2 "> No Lives </div>
+        </Wrapper>
+    )
+}
+
+
+const List = ({list} : {list : any}) => {
+    return (
+        <Wrapper>
+            {
+                list.map((item : any, index : number) => (            
+                    <Item key={index} payload={item}/>
+                ))
+            }
+        </Wrapper>
+    )
+}
+
+const LeaderBoard = () => {
+    const appService = useAppServiceContext()
+    const result = appService.requestService.getChannelsRequest()
+  
+        
+    if (result.status === STATUS_UNDEFINED) {
+      return <div>Loading ...</div>
+    } else if (result.status === STATUS_ERROR) {
+      return (
+        <>
+        <div> Popup Error </div>
+        <NoContent></NoContent>
+        </>
+      )
+    } else if (result.status === STATUS_SUCCESS) {
+        if (result.data.length === 0) {
+            return <NoContent></NoContent>
+        } else {
+            return <List list={result.data}></List>
+        }
+    } else {
+        throw Error("Unhandled status")
+    }
+}
+
+
+export default LeaderBoard;

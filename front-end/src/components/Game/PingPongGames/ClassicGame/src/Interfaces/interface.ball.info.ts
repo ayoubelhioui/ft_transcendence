@@ -1,5 +1,5 @@
 export interface IBallInfo {
-    position : THREE.Vector3,
-    velocity : THREE.Vector3,
+    position : THREE.Vector2,
+    velocity : THREE.Vector2,
     speed : number
 }

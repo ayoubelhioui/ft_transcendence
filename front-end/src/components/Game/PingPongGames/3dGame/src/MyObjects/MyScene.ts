@@ -18,8 +18,8 @@ export class MyScene extends THREE.Scene {
         super()
 
         this.game = game
-        this.scoreP1 = new ScoreNbr(2, 5, -10)
-        this.scoreP2 = new ScoreNbr(2, 5, 10)
+        this.scoreP1 = new ScoreNbr(2, 5, -10, 0xff0000)
+        this.scoreP2 = new ScoreNbr(2, 5, 10, 0x0000ff)
         this.scoreP1.set(0)
         this.scoreP2.set(0)
         this.scoreP1.rotation.set(0, Math.PI / 2, 0)
@@ -93,26 +93,8 @@ export class MyScene extends THREE.Scene {
         tableModel.traverse((node) => {
             const meshNode = node as THREE.Mesh;
             if (meshNode.isMesh) {
-                const mat = meshNode.material as THREE.MeshStandardMaterial
-
+                //const mat = meshNode.material as THREE.MeshStandardMaterial
                 meshNode.receiveShadow = true;
-                // meshNode.material.emissiveIntensity = 0
-                
-                if (meshNode.id === 16) {
-                    //lines 
-                    
-                    mat.emissive = new THREE.Color("#0000FF")
-                    mat.emissiveIntensity = 6
-                } else if (meshNode.id === 23) {
-                    //legs
-                    meshNode.position.y = -0.3
-                } else if (meshNode.id === 15) {
-                    //table color
-                    mat.color = new THREE.Color("#C824B4")
-                    this.tableColor = mat.color
-                }
-                
-                
             }
         });
         tableModel.position.y = params.table.posY

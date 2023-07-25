@@ -9,7 +9,6 @@ const NotifComponent = () => {
     );
 }
 const Notifications = () => {
-
     return (
         <div className=' overflow-x-scroll flex flex-col bg-blue-950 rounded-[10px]  absolute top-[5rem] w-[300px] h-[300px]'>
             <NotifComponent />

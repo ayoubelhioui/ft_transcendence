@@ -25,13 +25,14 @@ export class PlayerJoinDto{
     @IsOptional()
     user : User;
    
-    @IsNumber()
+    @IsUUID()
     @IsOptional()
-    token : number;
+    token? : string;
 
-    // @IsUUID()
-    // @IsOptional()
-    // token? : string; //!token should create with room
+    @IsNotEmpty()
+    @IsOptional()
+    invite_callback : any
+
 }
 
 //s : SocketService

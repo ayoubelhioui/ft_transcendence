@@ -11,19 +11,18 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 
 
-
-
-import { authContext } from '../context/useContext';
 import Settings from './Settings';
 import React, { useState } from 'react';
-import axiosInstance from '../api/axios';
 import { address } from '../../Const';
+import { useAppServiceContext } from '../../Context/Context';
+import AxiosInstance from '../../Context/Service/AxiosInstance';
 
 
 
 const Profile = () => {
-  const authApp = authContext();
-
+  const appService = useAppServiceContext()
+  const authApp = appService.authService
+  console.log(authApp.user);
   const [NewAvatar, setNewAvatar] = useState<File | null>(null);
 
 
@@ -53,9 +52,9 @@ const Profile = () => {
 
         console.log(formData.get('avatar'));
 
-        const response = await axiosInstance.post(`/users/image/${authApp.user?.IntraId}`, formData, {
+        const response = await AxiosInstance.post(`/users/image/${authApp.user?.IntraId}`, formData, {
             headers: {
-                Authorization: `Bearer ${authApp.accessToken}`
+                Authorization: `Bearer ${authApp.getAccessToken}`
             }
           }
         );
@@ -125,7 +124,7 @@ const Profile = () => {
           </div>
           <span className='w-[1px] h-[50px] bg-gray-400  max-md:hidden'></span>
           <div className="flex flex-col items-center">
-            <span className='text-3xl max-sm:text-xl'>{authApp.user?.winrate}%</span>
+            <span className='text-3xl max-sm:text-xl'>{authApp.user?.win_rate}%</span>
             <h2 className=' opacity-70 text-2xl max-sm:text-lg'>Win Rate</h2>
           </div>
 

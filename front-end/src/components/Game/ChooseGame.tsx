@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import image from '../assets/image.png'
-import image_2 from '../assets/image_2.png'
-import img_classic_game from '../assets/classic-game.png'
-import img_three_game from '../assets/table3d.png'
+import image from '../../assets/image.png'
+import image_2 from '../../assets/image_2.png'
+import img_classic_game from '../../assets/classic-game.png'
+import img_three_game from '../../assets/table3d.png'
 
 const ChooseGame = () => {
   const [isClicked, setIsClicked] = useState(false);

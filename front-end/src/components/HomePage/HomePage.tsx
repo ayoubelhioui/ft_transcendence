@@ -1,16 +1,18 @@
 
 // import { motion } from 'framer-motion'
 import { NavLink } from 'react-router-dom';
-import { Live, Results, TopPlayers } from './Container'
 import img from "../../assets/ping-pong-player-darkbg.png"
-import FriendSection from '../FriendSection'
-import { authContext } from '../context/useContext'
+import FriendSection from './FriendSection'
 import { address } from '../../Const';
-// import { Navigate } from 'react-router-dom'
+import { useAppServiceContext } from '../../Context/Context';
+import { Live } from './Containers/Live';
+import { Results } from './Containers/Results';
+import { TopPlayers } from './Containers/TopPlayers';
 
 
 const HomePage = () => {
-  const authUser = authContext();
+  const appService = useAppServiceContext()
+  const authUser = appService.authService
 
   return (
     <>

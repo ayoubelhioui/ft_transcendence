@@ -16,6 +16,7 @@ export class Ball extends THREE.Object3D{
     trail : TrailRenderer
     spot : Spot
     ballObj : THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>
+    end : boolean = false
 
     velocity : THREE.Vector3 = new THREE.Vector3()
     timeStep : number = params.timeStep
@@ -95,13 +96,17 @@ export class Ball extends THREE.Object3D{
             this.spot.hit(payload.spotPos)
         if (payload.net)
             this.game.netObj.hit()
+        if (payload.end) {
+            this.end = true
+            this.trail.stop = true
+        }
     }
 
     update() {
         this.changeColor()
         this.trail.update()
         this.spot.update()
-        if (this.trail.stop === false)
+        if (this.trail.stop === false && !this.end)
             this.move()
     }
 }
