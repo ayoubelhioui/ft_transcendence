@@ -71,6 +71,7 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
     .then(results => {
       // Transform the raw results to the desired output structure
       return results.map(result => {
+        console.log(result);
         const channel: any = {
           id: result.channel_id,
           name: result.channel_name,

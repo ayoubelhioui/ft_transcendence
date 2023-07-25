@@ -48,7 +48,7 @@ import { useState } from 'react';
 
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdSend } from 'react-icons/md'
-import { useAppServiceContext } from '../../Context/Context';
+import { useAppServiceContext } from '../../../Context/Context';
 
 
 
@@ -110,7 +110,7 @@ const Receiver = () => {
 };
 
 
-const Conversations = () => {
+const Conversations = ({name} : {name : string}) => {
   const appService = useAppServiceContext()
   const authApp = appService.authService;
 
@@ -125,9 +125,7 @@ const Conversations = () => {
         <div className="flex flex-col items-center mx-auto ">
           {/* <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[55px] h-[55px]'/> */}
           <h2 className="text-sm text-white w-full text-center">
-            {
-            /* //!{name} */
-            }
+            {name}
           </h2>
         </div>
         <div className="flex flex-col relative">

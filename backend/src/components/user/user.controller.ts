@@ -5,7 +5,7 @@ import { GetUser } from './decorators/user.decorator';
 import { ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard, UserInChannelGuard} from '../channels/guards';
 import { GetChannel, GetChannelUsers } from '../channels/decorators';
 import { JoinChannelDto } from '../channels/dto';
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UploadedFiles, UseGuards, UseInterceptors, UsePipes, Response, Request, Req, Delete } from '@nestjs/common'
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UploadedFiles, UseGuards, UseInterceptors, UsePipes, Response, Request, Req, Delete, NotFoundException } from '@nestjs/common'
 import { TokenValidationGuard } from 'src/components/auth/guards/acces-token.guard';
 import { UserService } from './user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -81,8 +81,17 @@ export class UserController{
     
     @Get('image/:id')
     async getUserImage(@Param('id', ParseIntPipe) id : number, @Response() res) {
-        const stream = fs.createReadStream('./uploads/' + id);  
+        const stream = fs.createReadStream('./uploads/' + id);
+        stream.on('error', (err) => {
+            console.log("Error")
+            stream.destroy();
+            res.status(404).json({ error: 'Image not found' });
+        });
+        // stream.on('end', () => {
+            
+        // });
         stream.pipe(res);
+        
     }
 
     @Post('image/:id')
