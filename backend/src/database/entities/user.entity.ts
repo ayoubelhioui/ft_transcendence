@@ -29,6 +29,9 @@ class User{
 
     @Column()
     public winrate: number = 0;
+    
+    @Column()
+    public twoFactorSecret: string;
 
     @ManyToMany(() => Achievement, (achievement) => achievement.users, { cascade: true, onDelete: 'CASCADE' })
     public achievements: Achievement[];

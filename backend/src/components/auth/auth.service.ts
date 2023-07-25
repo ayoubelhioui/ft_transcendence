@@ -4,12 +4,15 @@ import { client_address } from "src/Const";
 import { UserDto } from "src/global/dto/user.dto";
 import TokenBlacklist from "src/database/entities/token_blacklist";
 import { UserService } from "src/components/user/user.service";
+import { User } from "src/database/entities";
+import { use } from "passport";
 
 @Injectable()
 export class AuthService{
-    constructor(private jwtService: JwtService, private userService: UserService){}
     private payload: object;
     private userInfo: any;
+    constructor(private jwtService: JwtService, private userService: UserService) { }
+    
     async isUserAlreadyExist(userDto: UserDto){
         this.userInfo = await this.findUserById(userDto.IntraId);
         if (!this.userInfo)
@@ -41,7 +44,7 @@ export class AuthService{
         return (await this.userService.findById(intraId));
     }
 
-    async removeTokens(accessToken: string, refreshToken: string){
+    async removeTokens(accessToken: string, refreshToken: string) {
         await this.userService.addTokenToBlacklist(accessToken);
         await this.userService.addTokenToBlacklist(refreshToken);
     }
@@ -63,12 +66,23 @@ export class AuthService{
         });
     }
     
+    
+    async storeUserSecret(id :number, secret: string) {
+        const userDto: UserDto = new UserDto();
+        userDto.twoFactorSecret = secret;
+        console.log(await this.userService.update(id, userDto));
+    }
+    // async findUserSecretKeyByUsername(username: string): string {
+        // const userSecret = this.userService.accessTokenInBlacklist
+        // return 'user-secret-key';
+    // }
+
     async twoFactors(token: string, userEmail: string) {
-        this.payload = await this.jwtService.verifyAsync(token, {
-            secret: process.env.TOKEN_SECRET,
-        });
-        if (userEmail != this.payload['sub'])
-            throw new ForbiddenException;
+        // this.payload = await this.jwtService.verifyAsync(token, {
+        //     secret: process.env.TOKEN_SECRET,
+        // });
+        // if (userEmail != this.payload['sub'])
+        //     throw new ForbiddenException;
     }
 }
 

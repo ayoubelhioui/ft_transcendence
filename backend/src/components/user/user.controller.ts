@@ -5,7 +5,7 @@ import { GetUser } from './decorators/user.decorator';
 import { ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard, UserInChannelGuard} from '../channels/guards';
 import { GetChannel, GetChannelUsers } from '../channels/decorators';
 import { JoinChannelDto } from '../channels/dto';
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UploadedFiles, UseGuards, UseInterceptors, UsePipes, Response, Request, Req, Delete } from '@nestjs/common'
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UploadedFiles, UseGuards, UseInterceptors, UsePipes, Response, Request, Req, Delete, Put } from '@nestjs/common'
 import { TokenValidationGuard } from 'src/components/auth/guards/acces-token.guard';
 import { UserService } from './user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -84,12 +84,10 @@ export class UserController{
     }))
     async updateUserImage(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req) { }
 
+    @Put('update')
     @UseGuards(TokenValidationGuard)
-    @Post('update')
-    async updateUser (@Body() body, @Request() req) : Promise<object>{
-        console.log(body);
-        const User = await this.userService.update(body, req.user);
-        console.log(User);
+    async updateUser (@Request() req, @Body() body) : Promise<object> {
+        const User = await this.userService.update(req.user.id, body);
         return (User);
     }
 }

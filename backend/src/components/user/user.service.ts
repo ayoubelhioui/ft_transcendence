@@ -26,6 +26,7 @@ export class UserService{
         createUserDto.wins = 0;
         createUserDto.loss = 0;
         createUserDto.two_factors_enabled = false;
+        createUserDto.twoFactorSecret = "";
     }
 
 
@@ -74,11 +75,9 @@ export class UserService{
         }));
     }
 
-    async update(userDto: UserDto, req: User) {
-        if (userDto.username)
-            req.username = userDto.username;
-        req.two_factors_enabled = userDto.two_factors_enabled;
-        return await this.userRepository.save(req);
+    async update(id: number, userDto: UserDto) {
+        console.log(id, userDto);
+        return await this.userRepository.update(id, userDto);
     }
 
     async uploadImageFromUrl(url: string, destinationPath: string): Promise<void> {
