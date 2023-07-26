@@ -29,6 +29,9 @@ export class UserService{
         createUserDto.twoFactorSecret = "";
     }
 
+    async getSecretById(id: number) {
+        return (await this.userRepository.getSecretById(id));
+    }
 
     async findUserById(id: number, relations: any = {}): Promise<User | undefined> {
         const user : User  = await this.userRepository.findOneByIdWithRelations(id, relations);

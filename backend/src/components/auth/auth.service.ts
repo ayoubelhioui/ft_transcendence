@@ -5,11 +5,13 @@ import { UserDto } from "src/global/dto/user.dto";
 import TokenBlacklist from "src/database/entities/token_blacklist";
 import { UserService } from "src/components/user/user.service";
 import * as otplib from 'otplib';
+import { PasswordService } from "../channels/password.service";
+
 @Injectable()
 export class AuthService{
     private payload: object;
     private userInfo: any;
-    constructor(private jwtService: JwtService, private userService: UserService) { }
+    constructor(private jwtService: JwtService, private userService: UserService, private passwordService: PasswordService) { }
     
     async isUserAlreadyExist(userDto: UserDto){
         this.userInfo = await this.findUserById(userDto.IntraId);
@@ -67,16 +69,14 @@ export class AuthService{
     
     async storeUserSecret(id :number, secret: string) {
         const userDto: UserDto = new UserDto();
-        userDto.twoFactorSecret = secret;
+        const hashedSecret = await this.passwordService.hashPassword(secret);
+        userDto.twoFactorSecret = hashedSecret;
         await this.userService.update(id, userDto);
     }
-    // async findUserSecretKeyByUsername(username: string): string {
-        // const userSecret = this.userService.accessTokenInBlacklist
-        // return 'user-secret-key';
-    // }
 
     async verifyTwoFactors(Body: any) {
-        const user = await this.userService.findUserById(Body.id);
+        const user = await this.userService.getSecretById(Body.id);
+        
         const userSecret = user.twoFactorSecret;
         return (otplib.authenticator.check(Body.secret, userSecret));
     }

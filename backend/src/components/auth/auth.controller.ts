@@ -37,7 +37,7 @@ export class AuthController{
     
     // @UseGuards(CorsGuard)
 
-    @Post('two-factors-verify')//expecting the user id and the passcode.
+    @Post('two-factors-verify') //expecting the user id and the passcode.
     async verifyTwoFactors(@Body() body) : Promise<void> { 
         await this.authService.verifyTwoFactors(body);
         // await this.authService.authenticate(body, res);

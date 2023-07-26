@@ -15,6 +15,16 @@ class UserRepository extends ABaseRepository<User> implements IUserRepository
     super();
   }
 
+  async getSecretById(id: number) {
+         const queryBuilder = this.entity.createQueryBuilder('user');
+         const result = await queryBuilder
+          .select('user.twoFactorSecret', 'secret')
+          .where('user.id = :id', { id })
+          .getRawOne();
+        console.log(result);
+        return result ? result.secret : null;
+  }
+
   async fetchTwoUsers(user1Id: number, user2Id: number) {
       const users = await this.entity.createQueryBuilder('Game')
         .where('user.id IN (:ids)', { ids: [user1Id, user2Id] })
