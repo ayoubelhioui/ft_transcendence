@@ -1,12 +1,13 @@
 import { User } from "src/database/entities";
 
-export class PlayerJoin{
+export interface PlayerJoin{
     isClassic : boolean;
     isBotMode : boolean;
     isWatchMode : boolean;
     userToInvite? : number;
     user : User;
-    token? : number;
+    invite_callback : any;
+    token? : string;
 }
 
 //s : SocketService

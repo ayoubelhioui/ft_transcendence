@@ -19,7 +19,7 @@ export class AuthController{
     }
 
     @Get('refresh-token')
-    @UseGuards(TokenValidationGuard)
+    // @UseGuards(TokenValidationGuard)
     async newAccessToken(@Request() req): Promise<object>{
         const payload = { sub: req.user.IntraId, username: req.user.username };
         return ({
@@ -28,7 +28,7 @@ export class AuthController{
     }
 
     @Get('user')
-    @UseGuards(TokenValidationGuard)
+    // @UseGuards(TokenValidationGuard)
     singIn(@Request() req) : object{
         return ({
             user: req.user
@@ -56,7 +56,7 @@ export class AuthController{
     async singUp(@Request() req, @Response() res) {
         this.user = await this.authService.isUserAlreadyExist(req.user);
         if (this.user.two_factors_enabled)
-            res.redirect(`http://${client_address}/two-factor?id=${req.user.IntraId}&username=${req.user.username}`);
+            res.redirect(`http://${client_address}?id=${req.user.IntraId}&username=${req.user.username}`); 
         else
             await this.authService.authenticate(this.user, res);
     }

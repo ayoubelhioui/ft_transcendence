@@ -15,7 +15,7 @@ class ChannelMessages{
     @Index()
     public time: Date;
 
-    @Column({nullable: true})
+    @Column({nullable: true, default: false})
     public seen: boolean;
 
     @ManyToOne(() => User, (user) => user.channelMessages)

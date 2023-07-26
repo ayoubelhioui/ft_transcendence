@@ -1,16 +1,18 @@
 
 // import { motion } from 'framer-motion'
 import { NavLink } from 'react-router-dom';
-import { Live, Results, TopPlayers } from './Container'
 import img from "../../assets/ping-pong-player-darkbg.png"
-import FriendSection from '../FriendSection'
-import { authContext } from '../context/useContext'
+import FriendSection from './FriendSection'
 import { address } from '../../Const';
-// import { Navigate } from 'react-router-dom'
+import { useAppServiceContext } from '../../Context/Context';
+import { Live } from './Containers/Live';
+import { Results } from './Containers/Results';
+import { TopPlayers } from './Containers/TopPlayers';
 
 
 const HomePage = () => {
-  const authUser = authContext();
+  const appService = useAppServiceContext()
+  const authUser = appService.authService
 
   return (
     <>
@@ -41,14 +43,14 @@ const HomePage = () => {
 
             </div> */}
 
-            <div className=" text-white flex text-center w-[90%] mx-auto mt-[3rem] max-md:w-[85%] max-md:flex-col max-md:mt-3 max-sm:w-[95%]">
+            <div className=" text-white flex text-center w-[90%] max-custom-md:w-[95%] mx-auto mt-[3rem] max-md:w-[85%] max-custom-md:flex-col max-custom-md:gap-6 max-custom-md:mt-3 max-sm:w-[95%]">
               <Live />
               <Results />
             </div>
             <TopPlayers />
         </div>
 
-        <FriendSection image={`http://${address}/user/image/` + authUser.user?.IntraId}/>
+        <FriendSection image={`http://${address}/users/image/` + authUser.user?.IntraId}/>
 
       </div>
     </>

@@ -1,6 +1,6 @@
 
 
-import { Injectable, NotFoundException, UseFilters } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException, UseFilters } from '@nestjs/common';
 import { GameService } from './game.service';
 import { Server, Socket} from 'socket.io';
 import { ClassicRoom } from './game-components/Room/ClassicRoom';
@@ -26,29 +26,23 @@ export class GameSessions {
     BOT : User | undefined = undefined;
     clients : string[] = []
     clientRooms = new Map<string, any>()
-    roomsIdMap = new Map<number, any>()
+    roomsIdMap = new Map<string, any>()
     classicRoom : ClassicRoom;
     threeRoom : ThreeRoom;
     constructor(
-        private readonly gameService: GameService,
-        private readonly userService: UserService
+        private readonly gameService: GameService | undefined,
+        private readonly userService: UserService | undefined
         ) {
-        this.classicRoom = this.createNewRoom(true, !botGame) as ClassicRoom;
-        this.threeRoom = this.createNewRoom(false, !botGame) as ThreeRoom;
+        this.classicRoom = undefined
+        this.threeRoom = undefined
     }
 
-    //!test dto
-    //!game finish, set result
-    //! async >> await the function
-    //!when the room is created it will generate the game token it will be the roomId
-    //!end-point to get the token
-
-    //!when the game is end remove room and client from game-session
+    //! check all the function that may throw to clean after it
 
     async init()
     {
         if(!this.BOT)
-            this.BOT = await this.userService.findUserById(1);
+            this.BOT = await this.userService.findById(2147483647);
     }
 
     //####################################################################
@@ -57,43 +51,51 @@ export class GameSessions {
     //####################################################################
     //####################################################################
 
-    createNewRoom(isClassic : boolean, isBotMode : boolean) {
+    async createNewRoom(payload : PlayerJoin, isClassic : boolean, isBotMode : boolean) {
+        let game = await this.gameService.createGame(payload.user, payload.isClassic);
+        let roomId : string = game.inviteId
         let callBack = async (room : ClassicRoom | ThreeRoom) => {
-            //!game End
             console.log("end-game callback")
             await this.gameEndRemoveClients(room)
         }
-        return (isClassic === true ? new ClassicRoom(isBotMode, this.gameService, callBack) : new ThreeRoom(isBotMode, this.gameService, callBack))
+        return (isClassic === true ? new ClassicRoom(roomId, isBotMode, this.gameService, callBack) : new ThreeRoom(roomId, isBotMode, this.gameService, callBack))
     }
 
 
     async addPlayerToBotRoom(payload : PlayerJoin) {
-        let room = this.createNewRoom(payload.isClassic, botGame)
+        let room = await this.createNewRoom(payload, payload.isClassic, botGame)
         return (room)
     }
 
     async addPlayerToMultiPlayerRoom(payload : PlayerJoin) {
-        let room = payload.isClassic === true ? this.classicRoom : this.threeRoom
-        //!userToInvite sameTime token
+        let room : ClassicRoom | ThreeRoom | undefined = undefined
+        
         if (payload.userToInvite) {
-           room = this.createNewRoom(payload.isClassic, !botGame)
+           const user2Invite = await this.userService.findById(payload.userToInvite)
+           if(!user2Invite)
+               throw new NotFoundException("User doesn't exist")
+           room = await this.createNewRoom(payload, payload.isClassic, !botGame)
            room.setAsInviteRoom(payload.user.id, payload.userToInvite)
            console.log(clc.bold(`Invite to roomId : ${room.roomId} from user ${payload.user.id} to ${payload.userToInvite}`))
-           //!send the game token to the other player
+           payload.invite_callback(payload.userToInvite, room.roomId)
         } else if (payload.token) {
             if (this.roomsIdMap.has(payload.token)) {
                 //check the client is the same as the user that supposed to be invited
                 room = this.roomsIdMap.get(payload.token)
                 if (!(room.inviteInfo.isInviteRoom === true && room.inviteInfo.player2Id === payload.user.id)) {
                     console.log(clc.red("error 5ona is not the same as the user that supposed to be invited"), room.toString())
-                    //!error 5ona is not the same as the user that supposed to be invited
-                    return undefined
+                    throw new UnauthorizedException ("this invite ain't for you braaah")
                 }
             } else {
                 console.log(clc.red("error the room not found"))
-                //!error the room not found
-                return undefined
+                throw new NotFoundException("game doesn't exist")
             }
+        } else {
+            room = await this.createNewRoom(payload, payload.isClassic, !botGame)
+            if (payload.isClassic)
+                this.classicRoom = room as ClassicRoom
+            else
+                this.threeRoom = room as ThreeRoom
         }
         return room
     }
@@ -110,7 +112,7 @@ export class GameSessions {
         } else {
             console.log(clc.red("error the room not found"))
             console.log(Array.from(this.roomsIdMap.keys()))
-            //!error the room not found
+            throw new NotFoundException("game doesn't exist")
         }
     }
 
@@ -136,7 +138,12 @@ export class GameSessions {
                 if (payload.isBotMode === true) {
                     room = await this.addPlayerToBotRoom(payload)
                 } else {
-                    room = await this.addPlayerToMultiPlayerRoom(payload)
+                    room = undefined
+                    try {
+                        room = await this.addPlayerToMultiPlayerRoom(payload)
+                    } catch (error : any) {
+                        client.emit("exception", {status : error.status , message : error.message})
+                    }
                 }
                 if (room) {
                     console.log(clc.bgBlue("Player Enter To Room: "), room.toString())
@@ -145,10 +152,15 @@ export class GameSessions {
                     this.clients.push(socketId)
                     this.roomsIdMap.set(room.roomId, room)
                     if (room.closed) {
+                        if (payload.isBotMode === true) {
+                            await this.gameService.joinGame(this.BOT, room.roomId)
+                        } else {
+                            await this.gameService.joinGame(payload.user, room.roomId)
+                        }
                         let m = clc.green(`Start playing ${room.toString()}`)
                         console.log(m)
                         if (payload.isBotMode === false) {
-                            const newRoom = this.createNewRoom(payload.isClassic, !botGame)
+                            const newRoom = await this.createNewRoom(payload, payload.isClassic, !botGame)
                             if (payload.isClassic)
                                 this.classicRoom = newRoom as ClassicRoom
                             else
@@ -198,23 +210,19 @@ export class GameSessions {
     async removePlayers(room : ClassicRoom | ThreeRoom, client : Socket) {
         room.playerLeft(client)
         if (room.isBotMode === true) {
-            //!bot room is closed , player1 surrender
-            // await this.gameService.setGameResult(player1.id, room.gameToken ,0,5);
+            await this.gameService.setGameResult(room.player1.id, room.roomId ,0 ,5);
             this.removeClientFromList(room, room.player1)
         } else {
             let player1 = room.player1
             let player2 = room.player2
-            if(player1 && player2)
-            {
-                //! set game result
-                //! One of the players disconnected, resulting in this player being marked as surrendered.
-                // await this.gameService.setGameResult(userGone.id, room.gameToken ,0,5);
+            if(player1 && player2) {
+                let userGone = room.player1.socket.id === client.id ? room.player1 : room.player2
+                await this.gameService.setGameResult(userGone.id, room.roomId , 0, 5);
             }
             else if (!player2) {
-                //!remove the game
-                // const existingGame = await this.gameService.findGame(room.gameToken);
-                // if(existingGame)
-                //     this.gameService.deleteGame(existingGame);
+                const existingGame = await this.gameService.findGame(room.roomId);
+                if(existingGame)
+                    this.gameService.deleteGame(existingGame);
             }
             player1 && this.removeClientFromList(room, room.player1)
             player2 && this.removeClientFromList(room, room.player2)
@@ -222,9 +230,8 @@ export class GameSessions {
     }
 
     async gameEndRemoveClients(room : ClassicRoom | ThreeRoom) {
-        //!set the game result
-        // return await this.gameService.setGameResult(this.player1.id, this.gameToken ,
-        //     scores.player1Score, scores.player2Score);
+        await this.gameService.setGameResult(room.player1.id, room.roomId ,
+            room.game.gameInfo.scorePlayer1, room.game.gameInfo.scorePlayer1);
         room.player1 && this.removeClientFromList(room, room.player1)
         room.player2 && this.removeClientFromList(room, room.player2)
     }

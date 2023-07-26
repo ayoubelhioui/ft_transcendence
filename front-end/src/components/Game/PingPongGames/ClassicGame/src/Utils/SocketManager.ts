@@ -1,7 +1,7 @@
+import { IBallInfo } from "../Interfaces/interface.ball.info"
+import { LiveData } from "../Interfaces/interface.live.data"
 import { Game } from "../MyObjects/Game"
 import { Socket, io } from 'socket.io-client'
-import { address } from "../../../../../../Const"
-
 
 export class SocketManager {
 
@@ -9,16 +9,10 @@ export class SocketManager {
     socketAddr : string
 
     constructor(game : Game) {
-        this.socketAddr = `http://${address}`
+        const host = import.meta.env.VITE_HOST || 'localhost'
+        const port = import.meta.env.VITE_SERVER_PORT || '80'
+        this.socketAddr = `http://${host}:${port}`
         this.socket = this.getSocket(game)
-    }
-
-    hitBall(payload : any) {
-        if (!this.socket)
-            return
-        //payload.distX
-        //payload.distY
-        this.socket.emit("hitBall", payload)
     }
 
     lose(payload : any) {
@@ -30,8 +24,6 @@ export class SocketManager {
     racketMove(payload : any) {
         if (!this.socket)
             return
-        //payload.e
-        //payload.id
         this.socket.emit("movePaddle", payload)
     }
 
@@ -40,18 +32,68 @@ export class SocketManager {
     //###########################################
     //###########################################
 
-    getSocket(game : Game) {
-        let token = ""
+
+    socketOn(socket : Socket, game : Game) {
+        if (!game.gameParams.isWatchMode) {
+            socket.on("start", (data) => {
+                game.start(data)
+            })
         
-        //localStorage.setItem("lastname", "Smith");
-        let a = localStorage.getItem("token");
-        if (a) {
-            console.log(a)
-            token = a
+        
+            socket.on("end_game", (data) => {
+                game.end(data)
+            })
+        
+            socket.on("ballInfo", (data) => {
+                game.scene.ballObj.socketGetBallInfo(data)
+            })
+        
+            socket.on("paddleMove", (data) => {
+                //data.e
+                //data.id
+                //console.log("paddleMove")
+                if (data?.id === 1)
+                    game.scene.player1.receivePos(data)
+                else if (data?.id === 2)
+                    game.scene.player2.receivePos(data)
+            })
+
+            socket.on("gameScore", (data) => {
+                game.changeScore(data)
+            })
+
+
+            socket.on("new_notification", (data) => {
+                console.log("new notification",  data)
+            })
+
+            socket.on("exception", (data) => {
+                console.log("exception",  data)
+            })
+
+        } else {
+            socket.on("live_data", (data : LiveData) => {
+                game.scene.player1.receivePos({y : data.paddlePlayer1})
+                game.scene.player2.receivePos({y : data.paddlePlayer2})
+                game.changeScore({
+                    score : data.score
+                })
+                const ballData : IBallInfo = {
+                    position : data.position,
+                    velocity : data.velocity,
+                    speed : data.speed
+                }
+                game.scene.ballObj.socketGetBallInfo(ballData)
+            })
         }
+
+    }
+
+    getSocket(game : Game) {
+        
         const socket = io(this.socketAddr, {
             extraHeaders: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${game.gameParams.authToken}`
             }
         })
         
@@ -59,64 +101,25 @@ export class SocketManager {
             console.log("Client is connected")
         
             //after connecting
-            socket.emit("join_game", ({
-                isBotMode : game.isBotMode,
+            const obj = {
                 isClassic : true,
-                //! token
-            }))
+                isBotMode : game.gameParams.isBotMode,
+                isWatchMode : game.gameParams.isWatchMode,
+                token : game.gameParams.gameToken,
+                userToInvite : game.gameParams.userToInvite,
+            }
+            socket.emit("join_game", obj)
+            console.log("join game: ", obj)
         
             // socket.on('disconnected', () => {
             //     socket.emit('leave', "aaa");
             // });
         })
     
-        socket.on("start", (data) => {
-            game.start(data)
-        })
-    
-    
-        socket.on("end_game", (data) => {
-            game.end(data)
-        })
-    
-        socket.on("ballInfo", (data) => {
-            game.scene.ballObj.socketGetBallInfo(data)
-        })
-    
-        // socket.on("player2Event", (data) => {
-        //     //data.ballPosition
-        //     //data.ballVelocity
-        //     game.scene.player2.socketReceive(data)
-        // })
-    
-        socket.on("paddleMove", (data) => {
-            //data.e
-            //data.id
-            //console.log("paddleMove")
-            if (data?.id === 1)
-                game.scene.player1.receivePos(data)
-            else if (data?.id === 2)
-                game.scene.player2.receivePos(data)
-        })
-    
-        socket.on("gameScore", (data) => {
-            game.changeScore(data)
-        })
-    
-        // socket.on("turn", (data) => {
-        //     game.gameInfo.turn = data.turn
-        // })
-    
-        // socket.on("loseEvent", (data) => {
-        //     game.scene.ballObj.socketLose(data)
-        // })
-    
-        // socket.on("opponentLeft", (data) => {
-        //     console.log("opponentLeft ", data)
-        //     game.gameInfo.start = false
-        //     alert("Game End!!!")
-        // })
-    
+
+        this.socketOn(socket, game)
+
+
         return (socket)
     }
 

@@ -29,6 +29,10 @@ class Channel{
     
     @Column({default : true})
     public isGroup : boolean;
+
+
+    @Column({default : "-1"})
+    public avatar: string;
    
     
     @OneToMany(() => ChannelMessages, (channelMessages) => channelMessages.channel, {nullable : true, cascade: true, onDelete: 'CASCADE' })

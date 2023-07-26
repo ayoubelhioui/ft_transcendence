@@ -9,6 +9,7 @@ import { ChannelService } from '../channels/channel.service';
 import { FriendsService } from '../friends/friends.service';
 import { GameService } from '../game/game.service';
 import { GameSessions } from '../game/game-sessions.service';
+import { UserService } from '../user/user.service';
 
 @WebSocketGateway()
 @UseFilters(WebSocketExceptionFilter)
@@ -25,16 +26,17 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
     private readonly channelService : ChannelService,
     private readonly friendsService : FriendsService,
     private readonly gameService : GameService,
-    private readonly gameSessions : GameSessions
+    private readonly gameSessions : GameSessions,
+    private readonly userService : UserService
     ) {}
 
 
-
-
+    // ! we should not disconnect it but we should emit new event to told the client to refresh token or do whatever he should do
   private async isAuth(socket : Socket) : Promise <boolean>
   {
     // Retrieve the authentication token from the request
     const authToken = socket.handshake?.headers?.authorization; 
+    console.log("authtoken === ", authToken);
     if (!authToken)
         return (false);
     const token = authToken.replace('Bearer ', '');
@@ -46,7 +48,8 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
       return (false);
     }
 
-    const {sub, iat, exp, ...user } = payload as any;
+    const {sub} = payload as any;
+    const user = await this.userService.findById(sub);
     (socket as any).user  = user;
     return (true);
   }
@@ -74,6 +77,13 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
     client.emit("myOnlineFriends",
     onlineFriendsSockets.map(socket => this.socketService.getUser(socket)))
   }
+
+  /*
+    newFriendOnline, user
+    friendDisconnect user
+    myOnlineFriends, user[]
+    new_notification notification
+  */
 
   private async joinUserChannels(client: Socket) {
     const user : User = this.socketService.getUser(client);

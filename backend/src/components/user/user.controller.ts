@@ -1,5 +1,5 @@
 import { CreateUserDto } from "./dto/user.dto";
-import { Channel, ChannelUsers, User } from 'src/database/entities';
+import { Channel, ChannelUsers, Game, User } from 'src/database/entities';
 import { ChannelService } from '../channels/channel.service';
 import { GetUser } from './decorators/user.decorator';
 import { ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard, UserInChannelGuard} from '../channels/guards';
@@ -12,13 +12,19 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as fs from 'fs';
 import { UserDto } from 'src/global/dto/user.dto';
+import { TargetUserExistGuard } from "./guards/target-user-exists.guard";
+import { GameService } from "../game/game.service";
+import { GetTargetedUser } from "./decorators/targeted-user.decorator";
+import { TargetUserSpecialCaseGuard } from "./guards/target-user-special-case-guard";
 
 
 @Controller('users')
+// @UseGuards(TokenValidationGuard)
 export class UserController{
 
     constructor(
         private readonly userService: UserService,
+        private readonly gameService: GameService,
         private readonly channelService : ChannelService
         ) {}
 
@@ -35,9 +41,22 @@ export class UserController{
         return (user);
     }
 
+    @UseGuards(TargetUserSpecialCaseGuard)
+    @Get(':targetUserId/matchhistory')
+    async getMatchHistory( @GetTargetedUser() targettedUser : User ): Promise< Game[] | undefined> {
+        const games : Game[] = await this.gameService.getUserGamesHistory(targettedUser);
+        return (games);
+    }
 
-    // @UsePipes(ValidationPipe)
-    // @Post()
+
+    @Get(':targetUserId/achievements')
+    @UseGuards(TargetUserSpecialCaseGuard)
+    async getAchievements(@GetTargetedUser() user) {
+        return (this.userService.findUserById(user.id, ["achievements"]));
+    }
+    
+    // @UserGuards(TargetUserSpecialCaseGuard)
+    // @Get('')
     // async createUsers(@Body() createUserDto: UserDto): Promise< User | undefined>  {
     //     return (await this.userService.createUser(createUserDto));
     // }
@@ -58,16 +77,24 @@ export class UserController{
     };
 
 
-   
     
     @Get('image/:id')
     async getUserImage(@Param('id', ParseIntPipe) id : number, @Response() res) {
-        const stream = fs.createReadStream('./uploads/' + id);  
+        const stream = fs.createReadStream('./uploads/' + id);
+        stream.on('error', (err) => {
+            console.log("Error")
+            stream.destroy();
+            res.status(404).json({ error: 'Image not found' });
+        });
+        // stream.on('end', () => {
+            
+        // });
         stream.pipe(res);
+        
     }
 
     @Post('image/:id')
-    @UseGuards(TokenValidationGuard)
+    // @UseGuards(TokenValidationGuard)
     @UseInterceptors(FileInterceptor('avatar', {
         storage: diskStorage({
             destination: './uploads',

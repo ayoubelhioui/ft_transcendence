@@ -18,6 +18,8 @@ class ChannelUsers{
     @ManyToOne(() => Channel, channel => channel.channelUsers)
     public channel: Channel;
 
+    //!add date to channel to sort
+
     @Column()
     public userRole : ChannelUserRole;
 

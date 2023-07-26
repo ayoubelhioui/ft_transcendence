@@ -1,4 +1,4 @@
-import { authContext } from '../context/useContext';
+import { useAppServiceContext } from '../../../Context/Context';
 
 import { MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
 
@@ -41,10 +41,11 @@ const AdminMembers = ({image}: ImageProp) => {
 }
 
 const ChannelInfo = () => {
-  const authApp = authContext();
+  const appService = useAppServiceContext()
+  const authApp = appService.authService;
 
   return (
-    <div className="flex top_2 col-span-1 row-span-2 max-sm:hidden h-[750px] w-full flex-col">
+    <div className="flex top_2 col-span-1 row-span-2 max-m-custom-md:hidden h-[750px] w-full flex-col">
         <div className="flex flex-col items-center w-full mt-20">
           <img src={authApp.user?.avatar} alt='ChannelS Avatar' className=' object-cover rounded-full w-[110px] h-[110px]'/>
           <h2 className='text-white text-sm pt-2'>NameOfChannel</h2>

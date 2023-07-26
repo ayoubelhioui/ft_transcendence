@@ -9,9 +9,11 @@ export default {
     extend: {
       screens: {
         'custom-md':'970px',
+        'm-custom-md':'1300px'
       },
       gridTemplateColumns: {
         'column-layout': 'repeat(auto-fit, minmax(320px, 1fr))',
+        'column-layout-min': 'repeat(3, 200px)',
       },
       gridTemplateRows: {
 

@@ -11,19 +11,18 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 
 
-
-
-import { authContext } from '../context/useContext';
 import Settings from './Settings';
 import React, { useState } from 'react';
-import axiosInstance from '../api/axios';
 import { address } from '../../Const';
+import { useAppServiceContext } from '../../Context/Context';
+import AxiosInstance from '../../Context/Service/AxiosInstance';
 
 
 
 const Profile = () => {
-  const authApp = authContext();
-
+  const appService = useAppServiceContext()
+  const authApp = appService.authService
+  console.log(authApp.user);
   const [NewAvatar, setNewAvatar] = useState<File | null>(null);
 
 
@@ -53,9 +52,9 @@ const Profile = () => {
 
         console.log(formData.get('avatar'));
 
-        const response = await axiosInstance.post(`/user/image/${authApp.user?.IntraId}`, formData, {
+        const response = await AxiosInstance.post(`/users/image/${authApp.user?.IntraId}`, formData, {
             headers: {
-                Authorization: `Bearer ${authApp.accessToken}`
+                Authorization: `Bearer ${authApp.getAccessToken}`
             }
           }
         );
@@ -74,12 +73,12 @@ const Profile = () => {
 
   return (
     <>
-      <div className="flex text-white mt-14 mx-8 justify-between max-md:flex-col max-md:mt-8 max-sm:mt-14 backdrop-blur-md py-4 max-md:backdrop-blur-0 max-custom-md:w-full max-custom-md:mx-2">
+      <div className="flex text-white mt-14 mx-8 justify-between max-m-custom-md:flex-col max-md:mt-8 max-sm:mt-14 backdrop-blur-md py-4 max-md:backdrop-blur-0 max-m-custom-md:w-[95%] max-m-custom-md:mx-auto">
 
         <div className="flex flex-col">
           <div className="flex items-center max-sm:justify-center max-sm:flex-col">
             <div className="flex justify-start">
-              <img src={`http://${address}/user/image/` + authApp.user?.IntraId} alt='avatar' className=' object-cover rounded-full w-[130px] h-[130px]'/>
+              <img src={`http://${address}/users/image/` + authApp.user?.IntraId} alt='avatar' className=' object-cover rounded-full w-[130px] h-[130px]'/>
               <MdEdit size={20} className='cursor-pointer ' onClick={ () => setOpen(true) }/>
 
               { open &&
@@ -112,7 +111,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="flex ml-12 justify-around flex-1 flex-wrap max-md:w-full text-center items-center max-w-[900px] mx-auto max-md:ml-2 max-md:mt-4 max-md:pt-4 max-md:border-t-2 max-md:border-t-slate-400 max-md:border-b-2 max-md:border-b-slate-400 max-md:pb-4">
+        <div className="flex ml-12 justify-around flex-1 flex-wrap max-m-custom-md:w-full text-center items-center max-w-[900px] max-m-custom-md:max-w-[95%] mx-auto  max-m-custom-md:ml-2 max-m-custom-md:mt-12 max-m-custom-md:pt-4 max-m-custom-md:border-t-2 max-m-custom-md:border-t-slate-400 max-m-custom-md:border-b-2 max-m-custom-md:border-b-slate-400 max-m-custom-md:pb-4">
 
           <div className="flex flex-col items-center">
             <span className='text-3xl max-sm:text-xl'>{authApp.user?.wins}</span>
@@ -125,7 +124,7 @@ const Profile = () => {
           </div>
           <span className='w-[1px] h-[50px] bg-gray-400  max-md:hidden'></span>
           <div className="flex flex-col items-center">
-            <span className='text-3xl max-sm:text-xl'>{authApp.user?.winrate}%</span>
+            <span className='text-3xl max-sm:text-xl'>{authApp.user?.win_rate}%</span>
             <h2 className=' opacity-70 text-2xl max-sm:text-lg'>Win Rate</h2>
           </div>
 
@@ -136,8 +135,8 @@ const Profile = () => {
 
       </div>
 
-      <div className="flex my-auto gap-4 flex-row-reverse mx-4 max-md:flex-col max-md:w-full max-custom-md:gap-6 max-md:gap-2 max-md:my-18 overflow-x-auto max-custom-md:flex-col ">
-        <div className="flex flex-col gap-6 w-[70%] flex-1 max-custom-md:w-[100%]">
+      <div className="flex my-auto gap-4 flex-row-reverse mx-4 max-md:flex-col max-md:w-full max-m-custom-md:gap-6 max-md:gap-2 max-md:my-18 overflow-x-auto max-m-custom-md:flex-col max-sm:w-[95%]">
+        <div className="flex flex-col gap-6 w-[70%] flex-1 max-m-custom-md:w-[100%]">
           <ResultsMatch />
           <Achievements />
         </div>

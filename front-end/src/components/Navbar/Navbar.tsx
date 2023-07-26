@@ -3,7 +3,6 @@ import { RiMenu3Line, RiCloseLine } from 'react-icons/ri'
 import { NavLink } from 'react-router-dom'
 import { VscAccount as AccountIcon, VscHome as HomeIcons } from "react-icons/vsc";
 import { MdSource as MessageIcon, MdVideoLibrary as VideoIcon, MdSportsEsports as GameIcon, MdExitToApp as ExitIcon } from "react-icons/md";
-import { authContext } from '../context/useContext';
 
 import { IoIosNotificationsOutline as NotificationIcon } from 'react-icons/io'
 
@@ -13,7 +12,8 @@ import Tooltip from '@mui/material/Tooltip';
 import { useState } from 'react';
 import Notifications from "./Notifications.tsx";
 
-import { address } from '../../Const';
+import { STATUS_ERROR, address } from '../../Const';
+import { useAppServiceContext } from '../../Context/Context.ts';
 
 
 
@@ -45,7 +45,8 @@ const links: any = [
 
 
 const Navbar = () => {
-  const authNav = authContext();
+  const appService = useAppServiceContext();
+  const authNav = appService.authService
 
   const [handleMenu, setHandleMenu] = useState(false);
   const [handleNotif, setHandleNotif] = useState(false);
@@ -53,13 +54,21 @@ const Navbar = () => {
 
   const hoverStyle: string = "hover:scale-125 hover:duration-500 ease-in-out";
 
+  const logout = async () => {
+    await authNav.logout((result) => {
+      if (result.status === STATUS_ERROR) {
+        //!popup Error
+      }
+    })
+  }
+
   return (
     <>
-      <div className="  text-white back rounded-[0] bg-blue-950 w-[60%] mx-auto my-5 z-20">
+      <div className="  text-white back rounded-[0] bg-blue-950 w-[60%] max-sm:w-[90%] mx-auto my-5 z-20">
         <ul  className=' py-2 flex items-center max-md:mt-1 max-md:justify-between '>
           <li className=' pl-3 max-sm:pl-1'>
             <NavLink to="/Profile">
-              <img src={`http://${address}/user/image/` + authNav.user?.IntraId} alt="" className=' cursor-pointer object-cover rounded-full w-[45px] h-[45px]' />
+              <img src={`http://${address}/users/image/` + authNav.user?.IntraId} alt="" className=' cursor-pointer object-cover rounded-full w-[45px] h-[45px]' />
             </NavLink>
           </li>
 
@@ -89,7 +98,7 @@ const Navbar = () => {
           ))}
           </div>
 
-          <NavLink to='/' className=' text-white cursor-pointer pr-2 max-md:hidden' onClick={authNav.logout} >
+          <NavLink to='/' className=' text-white cursor-pointer pr-2 max-md:hidden' onClick={logout} >
 
             <Tooltip title="Logout">
                 <IconButton>
@@ -118,7 +127,7 @@ const Navbar = () => {
                       </NavLink>
                     </li>
                 ))}
-                <NavLink to="/" onClick={authNav.logout} className={`mx-auto ${hoverStyle} pt-12 text-2xl text-left`}>
+                <NavLink to="/" onClick={logout} className={`mx-auto ${hoverStyle} pt-12 text-2xl text-left`}>
                   Logout
                 </NavLink>
               </div>

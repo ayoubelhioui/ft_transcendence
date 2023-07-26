@@ -9,7 +9,6 @@ import { NotificationModule } from './components/notification/notification.modul
 import { GroupInvitesModule } from './components/group_invites/group_invites.module';
 import { FriendsModule } from './components/friends/friends.module';
 import { ChannelModule } from './components/channels/channel.module';
-import { AddUserMiddleware } from './global/middlewares/add-default-user.middleware';
 import { SocketModule } from './components/socket/socket.module';
 import { AuthModule } from './components/auth/auth.module';
 import { AddBotMiddleware } from './global/middlewares/add-bot-user.middleware';

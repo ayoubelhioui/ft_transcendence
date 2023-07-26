@@ -10,8 +10,8 @@ export class ThreeRoom extends Room {
 
     game : ThreeGame
 
-    constructor(isBot : boolean, gameService : GameService, callBack : CallBackFun) {
-        super(isBot, gameService, callBack)
+    constructor(roomId : string, isBot : boolean, gameService : GameService, callBack : CallBackFun) {
+        super(roomId, isBot, gameService, callBack)
         this.roomType = 1
     
    
