@@ -4,9 +4,7 @@ import { client_address } from "src/Const";
 import { UserDto } from "src/global/dto/user.dto";
 import TokenBlacklist from "src/database/entities/token_blacklist";
 import { UserService } from "src/components/user/user.service";
-import { User } from "src/database/entities";
-import { use } from "passport";
-
+import * as otplib from 'otplib';
 @Injectable()
 export class AuthService{
     private payload: object;
@@ -70,19 +68,17 @@ export class AuthService{
     async storeUserSecret(id :number, secret: string) {
         const userDto: UserDto = new UserDto();
         userDto.twoFactorSecret = secret;
-        console.log(await this.userService.update(id, userDto));
+        await this.userService.update(id, userDto);
     }
     // async findUserSecretKeyByUsername(username: string): string {
         // const userSecret = this.userService.accessTokenInBlacklist
         // return 'user-secret-key';
     // }
 
-    async twoFactors(token: string, userEmail: string) {
-        // this.payload = await this.jwtService.verifyAsync(token, {
-        //     secret: process.env.TOKEN_SECRET,
-        // });
-        // if (userEmail != this.payload['sub'])
-        //     throw new ForbiddenException;
+    async verifyTwoFactors(Body: any) {
+        const user = await this.userService.findUserById(Body.id);
+        const userSecret = user.twoFactorSecret;
+        return (otplib.authenticator.check(Body.secret, userSecret));
     }
 }
 

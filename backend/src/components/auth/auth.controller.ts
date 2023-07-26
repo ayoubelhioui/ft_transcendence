@@ -37,21 +37,17 @@ export class AuthController{
     
     // @UseGuards(CorsGuard)
 
-    @Post('two-factors-verify')
-    async verifyTwoFactors(@Body() body, @Response() res) : Promise<void> {
-        await this.authService.twoFactors(body.token, body.userEmail);
+    @Post('two-factors-verify')//expecting the user id and the passcode.
+    async verifyTwoFactors(@Body() body) : Promise<void> { 
+        await this.authService.verifyTwoFactors(body);
         // await this.authService.authenticate(body, res);
     }
-    @Post('two-factors')
-    async twoFactorsAuth(@Body() body) : Promise<void> {
-        await this.authService.mailingUser(body.userEmail); 
-    }
 
-    @Post('two-factors-setup')
+    @Post('two-factors-setup') //expecting the user id.
     setupTwoFactorAuth(@Body() body) : string {
-        const secret = otplib.authenticator.generateSecret();
+        const secret: string = otplib.authenticator.generateSecret();
         this.authService.storeUserSecret(body.id, secret);
-        const otpAuthUrl = otplib.authenticator.keyuri('user@example.com', 'YourApp', secret);
+        const otpAuthUrl: string = otplib.authenticator.keyuri(body.username, 'transcendence', secret);
         return (otpAuthUrl);
     }
 
