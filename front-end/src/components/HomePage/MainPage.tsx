@@ -4,12 +4,13 @@ import Game from "../Game/Game"
 import ChooseGame from "../Game/ChooseGame"
 import { useAppServiceContext } from "../../Context/Context"
 import { appService } from "../../Context/Service/AppDataService"
+import { useState } from "react"
 
 
 const MainPage = () => {
     const appService = useAppServiceContext()
     appService.socketService.setUpSocket()
-    
+
     return (
         <MainWrapper>
             <Navbar /> 

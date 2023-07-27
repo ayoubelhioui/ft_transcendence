@@ -26,7 +26,7 @@ export class UserService{
         createUserDto.wins = 0;
         createUserDto.loss = 0;
         createUserDto.two_factors_enabled = false;
-        createUserDto.twoFactorSecret = "";
+        // createUserDto.twoFactorSecret = "";
     }
 
     async getSecretById(id: number) {

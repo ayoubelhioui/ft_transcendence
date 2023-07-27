@@ -12,7 +12,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { useState } from 'react';
 import Notifications from "./Notifications.tsx";
 
-import { STATUS_ERROR, address } from '../../Const';
+import { STATUS_ERROR, STATUS_SUCCESS, address } from '../../Const';
 import { useAppServiceContext } from '../../Context/Context.ts';
 
 
@@ -55,11 +55,12 @@ const Navbar = () => {
   const hoverStyle: string = "hover:scale-125 hover:duration-500 ease-in-out";
 
   const logout = async () => {
-    await authNav.logout((result) => {
-      if (result.status === STATUS_ERROR) {
-        //!popup Error
-      }
-    })
+    const res = await authNav.logout()
+    if (res.status === STATUS_SUCCESS) {
+      window.location.reload()
+    } else {
+      //!popup
+    }
   }
 
   return (

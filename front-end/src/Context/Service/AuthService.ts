@@ -117,29 +117,32 @@ export class AuthService {
     //====================================================
     //====================================================
 
-    async logout(callBack : (logoutResult : resultStatusI) => void) {
+    async logout() : Promise<resultStatusI> {
         try {
             const jResponse = {
                 accessToken: this.accessToken,
                 refreshToken: this.refreshToken
             };
     
-            await axiosInstance.post("/auth/logout", jResponse);
+            await axiosInstance.post("/auth/logout", jResponse, {
+                headers: {
+                    Authorization: `Bearer ${this.getAccessToken}`,
+                }
+            });
     
             Cookies.remove('access_token');
             Cookies.remove('refresh_token');
 
-            callBack({
+            return {
                 status : STATUS_SUCCESS,
                 message : "Success"
-            })
+            }
         } catch (error : any) {
-            callBack({
+            return {
                 status : STATUS_ERROR,
                 message : "Can't logout" + error
-            })
+            }
         }
-       
     }
 
 

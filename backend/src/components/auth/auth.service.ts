@@ -17,7 +17,6 @@ export class AuthService{
     
     async isUserAlreadyExist(userDto: UserDto){
         this.userInfo = await this.findUserById(userDto.IntraId);
-        console.log('the user is : ', this.userInfo.id);
         if (!this.userInfo)
         {
             this.userInfo = await this.userService.createUser(userDto);
@@ -88,7 +87,7 @@ export class AuthService{
 
     async disableTwoFactors(id :number) {
         const userDto: UserDto = new UserDto();
-        userDto.twoFactorSecret = '';
+        userDto.twoFactorSecret = null;
         userDto.two_factors_enabled = false;
         await this.userService.update(id, userDto);
     }

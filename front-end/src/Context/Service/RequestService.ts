@@ -50,18 +50,48 @@ export class RequestService {
                     Authorization: `Bearer ${obj.authService.getAccessToken}`,
                 }
             });
-            return ({
+            let ret = ({
                 status : STATUS_SUCCESS,
                 message : "Success",
                 data : response.data
             })
+            console.log(ret)
+            return (ret)
         } catch (error : any) {
             console.log(error)
-            return ({
+            let ret = ({
                 status : STATUS_ERROR,
                 message : "Failed to post to " + url + " Error: " + error,
                 data : undefined
             })
+            console.log(ret)
+            return (ret)
+        }
+    }
+
+    private static async makePutRequest(obj : RequestService, url : string, payload : any) {
+        try {
+            const response = await AxiosInstance.put(url, payload, {
+                headers: {
+                    Authorization: `Bearer ${obj.authService.getAccessToken}`,
+                }
+            });
+            let ret = ({
+                status : STATUS_SUCCESS,
+                message : "Success",
+                data : response.data
+            })
+            console.log(ret)
+            return (ret)
+        } catch (error : any) {
+            console.log(error)
+            let ret = ({
+                status : STATUS_ERROR,
+                message : "Failed to post to " + url + " Error: " + error,
+                data : undefined
+            })
+            console.log(ret)
+            return (ret)
         }
     }
 
@@ -159,6 +189,14 @@ export class RequestService {
 
     async postDisableTwoFactorsRequest(payload : any = {}) {
         return await RequestService.makePostRequest(this, '/auth/disable-two-factors', payload)
+    }
+    
+    async putUpdateUserNameRequest(payload : any = {}) {
+        return await RequestService.makePutRequest(this, '/users/update', payload)
+    }
+
+    async putUpdateUserImageRequest(intraId : number, payload : any = {}) {
+        return await RequestService.makePutRequest(this, `/users/image/${intraId}`, payload)
     }
 }
     

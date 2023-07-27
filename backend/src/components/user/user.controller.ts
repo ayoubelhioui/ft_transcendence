@@ -93,7 +93,7 @@ export class UserController{
         
     }
 
-    @Post('image/:id')
+    @Put('image/:id')
     // @UseGuards(TokenValidationGuard)
     @UseInterceptors(FileInterceptor('avatar', {
         storage: diskStorage({
@@ -109,10 +109,12 @@ export class UserController{
             callback(null, true);
         }
     }))
-    async updateUserImage(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req) { }
+    async updateUserImage(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req){
+        console.log('helloWorld');
+        res.status(200).json({ message: 'picture uploaded successfully' });
+    }
 
     @Put('update')
-    @UseGuards(TokenValidationGuard)
     async updateUser (@Request() req, @Body() body) : Promise<object> {
         const User = await this.userService.update(req.user.id, body);
         return (User);

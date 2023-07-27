@@ -1,84 +1,77 @@
-
-
-
-// const Dialog = () => {
-//   const [isOpen, setIsOpen] = useState(false);
-
-//   const openDialog = () => {
-//     setIsOpen(true);
-//   };
-
-//   const closeDialog = () => {
-//     setIsOpen(false);
-//   };
-
-//   return (
-//     <div>
-//       {isOpen && (
-//         <div className="fixed z-10 inset-0 overflow-y-auto">
-//           <div className="flex items-center justify-center min-h-screen">
-//             <div className="fixed inset-0 bg-black opacity-30" onClick={closeDialog}></div>
-//             <div className="bg-white rounded-lg w-1/2 p-6">
-//               <div className="flex justify-between items-center">
-//                 <h2 className="text-lg font-medium">Dialog Title</h2>
-//                 <button onClick={closeDialog}>X</button>
-//               </div>
-//               <div>
-//                 <p>Dialog content goes here.</p>
-//               </div>
-//               <div className="flex justify-end">
-//                 <button onClick={closeDialog} className="mr-2">
-//                   Cancel
-//                 </button>
-//                 <button onClick={closeDialog} className="bg-blue-500 text-white">
-//                   Confirm
-//                 </button>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-
-
-import { useEffect, useState } from 'react';
-
+import { ReactNode, useState, useEffect, useRef} from "react";
+import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../../Const";
+import { useAppServiceContext } from "../../../Context/Context";
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdSend } from 'react-icons/md'
-import { useAppServiceContext } from '../../../Context/Context';
+import { useChatContext } from "../ChatContext";
 
 
+const Header = ({name} : {name : string}) => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <div className="flex justify-between mx-6 mt-3 items-center pt-2">
+      <div className="flex flex-col items-center mx-auto ">
+        {/* <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[55px] h-[55px]'/> */}
+        <h2 className="text-sm text-white w-full text-center">
+          {name}
+        </h2>
+      </div>
+      <div className="flex flex-col relative">
+        <BsThreeDotsVertical
+          size={20}
+          className="text-white cursor-pointer"
+          onClick={() => setIsOpen(!isOpen)}
+        />
+
+        {isOpen && (
+          <div className="flex flex-col bg-blue-950 rounded-[10px] absolute top-[3rem] items-center -left-[8rem] w-[150px] h-[160px] justify-center text-white z-[999]">
+            {/* I need to check if the user is an admin, and if he is then i will have to display block and mute and add */}
+
+            <span className="text-sm my-3 cursor-pointer hover:text-gray-300 hover:border-gray-300">
+              Add a Friend
+            </span>
+            <span className="text-sm my-3 cursor-pointer hover:text-gray-300 hover:border-gray-300">
+              Block a Friend
+            </span>
+            <span className="text-sm my-3 cursor-pointer hover:text-gray-300 hover:border-gray-300">
+              Mute a Friend
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
 
 const ChatFooter = () => {
   const appService = useAppServiceContext()
-  const [message, setMessage] = useState("");
+  const chatContext = useChatContext()
+  const [message, setMessage] = useState("")
+  function handleMessageChange(event: React.ChangeEvent<HTMLInputElement>){
+     setMessage(event.target.value)
+  }
 
   const handleMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    //!channel Id 1
-    const payload = {
-      message,
-      channelId : 1
-    }
-    console.log(payload)
-    appService.socketService.socket?.emit("send_message", payload)
-
-    // Temporary setter
-    setMessage("");
+    appService.socketService.emitEvent("send_message", {
+      message : message,
+      channelId : chatContext.conversationInfo.id
+    })
+    setMessage("")
   };
+
   return (
     <div className="flex items-center">
       <form className="flex items-center w-full" onSubmit={handleMessage}>
         <input
-          type="search"
+          name="message"
+          type="text"
           className=" inp border-0 text-white shadow w-[90%]"
           placeholder="Send A Message..."
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={handleMessageChange}
         />
 
         <button type="submit" className=" outline-none p-0">
@@ -101,6 +94,7 @@ const Sender = ({message} : {message : any}) => {
     </div>
   );
 };
+
 const Receiver = ({message} : {message : any}) => {
   return (
     <div className="flex flex-col gap-1">
@@ -116,79 +110,149 @@ const Receiver = ({message} : {message : any}) => {
   );
 };
 
+const Wrapper = ( {children} : {children : ReactNode} ) =>  {
+  return (
+      <div>
+        {children}
+      </div>
+  )
+}
 
-const Conversations = ({name} : {name : string}) => {
+const Item = ({payload, isSender} : {payload : any, isSender : boolean}) => {
+  const message = payload
+
+  if (isSender) {
+    return (<Sender message={message}/>)
+  } else {
+    return (<Receiver message={message}/>)
+  }
+}
+
+const NoContent = () => {
+  return (
+      <Wrapper>
+          <div className="flex mx-auto py-2 "> No Chat </div>
+      </Wrapper>
+  )
+}
+
+const List = ({userId, data} : {userId : number, data : any}) => {
   const appService = useAppServiceContext()
-  const authApp = appService.authService;
-  //!channel Id 1
-  const messages = appService.requestService.getChannelMessagesRequest(1, undefined)
+  const [list, setList] = useState<Object[]>(data)
+  const listRef = useRef<HTMLDivElement | null>(null);
+  const prevScrollY = useRef(0);
 
-  const [isOpened, setIsOpened] = useState(false);
+  function requestData() {
+    // const lastMessageTime
+    // const result = appService.requestService.getChannelMessagesRequest(channelId, undefined)
+  }
 
-  const isBool: boolean = false;
+  function fetchData() {
+    if (listRef.current) {
+      prevScrollY.current = listRef.current.scrollTop;
+      if (list.length < 1000)
+        setList([... list, ... list])
+      listRef.current.scrollTop = prevScrollY.current;
+    }
+  }
+
+  const handleObserver = (entries : any) => {
+    const target = entries[0];
+    if (target.isIntersecting) {
+      fetchData();
+    }
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleObserver, {
+      threshold: 0,
+      
+    });
+
+    const loadMoreElement = document.getElementById('load-more');
+    if (loadMoreElement) {
+      observer.observe(loadMoreElement);
+    }
+
+    return () => {
+      observer.disconnect()
+    };
+  }, [list]);
 
 
-  // appService.socketService.on("on_message_send", (payload : any) => {
-
-  // })
-
-  appService.socketService.on("on_message_send", (data : any) => {
-    console.log("Received message", data)
-  })
-
-  console.log("Hi to Conversation")
-  return messages.data ? (
-    <div className="flex flex-col justify-between max-m-custom-md:w-[100%] top_2 col-span-2 max-m-custom-md:col-span-1 h-[65vh] max-m-custom-md:h-full row-span-2 ">
-      <div className="flex justify-between mx-6 mt-3 items-center pt-2">
-        <div className="flex flex-col items-center mx-auto ">
-          {/* <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[55px] h-[55px]'/> */}
-          <h2 className="text-sm text-white w-full text-center">
-            {name}
-          </h2>
-        </div>
-        <div className="flex flex-col relative">
-          <BsThreeDotsVertical
-            size={20}
-            className="text-white cursor-pointer"
-            onClick={() => setIsOpened(!isOpened)}
-          />
-
-          {isOpened && (
-            <div className="flex flex-col bg-blue-950 rounded-[10px] absolute top-[3rem] items-center -left-[8rem] w-[150px] h-[160px] justify-center text-white z-[999]">
-              {/* I need to check if the user is an admin, and if he is then i will have to display block and mute and add */}
-
-              <span className="text-sm my-3 cursor-pointer hover:text-gray-300 hover:border-gray-300">
-                Add a Friend
-              </span>
-              <span className="text-sm my-3 cursor-pointer hover:text-gray-300 hover:border-gray-300">
-                Block a Friend
-              </span>
-              <span className="text-sm my-3 cursor-pointer hover:text-gray-300 hover:border-gray-300">
-                Mute a Friend
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Body Of The Conversation */}
-
-      <div className="w-full h-full px-4 mt-8 overflow-y-scroll">
+  return (
+      <div ref={listRef} className="w-full h-full px-4 mt-8 overflow-y-scroll flex flex-col-reverse">
         {
-          messages.data.reverse().map((item : any) => (
-            item.user.id === authApp.user?.id ? <Sender key={item.id} message={item}/> : <Receiver key={item.id} message={item}/>
-          ))
+            list.reverse().map((item : any, index : number) => (            
+                <Item 
+                  key={index} 
+                  payload={item} 
+                  isSender={item.user.id === userId} 
+                />
+            ))
         }
-  
+        
+        <div id="load-more" className="h-10 w-10 bg-red-500"> 
+          <Sender message={"Limiter"}/>
+        </div>
       </div>
+  )
+}
 
+const ConversationsChat = ({id} : {id : number}) => {
+  const appService = useAppServiceContext()
+  const userId = appService.authService.user!.id
+  const result = appService.requestService.getChannelMessagesRequest(id, undefined)
+
+  if (result.status === STATUS_UNDEFINED) {
+    return <div>Loading ...</div>
+  } else if (result.status === STATUS_ERROR) {
+    return (
+      <>
+      <div> Popup Error </div>
+      <NoContent></NoContent>
+      </>
+    )
+  } else if (result.status === STATUS_SUCCESS) {
+      if (result.data.length === 0) {
+          return <NoContent></NoContent>
+      } else {
+          return <List data={result.data} userId={userId} ></List>
+      }
+  } else {
+      throw Error("Unhandled status")
+  }
+
+}
+
+const ConversationsPanel = ({id, name} : {id : number , name : string}) => {
+  return (
+    <>
+      <Header name={name} />
+      <ConversationsChat id={id} />
       <ChatFooter />
+    </>
+  )
+}
+
+const Conversations = () => {
+  const chatContext = useChatContext()
+  const id = chatContext.conversationInfo.id
+  const name = chatContext.conversationInfo.name
+
+  return (
+    <div className="flex flex-col justify-between max-m-custom-md:w-[100%] top_2 col-span-2 max-m-custom-md:col-span-1 h-[60vh] max-m-custom-md:h-full row-span-2 ">
+      { 
+      
+      id != undefined ? (
+        <ConversationsPanel id={id} name={name}/>
+      ) : (
+        <div> No Conversation Open ! </div>
+      )
+      
+      }
     </div>
-  ) : (
-    <div className="flex top_2 col-span-3 h-[950px] row-span-2 ">
-      {/* Your content here */}
-    </div>
-  );
-};
+  )
+}
 
 export default Conversations;

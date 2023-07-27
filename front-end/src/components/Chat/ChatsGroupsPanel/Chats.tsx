@@ -4,6 +4,7 @@ import { MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
 import { ReactNode, useState} from "react";
 import { useAppServiceContext } from "../../../Context/Context";
 import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../../Const";
+import { useChatContext } from "../ChatContext";
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
@@ -13,25 +14,24 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     )
 }
 
-const Item = ({payload} : {payload : any}) => {
+const Item = ({payload, onItemClick} : {payload : any, onItemClick : any}) => {
   const channel = payload
   const avatar = `http://${address}/users/image/${channel.avatar}`
   
-  const fun = () => {
-    console.log(channel.name)
-    //setUserName(channel.name)
+  function itemClick() {
+    onItemClick(payload.id, payload.name)
   }
 
   //! render last message if exist
-    return (
-      <div className="flex mt-8 items-center mx-6" onClick={fun}>
-          <img src={avatar} alt='avatar' className=' object-cover rounded-full w-[65px] h-[65px] cursor-pointer'/>
-          <div className="flex flex-col ml-6 cursor-pointer">
-            <h2 className='text-white'>{channel.name}</h2>
-            <p className='pt-1 pl-2 text-gray-600'>user's message</p>
-          </div>
-      </div>
-    )
+  return (
+    <div className="flex mt-8 items-center mx-6" onClick={itemClick}>
+        <img src={avatar} alt='avatar' className=' object-cover rounded-full w-[65px] h-[65px] cursor-pointer'/>
+        <div className="flex flex-col ml-6 cursor-pointer">
+          <h2 className='text-white'>{channel.name}</h2>
+          <p className='pt-1 pl-2 text-gray-600'>user's message</p>
+        </div>
+    </div>
+  )
 }
 
 const NoContent = () => {
@@ -44,16 +44,25 @@ const NoContent = () => {
 
 
 const List = ({list} : {list : any}) => {
-    return (
-      <Wrapper>
-          {
-              list.map((item : any, index : number) => (            
-                  <Item key={item.id} payload={item}/>
-              ))
-          }
-      </Wrapper>
-      
-    )
+  const chatService = useChatContext()
+
+  function onItemClick(id : number, name : string) {
+    chatService.setConversationInfo({
+      id,
+      name
+    })
+  }
+
+  return (
+    <Wrapper>
+        {
+            list.map((item : any) => (            
+                <Item key={item.id} payload={item} onItemClick={onItemClick}/>
+            ))
+        }
+    </Wrapper>
+    
+  )
 }
 
 const Chats = () => {
