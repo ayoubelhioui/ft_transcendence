@@ -15,7 +15,7 @@ export class TokenValidationGuard implements CanActivate {
         this.token = request.headers.authorization.replace('Bearer ', '');
         
         this.payload = await this.jwtService.verifyAsync(this.token, {
-          secret: process.env.TOKEN_SECRET, 
+          secret: process.env.TOKEN_SECRET,
       });
     }
     catch (err) {

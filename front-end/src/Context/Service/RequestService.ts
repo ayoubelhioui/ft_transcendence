@@ -142,5 +142,23 @@ export class RequestService {
     async postMessageRequest(channelId : number, payload : any = {}) {
         return await RequestService.makePostRequest(this,`/channels/${channelId}/messages`, payload)
     }
+
+    //====================================================
+
+    async postGetSecretKeyRequest(payload : any = {}) {
+        return await RequestService.makePostRequest(this, `/auth/generate-secret-two-factor`, payload)
+    }
+
+    async postVerifyEnableTwoFactorRequest(payload : any = {}) {
+        return await RequestService.makePostRequest(this, '/auth/two-factors-verify-store', payload)
+    }
+
+    async postVerifyTwoFactorRequest(payload : any = {}) {
+        return await RequestService.makePostRequest(this, '/auth/two-factors-verify', payload)
+    }
+
+    async postDisableTwoFactorsRequest(payload : any = {}) {
+        return await RequestService.makePostRequest(this, '/auth/disable-two-factors', payload)
+    }
 }
     

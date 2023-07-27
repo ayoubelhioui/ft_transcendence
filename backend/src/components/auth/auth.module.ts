@@ -33,7 +33,7 @@ export class AuthModule implements NestModule {
       .exclude(
         // Add the routes you want to exclude from the middleware
         { path: 'auth/callback', method: RequestMethod.GET },
-        { path: 'auth/verify-two-factors', method: RequestMethod.POST },
+        { path: 'auth/two-factors-verify', method: RequestMethod.POST },
         { path: 'auth/two-factors', method: RequestMethod.POST },
         { path: 'users/image/:id*', method: RequestMethod.ALL },
         // More routes can be excluded if needed

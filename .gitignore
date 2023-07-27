@@ -6,3 +6,4 @@ front-end/node_modules
 front-end/dist
 node_modules
 .DS_Store
+.env
