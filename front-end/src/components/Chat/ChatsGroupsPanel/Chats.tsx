@@ -1,10 +1,11 @@
 import { Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
-import { ReactNode, useState} from "react";
+import { ReactNode, useEffect, useState} from "react";
 import { useAppServiceContext } from "../../../Context/Context";
 import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../../Const";
 import { useChatContext } from "../ChatContext";
+import { RequestResultI } from "../../../Context/Service/RequestService";
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
@@ -12,6 +13,17 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
           {children}
       </div>
     )
+}
+
+
+const LastMessage = ({message} : {message : any | undefined}) => {
+  if (message) {
+    let item = message.message
+    if (item.length > 5)
+      item = item.slice(0, 5) + " ..."
+    return <p className='pt-1 pl-2 text-gray-600'>{item}</p>
+  }
+  return <p className='pt-1 pl-2 text-gray-600'></p>
 }
 
 const Item = ({payload, onItemClick} : {payload : any, onItemClick : any}) => {
@@ -28,7 +40,7 @@ const Item = ({payload, onItemClick} : {payload : any, onItemClick : any}) => {
         <img src={avatar} alt='avatar' className=' object-cover rounded-full w-[65px] h-[65px] cursor-pointer'/>
         <div className="flex flex-col ml-6 cursor-pointer">
           <h2 className='text-white'>{channel.name}</h2>
-          <p className='pt-1 pl-2 text-gray-600'>user's message</p>
+          <LastMessage message={channel.lastMessage} />
         </div>
     </div>
   )
@@ -53,6 +65,22 @@ const List = ({list} : {list : any}) => {
     })
   }
 
+
+  list = list.sort((a: any, b: any) => {
+    let timeA = a.lastMessage ? a.lastMessage.time : a.creationTime
+    let timeB = b.lastMessage ? b.lastMessage.time : b.creationTime
+    timeA = new Date(timeA).getTime()
+    timeB = new Date(timeB).getTime()
+    return -(timeA - timeB)
+  })
+
+  if (list[0] && !chatService.conversationInfo.id) {
+    chatService.setConversationInfo({
+      id : list[0].id,
+      name : list[0].name
+    })
+  }
+
   return (
     <Wrapper>
         {
@@ -67,9 +95,9 @@ const List = ({list} : {list : any}) => {
 
 const Chats = () => {
     const appService = useAppServiceContext()
-    const result = appService.requestService.getMyChannelsRequest()
-  
-    console.log("result === " , result);
+    const chatContext = useChatContext()
+    const result = appService.requestService.getMyChannelsRequest([chatContext.updateChats])
+   
     if (result.status === STATUS_UNDEFINED) {
       return <div>Loading ...</div>
     } else if (result.status === STATUS_ERROR) {

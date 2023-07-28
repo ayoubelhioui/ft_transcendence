@@ -156,7 +156,9 @@ export class ChannelController {
         let date : Date = null;
         if (messagesDateDto.date)
             date = new Date(messagesDateDto.date);
-        return (await this.channelService.getChannelMessages(channel, date));
+        let a = await this.channelService.getChannelMessages(channel, date)
+        console.log(channel, date, a)
+        return (a);
     };
 
     @Post(':id/messages')

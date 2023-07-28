@@ -36,11 +36,18 @@ export class ChatGateway {
     const channel : Channel = this.socketService.getChannel(socket);
     const createdMessage : ChannelMessages = await this.channelService.createMessage(user, channel, sendMessageDto.message);
     const channelRoom = "channel_" + channel.id;
-    socket.broadcast.to(channelRoom).emit("on_message_send", {
+    this.server.to(channelRoom).emit("on_message_send", {
       user, 
       message : createdMessage.message, 
-      time : createdMessage.time
+      time : createdMessage.time,
+      channelId : channel.id,
     });
+    // socket.emit("on_message_send", {
+    //   user, 
+    //   message : createdMessage.message, 
+    //   time : createdMessage.time,
+    //   channelId : channel.id,
+    // });
   }
 
 

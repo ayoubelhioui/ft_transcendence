@@ -52,13 +52,14 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
   }
 
   async getUserChannelsWithLastMessage(userId : number) : Promise < any[] | undefined > {
+    console.log("Hi!")
     return this.entity
     .createQueryBuilder('channelUsers')
     .leftJoinAndSelect('channelUsers.channel', 'channel')
     .leftJoinAndSelect('channel.lastMessage', 'lastMessage')
     .leftJoinAndSelect('lastMessage.user', 'user')
     .where('channelUsers.userId = :id', { id: userId })
-    .select(['channel.id', 'channel.name', 'channel.visibility', 'channel.isGroup', 'channel.avatar'])
+    .select(['channel.id', 'channel.name', 'channel.visibility', 'channel.isGroup', 'channel.avatar', 'channel.creationTime'])
     .addSelect('lastMessage.id', 'lastMessage_id')
     .addSelect('lastMessage.message', 'lastMessage_message')
     .addSelect('lastMessage.time', 'lastMessage_time')
@@ -76,7 +77,8 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
           name: result.channel_name,
           visibility: result.channel_visibility,
           isGroup: result.channel_isGroup,
-          avatar : result.channel_avatar
+          avatar : result.channel_avatar,
+          creationTime : result.channel_creationTime
         };
 
         if (result.lastMessage_id) {

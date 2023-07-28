@@ -110,13 +110,6 @@ const Receiver = ({message} : {message : any}) => {
   );
 };
 
-const Wrapper = ( {children} : {children : ReactNode} ) =>  {
-  return (
-      <div>
-        {children}
-      </div>
-  )
-}
 
 const Item = ({payload, isSender} : {payload : any, isSender : boolean}) => {
   const message = payload
@@ -128,45 +121,111 @@ const Item = ({payload, isSender} : {payload : any, isSender : boolean}) => {
   }
 }
 
-const NoContent = () => {
-  return (
-      <Wrapper>
-          <div className="flex mx-auto py-2 "> No Chat </div>
-      </Wrapper>
-  )
+interface ListI {
+  id : number
+  message : string
+  time : string
+  seen : boolean
+  user : any
 }
 
-const List = ({userId, data} : {userId : number, data : any}) => {
-  const appService = useAppServiceContext()
-  const [list, setList] = useState<Object[]>(data)
-  const listRef = useRef<HTMLDivElement | null>(null);
-  const prevScrollY = useRef(0);
+interface MessageListI {
+  doneFetching : boolean
+  id : number
+  list : ListI[]
+  scrollPosition : number
+}
 
-  function requestData() {
-    // const lastMessageTime
-    // const result = appService.requestService.getChannelMessagesRequest(channelId, undefined)
+const ConversationsChat = ({id} : {id : number}) => {
+  const appService = useAppServiceContext()
+  const chatContext = useChatContext()
+  const userId = appService.authService.user!.id
+  const [refreshTrigger, setRefreshTrigger] = useState(true)
+  const lists = useRef<MessageListI[]>([])
+  const listRef = useRef<HTMLDivElement | null>(null);
+
+  const getItem = (id : number) => {
+    return lists.current[id]
   }
 
-  function fetchData() {
-    if (listRef.current) {
-      prevScrollY.current = listRef.current.scrollTop;
-      if (list.length < 1000)
-        setList([... list, ... list])
-      listRef.current.scrollTop = prevScrollY.current;
+  const getOldestMessageDate = () => {
+    const list = getItem(id).list
+    return list.length === 0 ? undefined : list[list.length - 1].time
+  }
+
+  const updateList = (newItems : any, isNew : boolean, channelId : number) => {
+    const item = getItem(channelId)
+    if (item) {
+      if (isNew) {
+        item.list = [...newItems, ...item.list]
+      } else {
+        item.list = [...item.list, ...newItems]
+      }
+      setRefreshTrigger(!refreshTrigger)
     }
   }
 
-  const handleObserver = (entries : any) => {
+  const requestData = async () => {
+    const oldestMessageDate = getOldestMessageDate()
+    // console.log("next request: ", oldestMessageDate)
+    const result = await appService.requestService.getChannelMessagesRequest(id, oldestMessageDate)
+    if (result.status === STATUS_SUCCESS) {
+      if (result.data.length === 0) {
+        getItem(id).doneFetching = true
+      } else {
+        updateList(result.data, false, id)
+      }
+    } else {
+      //!handle Error
+    }
+  }
+
+  const handleObserver = async (entries : any) => {
     const target = entries[0];
     if (target.isIntersecting) {
-      fetchData();
+      if (listRef.current) {
+        if (!getItem(id)) {
+          const newItem : MessageListI = {
+            doneFetching : false,
+            id : id,
+            list : [],
+            scrollPosition : 0
+          }
+          lists.current[id] = newItem
+        }
+        getItem(id).scrollPosition = listRef.current.scrollTop
+        if (!getItem(id).doneFetching) {
+          await requestData()
+        }
+        listRef.current.scrollTop = getItem(id).scrollPosition;
+      }
     }
   };
+
+
+  const updateChat = () => {
+    console.log("update chat list: ", chatContext.updateChats)
+    //chatContext.updateChats = !chatContext.updateChats
+    chatContext.setUpdateChats(!chatContext.updateChats)
+  }
+
+  useEffect(() => {
+    const event = "on_message_send"
+    appService.socketService.on(event, (data : any) => {
+      console.log("Message Received to chat", id)
+      updateList([data], true, data.channelId)
+
+      updateChat()
+    })
+
+    return (() => {
+      appService.socketService.off(event)
+    })
+  }, [refreshTrigger, id, chatContext.updateChats])
 
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {
       threshold: 0,
-      
     });
 
     const loadMoreElement = document.getElementById('load-more');
@@ -177,50 +236,34 @@ const List = ({userId, data} : {userId : number, data : any}) => {
     return () => {
       observer.disconnect()
     };
-  }, [list]);
+  }, [refreshTrigger, id]);
 
-
-  return (
+  if (getItem(id)) {
+    return (
+        <div ref={listRef} className="w-full h-full px-4 mt-8 overflow-y-scroll flex flex-col-reverse">
+          {
+              getItem(id).list.map((item : any, index : number) => (            
+                  <Item 
+                    key={index} 
+                    payload={item} 
+                    isSender={item.user.id === userId} 
+                  />
+              ))
+          }
+          
+          <div id="load-more" className="h-10 w-10 bg-red-500"> 
+            <Sender message={"Limiter"}/>
+          </div>
+        </div>
+    )
+  } else {
+    return (
       <div ref={listRef} className="w-full h-full px-4 mt-8 overflow-y-scroll flex flex-col-reverse">
-        {
-            list.reverse().map((item : any, index : number) => (            
-                <Item 
-                  key={index} 
-                  payload={item} 
-                  isSender={item.user.id === userId} 
-                />
-            ))
-        }
-        
         <div id="load-more" className="h-10 w-10 bg-red-500"> 
           <Sender message={"Limiter"}/>
         </div>
       </div>
-  )
-}
-
-const ConversationsChat = ({id} : {id : number}) => {
-  const appService = useAppServiceContext()
-  const userId = appService.authService.user!.id
-  const result = appService.requestService.getChannelMessagesRequest(id, undefined)
-
-  if (result.status === STATUS_UNDEFINED) {
-    return <div>Loading ...</div>
-  } else if (result.status === STATUS_ERROR) {
-    return (
-      <>
-      <div> Popup Error </div>
-      <NoContent></NoContent>
-      </>
     )
-  } else if (result.status === STATUS_SUCCESS) {
-      if (result.data.length === 0) {
-          return <NoContent></NoContent>
-      } else {
-          return <List data={result.data} userId={userId} ></List>
-      }
-  } else {
-      throw Error("Unhandled status")
   }
 
 }
@@ -247,7 +290,7 @@ const Conversations = () => {
       id != undefined ? (
         <ConversationsPanel id={id} name={name}/>
       ) : (
-        <div> No Conversation Open ! </div>
+        <div> No Conversation ! </div>
       )
       
       }

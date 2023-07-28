@@ -32,6 +32,7 @@ const SignIn = () => {
        
     }  
 
+    window.history.replaceState({}, '', 'SignIn');
     console.log(id)
     if (id) {
         return (

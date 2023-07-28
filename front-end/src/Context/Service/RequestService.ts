@@ -95,7 +95,7 @@ export class RequestService {
         }
     }
 
-    private getData(fun : (obj : RequestService, url : string) => Promise<RequestResultI>, url : string) {
+    private getData(fun : (obj : RequestService, url : string) => Promise<RequestResultI>, url : string, dips : any[] = []) {
         const [state, setState] = useState<RequestResultI>({
             status : STATUS_UNDEFINED,
             message : "",
@@ -108,28 +108,11 @@ export class RequestService {
                 setState(await fun(obj, url))
             }
             loadData()
-        }, [])
+        }, dips)
     
         return (state)
     }
 
-    private postData(fun : (obj : RequestService, url : string, payload : any) => Promise<RequestResultI>, url : string, payload : any) {
-        const [state, setState] = useState<RequestResultI>({
-            status : STATUS_UNDEFINED,
-            message : "",
-            data : undefined
-        })
-    
-        useEffect(() => {
-            const obj = this
-            async function loadData() {
-                setState(await fun(obj, url, payload))
-            }
-            loadData()
-        }, [])
-    
-        return (state)
-    }
 
     //====================================================
     //====================================================
@@ -146,10 +129,14 @@ export class RequestService {
         return this.getData(RequestService.makeGetRequest, "/games/leaderboard")
     }
 
-    getMyChannelsRequest() {
-        return this.getData(RequestService.makeGetRequest, "/users/me/channels")
+    getMyChannelsRequest(dips : any[] = []) {
+        //return RequestService.makeGetRequest(this, `/users/me/channels`)
+        return this.getData(RequestService.makeGetRequest, "/users/me/channels", dips)
     }
 
+    
+    // ==== Chat ====================================================
+    
     getChannelsRequest() {
         return this.getData(RequestService.makeGetRequest, "/channels")
     }
@@ -160,9 +147,10 @@ export class RequestService {
     }
 
     //!messages
-    getChannelMessagesRequest(channelId : number, date : Date | undefined = undefined) {
-        let a = !date ? "" : `?date=${Date}`
-        return this.getData(RequestService.makeGetRequest, `/channels/${channelId}/messages${a}`)
+    getChannelMessagesRequest(channelId : number, date : string | undefined = undefined) {
+        let a = !date ? "" : `?date=${date}`
+        return RequestService.makeGetRequest(this, `/channels/${channelId}/messages${a}`)
+        //return this.getData(RequestService.makeGetRequest, `/channels/${channelId}/messages${a}`)
     }
 
     async postJoinChannelRequest(channelId : number, payload : any = {}) {
@@ -173,7 +161,7 @@ export class RequestService {
         return await RequestService.makePostRequest(this,`/channels/${channelId}/messages`, payload)
     }
 
-    //====================================================
+    // ==== Profile ====================================================
 
     async postGetSecretKeyRequest(payload : any = {}) {
         return await RequestService.makePostRequest(this, `/auth/generate-secret-two-factor`, payload)

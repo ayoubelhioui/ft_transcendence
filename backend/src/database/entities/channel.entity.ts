@@ -17,6 +17,9 @@ class Channel{
     @Column()
     public name: string;
 
+    @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
+    public creationTime: Date;
+
     @Exclude() // Exclude this property from serialization
     @Column({nullable: true, type: 'text', select: false})
     public password: string;

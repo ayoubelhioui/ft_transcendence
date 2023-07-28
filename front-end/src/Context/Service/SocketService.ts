@@ -19,11 +19,27 @@ export class SocketService {
                 Authorization: `Bearer ${this.requestService.getAuthService.getAccessToken}`
             }
         })
+
+
+        this.socket.on("connect", () => {
+            console.log("Connected")
+        })
+
+        this.socket.on("disconnect", () => {
+            console.log("disconnected")
+        })
     }
 
     emitEvent(event : string, payload : any = {}) {
         this.socket?.emit(event, payload)
     }
 
+    on(event : string, callBack : any) {
+        this.socket?.on(event, callBack)
+    }
+
+    off(event : string) {
+        this.socket?.off(event)
+    }
 
 }

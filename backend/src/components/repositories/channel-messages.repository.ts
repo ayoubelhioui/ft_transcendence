@@ -18,12 +18,12 @@ class ChannelMessagesRepository extends ABaseRepository<ChannelMessages> impleme
   }
 
   async getChannelMessages(channel : Channel, date ?: Date) : Promise <ChannelMessages[] | undefined> {
+    //!why channel: { id: channel.id } instead of  channel
     const condition : any = {
-        channel,
+      channel: { id: channel.id },
     };
     if (date)
       condition.time = LessThan(date);
-  
     return this.entity.find({
       where: condition,
       order: { 'time': 'DESC' }, // Order by the "name" column in ascending order
