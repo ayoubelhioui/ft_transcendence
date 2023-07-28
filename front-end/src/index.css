@@ -208,3 +208,43 @@ h1 {
 .align {
   @apply flex flex-col items-center;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.modal-content {
+  position: absolute; /* Ensure relative positioning for absolute positioning of the time line */
+  width: 400px; /* Set the desired width of the modal content */
+  background-color: #ffffff;
+  top: 0;
+  left: 50%;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Style the time line */
+.time-line {
+  position: absolute;
+  top: -5px; /* Adjust the positioning of the time line as needed */
+  left: 0;
+  height: 5px;
+  background-color: #f9a825; /* Set the color of the time line */
+}
