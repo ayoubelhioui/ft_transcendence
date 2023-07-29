@@ -9,7 +9,7 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
         <>
             <div className=' min-h-[370px] max-md:min-h-[270px] back rounded-[10px] flex-1 mr-16 max-custom-md:mr-0 flex flex-col justify-between shadow-md max-md:mr-0'>
-                <h1 className="text-2xl p-2">Live Games</h1>
+                <h1 className="text-2xl p-2 mb-4">Live Games</h1>
                 {children}
             </div>
         </>
@@ -18,21 +18,24 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 
 const Item = ({ player1, player2 }: {player1 : any, player2 : any}) => {
     return (
-      <div className="flex mx-auto py-2">
-             <Avatar src={`http://${address}/users/image/` + player1.IntraId} sx={{ width: 60, height: 60 }}/>
-            <div className=" mx-12 flex items-center gap-2 cursor-pointer">
-              <span className=''>LIVE</span>
-              <span className='w-[11px] h-[12px] rounded-[50%] bg-red-700'></span>
+        <div className="flex gap-4 w-full h-full justify-center items-start">
+            <div className="flex mx-auto cursor-pointer py-2 items-center bg-opacity-40">
+                <Avatar src={`http://${address}/users/image/` + player1.IntraId} sx={{ width: 60, height: 60 }}/>
+                <div className=" mx-12 flex items-center gap-2 cursor-pointer">
+                <span className=''>LIVE</span>
+                <span className='w-[11px] h-[12px] rounded-[50%] bg-red-700'></span>
+                </div>
+                <Avatar src={`http://${address}/users/image/` + player2.IntraId} sx={{ width: 60, height: 60 }}/>
             </div>
-             <Avatar src={`http://${address}/users/image/` + player2.IntraId} sx={{ width: 60, height: 60 }}/>
-          </div>
+        </div>
+
     )
 }
 
 const NoContent = () => {
     return (
         <Wrapper>
-            <div className="flex mx-auto py-2 "> No Lives </div>
+            <div className="flex mx-auto h-full w-full justify-center items-center text-4xl"> No Lives </div>
         </Wrapper>
     )
 }

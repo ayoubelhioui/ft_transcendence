@@ -6,6 +6,7 @@ import TokenBlacklist from "src/database/entities/token_blacklist";
 import { UserService } from "src/components/user/user.service";
 import * as otplib from 'otplib';
 import { PasswordService } from "../channels/password.service";
+import { authTwoFactorVerifyDto } from "./dto/auth.two-factor-verify.dto";
 const SimpleCrypto = require("simple-crypto-js").default;
 
 
@@ -20,15 +21,15 @@ export class AuthService{
         if (!this.userInfo)
         {
             this.userInfo = await this.userService.createUser(userDto);
-            this.userService.uploadImageFromUrl(userDto.avatar, './uploads/' + userDto.IntraId);
+            await this.userService.uploadImageFromUrl(userDto.avatar, './uploads/' + userDto.IntraId);
         }
         return (this.userInfo);
     }
 
-    async authenticate(userDto: UserDto, res: any, redirect : boolean) : Promise<void>{
+    async authenticate(userDto: authTwoFactorVerifyDto, res: any, redirect : boolean) : Promise<void> {
         this.payload = { sub: userDto.IntraId, username: userDto.username };
+
         const tokens = await this.generateAuthTokens();
-        console.log('username : ', userDto.username, ' intraId : ', userDto.IntraId);
         if (!redirect) {
             res.status(200).json({
                 accessToken : tokens['access_token'],
@@ -72,7 +73,7 @@ export class AuthService{
     async generateAuthTokens(): Promise<object> {
         return ({
             access_token: await this.generateNewToken(this.payload, '1d'),
-            refresh_token: await this.generateNewToken(this.payload, '10d'),
+            refresh_token: await this.generateNewToken(this.payload, '2d'),
         });
     }
     
@@ -92,11 +93,10 @@ export class AuthService{
         await this.userService.update(id, userDto);
     }
 
-    async verifyTwoFactors(Body: any) {
+    async verifyTwoFactors(Body: authTwoFactorVerifyDto) {
         const twoFactorSecret = await this.userService.getSecretById(Body.id);
         const simpleCrypto = new SimpleCrypto('helloWorldTesting');
         const decryptedData = simpleCrypto.decrypt(twoFactorSecret);
-        // console.log('the fucking secret is ' + decryptedData + ' and the body secret is : ' + Body.passCode)
         const test = await otplib.authenticator.check(Body.passCode, decryptedData);
         return (test);
     }

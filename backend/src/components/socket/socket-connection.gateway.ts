@@ -47,7 +47,6 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
     } catch (err) {
       return (false);
     }
-
     const {sub} = payload as any;
     const user = await this.userService.findById(sub);
     (socket as any).user  = user;
@@ -57,6 +56,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   private async getOnlineFriendsSocket(user : User) :  Promise <Socket[]>{
     const onlineFriendsSockets : Socket[] = [];
     const friends : User[] = await this.friendsService.getFriends(user);
+    console.log("freinds ==== ", friends);
     friends.forEach(friend => {
       const friendsSocket : Socket[] = this.socketService.isUserOnline(friend.id);
       if (friendsSocket.length)
@@ -66,14 +66,16 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   }
 
 
+  
   private async handleOnlineStatus(client: Socket) {
     const user : User = this.socketService.getUser(client);
     const onlineFriendsSockets : Socket[] = await this.getOnlineFriendsSocket(user);
-
-    this.server
+    if (onlineFriendsSockets.length) {
+      this.server
       .to(onlineFriendsSockets
-      .map(socket => socket.id))
+          .map(socket => socket.id))
       .emit("newFriendOnline", {user});
+    }
     client.emit("myOnlineFriends",
     onlineFriendsSockets.map(socket => this.socketService.getUser(socket)))
   }
@@ -135,9 +137,8 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   });
   }
 
-  async handleDisconnect(client: Socket)
-  {
-    console.log("disconnected")
+
+  async disconnectUser(client: Socket) {
     const user : User = this.socketService.getUser(client);
     await this.gameSessions.removeClient(client);
     if (user)
@@ -145,12 +146,18 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
       this.socketService.removeSocket(user.id, client);
       const userSockets : Socket[] = this.socketService.isUserOnline(user.id);
       if (!userSockets.length) {
-        await this.closeJoinedGames(user);
+        //! await this.closeJoinedGames(user);
         const onlineFriendsSockets : Socket[] = await this.getOnlineFriendsSocket(user);
         this.server
         .to(onlineFriendsSockets.map(socket => socket.id))
         .emit("friendDisconnect", {user});
       }
     }
+  }
+
+  async handleDisconnect(client: Socket)
+  {
+    await this.disconnectUser(client);
+    console.log("disconnected")
   }
 }

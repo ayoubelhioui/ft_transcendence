@@ -87,7 +87,7 @@ export class RequestService {
             console.log(error)
             let ret = ({
                 status : STATUS_ERROR,
-                message : "Failed to post to " + url + " Error: " + error,
+                message : "Failed to put to " + url + " Error: " + error,
                 data : undefined
             })
             console.log(ret)
@@ -95,6 +95,32 @@ export class RequestService {
         }
     }
 
+    private static async makeDeleteRequest(obj : RequestService, url : string) {
+        try {
+            const response = await AxiosInstance.delete(url, {
+                headers: {
+                    Authorization: `Bearer ${obj.authService.getAccessToken}`,
+                }
+            });
+            let ret = ({
+                status : STATUS_SUCCESS,
+                message : "Success",
+                data : response.data
+            })
+            console.log(ret)
+            return (ret)
+        } catch (error : any) {
+            console.log(error)
+            let ret = ({
+                status : STATUS_ERROR,
+                message : "Failed to put to " + url + " Error: " + error,
+                data : undefined
+            })
+            console.log(ret)
+            return (ret)
+        }
+    }
+    
     private getData(fun : (obj : RequestService, url : string) => Promise<RequestResultI>, url : string, dips : any[] = []) {
         const [state, setState] = useState<RequestResultI>({
             status : STATUS_UNDEFINED,
@@ -129,14 +155,29 @@ export class RequestService {
         return this.getData(RequestService.makeGetRequest, "/games/leaderboard")
     }
 
+    // ==== Profile ====================================================
+
+    getUserMatchHistoryRequest(userId : number) {
+        return this.getData(RequestService.makeGetRequest, `/users/${userId}/matchhistory`)
+    }
+    
+    //achievements
+    getUserAchievementsRequest(userId : number) {
+        return this.getData(RequestService.makeGetRequest, `/users/${userId}/achievements`)
+    }
+
+    // ==== Chat ====================================================
+    
+    getChannelUsers(channelId : number) {
+        //return this.getData(RequestService.makeGetRequest, `/channels/${channelId}/users`)
+        return RequestService.makeGetRequest(this, `/channels/${channelId}/users`)
+    }
+
     getMyChannelsRequest(dips : any[] = []) {
         //return RequestService.makeGetRequest(this, `/users/me/channels`)
         return this.getData(RequestService.makeGetRequest, "/users/me/channels", dips)
     }
 
-    
-    // ==== Chat ====================================================
-    
     getChannelsRequest() {
         return this.getData(RequestService.makeGetRequest, "/channels")
     }
@@ -163,10 +204,45 @@ export class RequestService {
 
     // ==== Profile ====================================================
 
-    async postGetSecretKeyRequest(payload : any = {}) {
-        return await RequestService.makePostRequest(this, `/auth/generate-secret-two-factor`, payload)
+    async getUsersSearchRequest(search : string) {
+        //return this.getData(RequestService.makeGetRequest, `/users/search/${search}`)
+        return await RequestService.makeGetRequest(this, `/users/search/${search}`)
     }
 
+    async getSecretKeyRequest() {
+        return await RequestService.makeGetRequest(this, `/auth/generate-secret-two-factor`)
+    }
+
+     // ==== Friends ====================================================
+
+    //users/me/friends
+    async deleteBlockFriend(targetUserId : number) {
+        return await RequestService.makeDeleteRequest(this, `/users/me/friends/${targetUserId}/block`)
+    }
+
+    async deleteUnblockFriend(targetUserId : number) {
+        return await RequestService.makeDeleteRequest(this, `/users/me/friends/${targetUserId}/unblock`)
+    }
+
+    async deleteFriend(targetUserId : number) {
+        return await RequestService.makeDeleteRequest(this, `/users/me/friends/${targetUserId}`)
+    }
+
+    //users/me/friend-requests
+    async postRequestFriend(targetUserId : number) {
+        return await RequestService.makePostRequest(this, `/users/me/friend-requests/${targetUserId}`, {})
+    }
+
+    async putAcceptFriend(targetUserId : number) {
+        return await RequestService.makePutRequest(this, `/users/me/friend-requests/${targetUserId}`, {})
+    }
+
+    async deleteRefuseFriend(targetUserId : number) {
+        return await RequestService.makeDeleteRequest(this, `/users/me/friend-requests/${targetUserId}`)
+    }
+
+
+    //auth
     async postVerifyEnableTwoFactorRequest(payload : any = {}) {
         return await RequestService.makePostRequest(this, '/auth/two-factors-verify-store', payload)
     }
@@ -179,6 +255,7 @@ export class RequestService {
         return await RequestService.makePostRequest(this, '/auth/disable-two-factors', payload)
     }
     
+    //users
     async putUpdateUserNameRequest(payload : any = {}) {
         return await RequestService.makePutRequest(this, '/users/update', payload)
     }
@@ -186,5 +263,10 @@ export class RequestService {
     async putUpdateUserImageRequest(intraId : number, payload : any = {}) {
         return await RequestService.makePutRequest(this, `/users/image/${intraId}`, payload)
     }
+
+    async postGroupImageRequest(payload : any = {}) {
+        return await RequestService.makePutRequest(this, `/users/image/channel`, payload)
+    }
+
 }
     

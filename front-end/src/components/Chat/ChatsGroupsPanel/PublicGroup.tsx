@@ -9,7 +9,7 @@ import { useAppServiceContext } from "../../../Context/Context";
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
-        <div className="flex flex-col gap-4 pt-2 overflow-x-scroll min-h-[160px]">
+        <div className="flex flex-col gap-4 pt-2 overflow-y-scroll">
             <div className="flex justify-between px-2 py-1  items-center w-full text-blue-950 bg-white opacity-30 cursor-pointer">
                 <span className="text-sm">Public Groups</span>
                 <RiArrowDropDownLine size={25} />

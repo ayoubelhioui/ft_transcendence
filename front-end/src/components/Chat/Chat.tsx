@@ -10,8 +10,8 @@ const Chat = () => {
       <ChatContextProvider>
         <ChatsGroupsPanel/>
         <Conversations />
+        <ChannelInfo />
       </ChatContextProvider>
-      {/* <ChannelInfo /> */}
     </div>
   );
 };

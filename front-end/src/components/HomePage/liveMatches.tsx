@@ -21,7 +21,7 @@ const Item = ({payload} : {payload : any}) => {
     const player1 = payload.player1
     const player2 = payload.player2
 
-    const imagePath = isClassic ? "/src/assets/table3d.png" : "src/assets/classic-game.png"
+    const imagePath = isClassic ? "/src/assets/table3d.png" : "/src/assets/classic-game.png"
 
     //!link to the live
 
@@ -32,12 +32,12 @@ const Item = ({payload} : {payload : any}) => {
             </div>
             <div className="flex justify-between px-2 items-center w-full back h-[40px]">
                 <div className="flex flex-col items-center">
-                    <Avatar alt="Avatar" src={`http://${address}/users/image/` + player1.IntraId} sx={{ width: 30, height: 30 }}/>
+                    {/* <Avatar alt="Avatar" src={`http://${address}/users/image/` + player1.IntraId} sx={{ width: 30, height: 30 }}/> */}
                     <span className="text-white text-base">{player1.username}</span>
 
                 </div>
                 <div className="flex flex-col items-center">
-                     <Avatar alt="Avatar" src={`http://${address}/users/image/` + player2.IntraId} sx={{ width: 30, height: 30 }}/>
+                     {/* <Avatar alt="Avatar" src={`http://${address}/users/image/` + player2.IntraId} sx={{ width: 30, height: 30 }}/> */}
                     <span className="text-white text-base">{player2.username}</span>
                 </div>
             </div>

@@ -213,6 +213,7 @@ export class GameService {
             }
             else throw new BadRequestException("user 1 wasn't in playing in this game");
 
+            
             if(game.player1_score && game.player2_score)
                 throw new MethodNotAllowedException("already set scores")
             game.player1_score = player1Score;

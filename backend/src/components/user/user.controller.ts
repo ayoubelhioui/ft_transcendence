@@ -16,6 +16,8 @@ import { TargetUserExistGuard } from "./guards/target-user-exists.guard";
 import { GameService } from "../game/game.service";
 import { GetTargetedUser } from "./decorators/targeted-user.decorator";
 import { TargetUserSpecialCaseGuard } from "./guards/target-user-special-case-guard";
+import { numberDto } from "./dto/numberDto.dto";
+import { stringDto } from "./dto/stringDto.dto";
 
 
 @Controller('users')
@@ -35,10 +37,20 @@ export class UserController{
         return (users);
     }
 
+
     @Get(':id')
-    async getUser(@Param('id') id: number): Promise< User | undefined> {
+    async getUser(@Param() idDto: numberDto): Promise< User | undefined> {
+        const {id} = idDto;
         const user = await this.userService.findUserById(id);
         return (user);
+    }
+
+    @Get('search/:username')
+    async getUsersByName(@Param() usernameDto : stringDto)
+    {
+        const {username} = usernameDto;
+        const users = await this.userService.findByUsername(username);
+        return users;
     }
 
     @UseGuards(TargetUserSpecialCaseGuard)
@@ -52,7 +64,8 @@ export class UserController{
     @Get(':targetUserId/achievements')
     @UseGuards(TargetUserSpecialCaseGuard)
     async getAchievements(@GetTargetedUser() user) {
-        return (this.userService.findUserById(user.id, ["achievements"]));
+        const userWithAchievements = await this.userService.findUserById(user.id, ["achievements"])
+        return (userWithAchievements.achievements);
     }
     
     // @UserGuards(TargetUserSpecialCaseGuard)

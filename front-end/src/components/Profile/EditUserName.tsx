@@ -59,13 +59,13 @@ const EditUserName = ({setUserName} : {setUserName : any}) => {
 
 
             <Dialog open={open} onClose={() => setOpen(false)} className="outline-none flex h-full w-full items-center justify-center">
-                <div className=" w-[30rem] h-[32rem] bg-[#0e3c80] text-white max-sm:w-[25rem] ">
+                <div className=" w-[25rem] h-[15rem] bg-[#0e3c80] text-white max-sm:w-[25rem] ">
                     
-                    <DialogTitle className=" text-center text-lg font-extrabold">Change user name</DialogTitle>
+                <DialogTitle className=" text-center text-lg font-extrabold">Change Your Username</DialogTitle>
                     <DialogContent >
                         <form className="flex flex-col items-center " onSubmit={handleSubmit} >
-                            <input name="username" type="text" placeholder="userName" aria-label="UserName" onChange={handleNewUsernameChange} ></input>
-                            <button className="text-[#072964] flex items-end justify-end bg-white mt-10  py-2 px-6" type="submit">Submit</button>
+                        <input name="username" type="text" placeholder="Enter Your Username" aria-label="UserName" onChange={handleNewUsernameChange} className="w-[270px] h-[40px]" ></input>
+                            <button className="text-[#072964] flex items-end justify-end bg-white mt-6  py-2 px-8" type="submit">Submit</button>
                         </form>
                     </DialogContent>
                 </div>

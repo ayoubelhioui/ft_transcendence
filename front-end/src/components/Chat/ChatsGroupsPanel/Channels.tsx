@@ -8,8 +8,8 @@ const Channels = () => {
   console.log("channel result === " , result);
 
   return (
-    <div className="flex mt-3 flex-col h-[550px] overflow-y-scroll scroll-smooth">
-      <div className="flex flex-col">
+    <div className="flex mt-3 flex-col h-[550px] scroll-smooth">
+      <div className="flex flex-col overflow-y-scroll">
         <PublicGroup  result={result}/>
         <ProtectedGroup result={result} />
       </div>

@@ -8,6 +8,8 @@ import { CorsGuard } from "./guards/cors.guard";
 import { client_address } from "src/Const";
 import * as otplib from 'otplib';
 import { UserService } from "../user/user.service";
+import { authTwoFactorVerifyStorDto } from "./dto/auth.two-factor-store";
+import { authTwoFactorVerifyDto } from "./dto/auth.two-factor-verify.dto";
 const SimpleCrypto = require("simple-crypto-js").default;
 
 
@@ -24,6 +26,7 @@ export class AuthController{
     @Get('refresh-token')
     @UseGuards(TokenValidationGuard)
     async newAccessToken(@Request() req): Promise<object>{
+        console.log('())()()()()()()()()()()');
         const payload = { sub: req.user.IntraId, username: req.user.username };
         return ({
             access_token: await this.authService.generateNewToken(payload, '10m'),
@@ -37,18 +40,16 @@ export class AuthController{
             user: req.user
         });
     }
-    
-    // @UseGuards(CorsGuard)
 
-    @Post('generate-secret-two-factor')
+    @Get('generate-secret-two-factor')
     async generateSecret() {
         const secret: string = otplib.authenticator.generateSecret();
-        return (secret)
+        return (secret);
     }
 
     @Post('two-factors-verify-store') //expecting the user id and the passcode.
-    async verifyTwoFactorsAndStore(@Body() body, @Res() res, @Req() req) : Promise<void> {
-        const isMatched = await otplib.authenticator.check(body.passCode, body.secretCode);
+    async verifyTwoFactorsAndStore(@Body() body: authTwoFactorVerifyStorDto, @Res() res, @Req() req) : Promise<void> {
+        const isMatched = otplib.authenticator.check(body.passCode, body.secretCode);
         if (isMatched)
         {
             await this.authService.storeUserSecret(req.user.id, body.secretCode);
@@ -60,13 +61,10 @@ export class AuthController{
     
 
     @Post('two-factors-verify') //expecting the user id and the passcode.
-    async verifyTwoFactors(@Body() body, @Res() res, @Req() req) : Promise<void> {
-        console.log(body.id);
+    async verifyTwoFactors(@Body() body : authTwoFactorVerifyDto , @Res() res, @Req() req) : Promise<void> {
         const isMatched = await this.authService.verifyTwoFactors(body);
         if (isMatched)
-        {
             await this.authService.authenticate(body, res, false);
-        }
         else
             res.status(401).json({ error: 'InvalidPasscode', message: 'The passcode provided is incorrect. Please try again.' });
     }

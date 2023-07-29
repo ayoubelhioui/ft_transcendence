@@ -1,6 +1,8 @@
 import { useAppServiceContext } from '../../../Context/Context';
 
 import { MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
+import { useChatContext } from '../ChatContext';
+import { useEffect } from 'react';
 
 type ImageProp = {
   image: string;
@@ -42,12 +44,23 @@ const AdminMembers = ({image}: ImageProp) => {
 
 const ChannelInfo = () => {
   const appService = useAppServiceContext()
-  const authApp = appService.authService;
+  const chatContext = useChatContext()
+  const avatarLink = appService.authService.user?.avatar
+
+  useEffect(() => {
+    const conversationInfo = chatContext.conversationInfo
+    if (conversationInfo.id) {
+      console.log("Members ...")
+      const result = appService.requestService.getChannelUsers(conversationInfo.id)
+    } else {
+      console.log("No Conversation")
+    }
+  }, [])
 
   return (
     <div className="flex top_2 col-span-1 row-span-2 max-m-custom-md:hidden h-[750px] w-full flex-col">
         <div className="flex flex-col items-center w-full mt-20">
-          <img src={authApp.user?.avatar} alt='ChannelS Avatar' className=' object-cover rounded-full w-[110px] h-[110px]'/>
+          <img src={avatarLink} alt='ChannelS Avatar' className=' object-cover rounded-full w-[110px] h-[110px]'/>
           <h2 className='text-white text-sm pt-2'>NameOfChannel</h2>
         </div> 
 
@@ -59,14 +72,10 @@ const ChannelInfo = () => {
           <div className="flex justify-between w-full items-center">
 
             <h2 className=' text-lg tracking-wide'>ADMINS</h2>
-            <div className="flex justify-center cursor-pointer text-gray-400">
-              <span className='text-sm'>See all</span>
-              <SingleArrow size={20} />
-            </div>
 
           </div>
 
-          {authApp.user?.avatar && <AdminMembers image={authApp.user.avatar} />}
+          {avatarLink && <AdminMembers image={avatarLink} />}
         </div>
 
         {/* Members Element ,, possibly adding how many members,Admins in the channel*/}
@@ -75,14 +84,10 @@ const ChannelInfo = () => {
           <div className="flex justify-between w-full items-center">
 
             <h2 className='text-lg tracking-wide'>MEMBERS</h2>
-            <div className="flex justify-center cursor-pointer text-gray-400">
-              <span className='text-sm'>See all</span>
-              <SingleArrow size={20} />
-            </div>
 
           </div>
 
-          {authApp.user?.avatar && <ChannelMembers image={authApp.user?.avatar} />}
+          {avatarLink && <ChannelMembers image={avatarLink} />}
           
         </div>
     </div>

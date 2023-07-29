@@ -1,9 +1,9 @@
 import { Avatar } from "@mui/material"
 import image from "../../assets/ping-pong-player.png"
 import image_2 from "../../assets/headerBackground.png"
-import { intra_api } from "../../Const"
+import { STATUS_SUCCESS, intra_api } from "../../Const"
 import { MainWrapper } from ".."
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useAppServiceContext } from "../../Context/Context"
 import Cookies from 'js-cookie';
 
@@ -15,25 +15,34 @@ const SignIn = () => {
     const id = searchParams.get('id');
     const IntraId = searchParams.get('IntraId');
     const username = searchParams.get('username');
+    const changeUrl = useRef(false)
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         console.log("Make Request")
-        const res = await appService.requestService.postVerifyTwoFactorRequest({
-            id,
-            passCode,
-            IntraId,
-            username
-        })
-        console.log(passCode, res)
-        Cookies.set('access_token', res.data.accessToken);
-        Cookies.set('refresh_token', res.data.refreshToken);
-        window.location.href = "/";
+        if (id && IntraId) {
+            const res = await appService.requestService.postVerifyTwoFactorRequest({
+                id: +id,
+                passCode,
+                IntraId: +IntraId,
+                username
+            })
+            if (res.status === STATUS_SUCCESS) {
+                Cookies.set('access_token', res.data.accessToken);
+                Cookies.set('refresh_token', res.data.refreshToken);
+                window.location.href = "/";
+            } else {
+                //!error
+            }
+        }
        
     }  
 
-    window.history.replaceState({}, '', 'SignIn');
-    console.log(id)
+    if (changeUrl.current === false) {
+        //window.history.replaceState({}, '', 'SignIn');
+        changeUrl.current = !changeUrl.current
+    }
+
     if (id) {
         return (
             <MainWrapper>

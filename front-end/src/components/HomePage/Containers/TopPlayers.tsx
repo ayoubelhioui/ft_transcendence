@@ -27,7 +27,9 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
         <>
             <div className="flex flex-col top max-sm:mt-12 max-sm:mx-2 max-md:mx-4 max-md:mb-3">
                 <SeeMore></SeeMore>
-                {children}
+                <div className="flex gap-12">
+                    {children}
+                </div>
             </div>
         </>
     )
@@ -36,7 +38,7 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 const Item = ({ payload }: {payload : any}) => {
     return (
         <div className="flex text-white justify-start mx-6 max-custom-md:mx-2 mt-4 gap-6 items-center overflow-x-auto ">
-            <div  className="align">
+            <div className="align">
                 <Avatar src={`http://${address}/users/image/` + payload.IntraId} sx={{ width: 85, height: 85 }}/>
                 <span className="text-center mt-3 max-md:mt-1 text-xl">{payload.username}</span>
                 <span className=' w-full max-md:w-[55px] h-[1px] bg-white flex'></span>

@@ -9,7 +9,7 @@ import { RequestResultI } from "../../../Context/Service/RequestService";
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
-      <div className="text-white flex flex-col  overflow-y-scroll scroll-smooth">
+      <div className="text-white flex flex-col overflow-y-scroll scroll-smooth">
           {children}
       </div>
     )
@@ -49,7 +49,7 @@ const Item = ({payload, onItemClick} : {payload : any, onItemClick : any}) => {
 const NoContent = () => {
     return (
         <Wrapper>
-            <div className="flex mx-auto py-2 "> No Lives </div>
+            <div className="flex mt-[50%] text-white text-2xl justify-center items-center"> No Messages Yet! </div>
         </Wrapper>
     )
 }

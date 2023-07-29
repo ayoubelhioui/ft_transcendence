@@ -18,22 +18,23 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
                   {children}
           </div>
         </div>
+        
     )
 }
 
-const Item = ({payload} : {payload : any}) => {
-  const rank = payload.rank
-  const user = payload.user
+const Item = ({payload, rank} : {payload : any, rank : number}) => {
+  const user = payload
+
     const avatar = `http://${address}/users/image/${user.IntraId}`
 
     return (
-      <div className="flex mt-3 items-center justify-between bg-[#4D194D] py-3 px-4 rounded-[10px]">
+      <div className="flex mt-3 items-center justify-between text-white bg-[#4D194D] py-3 px-4 rounded-[10px]">
         <div className="w-1/4">{rank}</div>
         <div className="flex items-center gap-2 w-full">
           <img src={avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
           <div className="w-1/2">{user.username}</div>
         </div>
-        <div className="w-1/4 text-center">{user.winrate}</div>
+        <div className="w-1/4 text-center">{user.winrate}%</div>
       </div>
     )
 }
@@ -52,7 +53,7 @@ const List = ({lives} : {lives : any}) => {
         <Wrapper>
             {
                 lives.map((item : any, index : number) => (            
-                    <Item key={index} payload={item}/>
+                    <Item key={index} payload={item} rank={index + 1}/>
                 ))
             }
         </Wrapper>
@@ -61,7 +62,7 @@ const List = ({lives} : {lives : any}) => {
 
 const LeaderBoard = () => {
     const appService = useAppServiceContext()
-    const lives = appService.requestService.getResultsRequest()
+    const lives = appService.requestService.getTopPlayersRequest()
   
         
     if (lives.status === STATUS_UNDEFINED) {

@@ -28,7 +28,7 @@ const TwoFactor = () => {
     }
     
     const getSecretCode = async () => {
-        const res = await appService.requestService.postGetSecretKeyRequest()
+        const res = await appService.requestService.getSecretKeyRequest()
         if (res.status === STATUS_SUCCESS) {
             const secret: string = res.data
             const username = appService.authService.user?.username
@@ -91,14 +91,14 @@ const TwoFactor = () => {
             </motion.button>
             
             <Dialog open={open} onClose={() => setOpen(false)} className="outline-none flex h-full w-full items-center justify-center">
-                <div className=" w-[30rem] h-[32rem] bg-[#0e3c80] text-white max-sm:w-[25rem] ">
+                <div className=" w-[25rem] h-[23rem] bg-[#0e3c80] text-white max-sm:w-[25rem] ">
                     
-                    <DialogTitle className=" text-center text-lg font-extrabold">Enable two factor</DialogTitle>
+                    <DialogTitle className=" text-center text-lg font-extrabold">Enable 2FA Authentication</DialogTitle>
                     <DialogContent >
-                        <form className="flex flex-col items-center " onSubmit={handleSubmit} >
+                        <form className="flex flex-col items-center mt-2" onSubmit={handleSubmit} >
                             <QRCode  value={url} />
-                            <input name="passCode" type="text" placeholder="passCode" aria-label="PassCode" onChange={handlePassCodeChange} ></input>
-                            <button className="text-[#072964] flex items-end justify-end bg-white mt-10  py-2 px-6" type="submit">Submit</button>
+                            <input name="passCode" type="text" placeholder="Enter The Code" aria-label="PassCode" onChange={handlePassCodeChange} className="w-[250px]"></input>
+                            <button className="text-[#072964] flex items-end justify-end bg-white mt-5 py-2 px-8" type="submit">Submit</button>
                         </form>
                     </DialogContent>
                 </div>

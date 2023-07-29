@@ -1,201 +1,79 @@
-import React, { useEffect, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { RiArrowDropDownLine } from "react-icons/ri";
-
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-
-import { address } from "../../Const";
-import axios from "axios";
 import { useAppServiceContext } from "../../Context/Context";
+import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../Const";
 
-const ChannelCreation = () => {
-  const appService = useAppServiceContext()
-  const authApp = appService.authService;
-
-  const [isCreated, setIsCreated] = useState(true);
-
-  const [channelName, setChannelName] = useState("");
-
-  const [NewAvatar, setNewAvatar] = useState<File | null>(null);
-
-  const [isOpen, setIsOpen] = useState(false);
-
-  const [selected, setSelected] = useState("");
-
-  const [isProtected, setProtected] = useState(false);
-
-  // Temporary State ////////////////
-  const [password, setPassword] = useState("");
-
-  const bodyData = {
-    name: channelName,
-    password,
-    NewAvatar,
-    visibility: selected,
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    axiosReq();
-    setIsCreated(false);
-  };
-
-  const handleChannelName = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setChannelName(event.target.value);
-
-  const handleImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setNewAvatar(event.target.files[0]);
-    }
-  };
-
-  const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setPassword(event.target.value);
-
-  const axiosReq = async () => {
-    try {
-      const response = await axios.post(
-        `http://${address}/channels`,
-        bodyData,
-        {
-          headers: {
-            Authorization: `Bearer ${authApp.getAccessToken}`,
-          },
-        }
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.log("error in ChannelCreation ", error);
-    }
-  };
-
-  const HandleClose = () => setIsCreated(false);
-
+const Wrapper = ( {children} : {children : ReactNode} ) =>  {
   return (
-    <div className="">
-      <Dialog
-        open={isCreated}
-        onClose={HandleClose}
-        className="flex h-full w-full items-center justify-center"
-      >
-        <div className="w-[400px] flex flex-col justify-center items-center overflow-hidden h-[500px] text-white bg-blue-950">
-          <DialogTitle className="text-center text-xl">
-            Create a Channel
-          </DialogTitle>
-          <DialogContent>
-            <form onSubmit={handleSubmit} className="flex flex-col mt-4">
-              <label htmlFor="name_input" className="flex ml-5 text-white">
-                Group's Name:
-              </label>
-              <input
-                type="name"
-                className=" py-3 rounded-[10px]"
-                placeholder="Name"
-                value={channelName}
-                onChange={handleChannelName}
-              />
+      <div className="flex flex-col justify-between items-center w-[95%]">
+          {children}
+      </div>
+      
+  )
+}
 
-              {/* Image Component */}
+const Item = ({payload} : {payload : any}) => {
+  const user = payload
 
-              <div className="flex items-start justify-center flex-col">
-                <label htmlFor="file_input" className="flex ml-5 text-white">
-                  Upload Avatar:
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImage}
-                  className="py-3 rounded-[10px]                                   border-blue-950 border-2 "
-                />
-              </div>
+    const avatar = `http://${address}/users/image/${user.IntraId}`
 
-              {/* DropDown Component */}
-
-              <label htmlFor="name_input" className="flex ml-5 text-white">
-                Group's Type:
-              </label>
-              <div className="flex flex-col items-center justify-center mx-5 mt-4">
-                <div
-                  className="bg-blue-950 rounded-[10px] p-2 flex text-white border items-center w-full border-white"
-                  onClick={() => setIsOpen(!isOpen)}
-                >
-                  {selected || "Select Type"}
-                  <RiArrowDropDownLine size={25} />
-                </div>
-                <ul
-                  className={`rounded-[10px] bg-white text-center flex flex-col text-blue-950 font-semibold ${
-                    isOpen ? "block" : "hidden"
-                  } w-full p-2`}
-                >
-                  <li
-                    className="mt-2 hover:outline hover:outline-sky-700 cursor-pointer"
-                    onClick={() => {
-                      setSelected("public");
-                      setProtected(false);
-                    }}
-                  >
-                    Public
-                  </li>
-                  <li
-                    className="mt-2 hover:outline hover:outline-sky-700 cursor-pointer"
-                    onClick={() => {
-                      setSelected("protected");
-                      setProtected(!isProtected);
-                    }}
-                  >
-                    Protected
-                  </li>
-                  <li
-                    className="mt-2 hover:outline hover:outline-sky-700 cursor-pointer"
-                    onClick={() => {
-                      setSelected("private"), setProtected(false);
-                    }}
-                  >
-                    Private
-                  </li>
-                </ul>
-              </div>
-
-              {isProtected && (
-                <div className="flex items-start justify-center flex-col mt-6">
-                  <label htmlFor="name_input" className="flex ml-5 text-white">
-                    Enter Password:
-                  </label>
-                  <input
-                    type="password"
-                    className=" py-3 rounded-[10px] w-[90%]"
-                    placeholder="password"
-                    value={password}
-                    onChange={handlePassword}
-                  />
-                </div>
-              )}
-              <button
-                type="submit"
-                className="py-2 px-6 mt-12 bg-white text-blue-950 font-semibold mx-3"
-              >
-                Create
-              </button>
-            </form>
-          </DialogContent>
+    return (
+      <div className="flex mt-3 items-center justify-between text-white w-full">
+        <div className="flex items-center gap-2 w-full">
+          <img src={avatar} className="w-[50px] h-[50px] rounded-[50%] object-cover" alt="" />
+          <div className="w-1/2">{user.username}</div>
         </div>
-      </Dialog>
-    </div>
-  );
-};
+      </div>
+    )
+}
 
-const FriendInvitation = () => {
-  return <div></div>;
-};
+const NoContent = () => {
+  return (
+      <Wrapper>
+          <div className="flex mx-auto py-2 "> No Friends Found </div>
+      </Wrapper>
+  )
+}
+
+
+const List = ({list} : {list : any}) => {
+  console.log("sad", list)
+  return (
+      <Wrapper>
+          {
+              list.map((item : any, index : number) => (            
+                  <Item key={item.id} payload={item}/>
+              ))
+          }
+      </Wrapper>
+  )
+}
 
 const Friends = () => {
-  const [IsOpen, setOpen] = useState(false);
+  const [list, setList] = useState<Object[]>([])
+  const appService = useAppServiceContext();
+  const search = useRef("")
+  const handleInputChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+    search.current = e.target.value
+  }
 
-  const [isInvited, setIsInvited] = useState(false);
-  const [channelCreate, setChannelCreate] = useState(false);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const result = await appService.requestService.getUsersSearchRequest(search.current);
+
+    if (result.status === STATUS_UNDEFINED) {
+        //!loading
+        setList([])
+    } else if (result.status === STATUS_SUCCESS) {
+        setList(result.data)
+    } else if (result.status === STATUS_ERROR) {
+        setList([])
+        //!popup
+    }
+
+    console.log("Search ... ", search.current)
+  }
 
   return (
     <div className="flex flex-col top_1 w-[300px] text-gray-400 max-m-custom-md:w-[100%] max-sm:h-[280px] h-[550px] my-auto max-m-custom-md:h-[200px]">
@@ -204,63 +82,30 @@ const Friends = () => {
       <div className="flex flex-col">
         <div className="flex items-center justify-between">
           <div className="flex relative justify-between items-center">
+            
+          <form onSubmit={handleSubmit} className="flex flex-col mt-4">
             <input
-              type="search"
-              className="shadow border-0 my-4 mx-2 w-[230px]"
-              placeholder="Search a friend..."
+              type="text"
+              className="shadow border-0 my-4 mx-2 w-[250px] h-[40px] rounded-[10px]"
+              placeholder="Search"
+              name="search"
+              onChange={handleInputChange}
             />
-            <button
-              type="button"
-              onClick={() => null}
-              className="absolute left-[67%] mt-1 mr-0"
-            >
-              <BiSearchAlt2 size={20} />
-            </button>
-          </div>
-
-          <div className="flex flex-col relative">
-            <button
-              type="button"
-              className="outline-none p-0"
-              onClick={() => setOpen(!IsOpen)}
-            >
-              <BsThreeDotsVertical size={22} />
-            </button>
-
-            {IsOpen && (
-              <div className="flex flex-col bg-blue-950 rounded-[10px] absolute top-[3rem] -left-[4rem] w-[120px] h-[120px] items-center justify-center text-white">
-                <span
-                  className="text-sm my-3 cursor-pointer border-b hover:text-gray-300 hover:border-gray-300"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setIsInvited(!isInvited);
-                  }}
-                >
-                  Invite a Friend
-                </span>
-                <span
-                  className="text-sm my-3 cursor-pointer border-b hover:text-gray-300 hover:border-gray-300"
-                  onClick={() => {
-                    setChannelCreate(!channelCreate);
-                  }}
-                >
-                  Create a Channel
-                </span>
-              </div>
-            )}
-            {channelCreate && <ChannelCreation />}
-            {isInvited && <FriendInvitation />}
+          </form>
+           
+          <BiSearchAlt2 size={20} />
+          
           </div>
         </div>
 
-        {/* Friends List (Icons and Settings) */}
+        {list.length ?
+          <List list={list}/>
+          :
+          <NoContent/>
+        }
 
-        <div className="flex flex-col">
-          <div className="flex"></div>
-        </div>
       </div>
     </div>
-  );
-};
-
+  )
+}
 export default Friends;

@@ -1,27 +1,38 @@
+
 // import { IsNotEmpty } from "class-validator";
 
-export class UserDto{
+import { IsNotEmpty } from "class-validator";
 
-    // @IsNotEmpty()
+// 
+export class UserDto{
+    
+    @IsNotEmpty()
     IntraId?: number;
 
-    // @IsNotEmpty()
+    
+    @IsNotEmpty()
     username?: string;
 
-    // @IsNotEmpty()
+    
+    @IsNotEmpty()
     avatar?: string;
 
-    // @IsNotEmpty()
+    
+    @IsNotEmpty()
     wins?: number;
 
-    // @IsNotEmpty()  
+    
+    @IsNotEmpty()  
     loss?: number;
 
-    // @IsNotEmpty()
+    
+    @IsNotEmpty()
     winrate?: number;
 
-    // @IsNotEmpty()
+    
+    @IsNotEmpty()
     two_factors_enabled?: boolean;
 
+    @IsNotEmpty()
     twoFactorSecret?: string;
 }

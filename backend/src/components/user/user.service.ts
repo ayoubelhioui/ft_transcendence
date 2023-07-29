@@ -50,6 +50,17 @@ export class UserService{
         return (user);
     }
 
+
+
+    async findByUsername(username: string): Promise<User[]>{
+        const users = await this.userRepository.findByOptions({
+            where : {
+                username
+            },
+        });
+        return (users);
+    }
+
     async findAll()
     {
         return  (this.userRepository.findAll());
