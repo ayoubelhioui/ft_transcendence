@@ -34,7 +34,7 @@ const Popup = () => {
 
     return (
         <Modal
-        isOpen={isOpen}
+        isOpen={false}
         onRequestClose={onRequestClose}
         contentLabel="Example Modal"
         className="modal-overlay"

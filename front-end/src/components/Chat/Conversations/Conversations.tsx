@@ -84,8 +84,8 @@ const ChatFooter = () => {
 
 const Sender = ({message} : {message : any}) => {
   return (
-    <div className="flex flex-col">
-      <span className="text-white opacity-60 text-sm text-right pr-4 gap-1">
+    <div className="flex flex-col pt-4">
+      <span className="text-white opacity-60 text-sm text-right pr-2 gap-1">
         You
       </span>
       <div className="h-min text-lg text-white back max-w-[200px] p-[10px] rounded-[10px] ml-auto">
@@ -97,11 +97,11 @@ const Sender = ({message} : {message : any}) => {
 
 const Receiver = ({message} : {message : any}) => {
   return (
-    <div className="flex flex-col gap-1">
-      <span className="text-white opacity-60 text-sm text-left pl-4">
+    <div className="flex flex-col pt-4">
+      <span className="text-white opacity-60 text-sm text-left pl-2 gap-1">
         {message.user.username}
       </span>
-      <div className="text-lg text-white back max-w-[200px] h-min p-[10px] rounded-[10px] overflow-y-scroll">
+      <div className="text-lg text-white back max-w-[200px] h-min p-[10px] rounded-[10px]">
         <p className=" break-words">
         {message.message}
         </p>
@@ -204,7 +204,6 @@ const ConversationsChat = ({id} : {id : number}) => {
 
 
   const updateChat = () => {
-    console.log("update chat list: ", chatContext.updateChats)
     //chatContext.updateChats = !chatContext.updateChats
     chatContext.setUpdateChats(!chatContext.updateChats)
   }
@@ -212,7 +211,6 @@ const ConversationsChat = ({id} : {id : number}) => {
   useEffect(() => {
     const event = "on_message_send"
     appService.socketService.on(event, (data : any) => {
-      console.log("Message Received to chat", id)
       updateList([data], true, data.channelId)
 
       updateChat()
@@ -251,8 +249,8 @@ const ConversationsChat = ({id} : {id : number}) => {
               ))
           }
           
-          <div id="load-more" className="h-10 w-10 bg-red-500"> 
-            <Sender message={"Limiter"}/>
+          <div id="load-more" className="h-10 w-10 bg-transparent"> 
+              <span className=" text-transparent">s</span>
           </div>
         </div>
     )

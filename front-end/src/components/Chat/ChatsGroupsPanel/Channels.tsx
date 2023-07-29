@@ -5,7 +5,6 @@ import PublicGroup from "./PublicGroup"
 const Channels = () => {
   const appService = useAppServiceContext()
   const result = appService.requestService.getChannelsRequest()
-  console.log("channel result === " , result);
 
   return (
     <div className="flex mt-3 flex-col h-[550px] overflow-y-scroll scroll-smooth">

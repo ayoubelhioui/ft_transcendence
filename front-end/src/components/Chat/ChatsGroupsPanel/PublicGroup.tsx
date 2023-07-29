@@ -9,7 +9,7 @@ import { useAppServiceContext } from "../../../Context/Context";
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
-        <div className="flex flex-col gap-4 pt-2 overflow-x-scroll min-h-[160px]">
+        <div className="flex flex-col gap-4 pt-2 overflow-x-scroll min-h-[270px]">
             <div className="flex justify-between px-2 py-1  items-center w-full text-blue-950 bg-white opacity-30 cursor-pointer">
                 <span className="text-sm">Public Groups</span>
                 <RiArrowDropDownLine size={25} />
@@ -59,14 +59,13 @@ const Item = ({payload} : {payload : any}) => {
 const NoContent = () => {
     return (
         <Wrapper>
-            <div className="flex mx-auto py-2 "> No Lives </div>
+            <div className="flex mx-auto text-white justify-center items-center"> No Groups Available </div>
         </Wrapper>
     )
 }
 
 
 const List = ({list} : {list : any}) => {
-    console.log(list)
     list = list.filter((item : any) => (item.visibility === "public"));
 
     return (

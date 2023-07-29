@@ -12,8 +12,9 @@ const App = () => {
   useEffect(() => {
     async function prepare() {
       await appService.authService.authenticated((result : resultStatusI) => {
-        console.log(result)
-        setStatus(result.status)
+        setTimeout((res : any) => {
+          setStatus(res.status)
+        }, 3000, result)
       })
     }
     prepare()

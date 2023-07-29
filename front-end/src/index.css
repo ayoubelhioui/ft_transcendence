@@ -214,20 +214,16 @@ h1 {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.backdrop::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+  z-index: 0;
+}
 
 .modal-content {
   position: absolute; /* Ensure relative positioning for absolute positioning of the time line */
