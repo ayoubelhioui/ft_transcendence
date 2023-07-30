@@ -122,16 +122,38 @@ export class RequestService {
     }
     
     private getData(fun : (obj : RequestService, url : string) => Promise<RequestResultI>, url : string, dips : any[] = []) {
-        const [state, setState] = useState<RequestResultI>({
+        const def = {
             status : STATUS_UNDEFINED,
             message : "",
             data : undefined
-        })
+        }
+
+        const [state, setState] = useState<RequestResultI>(def)
     
         useEffect(() => {
             const obj = this
             async function loadData() {
                 setState(await fun(obj, url))
+            }
+            loadData()
+        }, dips)
+    
+        return (state)
+    }
+
+    private getData2(request : (...params : any) => Promise<RequestResultI>, params : any[], dips : any[] = []) {
+        const def = {
+            status : STATUS_UNDEFINED,
+            message : "",
+            data : undefined
+        }
+
+        const [state, setState] = useState<RequestResultI>(def)
+    
+        useEffect(() => {
+            const obj = this
+            async function loadData() {
+                setState(await request(obj, ...params))
             }
             loadData()
         }, dips)
@@ -168,9 +190,17 @@ export class RequestService {
 
     // ==== Chat ====================================================
     
-    getChannelUsers(channelId : number) {
-        //return this.getData(RequestService.makeGetRequest, `/channels/${channelId}/users`)
-        return RequestService.makeGetRequest(this, `/channels/${channelId}/users`)
+    getChannelUsers(channelId : number | undefined, dips : any[] = []) {
+        const request = async (obj : RequestService, channelId : number) => {
+            if (channelId)
+                return RequestService.makeGetRequest(obj, `/channels/${channelId}/users`)
+            return ({
+                status : STATUS_UNDEFINED,
+                message : "",
+                data : undefined
+            })
+        }
+        return this.getData2(request, [channelId], dips)
     }
 
     getMyChannelsRequest(dips : any[] = []) {
@@ -264,8 +294,8 @@ export class RequestService {
         return await RequestService.makePutRequest(this, `/users/image/${intraId}`, payload)
     }
 
-    async postGroupImageRequest(payload : any = {}) {
-        return await RequestService.makePutRequest(this, `/users/image/channel`, payload)
+    async postCreateNewChannel(payload : any = {}) {
+        return await RequestService.makePostRequest(this, `/channels`, payload)
     }
 
 }

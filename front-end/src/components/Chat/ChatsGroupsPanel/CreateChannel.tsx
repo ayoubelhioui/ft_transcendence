@@ -12,13 +12,18 @@ import { STATUS_SUCCESS } from "../../../Const";
 const DropList = ({selectedGroupType, setSelectedGroupType} : {selectedGroupType: any, setSelectedGroupType : any}) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleItemClick = (name : string) => {
+    setIsOpen(false)
+    setSelectedGroupType(name)
+  }
+
   const Item = ({name} : {name : string}) => {
     return (
       <li
         className="mt-2 hover:outline hover:outline-sky-700 cursor-pointer"
-        onClick={() => {setSelectedGroupType(name)}}
+        onClick={() => {handleItemClick(name)}}
       >
-        name
+        {name}
       </li>
     )
   }
@@ -146,9 +151,10 @@ const CreateChannel = ({openState} : {openState : [boolean, React.Dispatch<React
       };
 
 
-      const res = await appService.requestService.postGroupImageRequest(bodyData)
+      const res = await appService.requestService.postCreateNewChannel(bodyData)
       if (res.status === STATUS_SUCCESS) {
         console.log("Channel Created ")
+        setIsOpen(false)
       } else {
         //!popup
       }

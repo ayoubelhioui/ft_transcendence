@@ -46,16 +46,11 @@ const ChannelInfo = () => {
   const appService = useAppServiceContext()
   const chatContext = useChatContext()
   const avatarLink = appService.authService.user?.avatar
+  const conversationInfo = chatContext.conversationInfo
+  const result = appService.requestService.getChannelUsers(conversationInfo.id, [])
 
-  useEffect(() => {
-    const conversationInfo = chatContext.conversationInfo
-    if (conversationInfo.id) {
-      console.log("Members ...")
-      const result = appService.requestService.getChannelUsers(conversationInfo.id)
-    } else {
-      console.log("No Conversation")
-    }
-  }, [])
+
+  console.log("channelInfo", result)
 
   return (
     <div className="flex top_2 col-span-1 row-span-2 max-m-custom-md:hidden h-[750px] w-full flex-col">

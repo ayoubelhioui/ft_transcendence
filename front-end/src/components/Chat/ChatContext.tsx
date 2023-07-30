@@ -5,15 +5,20 @@ interface ConversationInfoI {
   name : string
 }
 
+//context interface
 export interface ChatContextI {
   conversationInfo : ConversationInfoI
   setConversationInfo : React.Dispatch<React.SetStateAction<ConversationInfoI> >
   updateChats : boolean
   setUpdateChats : React.Dispatch<React.SetStateAction<boolean> >
+  updateChannelInfo : boolean
+  setUpdateChannelInfo : React.Dispatch<React.SetStateAction<boolean> >
 }
 
+//create context
 const ChatContext = createContext<ChatContextI | undefined>(undefined);
 
+//use context
 function useChatContext() {
 
     const context = useContext(ChatContext)
@@ -25,6 +30,7 @@ function useChatContext() {
     return (context)
 }
 
+//provider
 function ChatContextProvider({ children } : {children : any}) {
   const [conversationInfo, setConversationInfo] = useState<ConversationInfoI>({
     id : undefined,
@@ -32,12 +38,15 @@ function ChatContextProvider({ children } : {children : any}) {
   });
 
   const [updateChats, setUpdateChats] = useState(false)
+  const [updateChannelInfo, setUpdateChannelInfo] = useState(false)
 
   const contextValue : ChatContextI = {
     conversationInfo,
     setConversationInfo,
     updateChats,
-    setUpdateChats
+    setUpdateChats,
+    updateChannelInfo,
+    setUpdateChannelInfo
   }
 
   return (
