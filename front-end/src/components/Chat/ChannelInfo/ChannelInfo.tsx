@@ -1,63 +1,31 @@
 import { useAppServiceContext } from '../../../Context/Context';
-
-import { MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
 import { useChatContext } from '../ChatContext';
-import { useEffect } from 'react';
+import AdminMembers from './AdminMembers';
+import ChannelMembers from './ChannelMembers';
+import ChannelImage from './ChannelImage';
+import { STATUS_ERROR, STATUS_UNDEFINED } from '../../../Const';
 
-type ImageProp = {
-  image: string;
-}
-
-const ChannelMembers = ({image}: ImageProp) => {
-  return (
-    <>
-      <div className="flex items-center mt-5 ml-5 gap-2">
-        <img src={image} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
-        <h2 className='text-white text-sm'>logiName</h2>
-      </div>
-      <div className="flex items-center mt-5 ml-5 gap-2">
-        <img src={image} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
-        <h2 className='text-white text-sm'>logiName</h2>
-      </div>
-      <div className="flex items-center mt-5 ml-5 gap-2">
-        <img src={image} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
-        <h2 className='text-white text-sm'>logiName</h2>
-      </div>
-    </>
-  )
-}
-
-const AdminMembers = ({image}: ImageProp) => {
-  return (
-    <>
-        <div className="flex items-center mt-5 ml-5 gap-2">
-          <img src={image} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
-          <h2 className='text-white text-sm'>logiName</h2>
-        </div>
-        <div className="flex items-center mt-5 ml-5 gap-2">
-          <img src={image} alt='ChannelS Avatar' className=' object-cover rounded-full w-[35px] h-[35px]'/>
-          <h2 className='text-white text-sm'>logiName</h2>
-        </div>
-    </>
-  )
-}
 
 const ChannelInfo = () => {
   const appService = useAppServiceContext()
   const chatContext = useChatContext()
-  const avatarLink = appService.authService.user?.avatar
   const conversationInfo = chatContext.conversationInfo
-  const result = appService.requestService.getChannelUsers(conversationInfo.id, [])
+  const result = appService.requestService.getChannelUsers(conversationInfo, [conversationInfo])
+  
+  //!filter list with the status should be implement in the saver
+  //!the data should be two list with the name {admins, members}
 
 
-  console.log("channelInfo", result)
+  if (result.status === STATUS_UNDEFINED || result.status === STATUS_ERROR) {
+    return (
+      <div></div>
+    )
+  }
 
   return (
     <div className="flex top_2 col-span-1 row-span-2 max-m-custom-md:hidden h-[750px] w-full flex-col">
-        <div className="flex flex-col items-center w-full mt-20">
-          <img src={avatarLink} alt='ChannelS Avatar' className=' object-cover rounded-full w-[110px] h-[110px]'/>
-          <h2 className='text-white text-sm pt-2'>NameOfChannel</h2>
-        </div> 
+
+        <ChannelImage />
 
         <span className='w-[80%] mx-auto h-[1px] bg-gray-500 opacity-80 mt-[50px] max-md:hidden'></span>
 
@@ -70,7 +38,7 @@ const ChannelInfo = () => {
 
           </div>
 
-          {avatarLink && <AdminMembers image={avatarLink} />}
+          {<AdminMembers result={result} />}
         </div>
 
         {/* Members Element ,, possibly adding how many members,Admins in the channel*/}
@@ -82,7 +50,7 @@ const ChannelInfo = () => {
 
           </div>
 
-          {avatarLink && <ChannelMembers image={avatarLink} />}
+          {<ChannelMembers result={result} />}
           
         </div>
     </div>

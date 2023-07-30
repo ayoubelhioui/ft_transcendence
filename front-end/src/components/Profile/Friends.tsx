@@ -37,7 +37,6 @@ const NoContent = () => {
 
 
 const List = ({list} : {list : any}) => {
-  console.log("sad", list)
   return (
       <Wrapper>
           {
@@ -81,19 +80,19 @@ const Friends = () => {
 
       <div className="flex flex-col">
         <div className="flex items-center justify-between">
-          <div className="flex relative justify-between items-center">
+          <div className="flex relative justify-between items-center h-full">
             
-          <form onSubmit={handleSubmit} className="flex flex-col mt-4">
-            <input
-              type="text"
-              className="shadow border-0 my-4 mx-2 w-[250px] h-[40px] rounded-[10px]"
-              placeholder="Search"
-              name="search"
-              onChange={handleInputChange}
-            />
-          </form>
-           
-          <BiSearchAlt2 size={20} />
+            <form onSubmit={handleSubmit} className="flex flex-col mt-4">
+              <input
+                type="text"
+                className="shadow border-0 my-4 mx-2 w-[280px] h-[40px] rounded-[10px]"
+                placeholder="Search"
+                name="search"
+                onChange={handleInputChange}
+              />
+            </form>
+            
+            {/* <BiSearchAlt2 size={20} className="h-full"/> */}
           
           </div>
         </div>

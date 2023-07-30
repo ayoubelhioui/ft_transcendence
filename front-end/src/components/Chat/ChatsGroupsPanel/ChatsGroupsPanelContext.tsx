@@ -7,7 +7,7 @@ export interface ConversationInfoI {
 }
 
 //context interface
-export interface ChatContextI {
+export interface ChatsGroupsPanelContextI {
   conversationInfo : ConversationInfoI
   setConversationInfo : React.Dispatch<React.SetStateAction<ConversationInfoI> >
   updateChats : boolean
@@ -15,12 +15,12 @@ export interface ChatContextI {
 }
 
 //create context
-const ChatContext = createContext<ChatContextI | undefined>(undefined);
+const ChatsGroupsPanelContext = createContext<ChatsGroupsPanelContextI | undefined>(undefined);
 
 //use context
-function useChatContext() {
+function useChatsGroupsPanelContext() {
 
-    const context = useContext(ChatContext)
+    const context = useContext(ChatsGroupsPanelContext)
 
     if (context === undefined) {
         throw new Error("Chat context not defined");
@@ -30,7 +30,7 @@ function useChatContext() {
 }
 
 //provider
-function ChatContextProvider({ children } : {children : any}) {
+function ChatsGroupsPanelContextProvider({ children } : {children : any}) {
   const [conversationInfo, setConversationInfo] = useState<ConversationInfoI>({
     id : undefined,
     name : '',
@@ -39,7 +39,7 @@ function ChatContextProvider({ children } : {children : any}) {
 
   const [updateChats, setUpdateChats] = useState(false)
 
-  const contextValue : ChatContextI = {
+  const contextValue : ChatsGroupsPanelContextI = {
     conversationInfo,
     setConversationInfo,
     updateChats,
@@ -47,13 +47,13 @@ function ChatContextProvider({ children } : {children : any}) {
   }
 
   return (
-    <ChatContext.Provider value={contextValue}>
+    <ChatsGroupsPanelContext.Provider value={contextValue}>
       {children}
-    </ChatContext.Provider>
+    </ChatsGroupsPanelContext.Provider>
   );
 };
 
 export {
-    useChatContext,
-    ChatContextProvider
+    useChatsGroupsPanelContext,
+    ChatsGroupsPanelContextProvider
 }

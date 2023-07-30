@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AuthService } from "./AuthService";
 import AxiosInstance from "./AxiosInstance";
 import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED } from "../../Const";
+import { ConversationInfoI } from "../../components/Chat/ChatContext";
 
 export interface RequestResultI {
     status : number,
@@ -190,17 +191,17 @@ export class RequestService {
 
     // ==== Chat ====================================================
     
-    getChannelUsers(channelId : number | undefined, dips : any[] = []) {
-        const request = async (obj : RequestService, channelId : number) => {
-            if (channelId)
-                return RequestService.makeGetRequest(obj, `/channels/${channelId}/users`)
+    getChannelUsers(channelInfo : ConversationInfoI, dips : any[] = []) {
+        const request = async (obj : RequestService, channelInfo : ConversationInfoI) => {
+            if (channelInfo.id && channelInfo.isGroup)
+                return RequestService.makeGetRequest(obj, `/channels/${channelInfo.id}/users`)
             return ({
                 status : STATUS_UNDEFINED,
                 message : "",
                 data : undefined
             })
         }
-        return this.getData2(request, [channelId], dips)
+        return this.getData2(request, [channelInfo], dips)
     }
 
     getMyChannelsRequest(dips : any[] = []) {
