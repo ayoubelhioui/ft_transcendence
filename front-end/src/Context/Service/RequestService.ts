@@ -123,7 +123,7 @@ export class RequestService {
     }
     
     private getData(fun : (obj : RequestService, url : string) => Promise<RequestResultI>, url : string, dips : any[] = []) {
-        const def = {
+        const def : RequestResultI = {
             status : STATUS_UNDEFINED,
             message : "",
             data : undefined
@@ -138,19 +138,21 @@ export class RequestService {
             }
             loadData()
         }, dips)
+
     
         return (state)
     }
 
     private getData2(request : (...params : any) => Promise<RequestResultI>, params : any[], dips : any[] = []) {
-        const def = {
+        const def : RequestResultI = {
             status : STATUS_UNDEFINED,
             message : "",
             data : undefined
         }
 
         const [state, setState] = useState<RequestResultI>(def)
-    
+        
+ 
         useEffect(() => {
             const obj = this
             async function loadData() {
@@ -160,6 +162,28 @@ export class RequestService {
         }, dips)
     
         return (state)
+    }
+
+    private getData3(state : any, request : (...params : any) => Promise<RequestResultI>, params : any[], dips : any[] = []) {
+        if (state) {
+            return (
+                useEffect(() => {
+                    const obj = this
+                    async function loadData() {
+                        state[0](await request(obj, ...params))
+                    }
+                    loadData()
+                }, dips)
+            )
+        } else {
+            const def : RequestResultI = {
+                status : STATUS_UNDEFINED,
+                message : "",
+                data : undefined
+            }
+    
+            return useState<RequestResultI>(def)
+        }
     }
 
 
@@ -179,6 +203,41 @@ export class RequestService {
     }
 
     // ==== Profile ====================================================
+
+    getUserFriends(userId : number, dips : any[] = []) {
+        console.log("request")
+        const request = async (obj : RequestService, userId : number) => {
+            return ({
+                status : STATUS_UNDEFINED,
+                message : "",
+                data : [
+                    {
+                        username: "friend1",
+                        id : 0,
+                        IntraId : "-1"
+                    },
+                    {
+                        username: "friend2",
+                        id : 1,
+                        IntraId : "-1"
+                    },
+                    {
+                        username: "friend3",
+                        id : 2,
+                        IntraId : "-1"
+                    },
+                    {
+                        username: "friend4",
+                        id : 3,
+                        IntraId : "-1"
+                    }
+                ]
+            })
+        }
+        const s = this.getData3(undefined, request, [userId], dips) as any[]
+        const e = this.getData3(s, request, [userId], dips)
+        return [s[0], e]
+    }
 
     getUserMatchHistoryRequest(userId : number) {
         return this.getData(RequestService.makeGetRequest, `/users/${userId}/matchhistory`)
@@ -209,8 +268,8 @@ export class RequestService {
         return this.getData(RequestService.makeGetRequest, "/users/me/channels", dips)
     }
 
-    getChannelsRequest() {
-        return this.getData(RequestService.makeGetRequest, "/channels")
+    getChannelsRequest(dips : any[] = []) {
+        return this.getData(RequestService.makeGetRequest, "/channels", dips)
     }
 
     //!channelInfo
@@ -234,6 +293,41 @@ export class RequestService {
     }
 
     // ==== Profile ====================================================
+
+    getUserWithRelation(userId : number | undefined) {
+        const request = async (obj : RequestService, userId : number) => {
+            if (!userId) {
+                return ({
+                    status : STATUS_ERROR,
+                    message : "profile",
+                    data : undefined
+                })
+            }
+            let res1 = await RequestService.makeGetRequest(this, `/users/${userId}`)
+            let res2 = await RequestService.makeGetRequest(this, `/users/me/friends/${userId}/status`)
+            if (res1.status === STATUS_SUCCESS && res2.status === STATUS_SUCCESS) {
+                let res : RequestResultI = {
+                    status : STATUS_SUCCESS,
+                    message : "success",
+                    data : {
+                        user : res1.data,
+                        relation : res2.data
+                    }
+                }
+                return (res)
+            }
+            if (res1.status !== STATUS_SUCCESS)
+                return res1
+            if (res2.status !== STATUS_SUCCESS)
+                return res2
+            return ({
+                status : STATUS_UNDEFINED,
+                message : "",
+                data : undefined
+            })
+        }
+        return this.getData2(request, [userId])
+    }
 
     async getUsersSearchRequest(search : string) {
         //return this.getData(RequestService.makeGetRequest, `/users/search/${search}`)

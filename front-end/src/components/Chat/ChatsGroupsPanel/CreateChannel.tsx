@@ -6,6 +6,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import { useAppServiceContext } from "../../../Context/Context";
 import { STATUS_SUCCESS } from "../../../Const";
+import { useChatContext } from "../ChatContext";
+import { useChatsGroupsPanelContext } from "./ChatsGroupsPanelContext";
 
 
 
@@ -122,6 +124,8 @@ const PasswordField = ({password} : {password : React.MutableRefObject<string>})
 
 const CreateChannel = ({openState} : {openState : [boolean, React.Dispatch<React.SetStateAction<boolean>>]}) => {
   const appService = useAppServiceContext()
+  const chatContext = useChatContext()
+  //const chatsGroupsPanelContext = useChatsGroupsPanelContext()
   const [isOpen, setIsOpen] = openState;
   const [selectedGroupType, setSelectedGroupType] = useState<string | undefined>(undefined)
   const password = useRef('')
@@ -154,6 +158,8 @@ const CreateChannel = ({openState} : {openState : [boolean, React.Dispatch<React
       const res = await appService.requestService.postCreateNewChannel(bodyData)
       if (res.status === STATUS_SUCCESS) {
         console.log("Channel Created ")
+        chatContext.setUpdateChats(!chatContext.updateChats)
+        //chatsGroupsPanelContext.setCommitSearch(!chatsGroupsPanelContext.commitSearch)
         setIsOpen(false)
       } else {
         //!popup

@@ -1,4 +1,5 @@
-import { AuthService } from "./AuthService";
+import { useState } from "react";
+import { AuthService, UserI } from "./AuthService";
 import { LoaderService } from "./LoaderService";
 import { RequestService } from "./RequestService"
 import { SocketService } from "./SocketService"
@@ -19,7 +20,7 @@ const appService : AppInterface = {
     requestService,
     socketService,
     authService,
-    loaderService,
+    loaderService
 }
 
 export {

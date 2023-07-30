@@ -1,15 +1,16 @@
 import { Avatar } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
-import { ReactNode, useEffect, useState} from "react";
+import { ReactNode, useEffect, useRef, useState} from "react";
 import { useAppServiceContext } from "../../../Context/Context";
 import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../../Const";
 import { useChatContext } from "../ChatContext";
 import { RequestResultI } from "../../../Context/Service/RequestService";
+import { useChatsGroupsPanelContext } from "./ChatsGroupsPanelContext";
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
-      <div className="text-white flex flex-col overflow-y-scroll scroll-smooth">
+      <div className="text-white flex flex-col h-[580px] overflow-y-scroll">
           {children}
       </div>
     )
@@ -28,10 +29,19 @@ const LastMessage = ({message} : {message : any | undefined}) => {
 
 const Item = ({payload} : {payload : any}) => {
   const chatService = useChatContext()
+  const navigate = useNavigate();
   const channel = payload
   let avatar = `http://${address}/users/image/${channel.avatar}`
   let groupIcon = ""
   
+  const imageOnClick = () => {
+    //!get the id of the user
+    const id = 1
+    if (!payload.isGroup) {
+      navigate(`/Profile/${id}`)
+    }
+  }
+
   if (!payload.isGroup){
     avatar = `http://${address}/users/image/-2`
   }
@@ -62,13 +72,13 @@ const Item = ({payload} : {payload : any}) => {
   return (
     <>
       <div className="flex my-4 items-center mx-6 gap-4" onClick={onItemClick}>
-          <img src={avatar} alt='avatar' className=' object-cover rounded-full w-[50px] h-[50px] cursor-pointer'/>
+          <img onClick={imageOnClick} src={avatar} alt='avatar' className=' object-cover rounded-full w-[50px] h-[50px] cursor-pointer'/>
           <div className="flex flex-col cursor-pointer">
             <h2 className='text-white'>{channel.name}</h2>
             <LastMessage message={channel.lastMessage} />
           </div>
       </div>
-      <span className="inline-block w-[100%] bg-gray-400 opacity-50 h-[1px]"></span>
+      <span className="flex w-[100%] bg-gray-400 opacity-50 border-[.1px]"></span>
     </>
 
   )
@@ -118,10 +128,36 @@ const List = ({list} : {list : any}) => {
 }
 
 const Chats = () => {
-    const appService = useAppServiceContext()
-    const chatContext = useChatContext()
-    const result = appService.requestService.getMyChannelsRequest([chatContext.updateChats])
+  const appService = useAppServiceContext()
+  const chatContext = useChatContext()
+  const chatsGroupsPanelContext = useChatsGroupsPanelContext()
+  const result = appService.requestService.getMyChannelsRequest([chatContext.updateChats])
+  const isSearchingDone = useRef(true)
+  let dataFiltered = useRef<Object[] | null>(null)
    
+  /******** Filter List */
+    useEffect(() => {
+    }, [chatsGroupsPanelContext.commitSearch])
+
+    useEffect(() => {
+      const search = chatsGroupsPanelContext.chatSearch
+      if (result.data && search.length > 0 && isSearchingDone.current) {
+        isSearchingDone.current = false
+        dataFiltered.current = [...result.data]
+        dataFiltered.current = dataFiltered.current.filter((item : any) => {
+          let name = item.name
+          return name.toLowerCase().includes(search.toLowerCase())
+        }
+        );
+        isSearchingDone.current = true
+      } else if (result.data && search.length === 0) {
+        dataFiltered.current = [...result.data]
+      }
+      chatsGroupsPanelContext.setCommitSearch(!chatsGroupsPanelContext.commitSearch)
+    }, [chatsGroupsPanelContext.chatSearch, result.data])
+
+  /**************************** */
+
     if (result.status === STATUS_UNDEFINED) {
       return <div>Loading ...</div>
     } else if (result.status === STATUS_ERROR) {
@@ -132,10 +168,10 @@ const Chats = () => {
         </>
       )
     } else if (result.status === STATUS_SUCCESS) {
-        if (result.data.length === 0) {
+        if (!dataFiltered.current || dataFiltered.current.length === 0) {
             return <NoContent></NoContent>
         } else {
-            return <List list={result.data}></List>
+            return <List list={dataFiltered.current}></List>
         }
     } else {
         throw Error("Unhandled status")

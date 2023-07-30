@@ -1,17 +1,13 @@
 import { createContext, useContext, useState } from "react";
 
-export interface ConversationInfoI {
-  id : number | undefined,
-  name : string,
-  isGroup : boolean
-}
-
 //context interface
 export interface ChatsGroupsPanelContextI {
-  conversationInfo : ConversationInfoI
-  setConversationInfo : React.Dispatch<React.SetStateAction<ConversationInfoI> >
-  updateChats : boolean
-  setUpdateChats : React.Dispatch<React.SetStateAction<boolean> >
+  chatSearch : string
+  setChatSearch : React.Dispatch<React.SetStateAction<string>>
+  commitSearch : boolean
+  setCommitSearch : React.Dispatch<React.SetStateAction<boolean>>
+  updateListChannelsJoin : boolean
+  setUpdateListChannelsJoin : React.Dispatch<React.SetStateAction<boolean>>
 }
 
 //create context
@@ -22,8 +18,8 @@ function useChatsGroupsPanelContext() {
 
     const context = useContext(ChatsGroupsPanelContext)
 
-    if (context === undefined) {
-        throw new Error("Chat context not defined");
+    if (!context) {
+        throw new Error("useChatsGroupsPanelContext not defined");
     }
 
     return (context)
@@ -31,19 +27,17 @@ function useChatsGroupsPanelContext() {
 
 //provider
 function ChatsGroupsPanelContextProvider({ children } : {children : any}) {
-  const [conversationInfo, setConversationInfo] = useState<ConversationInfoI>({
-    id : undefined,
-    name : '',
-    isGroup : false
-  });
-
-  const [updateChats, setUpdateChats] = useState(false)
+  const [chatSearch, setChatSearch] = useState('')
+  const [commitSearch, setCommitSearch] = useState(false)
+  const [updateListChannelsJoin, setUpdateListChannelsJoin] = useState(false)
 
   const contextValue : ChatsGroupsPanelContextI = {
-    conversationInfo,
-    setConversationInfo,
-    updateChats,
-    setUpdateChats
+    chatSearch,
+    setChatSearch,
+    commitSearch,
+    setCommitSearch,
+    updateListChannelsJoin,
+    setUpdateListChannelsJoin,
   }
 
   return (

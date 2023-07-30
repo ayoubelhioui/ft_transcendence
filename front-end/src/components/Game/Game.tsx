@@ -63,7 +63,7 @@ function getUrlParams() {
         userToInvite : searchParams.get('userToInvite') as string,
         // isBotMode : searchParams.get('isBotMode') === 'true',
         // isClassic : searchParams.get('isClassic') === 'true',
-        isBotMode : false,
+        isBotMode : true,
         isClassic : true,
     }
 }

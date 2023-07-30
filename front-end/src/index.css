@@ -83,16 +83,6 @@ h2 {
   overflow: hidden;
 }
 
-/* .nav {
-    @apply relative tracking-[1px];    
-} */
-/* .nav::after {
-  @apply content-[''] absolute bg-white h-[3px] w-0 left-0 -bottom-[5px] rounded-xl duration-500
-}
-.nav:hover::after {
-  @apply w-full
-} */
-
 button {
   border: 0;
   padding: 12px 40px;
@@ -234,19 +224,21 @@ h1 {
 
 
 
-
-
-
-
 .modal-content {
-  position: absolute; /* Ensure relative positioning for absolute positioning of the time line */
-  width: 400px; /* Set the desired width of the modal content */
-  background-color: #ffffff;
-  top: 0;
-  left: 50%;
-  padding: 20px;
+  display: flex;
+  gap: 10px; 
+  position: absolute;
+  width: 300px;
+  background: linear-gradient(190deg, #00c3fe 0.92%, #4D194D 100%);
+  top: 10%;
+  right:20.2%;
+  height: 100px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+  transform: translateX(100%);
+  animation: slideDown 1.7s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  
 }
 
 /* Style the time line */

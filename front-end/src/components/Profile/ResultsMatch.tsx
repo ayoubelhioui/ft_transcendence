@@ -44,9 +44,9 @@ const List = ({list} : {list : any}) => {
   )
 }
 
-const ResultsMatch = () => {
+const ResultsMatch = ({userInfo} : {userInfo : any}) => {
   const appService = useAppServiceContext()
-  const userId = appService.authService.user?.id!
+  const userId = userInfo.user.id
   const results = appService.requestService.getUserMatchHistoryRequest(userId)
 
   if (results.status === STATUS_SUCCESS) {

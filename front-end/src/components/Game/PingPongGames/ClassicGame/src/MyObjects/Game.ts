@@ -35,7 +35,7 @@ export class Game {
         this.camera = new MyCamera()
         this.socketMgr = new SocketManager(this)
 
-        this.scene.visible = false
+        this.scene.visible = true
         this.#events(this)
 
         if (this.gameParams.isWatchMode) {

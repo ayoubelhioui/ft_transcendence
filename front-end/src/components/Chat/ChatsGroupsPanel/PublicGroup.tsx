@@ -6,6 +6,7 @@ import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../.
 import { VscSettings } from "react-icons/vsc";
 import { Console } from "console";
 import { useAppServiceContext } from "../../../Context/Context";
+import { useChatsGroupsPanelContext } from "./ChatsGroupsPanelContext";
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
@@ -22,6 +23,7 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 const Item = ({payload} : {payload : any}) => {
     const appService = useAppServiceContext()
     const channel = payload
+    const chatsGroupsPanelContext = useChatsGroupsPanelContext()
     const avatar = `http://${address}/users/image/${channel.avatar}`
 
 
@@ -31,6 +33,7 @@ const Item = ({payload} : {payload : any}) => {
             console.log(res.message)
             //!popup message
         } else {
+            chatsGroupsPanelContext.setUpdateListChannelsJoin(!chatsGroupsPanelContext.updateListChannelsJoin)
             console.log("join success")
             //!join success
         }
@@ -59,43 +62,42 @@ const Item = ({payload} : {payload : any}) => {
 const NoContent = () => {
     return (
         <Wrapper>
-            <div className="flex mx-auto py-2 "> No Lives </div>
+            <div className="flex mx-auto text-white justify-center items-center"> No Groups Available </div>
         </Wrapper>
     )
 }
 
 
 const List = ({list} : {list : any}) => {
-    console.log(list)
     list = list.filter((item : any) => (item.visibility === "public"));
 
     return (
-      <Wrapper>
-          {
-              list.map((item : any, index : number) => (            
-                  <Item key={item.id} payload={item}/>
-              ))
-          }
-      </Wrapper>
-      
+    <Wrapper>
+        {
+            list.map((item : any, index : number) => (            
+                <Item key={item.id} payload={item}/>
+            ))
+        }
+    </Wrapper>
+    
     )
 }
 
-const PublicGroup = ({result} : {result : any}) => {
+const PublicGroup = ({result, list} : {result : any, list : any}) => {
     if (result.status === STATUS_UNDEFINED) {
-      return <div>Loading ...</div>
+    return <div>Loading ...</div>
     } else if (result.status === STATUS_ERROR) {
-      return (
+    return (
         <>
         <div> Popup Error </div>
         <NoContent></NoContent>
         </>
-      )
+    )
     } else if (result.status === STATUS_SUCCESS) {
-        if (result.data.length === 0) {
+        if (!list || list.length === 0) {
             return <NoContent></NoContent>
         } else {
-            return <List list={result.data}></List>
+            return <List list={list}></List>
         }
     } else {
         throw Error("Unhandled status")

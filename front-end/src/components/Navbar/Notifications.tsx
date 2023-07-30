@@ -1,5 +1,6 @@
 import { ReactNode } from "react"
 import { address } from "../../Const"
+import { Avatar } from "@mui/material"
 
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
@@ -11,18 +12,22 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 }
   
 const Item = ({payload} : {payload : any}) => {
-    const item = payload
-    //const avatar = `http://${address}/users/image/${item.IntraId}`
+    const item = payload;
+
+    //! need to get user's avatar
+
+    const avatar = `http://${address}/users/image/${item.IntraId}`
 
     return (
-      <div className="flex bg-white opacity-20 backdrop-blur-md p-8 rounded-[10px] m-2">
-          {/* <div className="flex my-4 items-center mx-6 gap-4" onClick={onItemClick}>
-              <img src={avatar} alt='avatar' className=' object-cover rounded-full w-[50px] h-[50px] cursor-pointer'/>
+      <div className="flex bg-white bg-opacity-20 backdrop-blur-md rounded-[10px] m-2 h-[60px]">
+          <div className="flex items-center mx-6 gap-4">
+            <Avatar alt="Avatar" src={avatar} />
+              {/* <img src={avatar} alt='avatar' className=' object-cover rounded-full w-[25px] h-[25px] cursor-pointer'/> */}
               <div className="flex flex-col cursor-pointer">
-                  <h2 className='text-white'>{channel.name}</h2>
-                  <LastMessage message={channel.lastMessage} />
+                  <h2 className='text-white text-base'>User's Name</h2>
+                  <p className='text-white text-sm'>{item.message}</p>
               </div>
-          </div> */}
+          </div>
       </div>
     )
 }
