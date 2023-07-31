@@ -10,7 +10,7 @@ const Conversations = () => {
   const name = chatContext.conversationInfo.name
 
   return (
-    <div className="flex flex-col justify-between max-m-custom-md:w-[100%] top_2 col-span-2 max-m-custom-md:col-span-1 h-[60vh] max-m-custom-md:h-full row-span-2 ">
+    <div className="flex flex-col justify-between max-m-custom-md:w-[100%] top_2 col-span-2 max-m-custom-md:col-span-1 h-[850px] max-custom-lg:h-[800px] row-span-2 ">
       { 
       
       id != undefined ? (

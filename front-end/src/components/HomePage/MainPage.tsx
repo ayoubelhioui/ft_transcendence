@@ -71,7 +71,7 @@ const MainPage = () => {
   
     return (
         <MainWrapper>
-            <Popup />
+            {/* <Popup /> */}
             <Navbar /> 
             <Routes>
 

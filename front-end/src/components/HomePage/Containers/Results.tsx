@@ -8,7 +8,7 @@ import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../.
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
         <>
-          <div className=' max-md:mt-4 relative back min-h-[370px] max-md:min-h-[270px] rounded-[10px] flex-1 shadow-md flex flex-col justify-between overflow-x-auto'>
+          <div className=' max-md:mt-4 relative back min-h-[370px] max-custom-lg:min-h-[35vh] max-md:min-h-[270px] rounded-[10px] flex-1 shadow-md flex flex-col justify-between overflow-x-auto'>
             <h1 className="text-2xl p-2 mb-4">Latest Results</h1>
                 {children}
           </div>
@@ -18,7 +18,7 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 
 const Item = ({ payload }: {payload : any}) => {
     return (
-      <div className="flex gap-4 flex-col w-full h-full justify-start items-center">
+      <div className="flex gap-4 flex-col w-full h-full mb-auto justify-start items-center">
         <div className="flex mx-auto cursor-pointer py-2 items-center bg-opacity-40">
                 <Avatar src={`http://${address}/users/image/` + payload.player1.IntraId} sx={{ width: 60, height: 60 }}/>
                 <div className=" mx-12 flex items-center gap-2">
@@ -33,7 +33,7 @@ const Item = ({ payload }: {payload : any}) => {
 const NoContent = () => {
     return (
         <Wrapper>
-           <div className="flex mx-auto h-full w-full justify-center items-center text-4xl"> No Lives </div>
+           <div className="flex mx-auto my-auto h-full w-full justify-center items-center text-4xl"> No Lives </div>
         </Wrapper>
     )
 }
@@ -75,22 +75,24 @@ const List = ({list} : {list : any}) => {
 export const Results = () => {
     const appService = useAppServiceContext()
     const response = appService.requestService.getResultsRequest()
-  
+    const result = response.state
+
+    response.effect()
         
-    if (response.status === STATUS_UNDEFINED) {
+    if (result.status === STATUS_UNDEFINED) {
       return <div>Loading ...</div>
-    } else if (response.status === STATUS_ERROR) {
+    } else if (result.status === STATUS_ERROR) {
       return (
         <>
         <div> Popup Error </div>
         <NoContent></NoContent>
         </>
       )
-    } else if (response.status === STATUS_SUCCESS) {
-        if (response.data.length === 0) {
+    } else if (result.status === STATUS_SUCCESS) {
+        if (result.data.length === 0) {
             return <NoContent></NoContent>
         } else {
-            return <List list={response.data}></List>
+            return <List list={result.data}></List>
         }
     } else {
         throw Error("Unhandled status")

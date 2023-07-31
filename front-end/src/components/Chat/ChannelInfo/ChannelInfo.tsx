@@ -10,8 +10,11 @@ const ChannelInfo = () => {
   const appService = useAppServiceContext()
   const chatContext = useChatContext()
   const conversationInfo = chatContext.conversationInfo
-  const result = appService.requestService.getChannelUsers(conversationInfo, [conversationInfo])
-  
+  const response = appService.requestService.getChannelUsers(conversationInfo)
+  const result = response.state
+
+  response.effect([conversationInfo])
+
   //!filter list with the status should be implement in the saver
   //!the data should be two list with the name {admins, members}
 
@@ -23,7 +26,7 @@ const ChannelInfo = () => {
   }
 
   return (
-    <div className="flex top_2 col-span-1 row-span-2 max-m-custom-md:hidden h-[750px] w-full flex-col">
+    <div className="flex top_2 col-span-1 row-span-2 max-m-custom-md:hidden h-[750px] max-custom-lg:h-[700px] w-full flex-col">
 
         <ChannelImage />
 

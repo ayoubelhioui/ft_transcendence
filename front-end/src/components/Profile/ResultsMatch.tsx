@@ -47,13 +47,16 @@ const List = ({list} : {list : any}) => {
 const ResultsMatch = ({userInfo} : {userInfo : any}) => {
   const appService = useAppServiceContext()
   const userId = userInfo.user.id
-  const results = appService.requestService.getUserMatchHistoryRequest(userId)
+  const response = appService.requestService.getUserMatchHistoryRequest(userId)
+  const results = response.state
+
+  response.effect([userInfo])
 
   if (results.status === STATUS_SUCCESS) {
     return (
-      <div className="flex flex-col top_1 h-[300px] max-md:pb-2 max-m-custom-md:h-[220px] ml-2 text-gray-400 max-md:ml-0 overflow-x-scroll">
+      <div className="flex flex-col top_1 h-[300px] max-custom-md:h-[350px] max-md:pb-2 max-m-custom-md:h-[220px] ml-2 text-gray-400 max-md:ml-0 overflow-x-scroll">
         <h1 className="text-2xl p-2">Match Results</h1>
-        <div className="flex gap-10 max-md:gap-4 pl-6 pt-6 max-md:pl-2 overflow-x-scroll">
+        <div className="flex gap-10 max-md:gap-4 pl-6 pt-6 max-md:pl-2 my-auto overflow-x-scroll">
           <List list={results.data} />
         </div>
       </div>

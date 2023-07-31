@@ -7,7 +7,7 @@ import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../C
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
-        <div className="flex flex-col purple_back mt-[5%] w-[80%] mx-auto h-[60vh] max-md:mt-[3%] max-md:w-[85%] max-sm:h-screen pb-5 max-sm:pb-0 max-custom-md:w-[85%] max-custom-md:h-[75vh]">
+        <div className="flex flex-col purple_back mt-[5%] max-custom-lg:mt-[4%] w-[80%] max-custom-lg:w-[70%] mx-auto h-[60vh] max-custom-lg:h-[80vh] max-md:mt-[3%] max-md:w-[85%] max-sm:h-screen pb-5 max-sm:pb-0 max-sm:w-[95%] max-custom-md:w-[85%] max-custom-md:h-[75vh]">
             <h1 className="text-white text-2xl mx-5 mt-5">Live Games</h1>
             <div className="flex flex-wrap mt-12 mx-5 gap-12 overflow-x-scroll justify-around">
                 {children}
@@ -54,11 +54,11 @@ const NoContent = () => {
 }
 
 
-const List = ({lives} : {lives : any}) => {
+const List = ({list} : {list : any}) => {
     return (
         <Wrapper>
             {
-                lives.map((item : any, index : number) => (            
+                list.map((item : any, index : number) => (            
                     <Item key={item.token} payload={item}/>
                 ))
             }
@@ -68,23 +68,25 @@ const List = ({lives} : {lives : any}) => {
 
 const LiveMatches = () => {
     const appService = useAppServiceContext()
-    const lives = appService.requestService.getLivesRequest()
-  
+    const response = appService.requestService.getLivesRequest()
+    const result = response.state
+
+    response.effect()
         
-    if (lives.status === STATUS_UNDEFINED) {
+    if (result.status === STATUS_UNDEFINED) {
       return <div>Loading ...</div>
-    } else if (lives.status === STATUS_ERROR) {
+    } else if (result.status === STATUS_ERROR) {
       return (
         <>
         <div> Popup Error </div>
         <NoContent></NoContent>
         </>
       )
-    } else if (lives.status === STATUS_SUCCESS) {
-        if (lives.data.length === 0) {
+    } else if (result.status === STATUS_SUCCESS) {
+        if (result.data.length === 0) {
             return <NoContent></NoContent>
         } else {
-            return <List lives={lives.data}></List>
+            return <List list={result.data}></List>
         }
     } else {
         throw Error("Unhandled status")

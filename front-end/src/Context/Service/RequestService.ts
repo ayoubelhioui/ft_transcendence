@@ -122,7 +122,7 @@ export class RequestService {
         }
     }
     
-    private getData(fun : (obj : RequestService, url : string) => Promise<RequestResultI>, url : string, dips : any[] = []) {
+    private getData(request : (...params : any) => Promise<RequestResultI>, params : any[]) {
         const def : RequestResultI = {
             status : STATUS_UNDEFINED,
             message : "",
@@ -130,59 +130,20 @@ export class RequestService {
         }
 
         const [state, setState] = useState<RequestResultI>(def)
-    
-        useEffect(() => {
-            const obj = this
-            async function loadData() {
-                setState(await fun(obj, url))
-            }
-            loadData()
-        }, dips)
 
-    
-        return (state)
-    }
-
-    private getData2(request : (...params : any) => Promise<RequestResultI>, params : any[], dips : any[] = []) {
-        const def : RequestResultI = {
-            status : STATUS_UNDEFINED,
-            message : "",
-            data : undefined
+        const effect = (dips : any[] = []) => {
+            return useEffect(() => {
+                console.log("request...")
+                const obj = this
+                async function loadData() {
+                    setState(await request(obj, ...params))
+                }
+                loadData()
+            }, dips)
         }
-
-        const [state, setState] = useState<RequestResultI>(def)
         
- 
-        useEffect(() => {
-            const obj = this
-            async function loadData() {
-                setState(await request(obj, ...params))
-            }
-            loadData()
-        }, dips)
-    
-        return (state)
-    }
-
-    private getData3(state : any, request : (...params : any) => Promise<RequestResultI>, params : any[], dips : any[] = []) {
-        if (state) {
-            return (
-                useEffect(() => {
-                    const obj = this
-                    async function loadData() {
-                        state[0](await request(obj, ...params))
-                    }
-                    loadData()
-                }, dips)
-            )
-        } else {
-            const def : RequestResultI = {
-                status : STATUS_UNDEFINED,
-                message : "",
-                data : undefined
-            }
-    
-            return useState<RequestResultI>(def)
+        return {
+            state, effect, setState
         }
     }
 
@@ -191,21 +152,20 @@ export class RequestService {
     //====================================================
 
     getLivesRequest() {
-        return this.getData(RequestService.makeGetRequest, "/games/live")
+        return this.getData(RequestService.makeGetRequest, ["/games/live"])
     }
 
     getResultsRequest() {
-        return this.getData(RequestService.makeGetRequest, "/games/latestResult")
+        return this.getData(RequestService.makeGetRequest, ["/games/latestResult"])
     }
 
     getTopPlayersRequest() {
-        return this.getData(RequestService.makeGetRequest, "/games/leaderboard")
+        return this.getData(RequestService.makeGetRequest, ["/games/leaderboard"])
     }
 
     // ==== Profile ====================================================
 
-    getUserFriends(userId : number, dips : any[] = []) {
-        console.log("request")
+    getUserFriends(userId : number) {
         const request = async (obj : RequestService, userId : number) => {
             return ({
                 status : STATUS_UNDEFINED,
@@ -217,12 +177,12 @@ export class RequestService {
                         IntraId : "-1"
                     },
                     {
-                        username: "friend2",
+                        username: "new_friend2",
                         id : 1,
                         IntraId : "-1"
                     },
                     {
-                        username: "friend3",
+                        username: "new_friend3",
                         id : 2,
                         IntraId : "-1"
                     },
@@ -234,23 +194,22 @@ export class RequestService {
                 ]
             })
         }
-        const s = this.getData3(undefined, request, [userId], dips) as any[]
-        const e = this.getData3(s, request, [userId], dips)
-        return [s[0], e]
+
+        return this.getData(request, [userId])
     }
 
     getUserMatchHistoryRequest(userId : number) {
-        return this.getData(RequestService.makeGetRequest, `/users/${userId}/matchhistory`)
+        return this.getData(RequestService.makeGetRequest, [`/users/${userId}/matchhistory`])
     }
     
     //achievements
     getUserAchievementsRequest(userId : number) {
-        return this.getData(RequestService.makeGetRequest, `/users/${userId}/achievements`)
+        return this.getData(RequestService.makeGetRequest, [`/users/${userId}/achievements`])
     }
 
     // ==== Chat ====================================================
     
-    getChannelUsers(channelInfo : ConversationInfoI, dips : any[] = []) {
+    getChannelUsers(channelInfo : ConversationInfoI) {
         const request = async (obj : RequestService, channelInfo : ConversationInfoI) => {
             if (channelInfo.id && channelInfo.isGroup)
                 return RequestService.makeGetRequest(obj, `/channels/${channelInfo.id}/users`)
@@ -260,21 +219,21 @@ export class RequestService {
                 data : undefined
             })
         }
-        return this.getData2(request, [channelInfo], dips)
+        return this.getData(request, [channelInfo])
     }
 
-    getMyChannelsRequest(dips : any[] = []) {
+    getMyChannelsRequest() {
         //return RequestService.makeGetRequest(this, `/users/me/channels`)
-        return this.getData(RequestService.makeGetRequest, "/users/me/channels", dips)
+        return this.getData(RequestService.makeGetRequest, ["/users/me/channels"])
     }
 
-    getChannelsRequest(dips : any[] = []) {
-        return this.getData(RequestService.makeGetRequest, "/channels", dips)
+    getChannelsRequest() {
+        return this.getData(RequestService.makeGetRequest, ["/channels"])
     }
 
     //!channelInfo
     getChannelUsersRequest(channelId : number) {
-        return this.getData(RequestService.makeGetRequest, `/channels/${channelId}/users`)
+        return this.getData(RequestService.makeGetRequest, [`/channels/${channelId}/users`])
     }
 
     //!messages
@@ -296,6 +255,7 @@ export class RequestService {
 
     getUserWithRelation(userId : number | undefined) {
         const request = async (obj : RequestService, userId : number) => {
+            console.log("getUserWithRelation: ", this)
             if (!userId) {
                 return ({
                     status : STATUS_ERROR,
@@ -303,8 +263,8 @@ export class RequestService {
                     data : undefined
                 })
             }
-            let res1 = await RequestService.makeGetRequest(this, `/users/${userId}`)
-            let res2 = await RequestService.makeGetRequest(this, `/users/me/friends/${userId}/status`)
+            let res1 = await RequestService.makeGetRequest(obj, `/users/${userId}`)
+            let res2 = await RequestService.makeGetRequest(obj, `/users/me/friends/${userId}/status`)
             if (res1.status === STATUS_SUCCESS && res2.status === STATUS_SUCCESS) {
                 let res : RequestResultI = {
                     status : STATUS_SUCCESS,
@@ -326,7 +286,7 @@ export class RequestService {
                 data : undefined
             })
         }
-        return this.getData2(request, [userId])
+        return this.getData(request, [userId])
     }
 
     async getUsersSearchRequest(search : string) {

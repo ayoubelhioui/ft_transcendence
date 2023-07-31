@@ -1,14 +1,16 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { BiSearchAlt2 } from "react-icons/bi";
+import { MdManageSearch } from "react-icons/md";
 import { useAppServiceContext } from "../../Context/Context";
 import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../Const";
 import { useNavigate } from "react-router-dom";
 import { AiOutlinePlusCircle as PlusCircle } from 'react-icons/ai'
+import { searchEffect } from "../Utils/utils";
+import AddFriend from "./SearchUsers";
 
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
   return (
-      <div className="flex flex-col justify-between items-center w-[95%]">
+      <div className="flex flex-col gap-4 justify-between items-center w-full ml-4 overflow-y-scroll">
           {children}
       </div>
       
@@ -26,11 +28,12 @@ const Item = ({payload} : {payload : any}) => {
   }
 
   return (
-    <div onClick={itemOnClick} className="flex mt-3 items-center justify-between text-white w-full">
-      <div className="flex items-center gap-2 w-full">
-        <img src={avatar} className="w-[50px] h-[50px] rounded-[50%] object-cover" alt="" />
-        <div className="w-1/2">{user.username}</div>
+    <div onClick={itemOnClick} className="flex mt-3 items-center justify-between max-custom-md:justify-around text-white w-[90%]">
+      <div className="flex items-center gap-6 w-full">
+        <img src={avatar} className="w-[50px] h-[50px] cursor-pointer rounded-[50%] object-cover" alt="" />
+        <div className="w-1/2 cursor-pointer">{user.username}</div>
       </div>
+      <button type="button" className="purple_back ml-1 py-1 px-4">DM</button>
     </div>
   )
 }
@@ -57,51 +60,36 @@ const List = ({list} : {list : any}) => {
 }
 
 
+
+
 const Friends = ({userInfo} : {userInfo : any}) => {
   const appService = useAppServiceContext()
-  const [result, effect] = appService.requestService.getUserFriends(userInfo.user.id, [])
-  const isSearchingDone = useRef(true)
-  const search = useRef('')
-  const [r, setR] = useState('')
-  let dataFiltered = useRef<Object[] | null>()
+  const response = appService.requestService.getUserFriends(userInfo.user.id)
+  const result = response.state
+  const search = searchEffect(result, (searchText : string, list : any[]) => {
+    list = list.filter((item : any) => {
+      let name = item.username
+      return name.toLowerCase().includes(searchText.toLowerCase())
+    });
+    return (list)
+  })
 
-  
-  /******** Filter List */
-
-  effect()
-  
-  useEffect(() => {
-    if (result.data && search.current.length > 0 && isSearchingDone.current) {
-      isSearchingDone.current = false
-      dataFiltered.current = [...result.data]
-      dataFiltered.current = dataFiltered.current.filter((item : any) => {
-        let name = item.username
-        return name.toLowerCase().includes(search.current.toLowerCase())
-      }
-      );
-      isSearchingDone.current = true
-    } else if (result.data && search.current.length === 0) {
-      dataFiltered.current = [...result.data]
-    }
-  }, [result.data])
-
-  /**************************** */
+  response.effect([userInfo])
+  search.commitEffect()
+  search.filterEffect([result.data])
 
   const handleInputChange = (e : React.ChangeEvent<HTMLInputElement>) => {
-    setR(e.target.value)
-    search.current = (e.target.value)
+    search.setSearch(e.target.value)
   }
 
   return (
-    <div className="flex flex-col top_1 w-[300px] text-gray-400 max-m-custom-md:w-[100%] max-sm:h-[280px] h-[550px] my-auto max-m-custom-md:h-[200px]">
-      <div className="flex justify-around items-center">
+    <div className="flex flex-col top_1 w-[300px] text-gray-400 max-m-custom-md:w-[100%] max-sm:h-[350px] max-sm:pb-2 h-[550px] my-auto max-m-custom-md:h-[200px] max-custom-md:h-[300px] max-custom-md:w-[100%]">
+      <div className="flex justify-between px-4 py-2 items-center">
         <h1 className="text-2xl">Friends List</h1>
-        <button type='button' className='outline-none' onClick={undefined}>
-          <PlusCircle size={30} className='text-white'/>
-        </button>
+        <AddFriend />
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col overflow-x-scroll">
         <div className="flex items-center justify-between">
           <div className="flex relative justify-between items-center h-full">
             
@@ -118,8 +106,8 @@ const Friends = ({userInfo} : {userInfo : any}) => {
           </div>
         </div>
 
-        {dataFiltered.current && dataFiltered.current.length ?
-          <List list={dataFiltered.current}/>
+        {search.dataFiltered && search.dataFiltered.length ?
+          <List list={search.dataFiltered}/>
           :
           <NoContent/>
         }

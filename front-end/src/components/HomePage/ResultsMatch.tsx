@@ -46,11 +46,11 @@ const NoContent = () => {
 }
 
 
-const List = ({lives} : {lives : any}) => {
+const List = ({list} : {list : any}) => {
     return (
         <Wrapper>
             {
-                lives.map((item : any, index : number) => (            
+                list.map((item : any, index : number) => (            
                     <Item key={index} payload={item}/>
                 ))
             }
@@ -60,23 +60,25 @@ const List = ({lives} : {lives : any}) => {
 
 const ResultsLatestHome = () => {
     const appService = useAppServiceContext()
-    const lives = appService.requestService.getResultsRequest()
-  
+    const response = appService.requestService.getResultsRequest()
+    const result = response.state
+
+    response.effect()
         
-    if (lives.status === STATUS_UNDEFINED) {
+    if (result.status === STATUS_UNDEFINED) {
       return <div>Loading ...</div>
-    } else if (lives.status === STATUS_ERROR) {
+    } else if (result.status === STATUS_ERROR) {
       return (
         <>
         <div> Popup Error </div>
         <NoContent></NoContent>
         </>
       )
-    } else if (lives.status === STATUS_SUCCESS) {
-        if (lives.data.length === 0) {
+    } else if (result.status === STATUS_SUCCESS) {
+        if (result.data.length === 0) {
             return <NoContent></NoContent>
         } else {
-            return <List lives={lives.data}></List>
+            return <List list={result.data}></List>
         }
     } else {
         throw Error("Unhandled status")

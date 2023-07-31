@@ -6,6 +6,7 @@ import { TargetUserExistGuard } from '../user/guards/target-user-exists.guard';
 import { GetTargetedUser } from '../channels/decorators';
 import { IsFriendGuard } from './guards/is-friend.guard';
 import { TokenValidationGuard } from '../auth/guards/acces-token.guard';
+import { friendRequestStatus } from 'src/global/types';
 
 @Controller('users/me/friends')
 // @UseGuards(TokenValidationGuard)
@@ -46,13 +47,47 @@ export class FriendsController {
        const blocking_relationship = await this.friendsService.blocking_relationship(user,relatedUser);
         if(blocking_relationship)
         { 
-            return (
-                blocking_relationship.blocked === user ? {status : `${user.username} blocked by ${relatedUser.username}`} : {status : `${relatedUser.username} blocked by ${user.username}`}
-            )
-
+            if (blocking_relationship.blocked === user) {
+                return {
+                    message : `${user.username} blocked by ${relatedUser.username}`,
+                    isFriend : undefined,
+                    isBlocked : true,
+                    isBlockedByMe : false,
+                    userId : user.id,
+                    targetUserId : relatedUser.id,
+                }
+            } else {
+                return {
+                    message : `${relatedUser.username} blocked by ${user.username}`,
+                    isFriend : undefined,
+                    isBlocked : true,
+                    isBlockedByMe : true,
+                    userId : user.id,
+                    targetUserId : relatedUser.id,
+                }
+            }
         } else {
-            const is_friend = await this.friendsService.isFriend(user,relatedUser);
-            return is_friend? {status : "Friends"} : {status : "Not Friends"}
+            const is_friend = await this.friendsService.friendStatus(user,relatedUser);
+            if (is_friend.status === friendRequestStatus.accepted) {
+                return {
+                    message : "Friends",
+                    isFriend : true,
+                    isBlocked : undefined,
+                    isBlockedByMe : undefined,
+                    userId : user.id,
+                    targetUserId : relatedUser.id,
+                }
+            } else {
+                return {
+                    message : "Not Friends",
+                    isFriend : false,
+                    isBlocked : undefined,
+                    isBlockedByMe : undefined,
+                    userId : user.id,
+                    targetUserId : relatedUser.id,
+                    isPending : is_friend.status == friendRequestStatus.pending ? true : false 
+                }
+            }
         }
     }
 }

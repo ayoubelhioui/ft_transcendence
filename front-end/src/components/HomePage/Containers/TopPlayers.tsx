@@ -25,7 +25,7 @@ const SeeMore = () => {
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
         <>
-            <div className="flex flex-col top max-sm:mt-12 max-sm:mx-2 max-md:mx-4 max-md:mb-3">
+            <div className="flex flex-col max-sm:flex-wrap top max-custom-lg:mt-[1vh] max-sm:h-[40%] max-custom-md:h-[25%] max-sm:mt-12 max-sm:mx-2 max-md:mx-4 max-md:mb-3">
                 <SeeMore></SeeMore>
                 <div className="flex gap-12">
                     {children}
@@ -73,22 +73,24 @@ const List = ({list} : {list : any}) => {
 export const TopPlayers = () => {
     const appService = useAppServiceContext()
     const response = appService.requestService.getTopPlayersRequest()
-  
+    const result = response.state
+
+    response.effect()
         
-    if (response.status === STATUS_UNDEFINED) {
+    if (result.status === STATUS_UNDEFINED) {
       return <div>Loading ...</div>
-    } else if (response.status === STATUS_ERROR) {
+    } else if (result.status === STATUS_ERROR) {
       return (
         <>
         <div> Popup Error </div>
         <NoContent></NoContent>
         </>
       )
-    } else if (response.status === STATUS_SUCCESS) {
-        if (response.data.length === 0) {
+    } else if (result.status === STATUS_SUCCESS) {
+        if (result.data.length === 0) {
             return <NoContent></NoContent>
         } else {
-            return <List list={response.data}></List>
+            return <List list={result.data}></List>
         }
     } else {
         throw Error("Unhandled status")

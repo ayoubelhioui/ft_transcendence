@@ -311,5 +311,22 @@ export class FriendsService {
         return (res.length > 0)
     };
 
+    async friendStatus (user  : User, friend: User) : Promise<Friends> {
+        
+        const res : Friends | undefined = await this.friendsRepository.findOneByOptions({
+            where :[
+                {
+                    sender: user,
+                    receiver : friend,
+
+                },
+                {
+                    sender: friend,
+                    receiver : user,
+                }
+            ]
+        })
+        return (res)
+    };
 
 }

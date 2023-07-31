@@ -7,6 +7,7 @@ import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../.
 import { useChatContext } from "../ChatContext";
 import { RequestResultI } from "../../../Context/Service/RequestService";
 import { useChatsGroupsPanelContext } from "./ChatsGroupsPanelContext";
+import { searchEffect } from "../../Utils/utils";
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
@@ -131,51 +132,42 @@ const Chats = () => {
   const appService = useAppServiceContext()
   const chatContext = useChatContext()
   const chatsGroupsPanelContext = useChatsGroupsPanelContext()
-  const result = appService.requestService.getMyChannelsRequest([chatContext.updateChats])
-  const isSearchingDone = useRef(true)
-  let dataFiltered = useRef<Object[] | null>(null)
-   
-  /******** Filter List */
-    useEffect(() => {
-    }, [chatsGroupsPanelContext.commitSearch])
+  const response = appService.requestService.getMyChannelsRequest()
+  const result = response.state
+  const search = searchEffect(result, (searchText : string, list : any[]) => {
+    list = list.filter((item : any) => {
+      let name = item.name
+      return name.toLowerCase().includes(searchText.toLowerCase())
+    });
+    return (list)
+  })
 
-    useEffect(() => {
-      const search = chatsGroupsPanelContext.chatSearch
-      if (result.data && search.length > 0 && isSearchingDone.current) {
-        isSearchingDone.current = false
-        dataFiltered.current = [...result.data]
-        dataFiltered.current = dataFiltered.current.filter((item : any) => {
-          let name = item.name
-          return name.toLowerCase().includes(search.toLowerCase())
-        }
-        );
-        isSearchingDone.current = true
-      } else if (result.data && search.length === 0) {
-        dataFiltered.current = [...result.data]
+  response.effect([chatContext.updateChats])
+  search.commitEffect()
+  search.filterEffect([result.data])
+
+  useEffect(() => {
+    search.setSearch(chatsGroupsPanelContext.chatSearch)
+  }, [chatsGroupsPanelContext.chatSearch])
+
+  if (result.status === STATUS_UNDEFINED) {
+    return <div>Loading ...</div>
+  } else if (result.status === STATUS_ERROR) {
+    return (
+      <>
+      <div> Popup Error </div>
+      <NoContent></NoContent>
+      </>
+    )
+  } else if (result.status === STATUS_SUCCESS) {
+      if (!search.dataFiltered || search.dataFiltered.length === 0) {
+          return <NoContent></NoContent>
+      } else {
+          return <List list={search.dataFiltered}></List>
       }
-      chatsGroupsPanelContext.setCommitSearch(!chatsGroupsPanelContext.commitSearch)
-    }, [chatsGroupsPanelContext.chatSearch, result.data])
-
-  /**************************** */
-
-    if (result.status === STATUS_UNDEFINED) {
-      return <div>Loading ...</div>
-    } else if (result.status === STATUS_ERROR) {
-      return (
-        <>
-        <div> Popup Error </div>
-        <NoContent></NoContent>
-        </>
-      )
-    } else if (result.status === STATUS_SUCCESS) {
-        if (!dataFiltered.current || dataFiltered.current.length === 0) {
-            return <NoContent></NoContent>
-        } else {
-            return <List list={dataFiltered.current}></List>
-        }
-    } else {
-        throw Error("Unhandled status")
-    }
+  } else {
+      throw Error("Unhandled status")
+  }
 
 }
 
