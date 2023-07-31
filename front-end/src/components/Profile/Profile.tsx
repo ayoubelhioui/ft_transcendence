@@ -173,6 +173,7 @@ const Profile = () => {
   //!can access to profile of a user blocked me
   const appService = useAppServiceContext()
   const params = useParams();
+  const [affect, setAffect] = useState(true)
   let id = params.id ? +params.id : undefined
   if (id === appService.authService.user?.id)
     id = undefined
@@ -180,16 +181,19 @@ const Profile = () => {
   const result = response.state
 
   console.log("Profile, ", id)
-  response.effect([id])
+  response.effect([id, affect])
   
   let userInfo = result.data
   if (result.status === STATUS_ERROR && result.message === "profile") {
     userInfo = {
       user : appService.authService.user!,
-      relation : undefined
+      relation : undefined,
     }
   }
-  console.log(userInfo)
+  if (userInfo?.relation) {
+    userInfo.relation.affect = setAffect
+  }
+  console.log("UserInfo", affect, userInfo)
   return <UserProfile userInfo={userInfo}/>
 }
 

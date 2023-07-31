@@ -41,53 +41,25 @@ export class FriendsController {
     @UseGuards(TargetUserExistGuard)
     async getUserToUserStatus(@GetUser() user : User, @GetTargetedUser() relatedUser : User)
     {
-        /*
-            check if blocked then if friends else noth
-        */
-       const blocking_relationship = await this.friendsService.blocking_relationship(user,relatedUser);
-        if(blocking_relationship)
-        { 
-            if (blocking_relationship.blocked === user) {
-                return {
-                    message : `${user.username} blocked by ${relatedUser.username}`,
-                    isFriend : undefined,
-                    isBlocked : true,
-                    isBlockedByMe : false,
-                    userId : user.id,
-                    targetUserId : relatedUser.id,
-                }
-            } else {
-                return {
-                    message : `${relatedUser.username} blocked by ${user.username}`,
-                    isFriend : undefined,
-                    isBlocked : true,
-                    isBlockedByMe : true,
-                    userId : user.id,
-                    targetUserId : relatedUser.id,
-                }
+        const is_friend = await this.friendsService.friendStatus(user,relatedUser);
+        //const 
+        if (is_friend) {
+            return {
+                userId : user.id,
+                targetUserId : relatedUser.id,
+                status : is_friend.status,
+                sender : is_friend.sender,
+                receiver : is_friend.receiver,
+                channel : is_friend.channel
             }
         } else {
-            const is_friend = await this.friendsService.friendStatus(user,relatedUser);
-            let isPending = is_friend && is_friend.status == friendRequestStatus.pending ? true : false
-            if (is_friend && is_friend.status === friendRequestStatus.accepted) {
-                return {
-                    message : "Friends",
-                    isFriend : true,
-                    isBlocked : undefined,
-                    isBlockedByMe : undefined,
-                    userId : user.id,
-                    targetUserId : relatedUser.id,
-                }
-            } else {
-                return {
-                    message : "Not Friends",
-                    isFriend : false,
-                    isBlocked : undefined,
-                    isBlockedByMe : undefined,
-                    userId : user.id,
-                    targetUserId : relatedUser.id,
-                    isPending : isPending
-                }
+            return {
+                userId : user.id,
+                targetUserId : relatedUser.id,
+                status : -1,
+                sender : undefined,
+                receiver : undefined,
+                channel : undefined
             }
         }
     }

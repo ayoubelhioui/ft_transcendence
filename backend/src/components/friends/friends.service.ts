@@ -320,7 +320,7 @@ export class FriendsService {
         return (res.length > 0)
     };
 
-    async friendStatus (user  : User, friend: User) : Promise<Friends> {
+    async friendStatus (user  : User, friend: User) : Promise<Friends | undefined> {
         
         const res : Friends | undefined = await this.friendsRepository.findOneByOptions({
             where :[
@@ -333,7 +333,8 @@ export class FriendsService {
                     sender: friend,
                     receiver : user,
                 }
-            ]
+            ],
+            relations : ["sender","receiver","channel"]
         })
         return (res)
     };

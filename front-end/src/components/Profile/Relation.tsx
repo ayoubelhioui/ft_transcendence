@@ -14,14 +14,29 @@ import { useAppServiceContext } from "../../Context/Context";
 import { STATUS_SUCCESS } from "../../Const";
 import { useNavigate } from "react-router-dom";
 
+enum friendRequestStatus{
+  unspecified = -1,
+	pending = 0,
+	accepted = 1,
+}
+
+
+interface Channel {
+  id : number
+}
+
+interface User {
+  id : number
+}
+
 interface Relation {
-  userId : number
-  targetUserId : number
-  message : string
-  isFriend : boolean
-  isBlocked : boolean
-  isBlockedByMe : boolean
-  isPending : boolean
+  userId : number,
+  targetUserId : number,
+  status : number,
+  sender : User,
+  receiver : User,
+  channel : Channel
+  affect : any
 }
 
 const GoToChat = () => {
@@ -55,34 +70,29 @@ const BlockRequest = ({relation} : {relation : Relation}) => {
 }
 
 const FriendsRequest = ({relation} : {relation : Relation}) => {
-  const [affect, setAffect] = useState(false)
   const appService = useAppServiceContext()
-  const navigate = useNavigate()
-  let title = relation.isFriend ? "Unfriend" : "Send Friend Request"
+  let title = relation.status ===  friendRequestStatus.unspecified ? "Send Friend Request" : "Unfriend"
   let twoButtons = false
-  if (relation.isPending) {
-    if (relation.targetUserId === appService.authService.user?.id) {
+  if (relation.status === friendRequestStatus.pending) {
+    if (appService.authService.user?.id === relation.sender.id) {
+      title = "Cancel friend request"
+    } else {      
       title = "Accept"
       twoButtons = true
-    } else {
-      title = "Cancel friend request"
     }
   }
 
-  // useEffect(() => {
-
-  // }, [affect])
 
   const request = async (rejectRequest : boolean) => {
-    if (relation.isFriend || rejectRequest || relation.isPending) {
-      if (rejectRequest) {
-        console.log("refuse friend")
-        return await appService.requestService.deleteRefuseFriend(relation.targetUserId)
-      }
-      if (relation.isPending) {
-        console.log("cancel friend")
-        return await appService.requestService.deleteCancelFriendRequest(relation.targetUserId)
-      }
+    if (rejectRequest) {
+      console.log("refuse friend")
+      return await appService.requestService.deleteRefuseFriend(relation.targetUserId)
+    }
+    if (relation.status === friendRequestStatus.pending && !twoButtons) {
+      console.log("cancel friend")
+      return await appService.requestService.deleteCancelFriendRequest(relation.targetUserId)
+    }
+    if (relation.status === friendRequestStatus.accepted) {
       console.log("delete friend")
       return await appService.requestService.deleteFriend(relation.targetUserId)
     }
@@ -97,8 +107,9 @@ const FriendsRequest = ({relation} : {relation : Relation}) => {
   const handleSubmit = async (rejectRequest : boolean) => {    
     const res = await request(rejectRequest)
     if (res.status === STATUS_SUCCESS) {
+      relation.affect((value : any) => !value)
       //navigate(`/Profile/${relation.targetUserId}`)
-      setAffect(!affect)
+      //setAffect(!affect)
     }
     else {
       console.log("Error")
@@ -135,7 +146,7 @@ const FriendsRequest = ({relation} : {relation : Relation}) => {
 const Relation = ({relation} : {relation : Relation}) => {
 
   console.log("R: ", relation)
-  if (relation.isFriend) {
+  if (relation.status === friendRequestStatus.accepted) {
     return (
       <>
         <FriendsRequest relation={relation} />
@@ -144,7 +155,7 @@ const Relation = ({relation} : {relation : Relation}) => {
       </>
     )
   } else {
-    if (relation.isBlocked) {
+    if (relation.status === -8) {
       return (
         <>
           <BlockRequest relation={relation} />
