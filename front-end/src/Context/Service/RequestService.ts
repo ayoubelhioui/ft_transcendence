@@ -173,22 +173,22 @@ export class RequestService {
                 data : [
                     {
                         username: "friend1",
-                        id : 0,
-                        IntraId : "-1"
-                    },
-                    {
-                        username: "new_friend2",
                         id : 1,
                         IntraId : "-1"
                     },
                     {
-                        username: "new_friend3",
+                        username: "new_friend2",
                         id : 2,
                         IntraId : "-1"
                     },
                     {
-                        username: "friend4",
+                        username: "new_friend3",
                         id : 3,
+                        IntraId : "-1"
+                    },
+                    {
+                        username: "friend4",
+                        id : 4,
                         IntraId : "-1"
                     }
                 ]
@@ -313,7 +313,12 @@ export class RequestService {
         return await RequestService.makeDeleteRequest(this, `/users/me/friends/${targetUserId}`)
     }
 
+    
     //users/me/friend-requests
+    async deleteCancelFriendRequest(targetUserId : number) {
+        return await RequestService.makeDeleteRequest(this, `users/me/friend-requests/${targetUserId}/cancel`)
+    }
+    
     async postRequestFriend(targetUserId : number) {
         return await RequestService.makePostRequest(this, `/users/me/friend-requests/${targetUserId}`, {})
     }

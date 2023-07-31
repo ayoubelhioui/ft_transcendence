@@ -34,4 +34,9 @@ export class FriendRequestsController {
         return await this.friendsService.refuseFriend(user,sender);
     };
 
+    @Delete(':targetUserId/cancel')
+    @UseGuards(TargetUserExistGuard)
+    async cancelFriendRequest(@GetUser() user : User,  @GetTargetedUser() pendingFriend : User){
+        return await this.friendsService.cancelFriendRequest(user,pendingFriend);
+    };
 }

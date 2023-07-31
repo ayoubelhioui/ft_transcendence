@@ -55,6 +55,7 @@ const BlockRequest = ({relation} : {relation : Relation}) => {
 }
 
 const FriendsRequest = ({relation} : {relation : Relation}) => {
+  const [affect, setAffect] = useState(false)
   const appService = useAppServiceContext()
   const navigate = useNavigate()
   let title = relation.isFriend ? "Unfriend" : "Send Friend Request"
@@ -68,20 +69,36 @@ const FriendsRequest = ({relation} : {relation : Relation}) => {
     }
   }
 
+  // useEffect(() => {
+
+  // }, [affect])
+
   const request = async (rejectRequest : boolean) => {
     if (relation.isFriend || rejectRequest || relation.isPending) {
-      return await appService.requestService.deleteUnblockFriend(relation.targetUserId)
+      if (rejectRequest) {
+        console.log("refuse friend")
+        return await appService.requestService.deleteRefuseFriend(relation.targetUserId)
+      }
+      if (relation.isPending) {
+        console.log("cancel friend")
+        return await appService.requestService.deleteCancelFriendRequest(relation.targetUserId)
+      }
+      console.log("delete friend")
+      return await appService.requestService.deleteFriend(relation.targetUserId)
     }
     if (twoButtons) {
+      console.log("accept friend")
       return await appService.requestService.putAcceptFriend(relation.targetUserId)
     }
+    console.log("post friend")
     return await appService.requestService.postRequestFriend(relation.targetUserId)
   }
 
   const handleSubmit = async (rejectRequest : boolean) => {    
     const res = await request(rejectRequest)
     if (res.status === STATUS_SUCCESS) {
-      navigate(`/Profile/${relation.targetUserId}`)
+      //navigate(`/Profile/${relation.targetUserId}`)
+      setAffect(!affect)
     }
     else {
       console.log("Error")

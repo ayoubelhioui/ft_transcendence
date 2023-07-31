@@ -71,6 +71,24 @@ async deleteFriend(user: User, friend: User) : Promise<number>{
 }
 
 
+async cancelFriendRequest(user: User, pendingFriend: User) : Promise<number>{
+  const deleteResult =  await this.entity.createQueryBuilder()
+    .delete()
+    .from(Friends) // Target the table associated with the Friends entity
+    .where('status = :status')
+    .andWhere(
+      '(senderId = :senderId AND receiverId = :receiverId) OR (senderId = :receiverId AND receiverId = :senderId)',
+      {
+        status: friendRequestStatus.pending,
+        senderId: user.id,
+        receiverId: pendingFriend.id,
+      }
+    )
+    .execute();
+
+    return deleteResult.affected ;
+}
+
 //UTILITY: use this to get two entities in one request
 
 // async getFriendRelationShip(senderId: number, receiverId: number) {

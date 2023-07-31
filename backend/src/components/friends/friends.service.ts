@@ -88,6 +88,15 @@ export class FriendsService {
     }
     // getOnlineFriends(userId  : number){}; sockets?
 
+    async cancelFriendRequest(sender : User , pendingFriend:User)
+    {
+       const affected_rows : number  = await this.friendsRepository.cancelFriendRequest(sender,pendingFriend);
+       if(!affected_rows)
+        throw new NotFoundException("Friend Request Not Found");
+        return {
+            message : "canceled"
+    }
+    }
 
     //both users exist guard
     async requestFriend(Sender: User, receiver: User) {

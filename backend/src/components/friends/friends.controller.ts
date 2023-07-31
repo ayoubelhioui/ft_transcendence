@@ -68,7 +68,8 @@ export class FriendsController {
             }
         } else {
             const is_friend = await this.friendsService.friendStatus(user,relatedUser);
-            if (is_friend.status === friendRequestStatus.accepted) {
+            let isPending = is_friend && is_friend.status == friendRequestStatus.pending ? true : false
+            if (is_friend && is_friend.status === friendRequestStatus.accepted) {
                 return {
                     message : "Friends",
                     isFriend : true,
@@ -85,7 +86,7 @@ export class FriendsController {
                     isBlockedByMe : undefined,
                     userId : user.id,
                     targetUserId : relatedUser.id,
-                    isPending : is_friend.status == friendRequestStatus.pending ? true : false 
+                    isPending : isPending
                 }
             }
         }

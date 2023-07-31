@@ -8,7 +8,7 @@ interface IFriendsRepository extends IBaseRepository<Friends>
     getFriendRequestOfId(user : User) : Promise <Friends[]>
     getFriendsOfId(user: User): Promise<User[]>;
     deleteFriend(user: User, friend: User);
-    
+    cancelFriendRequest(user: User, pendingFriend: User) : Promise<number>;
 }
 
 export default IFriendsRepository;
