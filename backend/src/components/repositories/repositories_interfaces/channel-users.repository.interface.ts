@@ -13,6 +13,7 @@ interface IChannelUsersRepository extends IBaseRepository<ChannelUsers>
     getUserChannelsWithLastMessage(userId : number) : Promise < Channel[] | undefined >;
     getChannelUsers(channelId : number) : Promise < User[] | undefined >;
     getUserChannelsId(userId : number) : Promise < any[] | undefined >;
+  
 
 }
 

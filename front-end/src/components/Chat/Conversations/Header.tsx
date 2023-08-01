@@ -1,11 +1,13 @@
 import { useState} from "react";
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import {BsFillArrowLeftCircleFill} from 'react-icons/bs'
 
 const Header = ({name} : {name : string}) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div className="flex justify-between mx-6 mt-3 items-center pt-2">
+      <BsFillArrowLeftCircleFill size={20} className=" hidden max-custom-md:block text-white cursor-pointer"/>
       <div className="flex flex-col items-center mx-auto ">
         {/* <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[55px] h-[55px]'/> */}
         <h2 className="text-sm text-white w-full text-center">

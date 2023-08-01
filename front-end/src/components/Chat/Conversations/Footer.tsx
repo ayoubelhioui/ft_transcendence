@@ -26,6 +26,7 @@ const ChatFooter = () => {
     <div className="flex items-center">
       <form className="flex items-center w-full" onSubmit={handleMessage}>
         <input
+          autoComplete="off" 
           name="message"
           type="text"
           className=" inp border-0 text-white shadow w-[90%]"

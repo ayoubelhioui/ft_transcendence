@@ -58,16 +58,12 @@ const Item = ({payload} : {payload : any}) => {
   }
 
   function onItemClick() {
-    chatService.setConversationInfo({
-      id : payload.id,
-      name : payload.name,
-      isGroup : payload.isGroup
-    })
+    navigate(`/Chat/${payload.id}`)
 
-    if (payload.isGroup) {
-      console.log(payload.id)
-      //! turn off channel info
-    }
+    // if (payload.isGroup) {
+    //   console.log(payload.id)
+    //   //! turn off channel info
+    // }
   }
 
   return (
@@ -111,7 +107,7 @@ const List = ({list} : {list : any}) => {
       chatService.setConversationInfo({
         id : list[0].id,
         name : list[0].name,
-        isGroup : list[0].isGroup
+        isGroup : list[0].isGroup,
       })
     }
   }, [])
@@ -141,6 +137,23 @@ const Chats = () => {
     });
     return (list)
   })
+
+  //************************************************ */
+  //**** redirect to the chat with the id in the url if it specified it
+  //**   && if the id exists in the original list
+  if (result?.data) {
+    const targetId = chatContext.conversationId
+    const isItemExist : any = result.data.find((item : any) => item.id === targetId)
+    //console.log("Trying to Redirect to ", targetId, isItemExist)
+    if (isItemExist && targetId !== chatContext.conversationInfo.id) {
+      chatContext.setConversationInfo({
+        id : isItemExist.id,
+        name : isItemExist.name,
+        isGroup : isItemExist.isGroup
+      })
+    }
+  }
+  //************************************************ */
 
   response.effect([chatContext.updateChats])
   search.commitEffect()

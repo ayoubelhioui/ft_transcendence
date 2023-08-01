@@ -48,9 +48,10 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
       return (false);
     }
     const {sub} = payload as any;
+    console.log(sub);
     const user = await this.userService.findById(sub);
     (socket as any).user  = user;
-    return (true);
+    return ((user) ? true : false);
   }
 
   private async getOnlineFriendsSocket(user : User) :  Promise <Socket[]>{
@@ -96,6 +97,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
       client.join(channelRoom);
     });
   }
+
 
 
 

@@ -51,7 +51,7 @@ const Item = ({ payload }: {payload : any}) => {
 const NoContent = () => {
     return (
         <Wrapper>
-          <h1 className='text-white text-4xl flex justify-center items-center h-full mt-12'>
+          <h1 className='text-white text-4xl flex justify-center w-full items-center h-full mt-12'>
             There Is No Players, Yet!
           </h1>
         </Wrapper>

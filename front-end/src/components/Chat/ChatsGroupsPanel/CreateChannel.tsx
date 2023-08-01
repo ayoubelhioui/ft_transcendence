@@ -74,6 +74,7 @@ const AvatarInput = ({avatar} : {avatar : React.MutableRefObject<File | null>}) 
       </label>
       <input
         type="file"
+        autoComplete="off" 
         accept="image/*"
         onChange={handleAvatar}
         className="py-3 rounded-[10px] border-blue-950 border-2 "
@@ -93,8 +94,9 @@ const NameField = ({name} : {name : React.MutableRefObject<string>}) => {
       Group's Name:
       </label>
       <input
+        autoComplete="off" 
         type="name"
-        className="py-3 rounded-[10px]"
+        className="py-3 rounded-[10px] w-[90%]"
         placeholder="Name"
         onChange={handleChangePassword}
       />
@@ -113,6 +115,7 @@ const PasswordField = ({password} : {password : React.MutableRefObject<string>})
         Enter Password:
       </label>
       <input
+        autoComplete="off" 
         type="password"
         className=" py-3 rounded-[10px] w-[90%]"
         placeholder="password"

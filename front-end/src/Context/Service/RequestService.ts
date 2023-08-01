@@ -165,37 +165,8 @@ export class RequestService {
 
     // ==== Profile ====================================================
 
-    getUserFriends(userId : number) {
-        const request = async (obj : RequestService, userId : number) => {
-            return ({
-                status : STATUS_UNDEFINED,
-                message : "",
-                data : [
-                    {
-                        username: "friend1",
-                        id : 1,
-                        IntraId : "-1"
-                    },
-                    {
-                        username: "new_friend2",
-                        id : 2,
-                        IntraId : "-1"
-                    },
-                    {
-                        username: "new_friend3",
-                        id : 3,
-                        IntraId : "-1"
-                    },
-                    {
-                        username: "friend4",
-                        id : 4,
-                        IntraId : "-1"
-                    }
-                ]
-            })
-        }
-
-        return this.getData(request, [userId])
+    getUserFriends() {
+        return this.getData(RequestService.makeGetRequest, [`/users/me/friends`])
     }
 
     getUserMatchHistoryRequest(userId : number) {
@@ -208,7 +179,10 @@ export class RequestService {
     }
 
     // ==== Chat ====================================================
-    
+
+    //!users/me/channels/{channelId}/status Group
+    //$_POST["name" ds]
+
     getChannelUsers(channelInfo : ConversationInfoI) {
         const request = async (obj : RequestService, channelInfo : ConversationInfoI) => {
             if (channelInfo.id && channelInfo.isGroup)
@@ -251,6 +225,10 @@ export class RequestService {
         return await RequestService.makePostRequest(this,`/channels/${channelId}/messages`, payload)
     }
 
+    async postCreateNewChannel(payload : any = {}) {
+        return await RequestService.makePostRequest(this, `/channels`, payload)
+    }
+    
     // ==== Profile ====================================================
 
     getUserWithRelation(userId : number | undefined) {
@@ -354,9 +332,6 @@ export class RequestService {
         return await RequestService.makePutRequest(this, `/users/image/${intraId}`, payload)
     }
 
-    async postCreateNewChannel(payload : any = {}) {
-        return await RequestService.makePostRequest(this, `/channels`, payload)
-    }
 
 }
     

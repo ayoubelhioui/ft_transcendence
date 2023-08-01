@@ -26,7 +26,7 @@ const Search = () => {
 
   return (
     <>
-      <input type="search" value={chatsGroupsPanelContext.chatSearch} onChange={onChange} className="shadow border-0 text-white w-full" placeholder="Search a friend..." />
+      <input autoComplete="off" type="search" value={chatsGroupsPanelContext.chatSearch} onChange={onChange} className="shadow border-0 text-white w-full" placeholder="Search a friend..." />
     </>
   )
 }
@@ -41,7 +41,7 @@ const ChatsGroupsPanel = () => {
 
   return (
     <ChatsGroupsPanelContextProvider>
-      <div className="top_2 col-span-1 row-span-2 max-m-custom-md:w-[300px] max-sm:hidden h-[750px] max-custom-lg:h-[700px] ">
+      <div className="top_2 col-span-1 row-span-2 max-m-custom-md:hidden max-sm:hidden h-[750px] max-custom-lg:h-[700px] ">
           <div className="pt-1 flex w-full justify-between items-center">
               <Search />
               <button type='button' className='outline-none' onClick={() => setIsOpen(true)}>

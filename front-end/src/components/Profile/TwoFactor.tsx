@@ -97,7 +97,7 @@ const TwoFactor = () => {
                     <DialogContent >
                         <form className="flex flex-col items-center mt-2" onSubmit={handleSubmit} >
                             <QRCode  value={url} />
-                            <input name="passCode" type="text" placeholder="Enter The Code" aria-label="PassCode" onChange={handlePassCodeChange} className="w-[250px]"></input>
+                            <input autoComplete="off"  name="passCode" type="text" placeholder="Enter The Code" aria-label="PassCode" onChange={handlePassCodeChange} className="w-[250px]"></input>
                             <button className="text-[#072964] flex items-end justify-end bg-white mt-5 py-2 px-8" type="submit">Submit</button>
                         </form>
                     </DialogContent>

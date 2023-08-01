@@ -43,7 +43,7 @@ export class ClassicRoom extends Room {
     playerLeft(socket : Socket) {
         if (this.closed === false)
             return
-        this.game.stop()
+        this.game?.stop()
         if (this.isBotMode === false) {
             this.sendToOther("end_game", socket, { isWin : true })
         }

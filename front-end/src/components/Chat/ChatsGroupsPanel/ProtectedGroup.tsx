@@ -65,6 +65,7 @@ const Item = ({payload} : {payload : any}) => {
             <div className=" bg-blue-950 absolute rounded-[10px] w-[200px] h-[60px] text-white z-[999] top-14 left-1/3">
               <div className="flex flex-col">
                 <input
+                  autoComplete="off" 
                   type="password"
                   placeholder="Enter Password"
                   className="bg-transparent text-white w-[150px] h-[30px] outline-none"

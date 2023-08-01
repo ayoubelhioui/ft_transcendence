@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import IChannelRepository from 'src/components/repositories/repositories_interfaces/channel.repository.interface';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { Channel, User, ChannelUsers, ChannelBlacklist, ChannelMessages, ChannelInvites } from 'src/database/entities';
@@ -16,6 +16,8 @@ import { JoinChannelDto } from './dto/join-channel.dto';
 import { ChannelsVisibility } from 'src/global/types/channel-visibility.type';
 import { ChannelWithPassword } from '../../global/dto/channel-with-password.dto';
 import { ChannelGateway } from './channel.gateway';
+import { UserService } from '../user/user.service';
+import { FriendsService } from '../friends/friends.service';
 
 
 
@@ -27,6 +29,9 @@ export class ChannelService {
                 @Inject('MyChannelBlacklistRepository') private readonly channelBlacklistRepository: IChannelBlacklistRepository,
                 @Inject('MyUsersMutedRepository') private readonly UsersMutedRepository: IUsersMutedRepository,
                 @Inject('MyChannelMessagesRepository') private readonly channelMessagesRepository: IChannelMessagesRepository,
+                private readonly userService : UserService,
+                @Inject(forwardRef(() => FriendsService))
+                    private readonly friendService  : FriendsService,
                 private readonly passwordService: PasswordService,
                 private readonly channelGateway : ChannelGateway) {}
 
@@ -43,13 +48,40 @@ export class ChannelService {
         return (this.channelUsersRepository.addUserToChannel(user, channel, userRole));
     };
 
+
+
     async createChannel(user : User, createChannelDto : CreateChannelDto) : 
     Promise < ReturnedChannelDto | undefined > {
         let channel : Channel = new Channel();
         channel = {...channel, ...createChannelDto, owner : user};
+        let targetedUser = undefined;
+        
+        if (createChannelDto.isGroup == false) {
+            targetedUser = await this.userService.findUserById(createChannelDto.targetUserId);
+            if (!targetedUser)
+                throw new BadRequestException("This Target User Not Exist")
+            //we should check if this targetedUser is not blocked each other
+            const results = await Promise.all([
+                this.friendService.blocking_exists(user, targetedUser),
+                this.channelRepository.getUsersDM(user, targetedUser),
+            ]);
+            const isBlockExist  : boolean = results[0];
+            const dm  : Channel = results[1];
+            if (isBlockExist)
+                throw new BadRequestException("this user is blocking each other")
+            if (dm)
+                return (dm);
+            channel.name = user.id + "_" + targetedUser.id;
+        }
         channel.password = await this.passwordService.hashPassword(channel.password);
         let createdChannel : Channel = await this.channelRepository.save(channel);
-        await this.addUserToChannel(user, channel, ChannelUserRole.owner);
+        const addUsersToChannelPromises =  [];
+        addUsersToChannelPromises.push(this.addUserToChannel(user, channel, ChannelUserRole.owner));
+        if (targetedUser)
+            addUsersToChannelPromises.push(this.addUserToChannel(targetedUser, channel, ChannelUserRole.owner));
+        await Promise.all(addUsersToChannelPromises);
+        this.channelGateway.joinUserToNewChannel(user, channel);
+        this.channelGateway.joinUserToNewChannel(targetedUser, channel);
         return (plainToClass(ReturnedChannelDto, createdChannel));
     };
 
@@ -68,12 +100,29 @@ export class ChannelService {
         return (createdChannel);
     }
 
+    async removeDmOfUsers(user1 : User, user2 : User) {
+        await this.channelRepository.removeDmOfUsers(user1, user2);
+    }
+
     async getUserChannels(user : User) :  Promise < Channel[] | undefined > {
         return (this.channelUsersRepository.getUserChannelsWithLastMessage(user.id));
     };
 
     async getUserChannelsId(user : User) : Promise < Channel[] | undefined > {
         return await this.channelUsersRepository.getUserChannelsId(user.id);
+    }
+
+
+    async getUserStatusInChannel(user : User, channel : Channel) {
+        const response = {
+            status : "success"
+        }
+        const usersMuted =  await this.UsersMutedRepository.getUserMuted(user, channel);
+        if (usersMuted) {
+            response.status = "muted",
+            response['expirationTime'] =  usersMuted.expirationTime;
+        }
+        return (response);
     }
 
 

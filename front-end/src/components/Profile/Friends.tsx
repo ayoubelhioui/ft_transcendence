@@ -64,7 +64,7 @@ const List = ({list} : {list : any}) => {
 
 const Friends = ({userInfo} : {userInfo : any}) => {
   const appService = useAppServiceContext()
-  const response = appService.requestService.getUserFriends(userInfo.user.id)
+  const response = appService.requestService.getUserFriends()
   const result = response.state
   const search = searchEffect(result, (searchText : string, list : any[]) => {
     list = list.filter((item : any) => {
@@ -96,6 +96,7 @@ const Friends = ({userInfo} : {userInfo : any}) => {
        
               <input
                 type="text"
+                autoComplete="off" 
                 className="shadow border-0 my-4 mx-2 w-[280px] h-[40px] rounded-[10px]"
                 placeholder="Search"
                 name="search"

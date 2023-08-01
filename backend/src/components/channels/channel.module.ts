@@ -23,16 +23,22 @@ import { GroupGuard } from './guards/group.guard';
 import { ChannelGateway } from './channel.gateway';
 import { SocketModule } from '../socket/socket.module';
 import { UserMutedGuard } from './guards';
+import { FriendsService } from '../friends/friends.service';
+import { UserService } from '../user/user.service';
+import { FriendsModule } from '../friends/friends.module';
+import TokenBlacklist from 'src/database/entities/token_blacklist';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Channel, User, ChannelUsers, ChannelBlacklist, UsersMuted, ChannelMessages, ChannelInvites]),
+    TypeOrmModule.forFeature([Channel, User, ChannelUsers, ChannelBlacklist, UsersMuted, ChannelMessages, ChannelInvites,TokenBlacklist]),
     SocketModule,
     forwardRef(() => UserModule),
+    forwardRef(() => FriendsModule),
   ],
   providers: [
     ChannelService,
     PasswordService,
+    UserService,
     {
       provide: 'MyChannelRepository',
       useClass: ChannelRepository

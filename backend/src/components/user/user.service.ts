@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/database/entities';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { UserDto } from 'src/global/dto/user.dto';
 import TokenBlacklist from 'src/database/entities/token_blacklist';
 import axios from 'axios';
@@ -49,13 +49,11 @@ export class UserService{
         });
         return (user);
     }
-
-
-
-    async findByUsername(username: string): Promise<User[]>{
+    
+    async findByUsername(username_: string): Promise<User[]>{
         const users = await this.userRepository.findByOptions({
             where : {
-                username
+                username : Like(`${username_}%`)
             },
         });
         return (users);

@@ -85,6 +85,7 @@ const MainPage = () => {
                     <Route path='Profile' element={<Profile />}/>
 
                     <Route path='Chat' element={<Chat />}/>
+                    <Route path='Chat/:id' element={<Chat />}/>
 
                     <Route path='Leaderboard' element={<LeaderBoard />}/>
 

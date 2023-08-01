@@ -64,6 +64,7 @@ export class GameSessions {
 
     async addPlayerToBotRoom(payload : PlayerJoin) {
         let room = await this.createNewRoom(payload, payload.isClassic, botGame)
+        console.log("===> ", room.toString())
         return (room)
     }
 
@@ -207,17 +208,26 @@ export class GameSessions {
         this.clients.splice(this.clients.indexOf(client.id), 1);
     }
 
+    async setGameResult(client : Socket, player1Id : number, roomId : string, score1 : number, score2 : number) {
+        try {
+            await this.gameService.setGameResult(player1Id, roomId ,score1 ,score2);
+        } catch(e : any) {
+            console.log("setGameResult error: ", e.message)
+            client.emit("exception", e.message)
+        }
+    }
+
     async removePlayers(room : ClassicRoom | ThreeRoom, client : Socket) {
         room.playerLeft(client)
         if (room.isBotMode === true) {
-            await this.gameService.setGameResult(room.player1.id, room.roomId ,0 ,5);
+            await this.setGameResult(client, room.player1.id, room.roomId ,0 ,5);
             this.removeClientFromList(room, room.player1)
         } else {
             let player1 = room.player1
             let player2 = room.player2
             if(player1 && player2) {
                 let userGone = room.player1.socket.id === client.id ? room.player1 : room.player2
-                await this.gameService.setGameResult(userGone.id, room.roomId , 0, 5);
+                await this.setGameResult(client, userGone.id, room.roomId ,0 ,5);
             }
             else if (!player2) {
                 const existingGame = await this.gameService.findGame(room.roomId);

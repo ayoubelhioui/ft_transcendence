@@ -47,7 +47,7 @@ const SignIn = () => {
         return (
             <MainWrapper>
                 <form className="flex flex-col items-center " onSubmit={handleSubmit} >
-                    <input className="text-white" type="name" placeholder="passCode" aria-label="PassCode" onChange={handlePassCodeChange} ></input>
+                    <input autoComplete="off" className="text-white" type="name" placeholder="passCode" aria-label="PassCode" onChange={handlePassCodeChange} ></input>
                     <button className="text-[#072964] flex items-end justify-end bg-white mt-10  py-2 px-6" type="submit">Submit</button>
                 </form>
             </MainWrapper>

@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException, UnauthorizedException, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnauthorizedException, Delete, HttpException, HttpStatus, forwardRef } from '@nestjs/common';
 import { BlockedUsers, Friends, User } from 'src/database/entities';
 // import { BlockedUsersRepository, FriendsRepository, UserRepository } from '../repositories';
 import { IBlockedUsersRepository, IFriendsRepository, IUserRepository } from '../repositories/repositories_interfaces';
@@ -19,7 +19,8 @@ export class FriendsService {
     constructor(
         @Inject("MyFriendsRepository") private readonly friendsRepository : IFriendsRepository,
         @Inject("MyBlockedUsersRepository") private readonly blockedUsersRepository : IBlockedUsersRepository,
-        private readonly channelService : ChannelService,
+        @Inject(forwardRef(() => ChannelService))
+            private readonly channelService : ChannelService,
         private readonly notificationService : NotificationService,
         private readonly friendsGateway: FriendsGateway
         ){}
@@ -141,7 +142,7 @@ export class FriendsService {
             {
             existingRequest.status = friendRequestStatus.accepted;
             existingRequest.accepted_time = new Date();
-            existingRequest.channel = await this.channelService.createDmChannel(Sender,receiver,`${Sender.username} - ${receiver.username} DM`);
+            // existingRequest.channel = await this.channelService.createDmChannel(Sender,receiver,`${Sender.username} - ${receiver.username} DM`);
             const notificationInfos = {
                 message : `You guys has accepted your friend requests`, 
             }
@@ -207,8 +208,9 @@ export class FriendsService {
         {
             existingRequest.status = friendRequestStatus.accepted;
             existingRequest.accepted_time = new Date();
-            existingRequest.channel = await this.channelService.createDmChannel(user , sender ,`${sender.username} - ${user.username} DM`);
-            await Promise.all([this.friendsRepository.save(existingRequest),
+            // existingRequest.channel = await this.channelService.createDmChannel(user , sender ,`${sender.id}_${user.id}`);
+            await Promise.all([
+                this.friendsRepository.save(existingRequest),
                 this.notificationService.createNotification(notificationInfos,user, sender),
                 this.friendsGateway.new_friends_connect(user,sender)
             ]
@@ -274,7 +276,10 @@ export class FriendsService {
         if(await this.blocking_exists(blocked,blockedBy))
             return { message : "already blocked"}
         try {
-            this.deleteFriend(blockedBy,blocked);
+            await Promise.all([
+                this.deleteFriend(blockedBy,blocked),
+                this.channelService.removeDmOfUsers(blockedBy, blocked)
+            ]);
         } catch (error) {
             
         }

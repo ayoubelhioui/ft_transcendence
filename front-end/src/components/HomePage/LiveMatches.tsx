@@ -48,7 +48,7 @@ const Item = ({payload} : {payload : any}) => {
 const NoContent = () => {
     return (
         <Wrapper>
-            <div className="flex mx-auto py-2 "> No Lives </div>
+            <div className="flex mx-auto h-screen my-auto w-full justify-center items-center text-4xl text-white"> No Lives Yet!</div>
         </Wrapper>
     )
 }

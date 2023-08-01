@@ -56,11 +56,11 @@ async deleteFriend(user: User, friend: User) : Promise<number>{
   const deleteResult =  await this.entity.createQueryBuilder()
     .delete()
     .from(Friends) // Target the table associated with the Friends entity
-    .where('status = :status')
+    // .where('status = :status')
     .andWhere(
       '(senderId = :senderId AND receiverId = :receiverId) OR (senderId = :receiverId AND receiverId = :senderId)',
       {
-        status: friendRequestStatus.accepted,
+        // status: friendRequestStatus.accepted,
         senderId: user.id,
         receiverId: friend.id,
       }

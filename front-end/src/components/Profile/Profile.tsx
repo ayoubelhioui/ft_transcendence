@@ -73,7 +73,7 @@ const EditImage = () => {
           <DialogTitle className='text-center'>Image Upload</DialogTitle>
           <DialogContent>
             <form onSubmit={handleSubmit} className='flex items-center flex-col'>
-              <input type="file" accept="image/*" onChange={handleImage} />
+              <input autoComplete="off"  type="file" accept="image/*" onChange={handleImage} />
               <button className="text-[#072964] flex items-center justify-center bg-white my-4 py-2 px-6" type="submit">Submit</button>
             </form>
           </DialogContent>
@@ -170,7 +170,6 @@ const UserProfile = ({userInfo} : {userInfo : any}) => {
 }
 
 const Profile = () => {
-  //!can access to profile of a user blocked me
   const appService = useAppServiceContext()
   const params = useParams();
   const [affect, setAffect] = useState(true)
@@ -178,6 +177,7 @@ const Profile = () => {
   if (id === appService.authService.user?.id)
     id = undefined
   const response = appService.requestService.getUserWithRelation(id)
+  //!Unauthorized
   const result = response.state
 
   console.log("Profile, ", id)

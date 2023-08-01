@@ -101,7 +101,7 @@ export class Ball extends THREE.Object3D{
 
     update() {
         if (this.game.isStarted()) {
-            this.move()
+            // this.move()
             // this.reset()
         }
     }

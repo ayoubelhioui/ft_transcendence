@@ -60,5 +60,16 @@ export class ChannelGateway {
         const channelRoom = "channel_" + channel.id;
         this.emitSystemPrompt(`${user.username} is  Muted`, channelRoom);
     };
+
+
+    public joinUserToNewChannel(user : User, channel : Channel) {
+      if (!user)
+        return ;
+      const userSockets : Socket[] = this.socketService.isUserOnline(user.id);
+      const channelRoom : string = 'channel_' + channel.id;
+      userSockets.forEach( socket => {
+        socket.join(channelRoom);
+      });
+    }
 }
 // export class ChatGateway{};

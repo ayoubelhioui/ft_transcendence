@@ -5,7 +5,7 @@ import { GetUser } from './decorators/user.decorator';
 import { ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard, UserInChannelGuard} from '../channels/guards';
 import { GetChannel, GetChannelUsers } from '../channels/decorators';
 import { JoinChannelDto } from '../channels/dto';
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UploadedFiles, UseGuards, UseInterceptors, UsePipes, Response, Request, Req, Delete, Put } from '@nestjs/common'
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, UploadedFiles, UseGuards, UseInterceptors, UsePipes, Response, Request, Req, Delete, Put, UnauthorizedException } from '@nestjs/common'
 import { TokenValidationGuard } from 'src/components/auth/guards/acces-token.guard';
 import { UserService } from './user.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -18,6 +18,7 @@ import { GetTargetedUser } from "./decorators/targeted-user.decorator";
 import { TargetUserSpecialCaseGuard } from "./guards/target-user-special-case-guard";
 import { numberDto } from "./dto/numberDto.dto";
 import { stringDto } from "./dto/stringDto.dto";
+import { FriendsService } from "../friends/friends.service";
 
 
 @Controller('users')
@@ -27,7 +28,10 @@ export class UserController{
     constructor(
         private readonly userService: UserService,
         private readonly gameService: GameService,
-        private readonly channelService : ChannelService
+        private readonly channelService : ChannelService,
+        private readonly friendsService : FriendsService
+    
+        
         ) {}
 
 
@@ -39,9 +43,12 @@ export class UserController{
 
 
     @Get(':id')
-    async getUser(@Param() idDto: numberDto): Promise< User | undefined> {
+    async getUser(@GetUser() loggedUser : User , @Param() idDto: numberDto): Promise< User | undefined> {
         const {id} = idDto;
         const user = await this.userService.findUserById(id);
+        const block_status = await this.friendsService.is_blocked_by(loggedUser, user);
+        if(block_status)
+            throw new UnauthorizedException("You cannot view this user");
         return (user);
     }
 
@@ -78,6 +85,13 @@ export class UserController{
     async getMyChannels(@GetUser() user: User) : Promise< Channel[] | undefined > {
         return (await this.channelService.getUserChannels(user));
     };
+
+    @Get('me/channels/:id/status')
+    @UseGuards(ChannelExistsGuard, GroupGuard, UserInChannelGuard)
+    async getStatusInChannel(@GetUser() user: User, @GetChannel() channel) : Promise< Object | undefined > {
+        return (await this.channelService.getUserStatusInChannel(user, channel));
+    };
+
 
 
     @Delete('me/channels/:id/leave')

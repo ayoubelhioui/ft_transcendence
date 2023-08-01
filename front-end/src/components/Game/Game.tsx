@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState} from 'react'
-import axios from "axios";
+
 
 import Cookies from 'js-cookie';
 
@@ -11,6 +11,8 @@ import threeGameStart from './PingPongGames/3dGame/src/game'
 import LoadingPage from './LoadingPage'
 import EndGame from './EndGame'
 import { GameState } from './PingPongGames/GameState'
+
+
 const r = (state: number): JSX.Element => {
     if (state === GameState.gameStarted) {
       return <div></div>
@@ -123,6 +125,7 @@ const Game =  () => {
             if (canvas)
                 canvas.style.display = 'none'
             console.log('Component is about to be destroyed. End Game');
+            
           };
     }, [])
 

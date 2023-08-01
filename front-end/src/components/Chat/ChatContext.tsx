@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 
 export interface ConversationInfoI {
   id : number | undefined,
@@ -12,6 +12,7 @@ export interface ChatContextI {
   setConversationInfo : React.Dispatch<React.SetStateAction<ConversationInfoI> >
   updateChats : boolean
   setUpdateChats : React.Dispatch<React.SetStateAction<boolean> >
+  conversationId : number | undefined
 }
 
 //create context
@@ -30,7 +31,8 @@ function useChatContext() {
 }
 
 //provider
-function ChatContextProvider({ children } : {children : any}) {
+function ChatContextProvider({ children, chatId } : {children : any, chatId : number | undefined}) {
+  const conversationId = chatId
   const [conversationInfo, setConversationInfo] = useState<ConversationInfoI>({
     id : undefined,
     name : '',
@@ -43,7 +45,8 @@ function ChatContextProvider({ children } : {children : any}) {
     conversationInfo,
     setConversationInfo,
     updateChats,
-    setUpdateChats
+    setUpdateChats,
+    conversationId
   }
 
   return (

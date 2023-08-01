@@ -64,7 +64,7 @@ const EditUserName = ({setUserName} : {setUserName : any}) => {
                 <DialogTitle className=" text-center text-lg font-extrabold">Change Your Username</DialogTitle>
                     <DialogContent >
                         <form className="flex flex-col items-center " onSubmit={handleSubmit} >
-                        <input name="username" type="text" placeholder="Enter Your Username" aria-label="UserName" onChange={handleNewUsernameChange} className="w-[270px] h-[40px]" ></input>
+                        <input autoComplete="off" name="username" type="text" placeholder="Enter Your Username" aria-label="UserName" onChange={handleNewUsernameChange} className="w-[270px] h-[40px]" ></input>
                             <button className="text-[#072964] flex items-end justify-end bg-white mt-6  py-2 px-8" type="submit">Submit</button>
                         </form>
                     </DialogContent>

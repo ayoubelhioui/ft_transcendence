@@ -30,21 +30,43 @@ interface User {
 }
 
 interface Relation {
-  userId : number,
-  targetUserId : number,
-  status : number,
-  sender : User,
-  receiver : User,
-  channel : Channel
+  userId : number
+  targetUserId : number
+  status : number
+  sender? : User
+  receiver? : User
+  channel? : Channel
   affect : any
+  blocked? : User
+  blockedBy? : User
 }
 
-const GoToChat = () => {
+const GoToChat = ({relation} : {relation : Relation}) => {
+  const navigate = useNavigate()
+  const appService = useAppServiceContext()
+
+  const sendRequest = async () => {
+    const bodyData = {
+      name: "dm Channel",
+      isGroup: false,
+      targetUserId: relation.targetUserId,
+      visibility: "private"
+    };
+
+    const res = await appService.requestService.postCreateNewChannel(bodyData)
+    if (res.status === STATUS_SUCCESS){
+      navigate(`/Chat/${res.data.id}`)
+    } else {
+      //!error
+    }
+  }
+  
   return (
     <>
       <motion.button 
       type='button'
       whileTap={{scale: 0.955}}
+      onClick={sendRequest}
       className='flex items-center bg-[#4D194D] py-2 px-6 mx-auto text-xs outline-none'
       > 
           <MdEdit size={15} className='mr-1'/> 
@@ -55,15 +77,41 @@ const GoToChat = () => {
 }
 
 const BlockRequest = ({relation} : {relation : Relation}) => {
+  const appService = useAppServiceContext()
+  let blockStatus = relation.blockedBy?.id === relation.userId
+  let title = !blockStatus ? "Block Friend" : "Unblock Friend"
+
+  const request = async () => {
+    console.log("=>", relation.blockedBy)
+    if (blockStatus) {
+      console.log("unblock friend")
+      return await appService.requestService.deleteUnblockFriend(relation.targetUserId)
+    }
+    console.log("block friend")
+    return await appService.requestService.deleteBlockFriend(relation.targetUserId)
+  }
+
+  const handleSubmit = async () => {    
+    const res = await request()
+    if (res.status === STATUS_SUCCESS) {
+      relation.affect((value : any) => !value)
+    }
+    else {
+      console.log("Error")
+      //!popup
+    }
+  }
+
   return (
     <>
-      <motion.button 
+      <motion.button
+      onClick={handleSubmit}
       type='button'
       whileTap={{scale: 0.955}}
       className='flex items-center bg-[#4D194D] py-2 px-6 mx-auto text-xs outline-none'
       > 
-          <MdEdit size={15} className='mr-1'/> 
-          Block Friend
+      <MdEdit size={15} className='mr-1'/> 
+          {title}
       </motion.button>
     </>
   )
@@ -74,7 +122,7 @@ const FriendsRequest = ({relation} : {relation : Relation}) => {
   let title = relation.status ===  friendRequestStatus.unspecified ? "Send Friend Request" : "Unfriend"
   let twoButtons = false
   if (relation.status === friendRequestStatus.pending) {
-    if (appService.authService.user?.id === relation.sender.id) {
+    if (appService.authService.user?.id === relation.sender?.id) {
       title = "Cancel friend request"
     } else {      
       title = "Accept"
@@ -108,8 +156,6 @@ const FriendsRequest = ({relation} : {relation : Relation}) => {
     const res = await request(rejectRequest)
     if (res.status === STATUS_SUCCESS) {
       relation.affect((value : any) => !value)
-      //navigate(`/Profile/${relation.targetUserId}`)
-      //setAffect(!affect)
     }
     else {
       console.log("Error")
@@ -151,11 +197,11 @@ const Relation = ({relation} : {relation : Relation}) => {
       <>
         <FriendsRequest relation={relation} />
         <BlockRequest relation={relation} />
-        <GoToChat />
+        <GoToChat relation={relation}/>
       </>
     )
   } else {
-    if (relation.status === -8) {
+    if (relation.blockedBy?.id === relation.userId) {
       return (
         <>
           <BlockRequest relation={relation} />
@@ -164,7 +210,8 @@ const Relation = ({relation} : {relation : Relation}) => {
     } else {
       return <>
         <FriendsRequest relation={relation} />
-        <GoToChat />
+        <BlockRequest relation={relation} />
+        <GoToChat relation={relation}/>
       </>
     }
   }

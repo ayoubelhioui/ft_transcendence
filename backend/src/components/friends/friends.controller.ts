@@ -42,15 +42,18 @@ export class FriendsController {
     async getUserToUserStatus(@GetUser() user : User, @GetTargetedUser() relatedUser : User)
     {
         const is_friend = await this.friendsService.friendStatus(user,relatedUser);
-        //const 
+        const blocking = await this.friendsService.blocking_relationship(user,relatedUser);
+        // const 
         if (is_friend) {
             return {
                 userId : user.id,
                 targetUserId : relatedUser.id,
-                status : is_friend.status,
+                status : is_friend.status, //block
                 sender : is_friend.sender,
                 receiver : is_friend.receiver,
-                channel : is_friend.channel
+                channel : is_friend.channel,
+                blocked : blocking? blocking.blocked : null,
+                blockedBy : blocking? blocking.blockedBy : null,
             }
         } else {
             return {
@@ -59,7 +62,9 @@ export class FriendsController {
                 status : -1,
                 sender : undefined,
                 receiver : undefined,
-                channel : undefined
+                channel : undefined,
+                blocked : blocking? blocking.blocked : null,
+                blockedBy : blocking? blocking.blockedBy : null,
             }
         }
     }

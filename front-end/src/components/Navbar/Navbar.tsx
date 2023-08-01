@@ -1,5 +1,9 @@
 import { RiMenu3Line, RiCloseLine } from 'react-icons/ri'
 
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+
 import { NavLink } from 'react-router-dom'
 import { VscAccount as AccountIcon, VscHome as HomeIcons } from "react-icons/vsc";
 import { MdSource as MessageIcon, MdVideoLibrary as VideoIcon, MdSportsEsports as GameIcon, MdExitToApp as ExitIcon } from "react-icons/md";
@@ -9,7 +13,7 @@ import { IoIosNotificationsOutline as NotificationIcon } from 'react-icons/io'
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Notifications from "./Notifications.tsx";
 
 import { STATUS_ERROR, STATUS_SUCCESS, address } from '../../Const';
@@ -73,13 +77,18 @@ const Navbar = () => {
             </NavLink>
           </li>
 
+         
+
           <li className= {`max-md:hidden`}>
             
             
-              <NotificationIcon size={30} className='ml-6 text-white cursor-pointer' onClick={() => setHandleNotif(!handleNotif)}/>
+            
+              <NotificationIcon size={30} className='ml-6 text-white cursor-pointer' onClick={() => setHandleNotif(true)}/>
            
 
-            { handleNotif && <Notifications />  }
+             
+
+            { handleNotif && <Notifications setHandleNotif={setHandleNotif}/>}
           </li>
 
           <div className="flex mx-auto justify-between w-1/2 max-md:hidden">

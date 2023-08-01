@@ -43,7 +43,7 @@ const Item = ({payload, closeDialog} : {payload : any, closeDialog : any}) => {
 const NoContent = () => {
   return (
       <Wrapper>
-          <div className="flex mx-auto py-2 "> Not Found </div>
+          <div className="flex h-full mx-auto my-auto w-full justify-center items-center text-xl "> Not Found </div>
       </Wrapper>
   )
 }
@@ -78,6 +78,7 @@ const AddFriend = () => {
     event.preventDefault();
 
     const result = await appService.requestService.getUsersSearchRequest(search.current);
+    console.log(result)
 
     if (result.status === STATUS_UNDEFINED) {
         //!loading
@@ -107,12 +108,13 @@ const AddFriend = () => {
       >
         <div className="w-[300px] flex flex-col justify-center items-center overflow-hidden h-[370px] text-white bg-blue-950">
           <DialogTitle className="text-center text-xl">
-            User's Search
+            Search For Users
           </DialogTitle>
           <DialogContent>
             <div className="flex flex-col justify-between items-center">
               <form onSubmit={handleSubmit}>
                   <input
+                  autoComplete="off" 
                   type="text"
                   className="shadow border-0 my-4 mx-2 w-[250px] h-[40px] rounded-[10px]"
                   placeholder="Search and click enter ..."

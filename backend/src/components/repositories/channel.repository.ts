@@ -52,6 +52,27 @@ class ChannelRepository extends ABaseRepository<Channel> implements IChannelRepo
     .getRawOne();
     return (channelWithPassword);
   }
+
+  async  getUsersDM(user1 : User, user2 : User) : Promise<Channel | undefined> {
+    const dmUsers = await this.entity
+    .createQueryBuilder('channel')
+    .addSelect('channel.id', 'id')
+    .addSelect('channel.name', 'name')
+    .addSelect('channel.password', 'password')
+    .where('channel.isGroup = false')
+    .andWhere('(channel.name = :name1 OR channel.name = :name2)', {
+      name1: user1.id + "_" + user2.id,
+      name2: user2.id + "_" + user1.id,
+    })
+    .getOne();
+    return (dmUsers);
+  }
+
+  async removeDmOfUsers(user1 : User, user2  : User) {
+    const dm  : Channel = await this.getUsersDM(user1, user2);
+    if (dm)
+      await this.remove(dm);
+  }
 }
 
 export default ChannelRepository;

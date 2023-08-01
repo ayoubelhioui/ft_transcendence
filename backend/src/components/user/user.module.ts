@@ -12,6 +12,7 @@ import { AuthModule } from '../auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { GameModule } from '../game/game.module';
 import { TargetUserSpecialCaseGuard } from './guards/target-user-special-case-guard';
+import { FriendsModule } from '../friends/friends.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { TargetUserSpecialCaseGuard } from './guards/target-user-special-case-gu
         forwardRef(() => ChannelModule),
         forwardRef(() => AuthModule),
         forwardRef(() => GameModule),
+        forwardRef(() => FriendsModule),
 
         JwtModule
     ],
@@ -34,6 +36,10 @@ import { TargetUserSpecialCaseGuard } from './guards/target-user-special-case-gu
             provide: 'MyChannelUsersRepository',
             useClass: ChannelUsersRepository
          },
+         {
+            provide : "TokenBlacklist",
+            useClass: TokenBlacklist
+         }
     ],
     controllers: [UserController],
     exports: [UserService, TargetUserExistGuard, TargetUserSpecialCaseGuard]

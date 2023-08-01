@@ -7,6 +7,8 @@ interface IUsersMutedRepository extends IBaseRepository<UsersMuted>
 {
     muteMember(targetedUser : User, channel : Channel, dateMuteExpiration : Date);
     isUserMuted(user : User, channel : Channel) : Promise <boolean> ;
+    getUserMuted(user : User, channel : Channel) : Promise <UsersMuted>;
+
 
 }
 

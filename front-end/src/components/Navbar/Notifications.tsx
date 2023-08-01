@@ -1,9 +1,10 @@
-import { ReactNode } from "react"
+import { ReactNode, useEffect, useRef } from "react"
 import { address } from "../../Const"
 import { Avatar } from "@mui/material"
 
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
+
   return (
     <div className=' overflow-x-scroll flex flex-col bg-blue-950 rounded-[10px] absolute top-[5rem] w-[300px] h-[300px]'>
           {children}
@@ -53,20 +54,43 @@ const List = ({list} : {list : any}) => {
   )
 }
 
-const Notifications = () => {
-    const data :any[] = [{
-      message : "message",
-      link : "link",
-      type : "type",
-      id : 0,
-      user : Object()
-      //other
-    }]
+const Notifications = ({setHandleNotif} : {setHandleNotif : any}) => {
+  const ref = useRef<any>(null)
 
-    //! if fetching failed don't open notification or just display <NoContent />
-    return (
-       <List list={data} />
-    );
+  useEffect(() => {
+    
+    const handleClickOutside = (event : any) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setHandleNotif(false)
+      }
+    };
+
+    setTimeout(() => {
+      document.addEventListener('click', handleClickOutside);
+    }, 50)
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+
+  })
+
+
+  const data :any[] = [{
+    message : "message",
+    link : "link",
+    type : "type",
+    id : 0,
+    user : Object()
+    //other
+  }]
+
+  //! if fetching failed don't open notification or just display <NoContent />
+  return (
+      <div ref={ref}>
+        <List list={data}/>
+      </div>
+  );
 }
 
 export default Notifications;
