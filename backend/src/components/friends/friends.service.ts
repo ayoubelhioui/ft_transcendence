@@ -7,6 +7,7 @@ import { DeleteResult } from 'typeorm';
 import { NotificationService } from '../notification/notification.service';
 import { ChannelService } from '../channels/channel.service';
 import { FriendsGateway } from './friends.gateway';
+import { customLog } from 'src/Const';
 
 
 
@@ -276,7 +277,7 @@ export class FriendsService {
                 this.channelService.removeDmOfUsers(blockedBy, blocked)
             ]);
         } catch (error) {
-            console.log("I DIDNT DELETE THE DM AFTER BLOCK ", error.message)
+            customLog("I DIDNT DELETE THE DM AFTER BLOCK ", error.message)
         }
         return (
                 await this.blockedUsersRepository.create({

@@ -19,7 +19,7 @@ export class TokenValidationGuard implements CanActivate {
       });
     }
     catch (err) {
-      // console.log(err);
+      // customLog(err);
       return (false);
     }
     this.user = await this.authService.findUserById(this.payload.sub);

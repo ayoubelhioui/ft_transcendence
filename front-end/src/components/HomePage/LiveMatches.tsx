@@ -17,16 +17,28 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 }
 
 const Item = ({payload} : {payload : any}) => {
-    const isClassic : boolean = payload.isClassic
+    const appService = useAppServiceContext()
+    const navigate = useNavigate()
     const player1 = payload.player1
     const player2 = payload.player2
+    const token = payload.token
+    const isClassic = payload.isClassic
+
+    const goToGame = () => {  
+        appService.utilService.gameParams = {
+          isWatchMode : true,
+          isClassic : isClassic,
+          gameToken : token,
+        }
+        navigate("/Play")
+    }
 
     const imagePath = isClassic ? "/src/assets/table3d.png" : "/src/assets/classic-game.png"
 
     //!link to the live
 
     return (
-        <div className="flex flex-wrap h-[190px] w-[260px] cursor-pointer ">
+        <div className="flex flex-wrap h-[190px] w-[260px] cursor-pointer " onClick={() => goToGame()}>
            <div className={`flex bg-[url('${imagePath}')] w-full h-[130px] rounded-[16px] bg-cover`} >
                 {/* <img src={imagePath} alt="Image_Type" className="w-[300px] object-cover h-[120px]"/> */}
             </div>
@@ -48,7 +60,7 @@ const Item = ({payload} : {payload : any}) => {
 const NoContent = () => {
     return (
         <Wrapper>
-            <div className="flex mx-auto h-screen my-auto w-full justify-center items-center text-4xl text-white"> No Lives Yet!</div>
+            <div className="flex m-auto w-full h-[50vh] justify-center items-center text-4xl text-gray-400"> No Lives Yet!</div>
         </Wrapper>
     )
 }

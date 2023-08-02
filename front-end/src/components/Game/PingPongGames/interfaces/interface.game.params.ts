@@ -1,14 +1,30 @@
+import { Socket } from 'socket.io-client'
 import { LoaderResult } from '../3dGame/src/interfaces/interface.load.result.ts'
 
 export interface GameParams {
     isWatchMode : boolean,
-    isBotMode : boolean,
     isClassic : boolean,
+    isBotMode : boolean,
     userId : number,
     canvas : any,
-    gameToken : string | null,
-    userToInvite : number | null,
     authToken : string,
+    socket : Socket
     callBack : (state: number) => void
     resources : LoaderResult
+    userToInvite? : number,
+    gameToken? : string,
+}
+
+export interface GameParamsCollect {
+    isWatchMode : boolean,
+    isClassic : boolean,
+    isBotMode? : boolean,
+    userId? : number,
+    canvas? : any,
+    gameToken? : string,
+    userToInvite? : number,
+    authToken? : string,
+    socket? : Socket
+    callBack? : (state: number) => void
+    resources? : LoaderResult
 }

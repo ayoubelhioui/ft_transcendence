@@ -6,7 +6,7 @@ import { UserDto } from 'src/global/dto/user.dto';
 import TokenBlacklist from 'src/database/entities/token_blacklist';
 import axios from 'axios';
 import { createWriteStream } from 'fs';
-import { server_address } from 'src/Const';
+import { customLog, server_address } from 'src/Const';
 import { IUserRepository } from '../repositories/repositories_interfaces';
 const nodemailer = require('nodemailer');
 
@@ -34,7 +34,6 @@ export class UserService{
     }
 
     async findUserById(id: number, relations: any = {}): Promise<User | undefined> {
-        console.log(relations, id);
         const user : User  = await this.userRepository.findOneByIdWithRelations(id, relations);
         if (!user)
             throw new NotFoundException("user Not Found");
@@ -96,7 +95,6 @@ export class UserService{
     }
 
     async update(id: number, userDto: UserDto) {
-        console.log(id, userDto);
         return await this.userRepository.update(id, userDto);
     }
 
@@ -113,7 +111,6 @@ export class UserService{
     }
 
     async sendEmail(emailVerificationCode: string, userEmail: string){
-        console.log(userEmail);
          const transporter = await nodemailer.createTransport({
             service: 'outlook',
             auth: {
@@ -138,7 +135,7 @@ TRANSCENDENCE TEAM`
             if (error) {
               console.error('Error occurred:', error.message);
             } else {
-              console.log('Email sent successfully!', info.response);
+              customLog('Email sent successfully!', info.response);
             }
         });
     }

@@ -3,6 +3,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { UserService } from '../../components/user/user.service';
 import { User } from 'src/database/entities';
+import { customLog } from 'src/Const';
 
 
 //! TODO : make guest users
@@ -16,15 +17,15 @@ export class AddUserMiddleware implements NestMiddleware {
     }
 
     async use(req: Request, res: Response, next: NextFunction) {
-      console.log('middleware')
+      customLog('middleware')
         const users : User[] | undefined = await this.userService.findAll();
         const id = 2;
-        // console.log(users);
+        // customLog(users);
         // let user : User = null;
         // user = await this.userService.findUserById(id);
         if (!users || users.length < 2)
         {
-          console.log('creating users')
+          customLog('creating users')
 
           
           var user1 = await this.createUser(id);
@@ -46,7 +47,7 @@ export class AddUserMiddleware implements NestMiddleware {
           // (req as any).targetedUser = users[0];
         }
 
-        // console.log(user);
+        // customLog(user);
         next();
     }
 }

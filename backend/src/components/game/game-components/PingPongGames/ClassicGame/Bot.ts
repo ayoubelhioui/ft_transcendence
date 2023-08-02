@@ -1,3 +1,4 @@
+import { customLog } from "src/Const"
 import { Ball } from "./Ball"
 import { Game } from "./Game"
 import { params } from "./Params"
@@ -38,7 +39,7 @@ export class Bot {
             this.ballDir.x = Math.sign(this.ball.velocity.x)
             this.ballDir.y = Math.sign(this.ball.velocity.y)
             this.target = undefined
-            console.log("change target")
+            //customLog("change target")
         }
 
         if (Math.abs(distX) < params.sceneDim.x / 2 - 1 && sameDir) {
@@ -50,9 +51,9 @@ export class Bot {
             if (this.target === undefined) {
                 this.target = (ballSpeed.y) * Math.abs(time) + this.ball.position.y
                 let rr = Math.random()
-                console.log(this.target)
+                //customLog(this.target)
                 if (rr > this.mode) {
-                    console.log("lose", rr)
+                    //customLog("lose", rr)
                     const r = (Math.random() * 2 - 1)
                     this.target += r * 3 + 0.05 * (Math.sign(r))
                 }

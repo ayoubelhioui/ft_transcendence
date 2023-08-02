@@ -4,6 +4,7 @@ import { Game as ClassicGame } from '../PingPongGames/ClassicGame/Game'
 import { PlayerScores } from "../../dto/player-scores.dto";
 import { GameService } from "../../game.service";
 import { MovePaddleI } from "../../interfaces/move-paddle.interface";
+import { customLog } from "src/Const";
 
 export class ClassicRoom extends Room {
 
@@ -68,7 +69,7 @@ export class ClassicRoom extends Room {
         this.broadCast("gameScore", p, p)
         let res = this.gameScoreTrigger(payload)
         if (res) {
-            console.log("end-game")
+            customLog("end-game")
             const player1IsWin = (payload.player1Score > payload.player2Score)
             this.broadCast("end_game", {isWin : player1IsWin}, {isWin : !player1IsWin})
             this.game.stop()

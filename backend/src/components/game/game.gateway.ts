@@ -13,6 +13,8 @@ import { HitBallDto } from './dto/hit-ball.dto';
 import { MovePaddleDto } from './dto/move-paddle.dto';
 import { UserRepository } from '../repositories';
 import { UserService } from '../user/user.service';
+import { customLog } from 'src/Const';
+import * as clc from 'cli-color';
 
 @UseFilters(WebSocketExceptionFilter)
 @UsePipes(new ValidationPipe({
@@ -37,12 +39,12 @@ export class GameGateway {
 
   // handleConnection(socket: Socket) {
   //   // Handle connection logic
-  //   console.log('New client connected:', socket.id);
+  //   customLog('New client connected:', socket.id);
   // }
 
   // handleDisconnect(socket: Socket) {
   //   // Handle disconnection logic
-  //   console.log('Client disconnected:', socket.id);
+  //   customLog('Client disconnected:', socket.id);
   // }
 
 
@@ -63,7 +65,7 @@ export class GameGateway {
   @SubscribeMessage ('invite_to_game')
   handleSendInviteEvent(client: Socket, payload: InviteToGameDto) {
     // Handle invite event logic
-    console.log('Received invite event:', payload);
+    customLog('Received invite event:', payload);
     const user : User =  this.socketService.getUser(client);
     const { gameId, targetedUserId} = payload;
     const socketsToSend : Socket[] = this.socketService.getSocket(+targetedUserId);
@@ -79,10 +81,23 @@ export class GameGateway {
 
   @SubscribeMessage ('join_game')
   async joinGame(client: Socket, payload: PlayerJoinDto) {
-    const {id} = this.socketService.getUser(client);
+    const user = this.socketService.getUser(client);
+    customLog(clc.bgGreen("user inter with: "), user.id)
+    if(!user)
+    {
+      customLog("Khroj b7alk!")
+      // client.disconnect();
+      return 
+    }
+    const id = user.id;
     payload.user = await this.userService.findUserById(id)
     payload.invite_callback = this.inviteToGame
-    await this.gameSession.addClient(payload, client)
+    try {
+      await this.gameSession.addClient(payload, client)
+    } catch (e : any) {
+      customLog("addClient Error:", e.message)
+      // client.disconnect()
+    }
   }
 
   
@@ -99,6 +114,11 @@ export class GameGateway {
   @SubscribeMessage ('movePaddle')
   paddleMove(client: Socket, payload: MovePaddleDto) {
     this.gameSession.paddleMove(payload, client.id)
+  }
+
+  @SubscribeMessage ('leaveGame')
+  leaveGame(client: Socket, payload: any) {
+    this.gameSession.leaveGame(client)
   }
 
   //refuse / close button to close popup

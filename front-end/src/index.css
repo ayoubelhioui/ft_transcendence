@@ -67,7 +67,7 @@ h2 {
 }
 
 .nav-animate {
-  transform: translateX(-100%);
+  transform: translateX(100%);
   animation: slide 1.7s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 }
 
@@ -231,13 +231,10 @@ h1 {
   width: 300px;
   background: linear-gradient(190deg, #00c3fe 0.92%, #4D194D 100%);
   top: 10%;
-  right:20.2%;
-  height: 100px;
+  right:20.10%;
+  height: 80px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-
-  transform: translateX(100%);
-  animation: slideDown 1.7s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
   
 }
 

@@ -5,7 +5,7 @@
 // @Injectable()
 // export class LogRequestPipe implements PipeTransform {
 //   transform(value: CreateUserDto) {
-//     console.log('Request body:', value);
+//     customLog('Request body:', value);
 //     return value;
 //   }
 // }

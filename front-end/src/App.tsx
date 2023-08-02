@@ -3,6 +3,8 @@ import { useAppServiceContext } from './Context/Context';
 import { resultStatusI } from './Context/Service/AuthService';
 import { STATUS_ERROR, STATUS_NOT_SIGN_IN, STATUS_SUCCESS, STATUS_UNDEFINED } from './Const';
 import { LoadingPage, MainPage, SignIn } from './components';
+import { load } from './components/Game/PingPongGames/3dGame/src/Utils/Loader';
+import { LoaderResult } from './components/Game/PingPongGames/3dGame/src/interfaces/interface.load.result';
 
 
 const App = () => {
@@ -11,6 +13,8 @@ const App = () => {
 
   useEffect(() => {
     async function prepare() {
+      const gameResources = (await load() as LoaderResult)
+      appService.utilService.gameResources = gameResources
       await appService.authService.authenticated((result : resultStatusI) => {
         setTimeout((res : any) => {
           setStatus(res.status)

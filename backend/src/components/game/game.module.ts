@@ -35,6 +35,7 @@ import { GameSessions } from './game-sessions.service';
       provide : "MyBlockedUsersRepository",
       useClass : BlockedUsersRepository
     },
+    
     /*** guards */
     GameExistsGuard,
     GameGateway,

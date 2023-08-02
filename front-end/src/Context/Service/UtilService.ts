@@ -1,15 +1,16 @@
-import { GameParams } from "../../components/Game/PingPongGames/interfaces/interface.game.params"
+import { LoaderResult } from "../../components/Game/PingPongGames/3dGame/src/interfaces/interface.load.result"
+import { GameParamsCollect } from "../../components/Game/PingPongGames/interfaces/interface.game.params"
 
 
 export class UtilService {
     
-    gameParams : GameParams | undefined
+    gameResources : LoaderResult | undefined
+    gameParams : GameParamsCollect | undefined
 
     constructor() {
         this.gameParams = undefined
+        this.gameResources = undefined
     }
 
-    async load() {
-        
-    }
+
 }

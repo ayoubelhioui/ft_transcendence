@@ -4,6 +4,7 @@ import { Bot } from './Bot'
 import { Ball } from './Ball'
 import { Room } from '../../Room/Room'
 import { ThreeRoom } from '../../Room/ThreeRoom'
+import { customLog } from 'src/Const'
 
 export class Game {
 
@@ -34,7 +35,7 @@ export class Game {
     }
 
     start(payload : any) {
-        console.log("Game is started ...")
+        customLog("Game is started ...")
         if (this.gameInfo.isBot)
             return
         this.gameInfo.turn = payload.turn
@@ -46,7 +47,7 @@ export class Game {
         this.gameInfo.scorePlayer1 += p[0]
         this.gameInfo.scorePlayer2 += p[1]
         let s = (p[2] === 0 ? "Player1 " : "Player2 ")
-        console.log(p[3], s, " Score1: ", this.gameInfo.scorePlayer1, " Score2: ", this.gameInfo.scorePlayer2)
+        customLog(p[3], s, " Score1: ", this.gameInfo.scorePlayer1, " Score2: ", this.gameInfo.scorePlayer2)
         this.changeTurn(this.getTurnInit())
         await this.room.sendGameScore({
             player1Score : this.gameInfo.scorePlayer1,

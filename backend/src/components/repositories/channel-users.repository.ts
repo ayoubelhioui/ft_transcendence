@@ -52,7 +52,7 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
   }
 
   async getUserChannelsWithLastMessage(userId : number) : Promise < any[] | undefined > {
-    // console.log("Hi!")
+    // customLog("Hi!")
     return this.entity
     .createQueryBuilder('channelUsers')
     .leftJoinAndSelect('channelUsers.channel', 'channel')

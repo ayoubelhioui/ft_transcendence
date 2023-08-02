@@ -1,3 +1,4 @@
+import { GameState } from "../../../GameState"
 import { IBallInfo } from "../Interfaces/interface.ball.info"
 import { LiveData } from "../Interfaces/interface.live.data"
 import { Game } from "../MyObjects/Game"
@@ -68,6 +69,7 @@ export class SocketManager {
             })
 
             socket.on("exception", (data) => {
+                game.gameParams.callBack(GameState.gameException)
                 console.log("exception",  data)
             })
 
@@ -91,14 +93,15 @@ export class SocketManager {
 
     getSocket(game : Game) {
         
-        const socket = io(this.socketAddr, {
-            extraHeaders: {
-                Authorization: `Bearer ${game.gameParams.authToken}`
-            }
-        })
+        // const socket = io(this.socketAddr, {
+        //     extraHeaders: {
+        //         Authorization: `Bearer ${game.gameParams.authToken}`
+        //     }
+        // })
+        const socket = game.gameParams.socket
         
-        socket.on("connect", () => {
-            console.log("Client is connected")
+        //socket.on("connect", () => {
+            console.log("Client is connected with : ", socket.id)
         
             //after connecting
             const obj = {
@@ -114,13 +117,31 @@ export class SocketManager {
             // socket.on('disconnected', () => {
             //     socket.emit('leave', "aaa");
             // });
-        })
+
+            // socket.on("disconnect", () => {
+            //     console.log("Disconnected", socket.id)
+            // })
+
+        //})
     
 
         this.socketOn(socket, game)
 
 
         return (socket)
+    }
+
+    stop() {
+        this.socket.off("start")
+        this.socket.off("end_game")
+        this.socket.off("ballInfo")
+        this.socket.off("paddleMove")
+        this.socket.off("gameScore")
+        this.socket.off("new_notification")
+        this.socket.off("exception")
+        this.socket.off("live_data")
+        this.socket.off("connect")
+        //this.socket.disconnect()
     }
 
 }

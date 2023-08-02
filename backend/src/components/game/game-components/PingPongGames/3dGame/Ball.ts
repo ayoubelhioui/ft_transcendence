@@ -6,6 +6,7 @@ import { Game } from './Game'
 import { Vec3 } from './interfaces/vec3.interface'
 import { BallInfo } from './interfaces/ball-info.interface'
 import { HitBallI } from 'src/components/game/interfaces/hit-ball.interface'
+import { customLog } from 'src/Const'
 
 export class Ball {
     
@@ -110,7 +111,7 @@ export class Ball {
         let p = [0, 1, 0, this.#getLoseReason(cause)]
         if (this.position.x < 0)
             p = [1, 0, 1, this.#getLoseReason(cause)]
-        console.log(p)
+        customLog(p)
         await this.game.changeScore(p)
         if (time) {
             setTimeout(this.#loseInit, time, this)
@@ -231,7 +232,7 @@ export class Ball {
 
     #hit(x : number, y : number, playerType : number) {
         // 0 <= x <= 1 || -1 <= y <= 1
-        console.log("playerType", playerType)
+        customLog("playerType", playerType)
         if (x > 0 || Math.sign(playerType) === Math.sign(this.position.x) 
         || Math.sign(this.position.x) !== Math.sign(this.velocity.x))
             return
@@ -249,7 +250,7 @@ export class Ball {
 
     // #initHit(x : number, y : number, playerType : number, racketPos : Vec3) {
     //     let dist = (racketPos.x - this.position.x)
-    //     console.log("Hit in dist", dist)
+    //     customLog("Hit in dist", dist)
     //     if (Math.sign(x) === -1) {
     //         this.#ballIsHit()
     //         let r = Math.random() * params.planeDim.y * -0.2 * Math.sign(this.position.z)
@@ -258,7 +259,7 @@ export class Ball {
     // }
 
     #initHit() {
-        console.log("Hit in dist")
+        customLog("Hit in dist")
   
         this.#ballIsHit()
         this.perform_init = false

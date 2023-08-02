@@ -1,6 +1,7 @@
 import { Game } from "../MyObjects/Game";
 import { Socket, io } from 'socket.io-client'
 import { LiveData } from "../interfaces/interface.live.data";
+import { GameState } from "../../../GameState";
 
 export class SocketManager {
 
@@ -67,6 +68,11 @@ export class SocketManager {
             socket.on("turn", (data) => {
                 game.gameInfo.turn = data.turn
             })
+
+            socket.on("exception", (data) => {
+                game.gameParams.callBack(GameState.gameException)
+                console.log("exception",  data)
+            })
         
         } else {
 
@@ -83,13 +89,15 @@ export class SocketManager {
     }
 
     getSocket(game : Game) {
-        const socket = io(this.socketAddr , {
-            extraHeaders: {
-                Authorization: `Bearer ${game.gameParams.authToken}`
-            }
-        })
+        // const socket = io(this.socketAddr , {
+        //     extraHeaders: {
+        //         Authorization: `Bearer ${game.gameParams.authToken}`
+        //     }
+        // })
+
+        const socket = game.gameParams.socket
         
-        socket.on("connect", () => {
+        //socket.on("connect", () => {
             console.log("Client is connected")
         
             //after connecting
@@ -104,12 +112,30 @@ export class SocketManager {
             // socket.on('disconnected', () => {
             //     socket.emit('leave', "aaa");
             // });
-        })
+
+            // socket.on("disconnect", () => {
+            //     console.log("Disconnected", socket.id)
+            // })
+
+        //})
     
-        
+
         this.socketOn(socket, game)
     
         return (socket)
     }
     
+
+    stop() {
+        this.socket.off("start")
+        this.socket.off("end_game")
+        this.socket.off("ballInfo")
+        this.socket.off("moveRacket")
+        this.socket.off("gameScore")
+        this.socket.off("turn")
+        this.socket.off("live_data")
+        this.socket.off("connect")
+        this.socket.off("exception")
+        //this.socket.disconnect()
+    }
 }

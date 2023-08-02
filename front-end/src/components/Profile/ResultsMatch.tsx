@@ -3,7 +3,7 @@ import { useAppServiceContext } from "../../Context/Context"
 
 const NoContent = () => {
   return (
-    <div className="flex mx-auto py-2 "> No Lives </div>
+    <div className="flex m-auto w-full h-[50vh] justify-center items-center text-4xl text-gray-400"> No Results Yet! </div>
   )
 }
 

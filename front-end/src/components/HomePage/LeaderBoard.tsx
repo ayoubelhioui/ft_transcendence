@@ -42,7 +42,7 @@ const Item = ({payload, rank} : {payload : any, rank : number}) => {
 const NoContent = () => {
     return (
         <Wrapper>
-            <div className="flex mx-auto h-screen w-full justify-center items-center text-4xl text-white"> No Users Currently! </div>
+            <div className="flex mx-auto h-screen w-full justify-center items-center text-4xl text-gray-400"> No Users Currently! </div>
         </Wrapper>
     )
 }

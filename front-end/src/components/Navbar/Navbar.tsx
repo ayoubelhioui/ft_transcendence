@@ -39,13 +39,11 @@ const links: any = [
     icon: <VideoIcon size={30} className='text-white'/>,
   },
   {
-    name: "Play",
+    name: "Playthrough",
     icon: <GameIcon size={30} className='text-white'/>,
   },
 
 ]
-
-// const Styles: string = "after:absolute after:content-[''] after:bg-white after:h-[3px] after:w-0 after:left-0 after:-bottom-[5px] after:rounded-xl after:duration-500 hover:after:w-full";
 
 
 const Navbar = () => {
@@ -121,8 +119,8 @@ const Navbar = () => {
 
 
           { handleMenu && (
-            <div className=" absolute top-[4rem] h-screen -right-[34%] bg-[#070757] w-screen ">
-              <div className="flex flex-col justify-center h-full px-4 py-2 ">
+            <div className=" absolute top-[4rem] h-screen bg-[#070757] w-screen -left-[6%] nav-animate">
+              <div className="flex flex-col justify-center h-full px-4 py-2">
                 {links.map((link: any, index: number) => (
                     <li className={`mx-auto ${hoverStyle} pt-12 text-2xl text-left`} key={index} >
                       <NavLink

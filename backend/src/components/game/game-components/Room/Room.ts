@@ -44,7 +44,7 @@ export class Room {
     wrapMethod(originalMethod: any) {
         return function (...args: any[]) {
             if (this.closed === false || !this.game || this.game.gameInfo.end === true) {
-                //console.log("no")
+                //customLog("no")
                 return
             }
             return originalMethod.apply(this, args);

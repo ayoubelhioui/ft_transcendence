@@ -19,6 +19,7 @@ import { TargetUserSpecialCaseGuard } from "./guards/target-user-special-case-gu
 import { numberDto } from "./dto/numberDto.dto";
 import { stringDto } from "./dto/stringDto.dto";
 import { FriendsService } from "../friends/friends.service";
+import { customLog } from "src/Const";
 
 
 @Controller('users')
@@ -109,7 +110,7 @@ export class UserController{
     async getUserImage(@Param('id', ParseIntPipe) id : number, @Response() res) {
         const stream = fs.createReadStream('./uploads/' + id);
         stream.on('error', (err) => {
-            console.log("Error")
+            customLog("Error")
             stream.destroy();
             res.status(404).json({ error: 'Image not found' });
         });
@@ -137,7 +138,7 @@ export class UserController{
         }
     }))
     async updateUserImage(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req){
-        console.log('helloWorld');
+        customLog('helloWorld');
         res.status(200).json({ message: 'picture uploaded successfully' });
     }
 

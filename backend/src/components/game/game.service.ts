@@ -7,6 +7,8 @@ import { pl } from 'date-fns/locale';
 import { GameGateway } from './game.gateway';
 import { GameSessions } from './game-sessions.service';
 import { GetUser } from '../user/decorators/user.decorator';
+import { customLog } from 'src/Const';
+import * as clc from 'cli-color';
 
 @Injectable()
 export class GameService {
@@ -81,6 +83,8 @@ export class GameService {
 
     async deleteGame(existingGame: Game)
     {
+        customLog(clc.bgRed("set game result"))
+
         if(existingGame)
         await this.gamesRepository.remove(existingGame);
     }
@@ -88,20 +92,25 @@ export class GameService {
     async createGame(player1: User,  gameType : boolean){
         
         const existingGame = await this.hasOpenGame(player1)
-        if(existingGame && existingGame.player2)
+        if(existingGame && existingGame.player2) {
+            console.log("Game already exist: ", existingGame.player2.id)
             return ({
                 message : "already have an on going game",
-                inviteId : existingGame.token
+                inviteId : existingGame.token,
+                game : existingGame
             })
+        }
         if(existingGame)
             await this.gamesRepository.remove(existingGame);
         const game = await this.gamesRepository.create({
             player1,
             type : gameType
         });
+        console.log("Game Created DB", game.token)
         return ({
             message : "game created",
-            inviteId : game.token
+            inviteId : game.token,
+            game : game
         })
 
     };
@@ -144,20 +153,20 @@ export class GameService {
                 relations: ["player1","player2"]
             }
         )
-        if(!game)
+        if(!game) {
+            customLog("game does not exist", token)
             throw new NotFoundException("game finished Or doesn't exist")
-            console.log("1")
+        }
         if(game.player2)
             throw new UnauthorizedException("game is full");
-            console.log("2")
 
+        customLog(game.player1.id, player2.id)
         if(game.player1.id === player2.id)
             throw new UnauthorizedException("can't join your own games");
-            console.log("3")
 
-        const inaccessible = await this.friendsService.blocking_exists(game.player1,player2);
-        if(inaccessible)
-            throw new UnauthorizedException("user innacessible");
+        // const inaccessible = await this.friendsService.blocking_exists(game.player1,player2);
+        // if(inaccessible)
+        //     throw new UnauthorizedException("user innacessible");
         game.player2 = player2;
         await this.gamesRepository.save(game)
         return game;
@@ -223,7 +232,7 @@ export class GameService {
 
             
             if(player1Score > player2Score)
-            {
+           {
                 game.player1.wins += 1 
                 game.player2.loss += 1 
             } else {
@@ -259,7 +268,7 @@ export class GameService {
             wins: 'DESC',
           },
         });
-        console.log(leaderboard);
+        customLog(leaderboard);
         return leaderboard;
         //highest wr order by games played
     };

@@ -26,7 +26,6 @@ export class AuthController{
     @Get('refresh-token')
     @UseGuards(TokenValidationGuard)
     async newAccessToken(@Request() req): Promise<object>{
-        console.log('())()()()()()()()()()()');
         const payload = { sub: req.user.IntraId, username: req.user.username };
         return ({
             access_token: await this.authService.generateNewToken(payload, '10m'),

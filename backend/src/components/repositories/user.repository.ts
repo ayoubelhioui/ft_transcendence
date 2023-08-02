@@ -21,7 +21,6 @@ class UserRepository extends ABaseRepository<User> implements IUserRepository
           .select('user.twoFactorSecret', 'secret')
           .where('user.id = :id', { id })
           .getRawOne();
-        console.log(result);
         return result ? result.secret : null;
   }
 

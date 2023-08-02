@@ -1,3 +1,4 @@
+import { customLog } from 'src/Const'
 import { ClassicRoom } from '../../Room/ClassicRoom'
 import { Ball } from './Ball'
 import { Bot } from './Bot'
@@ -35,7 +36,7 @@ export class Game {
     }
 
     start(payload : any) {
-        console.log("Game is started ...")
+        customLog("Game is started ...")
         this.gameInfo.turn = payload.turn
         this.gameInfo.initTurn = payload.turn
         this.gameInfo.start = true
@@ -44,7 +45,7 @@ export class Game {
     async changeScore(p : number[]) {
         this.gameInfo.scorePlayer1 += p[0]
         this.gameInfo.scorePlayer2 += p[1]
-        console.log(" Score1: ", this.gameInfo.scorePlayer1, " Score2: ", this.gameInfo.scorePlayer2)
+        customLog(" Score1: ", this.gameInfo.scorePlayer1, " Score2: ", this.gameInfo.scorePlayer2)
         this.changeTurn(this.getTurnInit())
         await this.room.sendGameScore({
             player1Score : this.gameInfo.scorePlayer1,
@@ -71,7 +72,7 @@ export class Game {
         if (this.gameInfo.end) {
             this.ballObj.endInit()
             await this.ballObj.update()
-            console.log("Game End")
+            customLog("Game End")
             clearInterval(this.interval)
         } else {
             await this.ballObj.update()
@@ -83,7 +84,7 @@ export class Game {
             t = performance.now() - t
             this.totalTime += t 
         }
-        //console.log(t, this.totalTime / params.frame)
+        //customLog(t, this.totalTime / params.frame)
     }
 
     gameLoop() {

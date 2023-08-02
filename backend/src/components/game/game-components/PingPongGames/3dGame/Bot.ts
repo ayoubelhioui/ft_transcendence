@@ -1,3 +1,4 @@
+import { customLog } from 'src/Const'
 import { Ball } from './Ball'
 import { Game } from './Game'
 import { params } from './Params'
@@ -56,12 +57,12 @@ export class Bot {
         if (Math.abs(zx) <= Math.abs(zMax)) {
             let y = - 0.5 * this.gravityForce * (tx ** 2) + gv.y * tx + gp.y
             let res = new THREE.Vector3(xMax, y, zx)
-            //console.log("z", res)
+            //customLog("z", res)
             return (res)
         } else {
             let y = - 0.5 * this.gravityForce * (tz ** 2) + gv.y * tz + gp.y
             let res = new THREE.Vector3(xz, y, zMax)
-            //console.log("x", res)
+            //customLog("x", res)
             return (res)
         }
     }
@@ -114,7 +115,7 @@ export class Bot {
     randomLose() {
         let r = Math.random()
         if (r > 1) {
-            console.log("Lose")
+            customLog("Lose")
             let z = (Math.random() * 2 - 1) * 2
             let y = (Math.random() * 2 - 1) * 2
             z += 1 * Math.sign(z)

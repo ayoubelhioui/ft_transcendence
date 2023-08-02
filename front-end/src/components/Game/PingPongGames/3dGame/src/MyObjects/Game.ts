@@ -26,10 +26,11 @@ export class Game {
     camera : MyCamera
     bloomComposer : EffectComposer
     bloomPass : UnrealBloomPass
-    guiParams : GuiParams
+    //guiParams : GuiParams
     orbit : OrbitControls
     socketMgr : SocketManager
     resources : LoaderResult
+    eventsCallBack : any[]
     // canvas : any
     // token : string
     // isBotMode : boolean
@@ -54,15 +55,16 @@ export class Game {
     }
 
 
-    constructor(gameParams : GameParams, resources : LoaderResult) {
+    constructor(gameParams : GameParams) {
         this.gameParams = gameParams
-        this.tableModel = resources.models.table.scene
-        this.racketModel = resources.models.racket.scene
-        this.resources = resources
+        this.resources = gameParams.resources
+        this.tableModel = this.resources.models.table.scene
+        this.racketModel = this.resources.models.racket.scene
         this.renderer = this.#setUpRenderer()
         this.scene = new MyScene(this)
         this.camera = new MyCamera()
         this.socketMgr = new SocketManager(this)
+        this.eventsCallBack = []
 
         this.ambientLightObj = new AmbientLight(this)
         this.spotLight = new SpotLight(this)
@@ -83,7 +85,7 @@ export class Game {
         }
         
         this.orbit = new OrbitControls(this.camera, this.renderer.domElement)
-        this.guiParams = new GuiParams(this)
+        //this.guiParams = new GuiParams(this)
         this.scene.visible = false
         this.#events(this)
 
@@ -92,7 +94,7 @@ export class Game {
             this.start({})
         }
 
-        window.game = this
+        //window.game = this
     }
 
     start(payload : any) {
@@ -107,8 +109,8 @@ export class Game {
 
     end(payload : any) {
         console.log("Game is Ended ...", payload)
-        //this.gameInfo.start = false
-        //this.scene.visible = false
+        this.gameInfo.start = false
+        this.scene.visible = false
         if (payload.isWin)
             this.gameParams.callBack(GameState.gameEndedWin)
         else
@@ -129,7 +131,7 @@ export class Game {
     }
 
     update() {
-        this.guiParams.update()
+        //this.guiParams.update()
         if (!this.gameInfo.start)
            return
         this.netObj.update()
@@ -140,6 +142,7 @@ export class Game {
     }
 
     loop() {
+
         const game = this
         function gameLoop()
         {
@@ -150,6 +153,21 @@ export class Game {
         }
     
         game.renderer.setAnimationLoop(gameLoop)
+    }
+
+    stop() {
+        window.removeEventListener('resize', this.eventsCallBack[0]);
+        window.removeEventListener('mousemove', this.eventsCallBack[1]);
+        window.removeEventListener('mousedown', this.eventsCallBack[2]);
+        window.removeEventListener('mouseup', this.eventsCallBack[3]);
+        this.socketMgr.stop()
+        this.renderer.setAnimationLoop(null)
+        this.renderer.dispose();
+
+        //getElementById("") 
+        console.log("remove orbit")
+        //this.guiParams.remove()
+       
     }
 
     //===========================================
@@ -171,8 +189,8 @@ export class Game {
         
         renderer.setSize(window.innerWidth, window.innerHeight)
         
-        const documentRoot = document.getElementById("root")
-        documentRoot?.appendChild(renderer.domElement)
+        //const documentRoot = document.getElementById("root")
+        //documentRoot?.appendChild(renderer.domElement)
         return renderer
     }
 
@@ -201,33 +219,49 @@ export class Game {
    
 
     #events(obj : Game) {
-        window.addEventListener('resize', function() {
+
+        const resizeCallBack = function() {
             obj.camera.aspect = window.innerWidth / window.innerHeight;
             obj.camera.updateProjectionMatrix();
             obj.renderer.setSize(window.innerWidth, window.innerHeight);
             obj.bloomComposer.setSize(window.innerWidth, window.innerHeight);
-        });
+        }
 
-        window.addEventListener('mousemove', function(e) {
+        const mousemoveCallBack = function(e : any) {
             params.mouse.oldX = params.mouse.x;
             params.mouse.oldY = params.mouse.y;
             params.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
             params.mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
             params.mouse.vx = params.mouse.x - params.mouse.oldX;
             params.mouse.vy = params.mouse.y - params.mouse.oldY; 
-        })
+        }
 
-        window.addEventListener('mousedown', function(e) {
+        const mousedownCallBack = function(e : any) {
             params.mouse.cx = (e.clientX / window.innerWidth) * 2 - 1;
             params.mouse.cy = - (e.clientY / window.innerHeight) * 2 + 1;
             params.mouse.isClicked = true
             //console.log("onmousedown", params.mouseClickPos)
-        })
+        }
 
-        window.addEventListener('mouseup', function() {
+        const mouseupCallBack =  function() {
             params.mouse.isClicked = false
             //console.log("onmouseup", params.mouseClickPos)
-        })
+        }
+
+        window.addEventListener('resize', resizeCallBack);
+
+        window.addEventListener('mousemove', mousemoveCallBack)
+
+        window.addEventListener('mousedown', mousedownCallBack)
+
+        window.addEventListener('mouseup', mouseupCallBack)
+
+        this.eventsCallBack = [
+            resizeCallBack,
+            mousemoveCallBack,
+            mousedownCallBack,
+            mouseupCallBack
+        ]
     }
 
 }

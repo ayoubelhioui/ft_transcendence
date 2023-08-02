@@ -138,7 +138,7 @@ export class Ball {
 
     addSpeed() {
         this.speed += (params.frame * params.timeStep) / 1200
-        // console.log(this.speed)
+        // customLog(this.speed)
         if (this.speed > this.maxSpeed)
             this.speed = this.maxSpeed
     }

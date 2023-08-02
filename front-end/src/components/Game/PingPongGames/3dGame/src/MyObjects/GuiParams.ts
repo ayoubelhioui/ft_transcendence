@@ -5,6 +5,7 @@ import * as THREE from "three";
 
 export class GuiParams {
 
+    //!destroy
     game : Game
     isExist = new Map()
     gui = new dat.GUI()
@@ -74,6 +75,10 @@ export class GuiParams {
                 }
             }
         })
+    }
+
+    remove() {
+        this.gui.destroy()
     }
 
     update() {

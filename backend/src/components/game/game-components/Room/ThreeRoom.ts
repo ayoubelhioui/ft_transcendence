@@ -5,6 +5,7 @@ import { PlayerScores } from "../../dto/player-scores.dto";
 import { GameService } from "../../game.service";
 import { RacketMoveI } from "../../interfaces/racket-move.interface";
 import { HitBallI } from "../../interfaces/hit-ball.interface";
+import { customLog } from "src/Const";
 
 export class ThreeRoom extends Room {
 
@@ -48,7 +49,7 @@ export class ThreeRoom extends Room {
     playerLeft(socket : Socket) {
         if (this.closed === false)
             return
-        this.game.stop()
+        this.game?.stop()
         if (this.isBotMode === false) {
             this.sendToOther("end_game", socket, { isWin : true })
         }
@@ -111,7 +112,7 @@ export class ThreeRoom extends Room {
         this.broadCast("gameScore", p, player2Data)
         const res = this.gameScoreTrigger(payload)
         if (res) {
-            console.log("end-game")
+            customLog("end-game")
             const player1IsWin = (payload.player1Score > payload.player2Score)
             this.broadCast("end_game", {isWin : player1IsWin}, {isWin : !player1IsWin})
             this.game.stop()

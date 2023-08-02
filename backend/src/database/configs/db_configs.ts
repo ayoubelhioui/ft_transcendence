@@ -2,6 +2,7 @@ import { ChannelInvites ,Achievement, BlockedUsers, Channel, ChannelBlacklist, C
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from 'src/components/auth/auth.module';
 import TokenBlacklist from '../entities/token_blacklist';
+import { customLog } from 'src/Const';
 
 export default function typeOrmConfigs() : any {
     return {
@@ -20,7 +21,7 @@ export default function typeOrmConfigs() : any {
             autoSchemaSync: true
           })
 
-          console.log(a)
+          customLog(a)
           return (a)
         }
     }

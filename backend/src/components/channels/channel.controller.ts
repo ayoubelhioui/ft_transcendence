@@ -25,6 +25,7 @@ import {  UserMutedGuard } from './guards/user-muted.guard';
 import { BlacklistedGuard } from './guards/blacklisted.guard';
 import { GroupGuard } from './guards/group.guard';
 import { CreateMessageDto } from './dto/create-message.dto';
+import { customLog } from 'src/Const';
 
 @Controller('channels')
 // @UseGuards(TokenValidationGuard)
@@ -70,7 +71,7 @@ export class ChannelController {
     @UseGuards(ChannelExistsGuard, GroupGuard,UserInChannelGuard, ChannelRolesGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
     async deleteChannel(@GetChannel() channel: Channel) {
-        // console.log(channel);
+        // customLog(channel);
         await this.channelService.deleteChannel(channel);
     };
 
@@ -79,7 +80,7 @@ export class ChannelController {
     @Post(':id/join')
     @UseGuards(ChannelExistsGuard, GroupGuard,PrivateChannelGuard, UserNotInChannelGuard, BlacklistedGuard)
     async joinChannel(@GetUser() user : User, @GetChannel() channel : Channel, @Body() joinChannelDto : JoinChannelDto) {
-        // console.log(joinChannelDto);
+        // customLog(joinChannelDto);
         await this.channelService.joinChannel(user, channel, joinChannelDto);
         return {
             message : "user joined successfully"
@@ -156,7 +157,7 @@ export class ChannelController {
         if (messagesDateDto.date)
             date = new Date(messagesDateDto.date);
         let a = await this.channelService.getChannelMessages(channel, date)
-        console.log(channel, date, a)
+        customLog(channel, date, a)
         return (a);
     };
 

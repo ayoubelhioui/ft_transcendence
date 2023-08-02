@@ -99,9 +99,9 @@ class ChannelRepository extends ABaseRepository<Channel> implements IChannelRepo
     //         }
     //     ]
     //   )
-    //   console.log("deleteing heere:")
-    //   console.log(user2.id + "_" + user1.id)
-    //   console.log(user1.id + "_" + user2.id)
+    //   customLog("deleteing heere:")
+    //   customLog(user2.id + "_" + user1.id)
+    //   customLog(user1.id + "_" + user2.id)
       return dm? 1 : 0;
     }
 } 

@@ -13,6 +13,7 @@ export class Game {
     camera : MyCamera
     socketMgr : SocketManager
     gameParams : GameParams
+    eventsCallBack : any[]
     // token : string
     // isBotMode : boolean
     // canvas : any
@@ -34,8 +35,9 @@ export class Game {
         this.scene = new MyScene(this)
         this.camera = new MyCamera()
         this.socketMgr = new SocketManager(this)
+        this.eventsCallBack = []
 
-        this.scene.visible = true
+        this.scene.visible = false
         this.#events(this)
 
         if (this.gameParams.isWatchMode) {
@@ -59,8 +61,8 @@ export class Game {
 
     end(payload : any) {
         console.log("Game is Ended ...", payload)
-        //this.scene.visible = false
-        //this.gameInfo.start = false
+        this.scene.visible = false
+        this.gameInfo.start = false
         if (payload.isWin)
             this.gameParams.callBack(GameState.gameEndedWin)
         else
@@ -87,6 +89,15 @@ export class Game {
         game.renderer.setAnimationLoop(gameLoop)
     }
 
+    stop() {
+        window.removeEventListener('resize', this.eventsCallBack[0]);
+        window.removeEventListener('keydown', this.eventsCallBack[1]);
+        window.removeEventListener('keyup', this.eventsCallBack[2]);
+        this.socketMgr.stop()
+        this.renderer.setAnimationLoop(null)
+        this.renderer.dispose();
+    }
+
     //===========================================
     //===========================================
 
@@ -98,31 +109,42 @@ export class Game {
 
         renderer.setSize(window.innerWidth, window.innerHeight)
         
-        const documentRoot = document.getElementById("root")
-        documentRoot?.appendChild(renderer.domElement)
+        //const documentRoot = document.getElementById("root")
+        //documentRoot?.appendChild(renderer.domElement)
         return renderer
     }
 
    
     #events(obj : Game) {
-        window.addEventListener('resize', function() {
+        const resizeCallBack = function() {
             obj.camera.aspect = params.sceneDim.x / params.sceneDim.y;
             obj.camera.updateProjectionMatrix();
             obj.renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+        }
 
-        window.addEventListener('keydown', function(e) {
-            if (e.key === "ArrowDown" || e.key === "s")
+        const keyDownCallBack = function(e : any) {
+            if (e.key === "ArrowDown" || e.key === "s" || e.key === "S")
                 params.event.x = -1
-            if (e.key === "ArrowUp" || e.key === "w")
+            if (e.key === "ArrowUp" || e.key === "w" || e.key === "W")
                 params.event.x = 1
-        })
+        }
 
-        window.addEventListener('keyup', function(e) {
-            if (e.key === "ArrowDown" || e.key === "s" || e.key === "ArrowUp" || e.key === "w")
+        const keyUpCallBack = function(e : any) {
+            if (e.key === "ArrowDown" 
+            || e.key === "s" 
+            || e.key === "ArrowUp" 
+            || e.key === "w"
+            || e.key === "W"
+            || e.key === "S"
+            )
                 params.event.x = 0
-        })
+        }
 
+        window.addEventListener('resize', resizeCallBack);
+        window.addEventListener('keydown', keyDownCallBack)
+        window.addEventListener('keyup', keyUpCallBack)
+
+        this.eventsCallBack = [resizeCallBack, keyDownCallBack, keyUpCallBack]
     }
 
 }

@@ -8,11 +8,20 @@ const client_port = process.env.CLIENT_PORT || 5000
 const server_address = `${host}:${server_port}`
 const client_address = `${host}:${client_port}`
 
-console.log(server_address, " client: ", client_address)
+function customLog(...args) {
+    const stackTrace = new Error().stack.split('\n');
+    const callerLine = stackTrace[2].trim();
+    let a = callerLine.split('/')
+    let b = a[a.length - 1]
+    console.log(`[${b}]`, ...args);
+  }
+
+customLog(server_address, " client: ", client_address)
 export {
     host,
     server_port,
     client_port,
     client_address,
     server_address,
+    customLog
 }

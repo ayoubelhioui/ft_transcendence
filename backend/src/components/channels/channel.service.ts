@@ -18,6 +18,7 @@ import { ChannelWithPassword } from '../../global/dto/channel-with-password.dto'
 import { ChannelGateway } from './channel.gateway';
 import { UserService } from '../user/user.service';
 import { FriendsService } from '../friends/friends.service';
+import { customLog } from 'src/Const';
 
 
 
@@ -102,7 +103,7 @@ export class ChannelService {
 
     async removeDmOfUsers(user1 : User, user2 : User) {
         const affected = await this.channelRepository.removeDmOfUsers(user1, user2);
-        console.log("Im Tryna delete dms : ", affected)
+        customLog("Im Tryna delete dms : ", affected)
     }
 
     async getUserChannels(user : User) :  Promise < Channel[] | undefined > {

@@ -39,20 +39,21 @@ const Popup = () => {
 
     return (
         <Modal 
-        isOpen={true}
+        isOpen={false}
         onRequestClose={onRequestClose}
         contentLabel="Example Modal"
-        className="modal-content border-none outline-none bg-none"
+        className="modal-content max-sm:top-[8%] max-sm:right-[5%] border-none outline-none bg-none"
         overlayClassName="modal-backdrop"
         shouldCloseOnOverlayClick={true}
       >
         
-        <div className=" text-black items-center justify-center w-[50px]">
+        <div className=" text-white flex items-center justify-center gap-4 mx-4 relative">
           <Avatar alt="Avatar" src="" />
           <div className="flex flex-col">
             <h2>User's Name</h2>
-            <p>{content}</p>
+            <p className="pl-2">rgfsvwewedffds</p>
           </div>
+          <ImCross size={15} onClick={onRequestClose} className="cursor-pointer absolute top-0 -right-[6.4rem] pt-[5px] w-[20px] h-[20px]"/>
           
           {/* Add the line to represent the time the popup will appear */}
           {/* <NavLink to="/Chat"> h </NavLink>
@@ -71,7 +72,7 @@ const MainPage = () => {
   
     return (
         <MainWrapper>
-            {/* <Popup /> */}
+            <Popup />
             <Navbar /> 
             <Routes>
 

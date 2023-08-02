@@ -3,6 +3,7 @@ import { Injectable, CanActivate, ExecutionContext, NestMiddleware, ForbiddenExc
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from '../auth.service';
 import { NextFunction } from 'express';
+import { customLog } from 'src/Const';
 
 
 @Injectable()
@@ -15,7 +16,7 @@ export class TokenValidationMiddleware implements NestMiddleware {
     private async _isValidToken() : Promise<boolean> {
         try {
             
-            // console.log('token', this.token);
+            // customLog('token', this.token);
             this.payload = await this.jwtService.verifyAsync(this.token, {
             secret: process.env.TOKEN_SECRET, 
         });
@@ -31,13 +32,13 @@ export class TokenValidationMiddleware implements NestMiddleware {
         const isValidToken : boolean = await this._isValidToken();
    
         if (!isValidToken) {
-            console.log('invalid token');
+            customLog('invalid token');
             throw new ForbiddenException('Invalid token');
         }
 
         this.user = await this.authService.findUserById(this.payload.sub);
         if (!(this.authService.isTokenInBlacklist(this.token)) || !this.user) {
-            console.log('invalid token');
+            customLog('invalid token');
             throw new ForbiddenException('Invalid token');
         }
         request['user'] = this.user;

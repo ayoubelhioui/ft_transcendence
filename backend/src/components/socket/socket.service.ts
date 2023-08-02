@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { Channel, User } from 'src/database/entities';
 import { Length } from 'class-validator';
+import { customLog } from 'src/Const';
 
 @Injectable()
 export class SocketService {
@@ -46,6 +47,9 @@ export class SocketService {
 
     getUser(socket : any) : User
     {
+        //customLog(socket.user)
+        if(!socket.user)
+            customLog("it aint here in them sockets")
         return socket.user;
     }
 

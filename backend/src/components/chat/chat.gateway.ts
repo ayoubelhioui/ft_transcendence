@@ -8,6 +8,7 @@ import { sendMessageDto } from './dto/send-message.dto';
 import { ChannelService } from '../channels/channel.service';
 import { SocketService } from '../socket/socket.service';
 import { Channel, ChannelMessages, User } from 'src/database/entities';
+import { customLog } from 'src/Const';
 
 
 @WebSocketGateway()
@@ -31,7 +32,7 @@ export class ChatGateway {
   @UseGuards(ChannelExistsGuard, UserInChannelGuard, UserMutedGuard)
   async sendMessage(socket: Socket,  sendMessageDto : sendMessageDto)
   {
-    console.log("emit getted?");
+    customLog("emit getted?");
     const user: User  =  this.socketService.getUser(socket);
     const channel : Channel = this.socketService.getChannel(socket);
     const createdMessage : ChannelMessages = await this.channelService.createMessage(user, channel, sendMessageDto.message);
@@ -57,7 +58,7 @@ export class ChatGateway {
   //   if muted, cache expiration date, only fetch again after that
   // */
   // handleDisconnect(socket: Socket) {
-  //   console.log('Client disconnected');
+  //   customLog('Client disconnected');
   // }
 }
 // export class ChatGateway{};

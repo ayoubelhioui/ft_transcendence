@@ -4,24 +4,28 @@ import image_2 from '../../assets/image_2.png'
 import img_classic_game from '../../assets/classic-game.png'
 import img_three_game from '../../assets/table3d.png'
 import { useAppServiceContext } from '../../Context/Context';
+import { useNavigate } from 'react-router-dom';
 
 const GAME_2D = true
 const GAME_3D = false
 
 const ChooseGame = () => {
-  const [isBotGame, setIsBotGame] = useState<boolean | undefined>(undefined);
+  const appService = useAppServiceContext()
+  const navigate = useNavigate()
+  const [isBotGame, setIsBotGame] = useState<boolean | undefined>(false);
 
-  const goToGame = (isClassicGame : boolean) => {
-    const appService = useAppServiceContext()
-    
+  const goToGame = (isClassicGame : boolean) => {  
     appService.utilService.gameParams = {
-
+      isWatchMode : false,
+      isBotMode : isBotGame!,
+      isClassic : isClassicGame
     }
+    navigate("/Play")
   }
 
   return (
     <div className="purple_back flex flex-col gap-16 items-center mx-24 h-[650px] my-auto p-8 text-white">
-        {!isBotGame ?
+        {isBotGame === undefined ?
           <>
             <h1 className='text-5xl'>Choose Which To Play Against</h1>
             <div className="flex justify-around w-full">

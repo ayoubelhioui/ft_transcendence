@@ -10,6 +10,7 @@ import { FriendsService } from '../friends/friends.service';
 import { GameService } from '../game/game.service';
 import { GameSessions } from '../game/game-sessions.service';
 import { UserService } from '../user/user.service';
+import { customLog } from 'src/Const';
 
 @WebSocketGateway()
 @UseFilters(WebSocketExceptionFilter)
@@ -36,7 +37,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   {
     // Retrieve the authentication token from the request
     const authToken = socket.handshake?.headers?.authorization; 
-    console.log("authtoken === ", authToken);
+    //customLog("authtoken === ", authToken);
     if (!authToken)
         return (false);
     const token = authToken.replace('Bearer ', '');
@@ -48,7 +49,8 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
       return (false);
     }
     const {sub} = payload as any;
-    console.log(sub);
+    customLog(payload);
+    customLog(socket.id);
     const user = await this.userService.findById(sub);
     (socket as any).user  = user;
     return ((user) ? true : false);
@@ -57,7 +59,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   private async getOnlineFriendsSocket(user : User) :  Promise <Socket[]>{
     const onlineFriendsSockets : Socket[] = [];
     const friends : User[] = await this.friendsService.getFriends(user);
-    console.log("freinds ==== ", friends);
+    customLog("freinds ==== ", friends);
     friends.forEach(friend => {
       const friendsSocket : Socket[] = this.socketService.isUserOnline(friend.id);
       if (friendsSocket.length)
@@ -91,7 +93,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   private async joinUserChannels(client: Socket) {
     const user : User = this.socketService.getUser(client);
     const channelsId : Channel[] = await this.channelService.getUserChannelsId(user);
-    // console.log(channelsId);
+    // customLog(channelsId);
     channelsId.forEach( element => {
       const channelRoom : string = 'channel_' + element.id;
       client.join(channelRoom);
@@ -102,16 +104,16 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
 
 
   async handleConnection(client: Socket) {
-      //console.log(client.handshake)
+      //customLog(client.handshake)
     const isAuth : boolean = await this.isAuth(client);
     if (!isAuth)
     {
       client.emit("exception",{message : "you are not Authorize"})
-      console.log("khroj tqawd");
+      customLog("khroj tqawd");
       client.disconnect();
       return;
     }
-    console.log("connected")
+    customLog("connected")
     const user : User = this.socketService.getUser(client);
     this.socketService.addSocket(user.id, client);
     await Promise.all([
@@ -160,6 +162,6 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   async handleDisconnect(client: Socket)
   {
     await this.disconnectUser(client);
-    console.log("disconnected")
+    customLog("disconnected")
   }
 }

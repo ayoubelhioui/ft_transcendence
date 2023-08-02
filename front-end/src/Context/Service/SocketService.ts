@@ -42,4 +42,7 @@ export class SocketService {
         this.socket?.off(event)
     }
 
+    getSocket() {
+        return this.socket
+    }
 }
