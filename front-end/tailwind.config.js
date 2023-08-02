@@ -20,6 +20,7 @@ export default {
 
         // Complex site-specific row configuration
         'layout': '650px minmax(650px, 1fr)',
+        'layout-min': '550px minmax(600px, 1fr)',
       },
       backgroundColor: {
         'custom-blue': 'rgba(9, 9, 121, 0.3)',

@@ -76,6 +76,16 @@ export class Game {
         console.log("game score", this.gameInfo)
     }
 
+    loop() {
+        const game = this
+        function gameLoop()
+        {
+            game.scene.update()
+            params.frame++
+            game.renderer.render(game.scene, game.camera)
+        }
+        game.renderer.setAnimationLoop(gameLoop)
+    }
 
     //===========================================
     //===========================================

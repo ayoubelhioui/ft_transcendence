@@ -76,6 +76,35 @@ const GoToChat = ({relation} : {relation : Relation}) => {
   )
 }
 
+const Play = ({relation} : {relation : Relation}) => {
+
+  const handleSubmit = async () => {
+    // const res = await request()
+    // if (res.status === STATUS_SUCCESS) {
+    //   relation.affect((value : any) => !value)
+    // }
+    // else {
+    //   console.log("Error")
+    //   //!popup
+    // }
+  }
+
+
+  return (
+    <>
+      <motion.button
+      onClick={handleSubmit}
+      type='button'
+      whileTap={{scale: 0.955}}
+      className='flex items-center bg-[#4D194D] py-2 px-6 mx-auto text-xs outline-none'
+      > 
+      <MdEdit size={15} className='mr-1'/> 
+          Play
+      </motion.button>
+    </>
+  )
+}
+
 const BlockRequest = ({relation} : {relation : Relation}) => {
   const appService = useAppServiceContext()
   let blockStatus = relation.blockedBy?.id === relation.userId
@@ -84,10 +113,10 @@ const BlockRequest = ({relation} : {relation : Relation}) => {
   const request = async () => {
     console.log("=>", relation.blockedBy)
     if (blockStatus) {
-      console.log("unblock friend")
+      console.log("unblock")
       return await appService.requestService.deleteUnblockFriend(relation.targetUserId)
     }
-    console.log("block friend")
+    console.log("block")
     return await appService.requestService.deleteBlockFriend(relation.targetUserId)
   }
 

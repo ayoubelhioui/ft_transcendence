@@ -138,9 +138,13 @@ export class AuthService {
                 message : "Success"
             }
         } catch (error : any) {
+
+            // Cookies.remove('access_token');
+            // Cookies.remove('refresh_token');
+
             return {
                 status : STATUS_ERROR,
-                message : "Can't logout" + error
+                message : "An error happen" + error
             }
         }
     }

@@ -244,11 +244,6 @@ export class FriendsService {
     {
         const existingRequest : Friends | undefined = await this.friendsRepository.findOneByOptions({
             where: [
-                        // {
-                        //     sender: Sender,
-                        //     receiver : receiver,
-                        //     status : friendRequestStatus.pending
-                        // },
                         {
                             sender: sender,
                             receiver: user,
@@ -281,7 +276,7 @@ export class FriendsService {
                 this.channelService.removeDmOfUsers(blockedBy, blocked)
             ]);
         } catch (error) {
-            
+            console.log("I DIDNT DELETE THE DM AFTER BLOCK ", error.message)
         }
         return (
                 await this.blockedUsersRepository.create({

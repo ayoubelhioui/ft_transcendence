@@ -5,10 +5,11 @@ import { GameParams } from '../../interfaces/interface.game.params';
 import { LoaderResult } from './interfaces/interface.load.result';
 
 
-async function threeGameStart(gameParams : GameParams) {
-    const resources = (await load() as LoaderResult)
-    const game = new Game(gameParams, resources)
- 
+function getThreeGame(gameParams : GameParams, resources : LoaderResult) {
+    return new Game(gameParams, resources)
+}
+
+async function threeGameStart(game : Game) {
     function gameLoop()
     {
         game.update()
@@ -20,4 +21,8 @@ async function threeGameStart(gameParams : GameParams) {
     game.renderer.setAnimationLoop(gameLoop)
 }
 
-export default threeGameStart
+export {
+    threeGameStart,
+    getThreeGame
+}
+

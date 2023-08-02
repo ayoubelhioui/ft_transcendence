@@ -41,7 +41,7 @@ const ChatsGroupsPanel = () => {
 
   return (
     <ChatsGroupsPanelContextProvider>
-      <div className="top_2 col-span-1 row-span-2 max-m-custom-md:hidden max-sm:hidden h-[750px] max-custom-lg:h-[700px] ">
+      <div className="top_2 col-span-1 row-span-2 max-m-custom-md:row-span-1 max-m-custom-md:content-center max-m-custom-md:w-[60%] max-m-custom-md:col-span-2 max-m-custom-md:mx-auto max-m-custom-md:h-[550px] h-[750px] max-custom-lg:h-[700px] max-m-custom-md:mr-auto max-sm:w-full">
           <div className="pt-1 flex w-full justify-between items-center">
               <Search />
               <button type='button' className='outline-none' onClick={() => setIsOpen(true)}>

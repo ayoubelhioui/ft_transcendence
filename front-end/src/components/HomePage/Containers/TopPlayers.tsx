@@ -25,7 +25,7 @@ const SeeMore = () => {
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
         <>
-            <div className="flex flex-col max-sm:flex-wrap top max-custom-lg:mt-[1vh] max-sm:h-[40%] max-custom-md:h-[25%] max-sm:mt-12 max-sm:mx-2 max-md:mx-4 max-md:mb-3">
+            <div className="flex flex-col max-sm:flex-wrap top max-custom-lg:mt-[1vh] max-sm:h-[40%] max-custom-md:h-[25%] max-sm:mt-12 max-sm:mx-2 max-md:mx-4 max-md:mb-3 max-m-custom-md:mb-4">
                 <SeeMore></SeeMore>
                 <div className="flex gap-12">
                     {children}
@@ -51,7 +51,7 @@ const Item = ({ payload }: {payload : any}) => {
 const NoContent = () => {
     return (
         <Wrapper>
-          <h1 className='text-white text-4xl flex justify-center w-full items-center h-full mt-12'>
+          <h1 className='text-gray-400 text-4xl flex justify-center w-full items-center h-full mt-12'>
             There Is No Players, Yet!
           </h1>
         </Wrapper>

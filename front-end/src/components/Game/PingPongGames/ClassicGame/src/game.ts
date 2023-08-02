@@ -2,9 +2,11 @@ import { Game } from './MyObjects/Game'
 import { GameParams } from '../../interfaces/interface.game.params'
 import { params } from './Utils/Params'
 
-async function classicGameStart(gameParams : GameParams) {
-    const game = new Game(gameParams)
-  
+function getGame(gameParams : GameParams) {
+    return new Game(gameParams)
+}
+
+async function classicGameStart(game : Game) {  
     function gameLoop()
     {
         game.scene.update()
@@ -14,4 +16,7 @@ async function classicGameStart(gameParams : GameParams) {
     game.renderer.setAnimationLoop(gameLoop)
 }
 
-export default classicGameStart
+export {
+    classicGameStart,
+    getGame
+}

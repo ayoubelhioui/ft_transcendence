@@ -84,3 +84,4 @@ export class AuthController{
             await this.authService.authenticate(user, res, true);
     }
 }
+

@@ -252,9 +252,6 @@ export class GameService {
             {
                 wins : MoreThan(0)
             },
-            {
-                loss : MoreThan(0)
-            }
                 ],
           order: {
           //sort by winrate than sort b games ()

@@ -68,11 +68,42 @@ class ChannelRepository extends ABaseRepository<Channel> implements IChannelRepo
     return (dmUsers);
   }
 
-  async removeDmOfUsers(user1 : User, user2  : User) {
-    const dm  : Channel = await this.getUsersDM(user1, user2);
+  async removeDmOfUsers(user1 : User, user2  : User) : Promise<number> {
+    // const dm  : Channel = await this.getUsersDM(user1, user2);
+    const dm = await this.findOneByOptions({
+      where : [
+                { 
+                  name: user1.id + "_" + user2.id,
+                  isGroup : false
+                },
+                { 
+                  name: user2.id + "_" + user1.id,
+                  isGroup : false
+                }
+            ]
+    })
     if (dm)
+    {
+      console.log ("FOUND DMS");
       await this.remove(dm);
-  }
-}
+    }
+    // const res = await this.delete(
+    //      [
+    //         { 
+    //           name: user1.id + "_" + user2.id,
+    //           isGroup : false
+    //         },
+    //         { 
+    //           name: user2.id + "_" + user1.id,
+    //           isGroup : false
+    //         }
+    //     ]
+    //   )
+    //   console.log("deleteing heere:")
+    //   console.log(user2.id + "_" + user1.id)
+    //   console.log(user1.id + "_" + user2.id)
+      return dm? 1 : 0;
+    }
+} 
 
 export default ChannelRepository;

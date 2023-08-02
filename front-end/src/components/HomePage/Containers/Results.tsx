@@ -33,7 +33,7 @@ const Item = ({ payload }: {payload : any}) => {
 const NoContent = () => {
     return (
         <Wrapper>
-           <div className="flex mx-auto my-auto h-full w-full justify-center items-center text-4xl"> No Lives </div>
+           <div className="flex mx-auto my-auto h-full w-full justify-center items-center text-3xl text-gray-400"> No Results </div>
         </Wrapper>
     )
 }

@@ -38,10 +38,10 @@ class Channel{
     public avatar: string;
    
     
-    @OneToMany(() => ChannelMessages, (channelMessages) => channelMessages.channel, {nullable : true, cascade: true, onDelete: 'CASCADE' })
+    @OneToMany(() => ChannelMessages, (channelMessages) => channelMessages.channel, {nullable : true })
     channelMessages: ChannelMessages[];
 
-    @OneToMany(() => ChannelUsers, (channelUsers) => channelUsers.channel, {nullable : true, cascade: true, onDelete: 'CASCADE' })
+    @OneToMany(() => ChannelUsers, (channelUsers) => channelUsers.channel, {nullable : true })
     public channelUsers: ChannelUsers[];
 
 
@@ -63,7 +63,7 @@ class Channel{
     public group_invites: Invites[];
 
     //update on each message sent
-    @OneToOne(() => ChannelMessages,  {nullable : true, cascade: true, onDelete: 'SET NULL' })
+    @OneToOne(() => ChannelMessages,  {nullable : true, cascade: true, onDelete: 'CASCADE' })
     @JoinColumn()
     lastMessage: ChannelMessages
 

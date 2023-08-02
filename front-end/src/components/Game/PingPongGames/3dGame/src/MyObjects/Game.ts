@@ -139,6 +139,18 @@ export class Game {
         this.player2.update()
     }
 
+    loop() {
+        const game = this
+        function gameLoop()
+        {
+            game.update()
+            params.frame++
+            //game.bloomComposer.render()
+            game.renderer.render(game.scene, game.camera)
+        }
+    
+        game.renderer.setAnimationLoop(gameLoop)
+    }
 
     //===========================================
     //===========================================

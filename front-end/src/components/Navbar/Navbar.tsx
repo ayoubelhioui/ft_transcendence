@@ -59,12 +59,8 @@ const Navbar = () => {
   const hoverStyle: string = "hover:scale-125 hover:duration-500 ease-in-out";
 
   const logout = async () => {
-    const res = await authNav.logout()
-    if (res.status === STATUS_SUCCESS) {
-      window.location.reload()
-    } else {
-      //!popup
-    }
+    await authNav.logout()
+    window.location.reload()
   }
 
   return (

@@ -12,7 +12,7 @@ const Conversations = () => {
   const name = chatContext.conversationInfo.name
 
   return (
-    <div className="flex flex-col justify-between max-m-custom-md:w-[100%] top_2 col-span-2 max-m-custom-md:col-span-1 h-[850px] max-m-custom-md:h-[900px] max-custom-lg:h-[800px] row-span-2 ">
+    <div className="flex flex-col justify-between max-m-custom-md:w-[100%] top_2 col-span-2 max-m-custom-md:col-span-2 h-[850px] max-m-custom-md:h-[670px] max-custom-lg:h-[800px] row-span-2 max-custom-md:mt-2">
       { 
       
       id != undefined ? (
@@ -22,7 +22,7 @@ const Conversations = () => {
           <ChatFooter />
         </>
       ) : (
-        <div className="flex mx-auto h-screen w-full justify-center items-center text-3xl text-white"> There Is No Conversation ! </div>
+        <div className="flex mx-auto h-screen w-full justify-center items-center text-3xl text-gray-400"> There Is No Conversation ! </div>
       )
       
       }

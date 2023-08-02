@@ -11,7 +11,7 @@ const Chat = () => {
   let chatId = params.id ? +params.id : undefined
 
   return (
-    <div className="grid grid-cols-column-layout max-m-custom-md:grid-cols-1 grid-rows-2 max-m-custom-md:grid-rows-1 gap-4 justify-center my-auto max-m-custom-md:my-0 items-center mx-auto max-w-full px-2 w-[1400px] max-sm:w-full">
+    <div className="grid grid-cols-column-layout grid-rows-2 max-m-custom-md:grid-rows-layout-min gap-4 max-custom-md:gap-0 max-custom-md:w-[90%] justify-center my-auto max-m-custom-md:my-0 items-center mx-auto max-w-full px-2 w-[1400px] max-sm:w-full">
       <ChatContextProvider chatId={chatId}>
         <ChatsGroupsPanel/>
         <Conversations />

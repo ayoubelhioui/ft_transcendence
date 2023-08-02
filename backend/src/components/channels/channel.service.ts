@@ -101,7 +101,8 @@ export class ChannelService {
     }
 
     async removeDmOfUsers(user1 : User, user2 : User) {
-        await this.channelRepository.removeDmOfUsers(user1, user2);
+        const affected = await this.channelRepository.removeDmOfUsers(user1, user2);
+        console.log("Im Tryna delete dms : ", affected)
     }
 
     async getUserChannels(user : User) :  Promise < Channel[] | undefined > {

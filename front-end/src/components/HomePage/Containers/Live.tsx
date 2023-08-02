@@ -35,7 +35,7 @@ const Item = ({ player1, player2 }: {player1 : any, player2 : any}) => {
 const NoContent = () => {
     return (
         <Wrapper>
-            <div className="flex mx-auto h-full my-auto w-full justify-center items-center text-4xl"> No Lives </div>
+            <div className="flex mx-auto h-full my-auto w-full justify-center items-center text-3xl text-gray-400"> No Lives </div>
         </Wrapper>
     )
 }

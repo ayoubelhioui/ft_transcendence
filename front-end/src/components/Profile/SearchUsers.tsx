@@ -31,7 +31,7 @@ const Item = ({payload, closeDialog} : {payload : any, closeDialog : any}) => {
   }
 
   return (
-    <div onClick={itemOnClick} className="flex mt-3 items-center justify-between text-white w-full">
+    <div onClick={itemOnClick} className="flex mt-3 items-center justify-between text-white w-full cursor-pointer">
       <div className="flex items-center gap-6 w-full">
         <img src={avatar} className="w-[50px] h-[50px] rounded-[50%] object-cover" alt="" />
         <div className="w-1/2">{user.username}</div>
@@ -43,7 +43,7 @@ const Item = ({payload, closeDialog} : {payload : any, closeDialog : any}) => {
 const NoContent = () => {
   return (
       <Wrapper>
-          <div className="flex h-full mx-auto my-auto w-full justify-center items-center text-xl "> Not Found </div>
+          {/* <div className="flex h-full mx-auto my-auto w-full justify-center items-center text-xl "> Not Found </div> */}
       </Wrapper>
   )
 }

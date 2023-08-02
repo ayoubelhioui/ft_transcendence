@@ -62,7 +62,7 @@ const Item = ({payload} : {payload : any}) => {
 const NoContent = () => {
     return (
         <Wrapper>
-            <div className="flex mx-auto text-white justify-center items-center"> No Groups Available </div>
+            <div className="flex mx-auto text-gray-400 justify-center items-center"> No Groups Available </div>
         </Wrapper>
     )
 }

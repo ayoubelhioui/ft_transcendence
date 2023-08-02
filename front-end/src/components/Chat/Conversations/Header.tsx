@@ -7,9 +7,10 @@ const Header = ({name} : {name : string}) => {
 
   return (
     <div className="flex justify-between mx-6 mt-3 items-center pt-2">
-      <BsFillArrowLeftCircleFill size={20} className=" hidden max-custom-md:block text-white cursor-pointer"/>
+      <button type='button' className=' bg-[#4D194D] py-[6px] px-6  text-sm outline-none text-white'> 
+          Exit
+      </button>
       <div className="flex flex-col items-center mx-auto ">
-        {/* <img src={authApp.user?.avatar} alt='avatar' className=' object-cover rounded-full w-[55px] h-[55px]'/> */}
         <h2 className="text-sm text-white w-full text-center">
           {name}
         </h2>
@@ -23,16 +24,18 @@ const Header = ({name} : {name : string}) => {
 
         {isOpen && (
           <div className="flex flex-col bg-blue-950 rounded-[10px] absolute top-[3rem] items-center -left-[8rem] w-[150px] h-[160px] justify-center text-white z-[999]">
-            {/* I need to check if the user is an admin, and if he is then i will have to display block and mute and add */}
 
             <span className="text-sm my-3 cursor-pointer hover:text-gray-300 hover:border-gray-300">
-              Invite Someone
+              Invite
             </span>
             <span className="text-sm my-3 cursor-pointer hover:text-gray-300 hover:border-gray-300">
               Block
             </span>
             <span className="text-sm my-3 cursor-pointer hover:text-gray-300 hover:border-gray-300">
               Mute
+            </span>
+            <span className="text-sm my-3 cursor-pointer hover:text-gray-300 hover:border-gray-300">
+              Delete
             </span>
           </div>
         )}

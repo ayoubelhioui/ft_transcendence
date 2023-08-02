@@ -21,7 +21,7 @@ class ChannelMessages{
     @ManyToOne(() => User, (user) => user.channelMessages)
     user : User;
 
-    @ManyToOne(() => Channel, (channel) => channel.channelMessages)
+    @ManyToOne(() => Channel, (channel) => channel.channelMessages, {cascade : true, onDelete : "CASCADE"})
     channel : Channel;
 
 }

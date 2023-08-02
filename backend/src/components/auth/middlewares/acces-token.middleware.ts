@@ -15,7 +15,7 @@ export class TokenValidationMiddleware implements NestMiddleware {
     private async _isValidToken() : Promise<boolean> {
         try {
             
-            console.log('token', this.token);
+            // console.log('token', this.token);
             this.payload = await this.jwtService.verifyAsync(this.token, {
             secret: process.env.TOKEN_SECRET, 
         });

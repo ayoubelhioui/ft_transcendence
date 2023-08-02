@@ -84,7 +84,7 @@ const Item = ({payload} : {payload : any}) => {
 const NoContent = () => {
     return (
         <Wrapper>
-            <div className="flex mt-[50%] text-white text-2xl justify-center items-center"> No Messages Yet! </div>
+            <div className="flex mt-[50%] text-gray-400 text-2xl justify-center items-center"> No Messages Yet! </div>
         </Wrapper>
     )
 }

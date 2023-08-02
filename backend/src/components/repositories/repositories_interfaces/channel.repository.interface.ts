@@ -10,8 +10,7 @@ interface IChannelRepository extends IBaseRepository<Channel>
     getOwnerChannels(owner : User) : Promise < Channel[] | undefined >;
     getChannelWithPassword(channelId : number) : Promise<ChannelWithPassword | undefined>;
     getUsersDM(user1 : User, user2 : User) : Promise<Channel | undefined>;
-    removeDmOfUsers(user1 : User, user2  : User);
-    
+    removeDmOfUsers(user1 : User, user2  : User) : Promise<number>;
 
 }
 

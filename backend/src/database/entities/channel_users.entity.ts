@@ -15,7 +15,7 @@ class ChannelUsers{
     @ManyToOne(() => User, user => user.channelUsers)
     public user: User;
 
-    @ManyToOne(() => Channel, channel => channel.channelUsers)
+    @ManyToOne(() => Channel, channel => channel.channelUsers, {cascade : true,  onDelete : "CASCADE"})
     public channel: Channel;
 
     //!add date to channel to sort
