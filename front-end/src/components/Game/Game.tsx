@@ -84,6 +84,7 @@ const Game =  () => {
         }
    
         return () => {
+            console.log("leave")
             if (gameObject) {
                 gameObject.stop()
                 gameObject.socketMgr.socket.emit("leaveGame", {})
@@ -98,7 +99,7 @@ const Game =  () => {
     return (
         <>
             <GameUi state={state}></GameUi>
-            <div ref={rootHtmlElement} />
+            <div ref={rootHtmlElement} className='w-full h-full' />
         </>
     )
         

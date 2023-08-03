@@ -42,6 +42,7 @@ export class SocketManager {
         
         
             socket.on("end_game", (data) => {
+                console.log("End Game Event")
                 game.end(data)
             })
         

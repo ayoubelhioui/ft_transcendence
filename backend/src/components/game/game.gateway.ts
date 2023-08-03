@@ -82,13 +82,13 @@ export class GameGateway {
   @SubscribeMessage ('join_game')
   async joinGame(client: Socket, payload: PlayerJoinDto) {
     const user = this.socketService.getUser(client);
-    customLog(clc.bgGreen("user inter with: "), user.id)
     if(!user)
     {
       customLog("Khroj b7alk!")
       // client.disconnect();
       return 
     }
+    customLog(clc.bgGreen("user inter with: "), user.id)
     const id = user.id;
     payload.user = await this.userService.findUserById(id)
     payload.invite_callback = this.inviteToGame

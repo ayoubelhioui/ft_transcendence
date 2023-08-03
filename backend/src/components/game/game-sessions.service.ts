@@ -78,10 +78,10 @@ export class GameSessions {
         if (payload.userToInvite) {
            const user2Invite = await this.userService.findById(payload.userToInvite)
            if(!user2Invite)
-               throw new NotFoundException("User doesn't exist")
+                throw new NotFoundException("User doesn't exist")
            const blocking = await this.friendsService.blocking_exists(user2Invite,payload.user)
            if(blocking)
-            throw new UnauthorizedException("yall are blocked");
+                throw new UnauthorizedException("yall are blocked");
            room = await this.createNewRoom(payload, payload.isClassic, !botGame)
            room.setAsInviteRoom(payload.user.id, payload.userToInvite)
            customLog(clc.bold(`Invite to roomId : ${room.roomId} from user ${payload.user.id} to ${payload.userToInvite}`))
@@ -99,16 +99,20 @@ export class GameSessions {
                 throw new NotFoundException("game doesn't exist")
             }
         } else {
-            if (payload.isClassic && this.classicRoom && !this.classicRoom.closed) {
-                room = this.classicRoom
-            } else if (!payload.isClassic && this.threeRoom && !this.threeRoom.closed) {
-                room = this.threeRoom
-            } else {
-                room = await this.createNewRoom(payload, payload.isClassic, !botGame)
-                if (payload.isClassic)
+            if (payload.isClassic) {
+                if (this.classicRoom && !this.classicRoom.closed) {
+                    room = this.classicRoom
+                } else {
+                    room = await this.createNewRoom(payload, payload.isClassic, !botGame)
                     this.classicRoom = room as ClassicRoom
-                else
+                }
+            } else {
+                if (this.threeRoom && !this.threeRoom.closed) {
+                    room = this.threeRoom
+                } else {
+                    room = await this.createNewRoom(payload, payload.isClassic, !botGame)
                     this.threeRoom = room as ThreeRoom
+                }
             }
         }
         return room
@@ -157,16 +161,12 @@ export class GameSessions {
                         room = await this.addPlayerToMultiPlayerRoom(payload)
                     } catch (error : any) {
                         client.emit("exception", {status : error.status , message : error.message})
+                        return
                     }
                 }
                 if (room) {
                     customLog(clc.bgBlue("Player Enter To Room: "), room.toString())
                     room.add(payload, client)
-                    if (room.player1 && !room.player2) {
-                        customLog("Player1 create the game: ", room.player1.id, room.roomId)
-                    } else if (room.player2) {
-                        customLog("Player2 Join the game: ", room.player2.id, room.roomId)
-                    }
                     this.clientRooms.set(socketId, room)
                     this.clients.push(socketId)
                     this.roomsIdMap.set(room.roomId, room)
@@ -177,15 +177,7 @@ export class GameSessions {
                             console.log(clc.bgBlue("Players of the room: "), room.player1.id, room.player2.id)
                             await this.gameService.joinGame(room.player2.user, room.roomId)
                         }
-                        let m = clc.green(`Start playing ${room.toString()}`)
-                        customLog(m)
-                        if (payload.isBotMode === false) {
-                            const newRoom = await this.createNewRoom(payload, payload.isClassic, !botGame)
-                            if (payload.isClassic)
-                                this.classicRoom = newRoom as ClassicRoom
-                            else
-                                this.threeRoom = newRoom as ThreeRoom
-                        }
+                        customLog(clc.green(`Start playing ${room.toString()}`))
                         setTimeout((r : ClassicRoom | ThreeRoom) => r.start(), 1000, room)
                     }
                 }

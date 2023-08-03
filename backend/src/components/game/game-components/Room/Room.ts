@@ -65,7 +65,7 @@ export class Room {
         }
         if (this.player1 === undefined)
             this.player1 = newPlayer
-        else if (this.player2 === undefined)
+        else if (this.player2 === undefined && newPlayer.id != this.player1.id)
             this.player2 = newPlayer
         if (this.player1 && this.player2) {
             this.closed = true
@@ -119,6 +119,6 @@ export class Room {
         let type = this.roomType === 0 ? "Classic" : "Three"
         let invite = this.inviteInfo.isInviteRoom ? `Invite (${this.inviteInfo.player1Id}, ${this.inviteInfo.player2Id})` : ""
         let bot = this.isBotMode ? "Bot" : "Multi"
-        return `${type} Room ${this.roomId} Type : ${bot} ${invite}`
+        return `${type} Room ${this.roomId} Type : ${bot} ${invite} users ${this.player1?.id} ${this.player2?.id}`
     }
 }
