@@ -5,7 +5,7 @@ import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../C
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
-		<div className="flex flex-col purple_back mt-[5%] w-[70%] mx-auto h-[60vh] max-md:mt-[3%] max-md:w-[85%] pb-5 max-sm:pb-0 max-custom-md:w-[85%] max-custom-md:h-[75vh]">
+		<div className="flex flex-col purple_back mt-[4%] w-[70%] mx-auto h-[60vh] max-md:mt-[3%] max-md:w-[85%] pb-5 max-sm:pb-4 max-custom-md:w-[85%] max-custom-md:h-[75vh] max-sm:h-[95vh] max-sm:w-[95%]">
 			<h1 className="text-white text-3xl text-center mx-5 mt-5">Latest Results</h1>
 			<div className="flex flex-wrap items-center justify-center mt-12 mx-5 gap-12 overflow-x-scroll">
                 {children}

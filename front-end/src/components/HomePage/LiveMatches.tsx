@@ -7,7 +7,7 @@ import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../C
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
-        <div className="flex flex-col purple_back mt-[5%] max-custom-lg:mt-[4%] w-[80%] max-custom-lg:w-[70%] mx-auto h-[60vh] max-custom-lg:h-[80vh] max-md:mt-[3%] max-md:w-[85%] max-sm:h-screen pb-5 max-sm:pb-0 max-sm:w-[95%] max-custom-md:w-[85%] max-custom-md:h-[75vh]">
+        <div className="flex flex-col purple_back mt-[4%] max-custom-lg:mt-[4%] w-[80%] max-custom-lg:w-[70%] mx-auto h-[60vh] max-custom-lg:h-[80vh] max-md:mt-[3%] max-md:w-[85%] max-sm:h-screen pb-5 max-sm:pb-0 max-sm:w-[95%] max-custom-md:w-[85%] max-custom-md:h-[75vh]">
             <h1 className="text-white text-2xl mx-5 mt-5">Live Games</h1>
             <div className="flex flex-wrap mt-12 mx-5 gap-12 overflow-x-scroll justify-around">
                 {children}
@@ -17,28 +17,20 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 }
 
 const Item = ({payload} : {payload : any}) => {
-    const appService = useAppServiceContext()
-    const navigate = useNavigate()
     const player1 = payload.player1
     const player2 = payload.player2
-    const token = payload.token
     const isClassic = payload.isClassic
 
-    const goToGame = () => {  
-        appService.utilService.gameParams = {
-          isWatchMode : true,
-          isClassic : isClassic,
-          gameToken : token,
-        }
-        navigate("/Play")
-    }
+    console.log("payload", payload)
+
+   
 
     const imagePath = isClassic ? "/src/assets/table3d.png" : "/src/assets/classic-game.png"
 
     //!link to the live
 
     return (
-        <div className="flex flex-wrap h-[190px] w-[260px] cursor-pointer " onClick={() => goToGame()}>
+        <div className="flex flex-wrap h-[190px] w-[260px] cursor-pointer ">
            <div className={`flex bg-[url('${imagePath}')] w-full h-[130px] rounded-[16px] bg-cover`} >
                 {/* <img src={imagePath} alt="Image_Type" className="w-[300px] object-cover h-[120px]"/> */}
             </div>
@@ -60,7 +52,7 @@ const Item = ({payload} : {payload : any}) => {
 const NoContent = () => {
     return (
         <Wrapper>
-            <div className="flex m-auto w-full h-[50vh] justify-center items-center text-4xl text-gray-400"> No Lives Yet!</div>
+            <div className="flex m-auto w-full h-[50vh] justify-center items-center text-4xl text-gray-400"> No friends playing right now!</div>
         </Wrapper>
     )
 }

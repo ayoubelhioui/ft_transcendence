@@ -11,13 +11,14 @@ import { MdEdit } from 'react-icons/md'
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { STATUS_ERROR, STATUS_SUCCESS, address } from '../../Const';
 import { useAppServiceContext } from '../../Context/Context';
 import AxiosInstance from '../../Context/Service/AxiosInstance';
 import { useParams } from 'react-router-dom';
 import { UserI } from '../../Context/Service/AuthService';
 import Relation from './Relation';
+import { UserInfo } from '..';
 
 
 const ProfileUserName = ({userInfo} : {userInfo : any}) => {
@@ -47,7 +48,9 @@ const EditImage = () => {
   const newAvatar = useRef<File | undefined>(undefined);
 
   const handleImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // customLog(clc.red("=================================================================>"));
     if (event.target.files) {
+      console.log("==========================================================++>");
       newAvatar.current = event.target.files[0];
     }
   };
@@ -86,14 +89,27 @@ const EditImage = () => {
 const ProfileImage = ({userInfo} : {userInfo : any}) => {
   const intraId = userInfo?.user?.IntraId
   const avatarLink = `http://${address}/users/image/${intraId}`
-  
+  const appService = useAppServiceContext()
+  const isOnline = appService.socketService.listFriends.find((item : any) => item?.id === userInfo?.user?.id)
+  const isFriend = appService.socketService.allFriendsList.find((item : any) => item?.id === userInfo?.user?.id)
+
+
 
 
   return (
     <>
-      <div className="flex justify-start">
+      <div className="flex justify-start relative">
         <img src={avatarLink} alt='avatar' className=' object-cover rounded-full w-[130px] h-[130px]'/>
         { !(userInfo?.relation) && <EditImage/> }
+        {
+          isOnline && 
+            <span className="w-4 h-4 rounded-full bg-green-500 border-2 border-white absolute left-2 top-[1rem]"></span>
+        }
+        {
+          isFriend && !isOnline &&
+          <span className="w-4 h-4 rounded-full bg-red-500 border-2 border-white absolute left-2 top-[1rem]"></span>
+        }
+
       </div>
     </>
   )

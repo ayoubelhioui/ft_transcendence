@@ -35,7 +35,7 @@ const links: any = [
     icon: <MessageIcon size={30} className='text-white'/>,
   },
   {
-    name: "Live",
+    name: "FriendsPlaying",
     icon: <VideoIcon size={30} className='text-white'/>,
   },
   {

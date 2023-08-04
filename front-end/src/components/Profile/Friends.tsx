@@ -10,7 +10,7 @@ import AddFriend from "./SearchUsers";
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
   return (
-      <div className="flex flex-col gap-4 justify-between items-center w-full ml-4 overflow-y-scroll">
+      <div className="flex flex-col gap-4 justify-between items-center w-full ml-4 overflow-y-auto">
           {children}
       </div>
       
@@ -27,13 +27,17 @@ const Item = ({payload} : {payload : any}) => {
     navigate(`/Profile/${user.id}`)
   }
 
+  const itemOnClickDm = () => {
+    navigate(`/Chat/${user.id}`)
+  }
+
   return (
-    <div onClick={itemOnClick} className="flex mt-3 items-center justify-between max-custom-md:justify-around text-white w-[90%]">
+    <div  className="flex mt-3 items-center justify-between max-custom-md:justify-around text-white w-[90%]">
       <div className="flex items-center gap-6 w-full">
-        <img src={avatar} className="w-[50px] h-[50px] cursor-pointer rounded-[50%] object-cover" alt="" />
+        <img onClick={itemOnClick} src={avatar} className="w-[50px] h-[50px] cursor-pointer rounded-[50%] object-cover" alt="" />
         <div className="w-1/2 cursor-pointer">{user.username}</div>
       </div>
-      <button type="button" className="purple_back ml-1 py-1 px-4">DM</button>
+      <button onClick={itemOnClickDm} type="button" className="purple_back ml-1 py-1 px-4">DM</button>
     </div>
   )
 }
@@ -41,7 +45,7 @@ const Item = ({payload} : {payload : any}) => {
 const NoContent = () => {
   return (
       <Wrapper>
-          <div className="flex mx-auto py-2 "> No Friends Found </div>
+          <div className="flex mx-auto text-gray-400 justify-center items-center"> No Friends Found </div>
       </Wrapper>
   )
 }
@@ -89,9 +93,9 @@ const Friends = ({userInfo} : {userInfo : any}) => {
         <AddFriend />
       </div>
 
-      <div className="flex flex-col overflow-x-scroll">
-        <div className="flex items-center justify-between">
-          <div className="flex relative justify-between items-center h-full">
+      <div className="flex flex-col max-sm:overflow-x-scroll">
+        <div className="flex items-center justify-between ">
+          <div className="flex relative justify-between items-center h-full ">
             
        
               <input

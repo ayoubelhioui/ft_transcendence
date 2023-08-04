@@ -25,9 +25,9 @@ const SeeMore = () => {
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
         <>
-            <div className="flex flex-col max-sm:flex-wrap top max-custom-lg:mt-[1vh] max-sm:h-[40%] max-custom-md:h-[25%] max-sm:mt-12 max-sm:mx-2 max-md:mx-4 max-md:mb-3 max-m-custom-md:mb-4">
+            <div className="flex flex-col top max-custom-lg:mt-[1vh] max-sm:h-[28%] max-custom-md:h-[25%] max-sm:mt-12 max-sm:mx-auto max-md:mx-4 max-md:mb-3 max-m-custom-md:mb-4">
                 <SeeMore></SeeMore>
-                <div className="flex gap-12">
+                <div className="flex gap-12 max-sm:gap-2 max-sm:overflow-y-scroll max-sm:flex-wrap">
                     {children}
                 </div>
             </div>
@@ -37,10 +37,10 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 
 const Item = ({ payload }: {payload : any}) => {
     return (
-        <div className="flex text-white justify-start mx-6 max-custom-md:mx-2 mt-4 gap-6 items-center overflow-x-auto ">
+        <div className="flex text-white justify-start mx-6 max-custom-md:mx-2 mt-4 gap-6 items-center overflow-x-auto">
             <div className="align">
                 <Avatar src={`http://${address}/users/image/` + payload.IntraId} sx={{ width: 85, height: 85 }}/>
-                <span className="text-center mt-3 max-md:mt-1 text-xl">{payload.username}</span>
+                <span className="text-center mt-3 max-md:mt-1 text-xl max-sm:text-sm">{payload.username}</span>
                 <span className=' w-full max-md:w-[55px] h-[1px] bg-white flex'></span>
                 <span className='text-xl max-md:text-xs'>{payload.winrate}%</span>
             </div>

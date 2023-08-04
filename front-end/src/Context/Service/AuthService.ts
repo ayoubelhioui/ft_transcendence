@@ -11,6 +11,7 @@ export interface UserI {
     win_rate: number;
     two_factors_enabled: boolean;
     IntraId: number
+    isFirstTime: boolean
 }
 
 export interface resultStatusI {

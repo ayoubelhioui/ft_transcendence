@@ -44,7 +44,7 @@ const Item = ({payload} : {payload : any}) => {
   }
 
   if (!payload.isGroup){
-    avatar = `http://${address}/users/image/-2`
+    avatar = `http://${address}/users/image/${payload.avatar}`
   }
 
   if (payload.isGroup) {
@@ -108,6 +108,7 @@ const List = ({list} : {list : any}) => {
         id : list[0].id,
         name : list[0].name,
         isGroup : list[0].isGroup,
+        avatar : list[0].avatar
       })
     }
   }, [])
@@ -141,23 +142,28 @@ const Chats = () => {
   //************************************************ */
   //**** redirect to the chat with the id in the url if it specified it
   //**   && if the id exists in the original list
-  if (result?.data) {
-    const targetId = chatContext.conversationId
-    const isItemExist : any = result.data.find((item : any) => item.id === targetId)
-    //console.log("Trying to Redirect to ", targetId, isItemExist)
-    if (isItemExist && targetId !== chatContext.conversationInfo.id) {
-      chatContext.setConversationInfo({
-        id : isItemExist.id,
-        name : isItemExist.name,
-        isGroup : isItemExist.isGroup
-      })
-    }
-  }
+
   //************************************************ */
 
   response.effect([chatContext.updateChats])
   search.commitEffect()
   search.filterEffect([result.data])
+
+  useEffect(() => {
+    if (result?.data) {
+      const targetId = chatContext.conversationId
+      const isItemExist : any = result.data.find((item : any) => item.id === targetId)
+      //console.log("Trying to Redirect to ", targetId, isItemExist)
+      if (isItemExist && targetId !== chatContext.conversationInfo.id) {
+        chatContext.setConversationInfo({
+          id : isItemExist.id,
+          name : isItemExist.name,
+          isGroup : isItemExist.isGroup,
+          avatar : isItemExist.avatar
+        })
+      }
+    }
+  })
 
   useEffect(() => {
     search.setSearch(chatsGroupsPanelContext.chatSearch)

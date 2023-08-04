@@ -17,28 +17,16 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 }
 
 const Item = ({ item }: {item : any }) => {
-    const appService = useAppServiceContext()
-    const navigate = useNavigate()
     const player1 = item.player1
     const player2 = item.player2
-    const token = item.token
-    const isClassic = item.isClassic
 
-    const goToGame = () => {  
-        appService.utilService.gameParams = {
-          isWatchMode : true,
-          isClassic : isClassic,
-          gameToken : token,
-        }
-        navigate("/Play")
-    }
-
+    
     return (
-        <div className="flex gap-4 w-full h-full justify-center items-start" onClick={() => goToGame()}>
-            <div className="flex mx-auto cursor-pointer py-2 items-center bg-opacity-40">
-                <Avatar src={`http://${address}/users/image/` + player1.IntraId} sx={{ width: 60, height: 60 }}/>
-                <div className=" mx-12 flex items-center gap-2 cursor-pointer">
-                <span className=''>LIVE</span>
+        <div className="flex gap-4 w-full h-full justify-center items-start">
+            <div className="flex mx-auto py-2 items-center bg-opacity-40">
+                <Avatar src={`http://${address}/users/image/` + player1.IntraId} sx={{ width: 60, height: 60 }} />
+                <div className=" mx-12 flex items-center gap-2">
+                <span>LIVE</span>
                 <span className='w-[11px] h-[12px] rounded-[50%] bg-red-700'></span>
                 </div>
                 <Avatar src={`http://${address}/users/image/` + player2.IntraId} sx={{ width: 60, height: 60 }}/>

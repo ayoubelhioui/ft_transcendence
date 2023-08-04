@@ -169,6 +169,10 @@ export class RequestService {
         return this.getData(RequestService.makeGetRequest, [`/users/me/friends`])
     }
 
+    getAllUserFriends() {
+        return RequestService.makeGetRequest(this, "/users/me/friends")
+    }
+
     getUserMatchHistoryRequest(userId : number) {
         return this.getData(RequestService.makeGetRequest, [`/users/${userId}/matchhistory`])
     }
@@ -332,6 +336,57 @@ export class RequestService {
         return await RequestService.makePutRequest(this, `/users/image/${intraId}`, payload)
     }
 
+    async postUpdateUserInfo(intraId : number, payload : any = {}) {
+        return await RequestService.makePostRequest(this, `/users/userInfo/${intraId}`, payload);
+    }
+
+    //============================================ Channels
+
+    async deleteLeaveChannel(channelId : number) {
+        return await RequestService.makeDeleteRequest(this, `/users/me/channels/${channelId}/leave`)
+    }
+
+    async postInviteToChannel(channelId : number, userId : number) {
+        return await RequestService.makePostRequest(this, `/channels/${channelId}/invite/${userId}`, {})
+    }
+
+
+    //============================================ Notification
+
+    async getNotification() {
+        return await RequestService.makeGetRequest(this, `/users/me/notification`)
+    }
+
+    async acceptNotification(type : string, link : string) {
+        if (type === "POST") {
+            return await RequestService.makePostRequest(this, link, {})
+        }
+    }
+
+    async deleteNotification(id : number) {
+        return await RequestService.makeDeleteRequest(this, `users/me/notification/${id}`)
+    }
+
+    async getUserRole(channelId : number) {
+        return await RequestService.makeGetRequest(this, `/users/me/channels/${channelId}/role`)
+    }
+
+
+    async changeMemberRole(channelId : number, targetUser : number, userRole : number) {
+        return await RequestService.makePutRequest(this, `/channels/${channelId}/role/${targetUser}`, {userRole})
+    }
+
+    async kickMember(channelId : number, targetUser : number) {
+        return await RequestService.makeDeleteRequest(this, `/channels/${channelId}/kick/${targetUser}`)
+    }
+
+    async blockMember(channelId : number, targetUser : number) {
+        return await RequestService.makeDeleteRequest(this, `/channels/${channelId}/block/${targetUser}`)
+    }
+
+    async muteMember(channelId : number, targetUser : number, muteDurationMinutes : number) {
+        return await RequestService.makePostRequest(this, `/channels/${channelId}/mute/${targetUser}`, {muteDurationMinutes})
+    }
+
 
 }
-    

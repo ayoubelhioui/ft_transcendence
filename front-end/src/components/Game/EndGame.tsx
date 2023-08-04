@@ -1,29 +1,33 @@
-import loss1 from '../../assets/end/loss1.gif'
-import loss2 from '../../assets/end/loss2.gif'
-
-import win1 from '../../assets/end/win1.gif'
-import win2 from '../../assets/end/win2.gif'
-import win3 from '../../assets/end/win3.gif'
+import Lottie from "lottie-react";
+import win_logo from "../../assets/animate_win.json"
+import loss_logo from "../../assets/animation_loss.json"
+import { useNavigate } from 'react-router-dom'
 
 
 const EndGame = ({ isWinner } : { isWinner : boolean }) => {
-    let loss = [
-        loss1,
-        loss2,
-    ]
-    let win = [
-        win1,
-        win2,
-        win3,
-    ]
-    let lossImg = loss[Math.floor(Math.random() * loss.length)]
-    let winImg = loss[Math.floor(Math.random() * win.length)]
-    console.log(lossImg)
-    if (isWinner) {
-        return <div className='game-ending-win' style={{ backgroundImage : `url(${winImg})` }}></div>
-    } else {
-        return <div className='game-ending-lose' style={{ backgroundImage : `url(${lossImg})` }} ></div>
-    }
+  const navigate = useNavigate()
+  console.log("isWinn => ", isWinner)
+  const image = isWinner ? win_logo : loss_logo 
+
+  const onButtonClick = () => {
+    navigate('/Playthrough')
+  }
+  const onReturnClick = () => {
+    navigate('/Home')
+  }
+
+  return (
+    <>
+        <div className="bg-blue-950 absolute inset-0 flex flex-col justify-center items-center max-sm:justify-start h-screen max-sm:h-[2000px] w-full z-[2000] translate-x-0 translate-y-0">
+            <Lottie animationData={image} className="w-[700px] h-[700px] max-sm:w-[400px] max-sm:h-[400px]"/>
+            <div className="flex gap-12 mt-12 max-sm:mt-6 max-sm:gap-6">
+              <button onClick={onButtonClick} className="inline-block bg-white text-blue-950 py-[.8rem] px-12 max-sm:px-8 rounded-[10px] text-xl max-sm:text-base"> Play Again </button>
+              <button onClick={onReturnClick} className=" inline-block bg-white text-blue-950 py-[.8rem] px-12 max-sm:px-8 rounded-[10px] text-xl max-sm:text-base"> Return </button>
+
+            </div>
+        </div>
+    </>
+  )
     
 }
 

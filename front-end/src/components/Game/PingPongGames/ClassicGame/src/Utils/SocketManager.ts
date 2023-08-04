@@ -37,9 +37,9 @@ export class SocketManager {
     socketOn(socket : Socket, game : Game) {
         if (!game.gameParams.isWatchMode) {
             socket.on("start", (data) => {
+                console.log("Game start with: ", data)
                 game.start(data)
             })
-        
         
             socket.on("end_game", (data) => {
                 console.log("End Game Event")

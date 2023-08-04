@@ -12,7 +12,7 @@ const GAME_3D = false
 const ChooseGame = () => {
   const appService = useAppServiceContext()
   const navigate = useNavigate()
-  const [isBotGame, setIsBotGame] = useState<boolean | undefined>(false);
+  const [isBotGame, setIsBotGame] = useState<boolean | undefined>(undefined);
 
   const goToGame = (isClassicGame : boolean) => {  
     appService.utilService.gameParams = {
@@ -24,31 +24,31 @@ const ChooseGame = () => {
   }
 
   return (
-    <div className="purple_back flex flex-col gap-16 items-center mx-24 h-[650px] my-auto p-8 text-white">
+    <div className="purple_back flex flex-col gap-16 max-sm:gap-8 items-center mx-24 max-sm:mx-0 max-sm:h-full h-[650px] max-sm:w-full my-auto p-8 text-white">
         {isBotGame === undefined ?
           <>
-            <h1 className='text-5xl'>Choose Which To Play Against</h1>
-            <div className="flex justify-around w-full">
+            <h1 className='text-5xl max-sm:text-3xl'>Choose Which To Play Against</h1>
+            <div className="flex justify-around max-sm:flex-col max-sm:gap-4 w-full">
               <div className="flex flex-col gap-4 items-center hover:scale-105 transition-all duration-500 cursor-pointer" onClick={() => setIsBotGame(true)}>
                   <img src={image} alt="bot_image" className='w-[350px]'/>
-                  <h1 className='text-4xl uppercase text-center'>PLay With A Bot</h1>
+                  <h1 className='text-4xl uppercase text-center max-sm:text-2xl'>PLay With A Bot</h1>
               </div>
               <div className="flex flex-col gap-4 items-center hover:scale-105 transition-all duration-500 cursor-pointer" onClick={() => setIsBotGame(false)}>
                   <img src={image_2} alt="friend_image" className='w-[350px]'/>
-                  <h1 className='text-4xl uppercase text-center'>PLay With A Friend</h1>
+                  <h1 className='text-4xl uppercase text-center max-sm:text-2xl'>PLay With A Friend</h1>
               </div>
             </div>
           </> :
           <>
-            <h1 className='text-5xl'>Choose Your Game Type</h1>
-            <div className="flex justify-around w-full">
+            <h1 className='text-5xl max-sm:text-3xl'>Choose Your Game Type</h1>
+            <div className="flex justify-around max-sm:flex-col max-sm:gap-4 w-full">
               <div className="flex flex-col gap-4 items-center hover:scale-105 transition-all duration-500 cursor-pointer" onClick={() => goToGame(GAME_2D)}>
                   <img src={img_classic_game} alt="bot_image" className='w-[450px]'/>
-                  <h1 className='text-4xl uppercase text-center'>2D Game</h1>
+                  <h1 className='text-4xl uppercase text-center max-sm:text-2xl'>2D Game</h1>
               </div>
               <div className="flex flex-col gap-4 items-center hover:scale-105 transition-all duration-500 cursor-pointer"onClick={() => goToGame(GAME_3D)}>
                   <img src={img_three_game} alt="friend_image" className='w-[450px]'/>
-                  <h1 className='text-4xl uppercase text-center'>3D Game</h1>
+                  <h1 className='text-4xl uppercase text-center max-sm:text-2xl'>3D Game</h1>
               </div>
             </div>
           </>

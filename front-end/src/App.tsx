@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAppServiceContext } from './Context/Context';
 import { resultStatusI } from './Context/Service/AuthService';
 import { STATUS_ERROR, STATUS_NOT_SIGN_IN, STATUS_SUCCESS, STATUS_UNDEFINED } from './Const';
-import { LoadingPage, MainPage, SignIn } from './components';
+import { LoadingPage, MainPage, SignIn, UserInfo } from './components';
 import { load } from './components/Game/PingPongGames/3dGame/src/Utils/Loader';
 import { LoaderResult } from './components/Game/PingPongGames/3dGame/src/interfaces/interface.load.result';
 

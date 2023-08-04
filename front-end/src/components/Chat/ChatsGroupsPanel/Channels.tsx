@@ -29,8 +29,8 @@ const Channels = () => {
   }, [chatsGroupsPanelContext.chatSearch])
 
   return (
-    <div className="flex mt-3 flex-col h-[550px] scroll-smooth">
-      <div className="flex flex-col overflow-y-scroll">
+    <div className="flex mt-3 flex-col h-[600px]">
+      <div className="flex flex-col overflow-y-scroll relative">
         <PublicGroup  result={result} list={search.dataFiltered}/>
         <ProtectedGroup result={result} list={search.dataFiltered}/>
       </div>

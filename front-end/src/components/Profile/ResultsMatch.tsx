@@ -13,8 +13,8 @@ const Item = ({ item }: {item : any}) => {
   const player2 = item.player2
 
   return (
-      <div className="flex flex-col h-[190px] w-[230px] max-md:w-[170px] max-md:h-[150px] cursor-pointer gap-4">
-            <div className={`flex bg-[url('/src/assets/classic-game.png')] w-full h-[130px] max-md:h-[110px] rounded-[16px] bg-cover`} >
+      <div className="flex flex-col h-[190px] w-[230px] max-md:w-[170px] max-md:h-[150px] max-sm:w-[70%] max-sm:mx-auto gap-4">
+            <div className={`flex bg-[url('/src/assets/classic-game.png')] w-[230px] h-[130px] max-sm:w-full max-md:h-[110px] rounded-[16px] bg-cover`} >
                 {/* <img src={imagePath} alt="Image_Type" className="w-[300px] object-cover h-[120px]"/> */}
             </div>
             <div className="flex justify-between px-2 max-md:h-[30px] items-center w-full back h-[40px]">
@@ -54,9 +54,9 @@ const ResultsMatch = ({userInfo} : {userInfo : any}) => {
 
   if (results.status === STATUS_SUCCESS) {
     return (
-      <div className="flex flex-col top_1 h-[300px] max-custom-md:h-[350px] max-md:pb-2 max-m-custom-md:h-[220px] ml-2 text-gray-400 max-md:ml-0 overflow-x-scroll">
+      <div className="flex flex-col top_1 h-[300px] max-custom-md:h-[350px] max-md:pb-2 max-m-custom-md:h-[220px] ml-2 text-gray-400 max-md:ml-0">
         <h1 className="text-2xl p-2">Match Results</h1>
-        <div className="flex gap-10 max-md:gap-4 pl-6 pt-6 max-md:pl-2 my-auto overflow-x-scroll">
+        <div className="flex gap-16 max-md:gap-4 max-sm:gap-2 max-sm:flex-wrap pl-6 pt-6 max-md:pl-2 my-auto overflow-x-auto">
           <List list={results.data} />
         </div>
       </div>

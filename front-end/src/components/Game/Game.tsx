@@ -5,7 +5,7 @@ import { useAppServiceContext } from '../../Context/Context';
 import { Game as ThreeGame } from './PingPongGames/3dGame/src/MyObjects/Game'
 import { Game as ClassicGame } from './PingPongGames/ClassicGame/src/MyObjects/Game'
 import EndGame from './EndGame';
-import { LoadingPage } from '..';
+import LoadingPage from './LoadingPage';
 
 const GameUi = ({state} : {state : number}) => {
     if (state === GameState.gameStarted) {
@@ -52,7 +52,7 @@ const Game =  () => {
     const gameParams = appService.utilService.gameParams
     const [state, setState] = useState(GameState.gameLoading)
     const rootHtmlElement = useRef<HTMLDivElement>(null);
-
+    const [errorInGame, setErrorInGame] = useState(0)
 
     useEffect(() => {
         let canvas : HTMLCanvasElement | null = null
@@ -67,7 +67,12 @@ const Game =  () => {
             gameParams.socket = appService.socketService.getSocket()
             gameParams.callBack = (state : number) => {
                 if (state === GameState.gameException) {
+                    console.log("Exception??", errorInGame, "state", state)
                     gameObject?.stop()
+                    // if (errorInGame < 3) {
+                    //     console.log("Refresh Game....")
+                    //     setTimeout(setErrorInGame, 1000, errorInGame + 1)
+                    // }
                 }
                 setTimeout(setState, 500, state)
             }
@@ -94,12 +99,12 @@ const Game =  () => {
             }          
         };
 
-    }, [])
+    }, [errorInGame])
 
     return (
         <>
             <GameUi state={state}></GameUi>
-            <div ref={rootHtmlElement} className='w-full h-full' />
+            <div ref={rootHtmlElement} className='absolute h-screen w-screen z-[1000] inset-0 m-auto translate-x-0 translate-y-0 max-sm:h-full' />
         </>
     )
         

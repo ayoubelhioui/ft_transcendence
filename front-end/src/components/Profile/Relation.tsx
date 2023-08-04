@@ -1,18 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+// import React, { useEffect, useRef, useState } from "react";
 import { motion } from 'framer-motion'
-import { MdEdit } from 'react-icons/md'
-import QRCode from 'qrcode.react';
-import * as otplib from 'otplib';
+// import { MdEdit } from 'react-icons/md'
+// import QRCode from 'qrcode.react';
+// import * as otplib from 'otplib';
 
 // import DialogActions from '@mui/material/DialogActions';
 // import Button from '@mui/material/Button';
 // import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+// import Dialog from '@mui/material/Dialog';
+// import DialogContent from '@mui/material/DialogContent';
+// import DialogTitle from '@mui/material/DialogTitle';
 import { useAppServiceContext } from "../../Context/Context";
 import { STATUS_SUCCESS } from "../../Const";
 import { useNavigate } from "react-router-dom";
+import { GameParamsCollect } from '../Game/PingPongGames/interfaces/interface.game.params';
 
 enum friendRequestStatus{
   unspecified = -1,
@@ -41,6 +42,38 @@ interface Relation {
   blockedBy? : User
 }
 
+const InviteToGame = ({relation, isClassic} : {relation : Relation, isClassic : boolean}) => {
+  const navigate = useNavigate()
+  const appService = useAppServiceContext()
+  const title = isClassic ? "Invite to classic game" : "Invite to 3d game"
+
+  const sendRequest = () => {
+    const bodyData : GameParamsCollect = {
+      isWatchMode : false,
+      isClassic : isClassic,
+      isBotMode : false,
+      userId : appService.authService.user?.id,
+      userToInvite : relation.targetUserId
+    };
+  
+    appService.utilService.gameParams = bodyData
+    navigate("/Play")
+  }
+  
+  return (
+    <>
+      <motion.button 
+      type='button'
+      whileTap={{scale: 0.955}}
+      onClick={sendRequest}
+      className='flex items-center bg-[#4D194D] py-2 px-6 mx-auto text-xs outline-none ml-2'
+      > 
+          {title}
+      </motion.button>
+    </>
+  )
+}
+
 const GoToChat = ({relation} : {relation : Relation}) => {
   const navigate = useNavigate()
   const appService = useAppServiceContext()
@@ -67,10 +100,9 @@ const GoToChat = ({relation} : {relation : Relation}) => {
       type='button'
       whileTap={{scale: 0.955}}
       onClick={sendRequest}
-      className='flex items-center bg-[#4D194D] py-2 px-6 mx-auto text-xs outline-none'
+      className='flex items-center bg-[#4D194D] py-2 px-6 mx-auto text-xs outline-none ml-2'
       > 
-          <MdEdit size={15} className='mr-1'/> 
-          Chat
+        Chat
       </motion.button>
     </>
   )
@@ -96,9 +128,8 @@ const Play = ({relation} : {relation : Relation}) => {
       onClick={handleSubmit}
       type='button'
       whileTap={{scale: 0.955}}
-      className='flex items-center bg-[#4D194D] py-2 px-6 mx-auto text-xs outline-none'
+      className='flex items-center bg-[#4D194D] py-2 px-6 mx-auto text-xs outline-none ml-2'
       > 
-      <MdEdit size={15} className='mr-1'/> 
           Play
       </motion.button>
     </>
@@ -108,7 +139,7 @@ const Play = ({relation} : {relation : Relation}) => {
 const BlockRequest = ({relation} : {relation : Relation}) => {
   const appService = useAppServiceContext()
   let blockStatus = relation.blockedBy?.id === relation.userId
-  let title = !blockStatus ? "Block Friend" : "Unblock Friend"
+  let title = !blockStatus ? "Block" : "Unblock"
 
   const request = async () => {
     console.log("=>", relation.blockedBy)
@@ -137,9 +168,8 @@ const BlockRequest = ({relation} : {relation : Relation}) => {
       onClick={handleSubmit}
       type='button'
       whileTap={{scale: 0.955}}
-      className='flex items-center bg-[#4D194D] py-2 px-6 mx-auto text-xs outline-none'
-      > 
-      <MdEdit size={15} className='mr-1'/> 
+      className='flex items-center bg-[#4D194D] py-2 px-6 mx-auto text-xs outline-none ml-2'
+      >  
           {title}
       </motion.button>
     </>
@@ -200,7 +230,6 @@ const FriendsRequest = ({relation} : {relation : Relation}) => {
     whileTap={{scale: 0.955}}
     className='flex items-center bg-[#4D194D] py-2 px-6 mx-auto text-xs outline-none'
     > 
-        <MdEdit size={15} className='mr-1'/> 
         {title}
     </motion.button>
     { twoButtons && 
@@ -210,7 +239,6 @@ const FriendsRequest = ({relation} : {relation : Relation}) => {
       whileTap={{scale: 0.955}}
       className='flex items-center bg-[#4D194D] py-2 px-6 mx-auto text-xs outline-none'
       > 
-          <MdEdit size={15} className='mr-1'/> 
           Reject
       </motion.button>
     }
@@ -227,6 +255,8 @@ const Relation = ({relation} : {relation : Relation}) => {
         <FriendsRequest relation={relation} />
         <BlockRequest relation={relation} />
         <GoToChat relation={relation}/>
+        <InviteToGame relation={relation} isClassic={false} />
+        <InviteToGame relation={relation} isClassic={true} />
       </>
     )
   } else {
@@ -241,6 +271,8 @@ const Relation = ({relation} : {relation : Relation}) => {
         <FriendsRequest relation={relation} />
         <BlockRequest relation={relation} />
         <GoToChat relation={relation}/>
+        <InviteToGame relation={relation} isClassic={false} />
+        <InviteToGame relation={relation} isClassic={true} />
       </>
     }
   }

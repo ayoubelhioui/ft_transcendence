@@ -19,7 +19,7 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 const Item = ({ payload }: {payload : any}) => {
     return (
       <div className="flex gap-4 flex-col w-full h-full mb-auto justify-start items-center">
-        <div className="flex mx-auto cursor-pointer py-2 items-center bg-opacity-40">
+        <div className="flex mx-auto py-2 items-center bg-opacity-40">
                 <Avatar src={`http://${address}/users/image/` + payload.player1.IntraId} sx={{ width: 60, height: 60 }}/>
                 <div className=" mx-12 flex items-center gap-2">
                 <span className='text-2xl px-4'>{payload.player1_score} : {payload.player2_score} </span>

@@ -90,7 +90,7 @@ const TwoFactor = () => {
                 {title}
             </motion.button>
             
-            <Dialog open={open} onClose={() => setOpen(false)} className="outline-none flex h-full w-full items-center justify-center">
+            <Dialog open={open} onClose={() => setOpen(false)} className="outline-none bg-blue-950 flex h-full w-full items-center justify-center">
                 <div className=" w-[25rem] h-[23rem] bg-[#0e3c80] text-white max-sm:w-[25rem] ">
                     
                     <DialogTitle className=" text-center text-lg font-extrabold">Enable 2FA Authentication</DialogTitle>

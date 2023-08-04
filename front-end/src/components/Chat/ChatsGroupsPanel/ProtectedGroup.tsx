@@ -10,7 +10,7 @@ import { useChatsGroupsPanelContext } from "./ChatsGroupsPanelContext";
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
         <div className="flex flex-col gap-4 mt-6 overflow-y-scroll">
-          <div className="flex justify-between px-2 py-1  items-center w-full text-blue-950 bg-white opacity-30 cursor-pointer">
+          <div className="flex justify-between px-2 py-1 items-center w-full text-blue-950 bg-white opacity-30 cursor-pointer">
             <span className="text-sm">Protected Groups</span>
             <RiArrowDropDownLine size={25} />
           </div>
@@ -62,18 +62,18 @@ const Item = ({payload} : {payload : any}) => {
 
           {isOpened && (
 
-            <div className=" bg-blue-950 absolute rounded-[10px] w-[200px] h-[60px] text-white z-[999] top-14 left-1/3">
+            <div className=" bg-blue-950 absolute rounded-[10px] w-[150px] h-[45px] text-white z-[999] top-14 left-1/3">
               <div className="flex flex-col">
                 <input
                   autoComplete="off" 
                   type="password"
                   placeholder="Enter Password"
-                  className="bg-transparent text-white w-[150px] h-[30px] outline-none"
+                  className="bg-transparent text-white w-[180px] h-[20px] outline-none p-0"
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
-                  className="text-white bg-purple-950 p-2 text-sm "
+                  className="text-white bg-purple-950 p-2 w-[100px] mx-auto text-sm "
                   onClick={() => joinToChannel(channel.id)}
                 >
                   Join Now

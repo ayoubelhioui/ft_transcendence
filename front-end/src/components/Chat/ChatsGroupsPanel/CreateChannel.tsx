@@ -59,30 +59,6 @@ return (
 }
 
 
-const AvatarInput = ({avatar} : {avatar : React.MutableRefObject<File | null>}) => {
-  
-  const handleAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      avatar.current = (event.target.files[0]);
-    }
-  };
-
-  return (
-    <div className="flex items-start justify-center flex-col">
-      <label htmlFor="file_input" className="flex ml-5 text-white">
-        Upload Avatar:
-      </label>
-      <input
-        type="file"
-        autoComplete="off" 
-        accept="image/*"
-        onChange={handleAvatar}
-        className="py-3 rounded-[10px] border-blue-950 border-2 "
-      />
-    </div>
-  )
-}
-
 const NameField = ({name} : {name : React.MutableRefObject<string>}) => {
   const handleChangePassword = (e : React.ChangeEvent<HTMLInputElement>) => {
     name.current = e.target.value
@@ -179,17 +155,17 @@ const CreateChannel = ({openState} : {openState : [boolean, React.Dispatch<React
         onClose={() => setIsOpen(false)}
         className="flex h-full w-full items-center justify-center"
       >
-        <div className="w-[400px] flex flex-col justify-center items-center overflow-hidden h-[500px] text-white bg-blue-950">
+        <div className="w-[400px] flex flex-col h-[400px] text-white bg-blue-950">
           <DialogTitle className="text-center text-xl">
             Create a Channel
           </DialogTitle>
           <DialogContent>
             
-            <form onSubmit={handleSubmit} className="flex flex-col mt-4">
+            <form onSubmit={handleSubmit} className="flex flex-col mt-2">
               
 
               <NameField name={name} />
-              <AvatarInput avatar={avatar} />
+              {/* <AvatarInput avatar={avatar} /> */}
               <DropList selectedGroupType={selectedGroupType} setSelectedGroupType={setSelectedGroupType} />
               {selectedGroupType === "Protected" && <PasswordField password={password}/> }
               

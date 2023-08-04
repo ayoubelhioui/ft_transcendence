@@ -63,10 +63,14 @@ export class Game {
         console.log("Game is Ended ...", payload)
         this.scene.visible = false
         this.gameInfo.start = false
-        if (payload.isWin)
-            this.gameParams.callBack(GameState.gameEndedWin)
-        else
-            this.gameParams.callBack(GameState.gameEndedLoss)
+        if (params.frame > 10) {
+            if (payload.isWin)
+                this.gameParams.callBack(GameState.gameEndedWin)
+            else
+                this.gameParams.callBack(GameState.gameEndedLoss)
+        } else {
+            this.gameParams.callBack(GameState.gameException)
+        }
     }
 
     changeScore(payload : any) {

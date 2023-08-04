@@ -3,7 +3,8 @@ import { createContext, useContext, useRef, useState } from "react";
 export interface ConversationInfoI {
   id : number | undefined,
   name : string,
-  isGroup : boolean
+  isGroup : boolean,
+  avatar? : string
 }
 
 //context interface

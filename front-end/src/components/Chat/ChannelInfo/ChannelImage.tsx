@@ -13,8 +13,7 @@ const ChannelImage = () => {
   const conversationInfo = chatContext.conversationInfo
   
   if (conversationInfo.id) {
-    //! should implemented it in the server side
-    // avatar = `http://${address}/channel/image/${conversationInfo.id}`
+    avatar = `http://${address}/users/image/${conversationInfo.avatar}`
     name = conversationInfo.name
   }
 

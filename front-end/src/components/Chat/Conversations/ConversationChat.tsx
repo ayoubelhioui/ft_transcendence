@@ -181,7 +181,7 @@ const ConversationsChat = ({id} : {id : number}) => {
   } else {
     return (
       <div ref={listRef} className="w-full h-full px-4 mt-8 overflow-y-scroll flex flex-col-reverse">
-        <div id="load-more" className="h-10 w-10 bg-red-500"> 
+        <div id="load-more" className="h-10 w-10"> 
           <Sender message={"Limiter"}/>
         </div>
       </div>
