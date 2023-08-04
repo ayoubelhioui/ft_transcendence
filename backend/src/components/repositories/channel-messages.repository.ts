@@ -24,12 +24,13 @@ class ChannelMessagesRepository extends ABaseRepository<ChannelMessages> impleme
     };
     if (date)
       condition.time = LessThan(date);
-    return this.entity.find({
+    const messages = await this.entity.find({
       where: condition,
       order: { 'time': 'DESC' }, // Order by the "name" column in ascending order
       take : LIMIT_MESSAGES,
       relations: ['user']
     })
+    return messages;
   }
 }
 

@@ -5,13 +5,14 @@ import { PlayerScores } from "../../dto/player-scores.dto";
 import { GameService } from "../../game.service";
 import { MovePaddleI } from "../../interfaces/move-paddle.interface";
 import { customLog } from "src/Const";
+import { AClient } from "../../class/AClinet";
 
 export class ClassicRoom extends Room {
 
-    game : ClassicGame
+    classicGame : ClassicGame
 
-    constructor(roomId : string, isBot : boolean, gameService : GameService, callBack : CallBackFun) {
-        super(roomId, isBot, gameService, callBack)
+    constructor(roomId : string, player1 : AClient, player2 : AClient, isBotGame : boolean) {
+        super(roomId, player1, player2, isBotGame)
         this.roomType = 0
 
         this.sendBallInfo = this.wrapMethod(this.sendBallInfo)
@@ -20,35 +21,12 @@ export class ClassicRoom extends Room {
         this.broadcastToWatchers = this.wrapMethod(this.broadcastToWatchers)
         this.receivePaddleMove = this.wrapMethod(this.receivePaddleMove)
 
+        this.game = new ClassicGame(this, isBotGame)
+        this.classicGame = this.game as ClassicGame
+        this.start()
     }
 
-    start() {
-        this.game = new ClassicGame(this, this.isBotMode)
-        this.game.gameLoop()
-
-        if (this.isBotMode === false) {
-            this.broadCast(
-                "start", 
-                {turn: 0, id: this.player1.socket.id}, 
-                {turn: 1, id: this.player2.socket.id}
-            )
-        } else {
-            this.broadCast(
-                "start", 
-                {turn: 0, id: this.player1.socket.id},
-                undefined
-            )
-        }
-    }
-
-    playerLeft(socket : Socket) {
-        if (this.closed === false)
-            return
-        this.game?.stop()
-        if (this.isBotMode === false) {
-            this.sendToOther("end_game", socket, { isWin : true })
-        }
-    }
+  
 
 //=============== Send
 
@@ -60,32 +38,22 @@ export class ClassicRoom extends Room {
         this.broadCast("paddleMove", payload, payload)
     }
 
-    async sendGameScore(payload : PlayerScores) {
+    async setGameScore(payload : PlayerScores) {
         let p = {
             score : [payload.player1Score, payload.player2Score]
         }
-        if (this.closed === false)
-            return
         this.broadCast("gameScore", p, p)
-        let res = this.gameScoreTrigger(payload)
-        if (res) {
-            customLog("end-game")
-            const player1IsWin = (payload.player1Score > payload.player2Score)
-            this.broadCast("end_game", {isWin : player1IsWin}, {isWin : !player1IsWin})
-            this.game.stop()
-            await this.callBack(this)
-        }
-        
+        this.sendGameScore(p, p)
     }
 
     broadcastToWatchers() {
         let data = {
-            score : [this.game.gameInfo.scorePlayer1, this.game.gameInfo.scorePlayer2],
-            position: this.game.ballObj.position,
-            velocity: this.game.ballObj.velocity,
-            speed: this.game.ballObj.speed,
-            paddlePlayer1 : this.game.player1.position.y,
-            paddlePlayer2 : this.game.player2.position.y
+            score : [this.classicGame.gameInfo.scorePlayer1, this.classicGame.gameInfo.scorePlayer2],
+            position: this.classicGame.ballObj.position,
+            velocity: this.classicGame.ballObj.velocity,
+            speed: this.classicGame.ballObj.speed,
+            paddlePlayer1 : this.classicGame.player1.position.y,
+            paddlePlayer2 : this.classicGame.player2.position.y
         }
         this.player1.socket.to("Room" + this.roomId).emit("live_data", data);
     }
@@ -94,9 +62,9 @@ export class ClassicRoom extends Room {
 
     receivePaddleMove(payload : MovePaddleI, socketId : string) {
         if (socketId === this.player1.socket.id)
-            this.game.player1.receivePos(payload)
+            this.classicGame.player1.receivePos(payload)
         else if (socketId === this.player2.socket.id)
-            this.game.player2.receivePos(payload)
+            this.classicGame.player2.receivePos(payload)
     }
 
     

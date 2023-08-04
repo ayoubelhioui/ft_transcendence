@@ -37,6 +37,7 @@ class UserRepository extends ABaseRepository<User> implements IUserRepository
       return ({
           user1,user2
       })
+      
   }
 }
 

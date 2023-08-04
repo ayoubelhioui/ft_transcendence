@@ -49,7 +49,7 @@ export class Game {
         let s = (p[2] === 0 ? "Player1 " : "Player2 ")
         customLog(p[3], s, " Score1: ", this.gameInfo.scorePlayer1, " Score2: ", this.gameInfo.scorePlayer2)
         this.changeTurn(this.getTurnInit())
-        await this.room.sendGameScore({
+        await this.room.setGameScore({
             player1Score : this.gameInfo.scorePlayer1,
             player2Score: this.gameInfo.scorePlayer2
         })

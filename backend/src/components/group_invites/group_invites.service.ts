@@ -34,15 +34,17 @@ export class GroupInvitesService {
     }
 
     private async isInvited(user : User, channel : Channel, token : string) : Promise<ChannelInvites> {
-        const options = {
-            where : {
-                token,
-                user,
-                group : channel
-            },
-           relations : ['sender'] 
-        }
-        const invite : ChannelInvites | undefined = await this.channelInvitesRepository.findOneByOptions(options);
+        // const options = {
+        //     where : {
+        //         token,
+        //         user,
+        //         group : channel
+        //     },
+        //    relations : ['sender'] 
+        // }
+        // console.log(token , user, channel);
+        const invite : ChannelInvites | undefined = await this.channelInvitesRepository.isInvited(user, channel, token);
+        console.log('invite : ', invite);
         if (!invite)
             throw new NotFoundException("this invitation Not Exist");
         return (invite);

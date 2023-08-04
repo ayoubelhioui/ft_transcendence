@@ -7,15 +7,17 @@ import { SocketModule } from '../socket/socket.module';
 import { ChannelModule } from '../channels/channel.module';
 import { ChannelUsersRepository, UsersMutedRepository } from '../repositories';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Channel, ChannelUsers, User, UsersMuted } from 'src/database/entities';
+import { Channel, ChannelUsers, Friends, User, UsersMuted } from 'src/database/entities';
+import { FriendsModule } from '../friends/friends.module';
 
 @Module({
   imports : [
-    TypeOrmModule.forFeature([Channel, User, ChannelUsers, UsersMuted]),
+    TypeOrmModule.forFeature([Channel, User, ChannelUsers, UsersMuted, Friends]),
     UserModule,
     JwtModule.register({}),
     forwardRef(() => SocketModule),
-    ChannelModule
+    ChannelModule,
+    FriendsModule
   ],
   providers: [
     ChatService, 

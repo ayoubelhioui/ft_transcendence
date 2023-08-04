@@ -72,7 +72,8 @@ export class ChannelService {
                 throw new BadRequestException("this user is blocking each other")
             if (dm)
                 return (dm);
-            channel.name = user.id + "_" + targetedUser.id;
+            channel.avatar = "talk.png";
+            channel.name = user.username + "_" + targetedUser.username;
         }
         channel.password = await this.passwordService.hashPassword(channel.password);
         let createdChannel : Channel = await this.channelRepository.save(channel);
@@ -200,7 +201,7 @@ export class ChannelService {
             this.channelBlacklistRepository.create({user : targetedUser, channel}),
             this.channelUsersRepository.delete({user : targetedUser, channel})
         ]);
-    };
+    };ƒ
 
 
     async  muteMember(targetedMember : User, channel : Channel, muteMemberDto : MuteMemberDto) {
@@ -239,8 +240,25 @@ export class ChannelService {
 
     // get 30 message  of a channel  before this date if given
     //note : date should be in a microsecond
-    async getChannelMessages(channel : Channel, date? : Date) : Promise <ChannelMessages[] | undefined> {
-        return (this.channelMessagesRepository.getChannelMessages(channel, date));  
+    async getChannelMessages(user : User,channel : Channel, date? : Date) : Promise <ChannelMessages[] | undefined> {
+        const unfiltered_messages = await (this.channelMessagesRepository.getChannelMessages(channel, date)); 
+        
+        const blockedByUsers : User [] = await this.friendService.is_blocked_by_arr(user)
+
+        const blockedByUsersIds : number[] = blockedByUsers.map((element) => element.id)
+
+        const filteredMessages  = unfiltered_messages.filter((element) =>{
+            for(let i = 0; i < blockedByUsersIds.length; i++)
+            {
+                if(element.user.id == blockedByUsersIds[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        })
+
+        return filteredMessages
     };
 
     private async setLastMessageChannel(channelId : number, lastMessage : ChannelMessages)

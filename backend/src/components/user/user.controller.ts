@@ -87,6 +87,14 @@ export class UserController{
         return (await this.channelService.getUserChannels(user));
     };
 
+    @Get('me/channels/:id/role')
+    @UseGuards(ChannelExistsGuard, GroupGuard, UserInChannelGuard)
+    async getUserRole(@Request() req) : Promise< any > {
+        return ({
+            role : (req as any).userRole,
+        })
+    };
+
     @Get('me/channels/:id/status')
     @UseGuards(ChannelExistsGuard, GroupGuard, UserInChannelGuard)
     async getStatusInChannel(@GetUser() user: User, @GetChannel() channel) : Promise< Object | undefined > {
@@ -104,10 +112,10 @@ export class UserController{
         }; 
     };
 
-
     
     @Get('image/:id')
-    async getUserImage(@Param('id', ParseIntPipe) id : number, @Response() res) {
+    async getUserImage(@Param('id') id : string, @Response() res) {
+        console.log(id);
         const stream = fs.createReadStream('./uploads/' + id);
         stream.on('error', (err) => {
             customLog("Error")
@@ -122,7 +130,6 @@ export class UserController{
     }
 
     @Put('image/:id')
-    // @UseGuards(TokenValidationGuard)
     @UseInterceptors(FileInterceptor('avatar', {
         storage: diskStorage({
             destination: './uploads',
@@ -138,7 +145,27 @@ export class UserController{
         }
     }))
     async updateUserImage(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req){
-        customLog('helloWorld');
+        res.status(200).json({ message: 'picture uploaded successfully' });
+    }
+
+    @Post('userInfo/:id')
+    @UseInterceptors(FileInterceptor('avatar', {
+        storage: diskStorage({
+            destination: './uploads',
+            filename: (req, file, callback) => {
+                console.log("Saved ... ")
+                const newFileName = req.params.id;
+                callback(null, newFileName);
+            }
+        }),
+        fileFilter: (req, file, callback) => {
+            if (!file.originalname.match(/\.(jpg|jpeg|png)$/))
+                return (callback(null, false));
+            callback(null, true);
+        }
+    }))
+    async updateUserImages(@Param('id', ParseIntPipe) id : number, @Body() body, @UploadedFiles() file, @Response() res, @Request() req){
+        const User = await this.userService.update(req.user.id, body);
         res.status(200).json({ message: 'picture uploaded successfully' });
     }
 

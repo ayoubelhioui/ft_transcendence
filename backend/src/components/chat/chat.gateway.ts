@@ -9,6 +9,8 @@ import { ChannelService } from '../channels/channel.service';
 import { SocketService } from '../socket/socket.service';
 import { Channel, ChannelMessages, User } from 'src/database/entities';
 import { customLog } from 'src/Const';
+import { FriendsService } from '../friends/friends.service';
+import { UserService } from '../user/user.service';
 
 
 @WebSocketGateway()
@@ -22,7 +24,11 @@ export class ChatGateway {
 
   constructor(
     private readonly socketService : SocketService,
-    private readonly channelService : ChannelService
+    private readonly channelService : ChannelService,
+    private readonly friendsService : FriendsService,
+    private readonly userService : UserService
+
+
   ) {};
   @WebSocketServer()
   server: Server;
@@ -32,23 +38,36 @@ export class ChatGateway {
   @UseGuards(ChannelExistsGuard, UserInChannelGuard, UserMutedGuard)
   async sendMessage(socket: Socket,  sendMessageDto : sendMessageDto)
   {
-    customLog("emit getted?");
-    const user: User  =  this.socketService.getUser(socket);
+    console.log("hereeeeeeee");
+    let user: User  =  this.socketService.getUser(socket);
     const channel : Channel = this.socketService.getChannel(socket);
+ 
     const createdMessage : ChannelMessages = await this.channelService.createMessage(user, channel, sendMessageDto.message);
     const channelRoom = "channel_" + channel.id;
+    user = await this.userService.findUserById(user.id)
+    const blockedByUsers : User [] = await this.friendsService.is_blocked_by_arr(user)//blockd
+
+    const blockedByUsersIds : number[] = blockedByUsers.map((element) => element.id)
+
+   for (let i = 0; i < blockedByUsers.length; i++) {
+      const socketClient : Socket[] = this.socketService.isUserOnline(blockedByUsersIds[i]);
+      for (let j = 0; j < socketClient.length; j++) {
+        socketClient[j].leave(channelRoom);
+      }
+   }
     this.server.to(channelRoom).emit("on_message_send", {
       user, 
       message : createdMessage.message, 
       time : createdMessage.time,
       channelId : channel.id,
     });
-    // socket.emit("on_message_send", {
-    //   user, 
-    //   message : createdMessage.message, 
-    //   time : createdMessage.time,
-    //   channelId : channel.id,
-    // });
+
+    for (let i = 0; i < blockedByUsers.length; i++) {
+        const socketClient : Socket[] = this.socketService.isUserOnline(blockedByUsersIds[i]);
+        for (let j = 0; j < socketClient.length; j++) {
+          socketClient[j].join(channelRoom);
+      }
+    }
   }
 
 

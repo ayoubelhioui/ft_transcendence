@@ -120,6 +120,8 @@ class ChannelUsersRepository extends ABaseRepository<ChannelUsers> implements IC
     .addSelect('user.username', 'username')
     .addSelect('user.wins', 'wins')
     .addSelect('user.loss', 'loss')
+    .addSelect('user.IntraId', 'IntraId')
+    .addSelect('channelUsers.userRole', 'userRole')
     .getRawMany()
   }
 

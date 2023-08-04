@@ -12,6 +12,7 @@ import { ChannelModule } from './components/channels/channel.module';
 import { SocketModule } from './components/socket/socket.module';
 import { AuthModule } from './components/auth/auth.module';
 import { AddBotMiddleware } from './global/middlewares/add-bot-user.middleware';
+import { AchievementModule } from './components/achievement/achievement.module';
 
 const ENV_PATH : string = './src/.env'; 
 
@@ -28,6 +29,7 @@ const ENV_PATH : string = './src/.env';
     GroupInvitesModule,
     FriendsModule,
     SocketModule,
+    AchievementModule,
   ],
   controllers: [],
   providers: [],

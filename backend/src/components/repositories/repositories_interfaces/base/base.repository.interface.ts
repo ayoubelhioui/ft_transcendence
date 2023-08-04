@@ -1,3 +1,4 @@
+import { User } from "src/database/entities";
 import { DeepPartial } from "typeorm";
 
 interface IBaseRepository<T,deleteResult = any>
@@ -20,6 +21,7 @@ interface IBaseRepository<T,deleteResult = any>
     findAllWithRelations(relations : any): Promise<T[] | undefined>;
 
     findByOptions(options : any) : Promise<T[] | undefined> ;
+    
     findOneByOptions(options : any) : Promise<T | undefined>;
 
     remove(entity: T): Promise<T>; 

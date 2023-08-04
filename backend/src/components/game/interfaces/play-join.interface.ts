@@ -1,3 +1,4 @@
+import { SocketService } from "src/components/socket/socket.service";
 import { User } from "src/database/entities";
 
 export interface PlayerJoin{
@@ -6,7 +7,7 @@ export interface PlayerJoin{
     isWatchMode : boolean;
     userToInvite? : number;
     user : User;
-    invite_callback : any;
+    socketService : SocketService;
     token? : string;
 }
 

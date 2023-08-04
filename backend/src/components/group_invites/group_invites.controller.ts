@@ -8,8 +8,8 @@ import { ChannelRoles, GetTargetedUser, GetChannel } from '../channels/decorator
 import { GroupInvitesService } from './group_invites.service';
 import { TokenValidationGuard } from '../auth/guards/acces-token.guard';
 
-@Controller('channels/:id/invite')
-// @UseGuards(TokenValidationGuard)
+@Controller('channels/:id/invite/')
+// @UseGuards(TokenValidationGuard) 
 
 export class GroupInvitesController {
 

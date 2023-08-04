@@ -36,7 +36,7 @@ export class GameService {
         });
     }
     
-    async getLiveGames(page: number = 1, pageSize: number = 10) {
+    async getLiveGames(user: User,page: number = 1, pageSize: number = 10) {
         //make it bring only 10 games last started
 
         const rowsToSkip = (page - 1) * pageSize;
@@ -49,7 +49,21 @@ export class GameService {
           },
           relations : ["player1","player2"]
         });
-        return liveGames;
+
+        const my_friends = await this.friendsService.getFriends(user)
+        const my_friendsIds = my_friends.map((element=>{
+            return element.id;
+        }))
+        const filteredLiveGames = liveGames.filter((element)=>{
+            for(let i = 0; i < my_friendsIds.length; i++)
+            {
+                if(element.player1.id == my_friendsIds[0] || element.player2.id == my_friendsIds[0])
+                    return true;
+            }
+            return false;
+        }
+        )
+        return filteredLiveGames;
     }
     
     // async getMatchResults(@GetUser() user: User) : Promise< Game[] | undefined > {
@@ -83,37 +97,82 @@ export class GameService {
 
     async deleteGame(existingGame: Game)
     {
-        customLog(clc.bgRed("set game result"))
+        customLog(clc.bgRed("Remove Game"))
 
         if(existingGame)
         await this.gamesRepository.remove(existingGame);
     }
-    //if User exist guards
-    async createGame(player1: User,  gameType : boolean){
+
+    
+    async createGame(player1 : User, player2 : User, gameType : boolean) {
         
-        const existingGame = await this.hasOpenGame(player1)
-        if(existingGame && existingGame.player2) {
-            console.log("Game already exist: ", existingGame.player2.id)
-            return ({
-                message : "already have an on going game",
-                inviteId : existingGame.token,
-                game : existingGame
+      
+
+        if(player2.IntraId ===  2147483647)
+        {
+            player2 = await this.userRepository.findOneByOptions({
+                where : { 
+                    IntraId : player2.IntraId
+                }
             })
         }
-        if(existingGame)
-            await this.gamesRepository.remove(existingGame);
-        const game = await this.gamesRepository.create({
-            player1,
-            type : gameType
-        });
-        console.log("Game Created DB", game.token)
-        return ({
-            message : "game created",
-            inviteId : game.token,
-            game : game
+
+        const existingGame = await this.gamesRepository.findOneByOptions({
+            where : {
+                player1,
+                player2,
+                match_time_end: IsNull(),
+            },
+            relations : ["player2"]
         })
 
-    };
+        if (existingGame) {
+            return ({
+                message : "already have an on going game",
+                game : existingGame,
+                exists : 1
+            })
+        } else {
+            const game = await this.gamesRepository.create({
+                player1,
+                player2,
+                type : gameType
+            });
+            return ({
+                message : "game created",
+                game : game,
+                exists : 0
+            })
+        }
+    }
+
+    // async createGame(player1: User,  gameType : boolean){
+    //     const existingGame = await this.hasOpenGame(player1)
+    //     if(existingGame && existingGame.player2) {
+    //         console.log("Game already exist: ", existingGame.player2.id)
+    //         return ({
+    //             message : "already have an on going game",
+    //             inviteId : existingGame.token,
+    //             exists : 1,
+
+    //             game : existingGame
+    //         })
+    //     }
+    //     if(existingGame)
+    //         await this.gamesRepository.remove(existingGame);
+    //     const game = await this.gamesRepository.create({
+    //         player1,
+    //         type : gameType
+    //     });
+    //     console.log("Game Created DB", game.token)
+    //     return ({
+    //         message : "game created",
+    //         inviteId : game.token,
+    //         exists : 0,
+    //         game : game
+    //     })
+
+    // };
 
     async hasOpenGame(player1: User)
     {
@@ -210,7 +269,7 @@ export class GameService {
     
     
     async setGameResult(user1Id : number,token: string, player1Score: number, player2Score: number) : Promise <Game> {
-    
+        console.log("gameToken === ", token);
         const gameArr : Game[] = await this.gamesRepository.findByConditionWithRelations({token,player2 : Not(IsNull()), match_time_end : IsNull()},["player1", "player2"]);
         if (gameArr.length) {
             const game : Game = gameArr[0];
@@ -248,7 +307,8 @@ export class GameService {
             // chatgpt says I can just save like this when I retrieve with relations
             
         } else {
-            throw new NotFoundException(`Match not found, Or Hasn't started`);
+            // throw new NotFoundException(`Match not found, Or Hasn't started`);
+            return (undefined)
         }
     }
   
@@ -268,7 +328,7 @@ export class GameService {
             wins: 'DESC',
           },
         });
-        customLog(leaderboard);
+        //customLog(leaderboard);
         return leaderboard;
         //highest wr order by games played
     };

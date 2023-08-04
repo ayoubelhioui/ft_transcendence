@@ -29,6 +29,9 @@ class User{
 
     @Column()
     public winrate: number = 0;
+
+    @Column({default : true})
+    public isFirstTime : boolean = true;
     
     @Column({nullable: true})
     public twoFactorSecret: string;

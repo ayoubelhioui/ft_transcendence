@@ -2,11 +2,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Channel, ChannelBlacklist, User } from "src/database/entities";
 import {  Repository } from "typeorm";
 import ABaseRepository from "src/components/repositories/repositories_interfaces/base/base.repository.abstract";
-import { Injectable, Query } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import IChannelRepository from "src/components/repositories/repositories_interfaces/channel.repository.interface";
-import { ChannelsVisibility } from "../../global/types/channel-visibility.type";
 import { ChannelWithPassword } from '../../global/dto/channel-with-password.dto';
-import { getConnection } from 'typeorm';
 
 @Injectable()
 class ChannelRepository extends ABaseRepository<Channel> implements IChannelRepository
@@ -61,8 +59,8 @@ class ChannelRepository extends ABaseRepository<Channel> implements IChannelRepo
     .addSelect('channel.password', 'password')
     .where('channel.isGroup = false')
     .andWhere('(channel.name = :name1 OR channel.name = :name2)', {
-      name1: user1.id + "_" + user2.id,
-      name2: user2.id + "_" + user1.id,
+      name1: user1.username + "_" + user2.username,
+      name2: user2.username + "_" + user1.username,
     })
     .getOne();
     return (dmUsers);
@@ -73,11 +71,11 @@ class ChannelRepository extends ABaseRepository<Channel> implements IChannelRepo
     const dm = await this.findOneByOptions({
       where : [
                 { 
-                  name: user1.id + "_" + user2.id,
+                  name: user1.username + "_" + user2.username,
                   isGroup : false
                 },
                 { 
-                  name: user2.id + "_" + user1.id,
+                  name: user2.username + "_" + user1.username,
                   isGroup : false
                 }
             ]

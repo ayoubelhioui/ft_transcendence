@@ -47,7 +47,7 @@ export class Game {
         this.gameInfo.scorePlayer2 += p[1]
         customLog(" Score1: ", this.gameInfo.scorePlayer1, " Score2: ", this.gameInfo.scorePlayer2)
         this.changeTurn(this.getTurnInit())
-        await this.room.sendGameScore({
+        await this.room.setGameScore({
             player1Score : this.gameInfo.scorePlayer1,
             player2Score : this.gameInfo.scorePlayer2
         })
@@ -72,7 +72,6 @@ export class Game {
         if (this.gameInfo.end) {
             this.ballObj.endInit()
             await this.ballObj.update()
-            customLog("Game End")
             clearInterval(this.interval)
         } else {
             await this.ballObj.update()
@@ -84,7 +83,6 @@ export class Game {
             t = performance.now() - t
             this.totalTime += t 
         }
-        //customLog(t, this.totalTime / params.frame)
     }
 
     gameLoop() {

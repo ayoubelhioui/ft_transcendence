@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { GetUser } from '../user/decorators/user.decorator';
 import { User } from 'src/database/entities';
@@ -14,8 +14,13 @@ export class NotificationController {
         ){}
 
     @Get()
-    getNotifactions(@GetUser() user : User){
-        return this.notificationService.getNotifactions(user);
-    };
+    async getNotifactions(@GetUser() user : User){
+        return await this.notificationService.getNotifactions(user);
+    }; 
+
+    @Delete(':id')
+    async deleteNotification(@Param('id') id : number) {
+        return await this.notificationService.removeNotification(id);
+    }
 
 }

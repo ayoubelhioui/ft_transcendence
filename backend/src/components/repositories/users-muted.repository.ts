@@ -40,7 +40,13 @@ class UsersMutedRepository extends ABaseRepository<UsersMuted> implements IUsers
       user,
       channel
     }
-    const userMuted : UsersMuted | undefined = await this.findOneByCondition(condition);
+    const userMuted : UsersMuted | undefined =  await
+      this.entity
+      .createQueryBuilder('userMuted')
+      .where('userMuted.userId = :user', { user: condition.user.id })
+      .andWhere('userMuted.channelId = :channel', { channel: condition.channel.id })
+      .getOne();
+
     return (userMuted != null && userMuted.expirationTime > new Date());
   } 
 

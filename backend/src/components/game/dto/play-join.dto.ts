@@ -1,4 +1,5 @@
 import { IsBoolean, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from "class-validator";
+import { SocketService } from "src/components/socket/socket.service";
 import { User } from "src/database/entities";
 
 //!check if isWatchMod = true => token is exist
@@ -25,13 +26,13 @@ export class PlayerJoinDto{
     @IsOptional()
     user : User;
    
-    @IsUUID()
+
     @IsOptional()
     token? : string;
 
     @IsNotEmpty()
     @IsOptional()
-    invite_callback : any
+    socketService : SocketService
 
 }
 

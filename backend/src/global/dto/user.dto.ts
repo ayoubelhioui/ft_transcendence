@@ -1,7 +1,7 @@
 
 // import { IsNotEmpty } from "class-validator";
 
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty, IsOptional } from "class-validator";
 
 // 
 export class UserDto{
@@ -20,6 +20,9 @@ export class UserDto{
     
     @IsNotEmpty()
     wins?: number;
+
+    @IsOptional()
+    isFirstTime? : boolean = true;
 
     
     @IsNotEmpty()  

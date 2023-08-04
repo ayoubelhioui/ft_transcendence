@@ -48,6 +48,34 @@ export class FriendsService {
         return (result.length > 0)
     }
 
+
+    async is_blocked_by_arr(blocked  : User) : Promise<User[]>
+    {
+        const result : BlockedUsers[] = await this.blockedUsersRepository.findByOptions(
+            {
+                where : {
+                    blocked
+                },
+                relations: ["blockedBy"]
+            }
+        )
+        const users = result.map((element) => element.blockedBy)
+        return (users)
+    }
+
+    async is_blocked_arr(blockedBy  : User) : Promise<User[]>
+    {
+        const result : BlockedUsers[] = await this.blockedUsersRepository.findByOptions(
+            {
+                where : {
+                    blockedBy
+                },
+                relations: ["blockedBy"]
+            }
+        )
+        const users = result.map((element) => element.blockedBy)
+        return (users)
+    }
     async blocking_exists(blocked  : User, blockedBy  : User) : Promise<boolean>
     {
         const result : BlockedUsers[] = await this.blockedUsersRepository.findByOptions(

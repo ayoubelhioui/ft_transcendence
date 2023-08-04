@@ -43,11 +43,13 @@ export class AuthController{
     @Get('generate-secret-two-factor')
     async generateSecret() {
         const secret: string = otplib.authenticator.generateSecret();
+        console.log('the fucking secret is :  ' + secret);
         return (secret);
     }
 
-    @Post('two-factors-verify-store') //expecting the user id and the passcode.
+    @Post('two-factors-verify-store')
     async verifyTwoFactorsAndStore(@Body() body: authTwoFactorVerifyStorDto, @Res() res, @Req() req) : Promise<void> {
+        console.log('the fucking secret is :  ' + body.secretCode, " AND code is : ", body.passCode);
         const isMatched = otplib.authenticator.check(body.passCode, body.secretCode);
         if (isMatched)
         {
@@ -59,7 +61,7 @@ export class AuthController{
     }
     
 
-    @Post('two-factors-verify') //expecting the user id and the passcode.
+    @Post('two-factors-verify')
     async verifyTwoFactors(@Body() body : authTwoFactorVerifyDto , @Res() res, @Req() req) : Promise<void> {
         const isMatched = await this.authService.verifyTwoFactors(body);
         if (isMatched)
@@ -68,7 +70,7 @@ export class AuthController{
             res.status(401).json({ error: 'InvalidPasscode', message: 'The passcode provided is incorrect. Please try again.' });
     }
 
-    @Post('disable-two-factors') //expecting the user id and the passcode.
+    @Post('disable-two-factors')
     async disableTwoFactors(@Req() req) : Promise<void> {
         await this.authService.disableTwoFactors(req.user.id)
     }

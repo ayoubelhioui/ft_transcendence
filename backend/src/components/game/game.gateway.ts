@@ -15,6 +15,7 @@ import { UserRepository } from '../repositories';
 import { UserService } from '../user/user.service';
 import { customLog } from 'src/Const';
 import * as clc from 'cli-color';
+import { AClient } from './class/AClinet';
 
 @UseFilters(WebSocketExceptionFilter)
 @UsePipes(new ValidationPipe({
@@ -49,17 +50,7 @@ export class GameGateway {
 
 
   
-  inviteToGame(targetedUserId: number, gameId : string)
-  {
-    const socketsToSend : Socket[] = this.socketService.getSocket(+targetedUserId);
-    const payloadToSend = {
-      gameToken: gameId
-    }
-    socketsToSend.forEach(socketToSend => {
-      socketToSend.emit('invite_to_game',payloadToSend );
-    })
-    
-  }
+
 
   //make GenerateInviteLink + Invite user (getFriends)
   @SubscribeMessage ('invite_to_game')
@@ -82,25 +73,26 @@ export class GameGateway {
   @SubscribeMessage ('join_game')
   async joinGame(client: Socket, payload: PlayerJoinDto) {
     const user = this.socketService.getUser(client);
-    if(!user)
-    {
-      customLog("Khroj b7alk!")
-      // client.disconnect();
-      return 
-    }
-    customLog(clc.bgGreen("user inter with: "), user.id)
     const id = user.id;
     payload.user = await this.userService.findUserById(id)
-    payload.invite_callback = this.inviteToGame
+    payload.socketService = this.socketService 
     try {
       await this.gameSession.addClient(payload, client)
     } catch (e : any) {
       customLog("addClient Error:", e.message)
+      client.emit("exception", e.message)
+      console.log(e.stack)
       // client.disconnect()
     }
   }
 
-  
+  @SubscribeMessage ('leaveGame')
+  async leaveGame(client: Socket, payload: any) {
+    const user = this.socketService.getUser(client);
+    customLog(clc.red("leaveGame:", user.username))
+    await this.gameSession.removeClient(client)
+  }
+
   @SubscribeMessage ('moveRacket')
   racketMove(client: Socket, payload: RacketMoveDto) {
     this.gameSession.racketMove(payload, client.id)
@@ -115,15 +107,5 @@ export class GameGateway {
   paddleMove(client: Socket, payload: MovePaddleDto) {
     this.gameSession.paddleMove(payload, client.id)
   }
-
-  @SubscribeMessage ('leaveGame')
-  leaveGame(client: Socket, payload: any) {
-    this.gameSession.leaveGame(client)
-  }
-
-  //refuse / close button to close popup
-
-  // @SubscribeMessage ('accept')
-
 
 }

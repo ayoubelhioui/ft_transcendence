@@ -7,6 +7,7 @@ interface INotificationRepository extends IBaseRepository<Notification>
 {
     getUserNotifications(user : User, date? : Date) : Promise < Notification[] >;
 
+
 }
 
 export default INotificationRepository;

@@ -22,17 +22,12 @@ export class NotificationRepository extends ABaseRepository<Notification> implem
     const filterCondition: any = {
       receiver,
     };
-
-    if (date) {
-      filterCondition.time = LessThan(date);
-    }
-
     return await this.entity.find({
       where: filterCondition,
       order: {
         time: 'DESC',
       },
-      take: 10,
+      relations :["sender","receiver"]
     });
   }
 

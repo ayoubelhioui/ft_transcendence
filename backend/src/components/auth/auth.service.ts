@@ -78,19 +78,11 @@ export class AuthService{
     }
     
     async storeUserSecret(id :number, secret: string) {
-        const userDto: UserDto = new UserDto();
-        const simpleCrypto = new SimpleCrypto('helloWorldTesting'); //this 'helloWorldTesting' should be in the .env
-        const encryptedData = simpleCrypto.encrypt(secret);
-        userDto.twoFactorSecret = encryptedData;
-        userDto.two_factors_enabled = true;
-        await this.userService.update(id, userDto);
+        return (this.userService.storeUserSecret(id, secret));
     }
 
     async disableTwoFactors(id :number) {
-        const userDto: UserDto = new UserDto();
-        userDto.twoFactorSecret = null;
-        userDto.two_factors_enabled = false;
-        await this.userService.update(id, userDto);
+        return (await this.userService.disableTwoFactors(id));
     }
 
     async verifyTwoFactors(Body: authTwoFactorVerifyDto) {

@@ -34,7 +34,7 @@ class Channel{
     public isGroup : boolean;
 
 
-    @Column({default : "-1"})
+    @Column({default : "youtube.png"})
     public avatar: string;
    
     

@@ -26,11 +26,7 @@ export class NotificationService {
 
     async getNotifactions(user : User, date? : Date)
     {
-        if(date)
-            return this.notificationRepository.getUserNotifications(user,date);
-        else
-            return this.notificationRepository.getUserNotifications(user);
-
+        return  await this.notificationRepository.getUserNotifications(user);
     };
 
     //check i notification exits guard?
@@ -42,6 +38,10 @@ export class NotificationService {
             }
         },{seen : true});
     };
+
+    async removeNotification(id : number) {
+        await this.notificationRepository.delete({id : id});
+    }
 
 
 }

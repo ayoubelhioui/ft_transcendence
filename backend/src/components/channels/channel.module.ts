@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module, NestModule, RequestMethod, forwardRef } fro
 import { ChannelService } from './channel.service';
 import { ChannelController } from './channel.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Channel, ChannelBlacklist, ChannelInvites, ChannelMessages, ChannelUsers, User, UsersMuted } from 'src/database/entities';
+import { Achievement, Channel, ChannelBlacklist, ChannelInvites, ChannelMessages, ChannelUsers, User, UsersMuted } from 'src/database/entities';
 import ChannelRepository from '../repositories/channel.repository';
 import { UserModule } from '../user/user.module';
 import { ValidationPasswordPipe } from './pipe/validation-password.pipe';
@@ -27,13 +27,15 @@ import { FriendsService } from '../friends/friends.service';
 import { UserService } from '../user/user.service';
 import { FriendsModule } from '../friends/friends.module';
 import TokenBlacklist from 'src/database/entities/token_blacklist';
+import { AchievementModule } from '../achievement/achievement.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Channel, User, ChannelUsers, ChannelBlacklist, UsersMuted, ChannelMessages, ChannelInvites,TokenBlacklist]),
+    TypeOrmModule.forFeature([Channel, User, ChannelUsers, ChannelBlacklist,Achievement ,UsersMuted, ChannelMessages, ChannelInvites,TokenBlacklist]),
     SocketModule,
     forwardRef(() => UserModule),
     forwardRef(() => FriendsModule),
+    AchievementModule
   ],
   providers: [
     ChannelService,

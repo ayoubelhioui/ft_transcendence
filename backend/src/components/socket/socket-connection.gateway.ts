@@ -49,8 +49,8 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
       return (false);
     }
     const {sub} = payload as any;
-    customLog(payload);
-    customLog(socket.id);
+    //customLog(payload);
+    //customLog(socket.id);
     const user = await this.userService.findById(sub);
     (socket as any).user  = user;
     return ((user) ? true : false);
@@ -59,7 +59,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
   private async getOnlineFriendsSocket(user : User) :  Promise <Socket[]>{
     const onlineFriendsSockets : Socket[] = [];
     const friends : User[] = await this.friendsService.getFriends(user);
-    customLog("freinds ==== ", friends);
+    //customLog("freinds ==== ", friends);
     friends.forEach(friend => {
       const friendsSocket : Socket[] = this.socketService.isUserOnline(friend.id);
       if (friendsSocket.length)

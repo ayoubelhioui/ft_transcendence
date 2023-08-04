@@ -29,10 +29,10 @@ export class GameController {
     
     @Get('/live')
     @UsePipes(ValidationPipe)
-    async getLiveGames(@Query() page?: PaginationDto) { 
+    async getLiveGames(@GetUser() user : User,@Query() page?: PaginationDto) { 
         if(page && page.page)
-            return await this.gameService.getLiveGames(page.page);
-        return await this.gameService.getLiveGames();
+            return await this.gameService.getLiveGames(user,page.page);
+        return await this.gameService.getLiveGames(user);
         
     }
 
@@ -51,17 +51,17 @@ export class GameController {
         return await this.gameService.joinGame(user, token.token);
     }
 
-    @Post(':type')
-    @UsePipes(ValidationPipe)
-    async createGame(@GetUser() user : User, @Param() typeDto : TypeDto){
-        let type;
-        if(typeDto.type === gameTypesNames[0])
-            type = 0;
-        else 
-            type = 1
+    // @Post(':type')
+    // @UsePipes(ValidationPipe)
+    // async createGame(@GetUser() user : User, @Param() typeDto : TypeDto){
+    //     let type;
+    //     if(typeDto.type === gameTypesNames[0])
+    //         type = 0;
+    //     else 
+    //         type = 1
 
-        return await this.gameService.createGame(user,type)
-    };
+    //     return await this.gameService.createGame(user,type)
+    // };
 
 
     @Put(':token/surrender')
