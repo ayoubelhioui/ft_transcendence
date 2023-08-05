@@ -28,11 +28,11 @@ export class FriendsGateway {
     this.server
       .to(user1_sockets
       .map(socket => socket.id))
-      .emit("newFriendOnline", {user2});
+      .emit("newFriendOnline", {user : user2});
     this.server
     .to(user2_sockets
     .map(socket => socket.id))
-    .emit("newFriendOnline", {user1});
+    .emit("newFriendOnline", {user : user1});
    
   }
 

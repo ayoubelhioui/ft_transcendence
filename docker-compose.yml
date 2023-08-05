@@ -82,6 +82,8 @@ services:
     - .env
   ports:
     - "5050:80"
+  networks:
+    - my_network
 
 networks:
   my_network:

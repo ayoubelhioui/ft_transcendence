@@ -64,7 +64,8 @@ export class SocketService {
             //console.log("newFriendOnline", data)
             let isExist = this.listFriends.find((item : any) => item.id === data?.user?.id)
             if (!isExist) {
-                this.listFriends.push(data?.user)
+                if (data?.user)
+                    this.listFriends.push(data.user)
             }
             this.setRerender?.((value : any) => !value)
             this.setRerenderProfile?.((value : any) => !value)

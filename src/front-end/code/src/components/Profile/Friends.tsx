@@ -18,6 +18,7 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 }
 
 const Item = ({payload} : {payload : any}) => {
+  const appService = useAppServiceContext()
   const navigate = useNavigate();
   const user = payload
 
@@ -27,8 +28,22 @@ const Item = ({payload} : {payload : any}) => {
     navigate(`/Profile/${user.id}`)
   }
 
-  const itemOnClickDm = () => {
-    navigate(`/Chat/${user.id}`)
+  const itemOnClickDm = async () => {
+    
+  
+    const bodyData = {
+      name: "dm Channel",
+      isGroup: false,
+      targetUserId: user.id,
+      visibility: "private"
+    };
+
+    const res = await appService.requestService.postCreateNewChannel(bodyData)
+    if (res.status === STATUS_SUCCESS){
+      navigate(`/Chat/${res.data.id}`)
+    } else {
+      //!error
+    }
   }
 
   return (

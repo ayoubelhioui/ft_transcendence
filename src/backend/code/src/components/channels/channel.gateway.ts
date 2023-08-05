@@ -24,41 +24,43 @@ export class ChannelGateway {
   @WebSocketServer()
   server: Server;
 
-  private emitSystemPrompt(message : string, channelRoom : string) {
+  private emitSystemPrompt(message : string, channelId : number) {
+    const channelRoom = "channel_" + channelId;
     this.server.to(channelRoom).emit("on_message_send", {
-        user : {
-            username : 'system'
-        }, 
-        message : message, 
-        time : new Date()
+      user : {
+        username : 'system'
+    },
+      message : message,
+      time : new Date(),
+      channelId
     });
   }
 
   async joinUserToChannel(user : User, channel : Channel) {
     const userSockets : Socket[] = this.socketService.isUserOnline(user.id);
     const channelRoom = "channel_" + channel.id;
-    this.emitSystemPrompt(`${user.username} joined the Channel ${channel.name}`, channelRoom);
+    this.emitSystemPrompt(`${user.username} joined the Channel ${channel.name}`, channel.id);
     userSockets.forEach(socket => {
         socket.join(channelRoom);
     })};
 
 
     systemMutingPrompts(user : User, channel : Channel, message : string) {
-      const channelRoom = "channel_" + channel.id;
-      this.emitSystemPrompt(`${user.username} ${message}`, channelRoom);
+      // const channelRoom = "channel_" + channel.id;
+      this.emitSystemPrompt(`${user.username} ${message}`, channel.id);
     };
 
     async leaveChannel(user : User, channel : Channel, message : string) {
         const userSockets : Socket[] = this.socketService.isUserOnline(user.id);
         const channelRoom = "channel_" + channel.id;
-        this.emitSystemPrompt(`${user.username} ${message}`, channelRoom);
+        this.emitSystemPrompt(`${user.username} ${message}`, channel.id);
         userSockets.forEach(socket => {
             socket.leave(channelRoom);
     })};
 
     async muteUser(user : User, channel : Channel) {
-        const channelRoom = "channel_" + channel.id;
-        this.emitSystemPrompt(`${user.username} is  Muted`, channelRoom);
+        // const channelRoom = "channel_" + channel.id;
+        this.emitSystemPrompt(`${user.username} is  Muted`, channel.id);
     };
 
 

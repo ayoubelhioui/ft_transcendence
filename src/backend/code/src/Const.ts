@@ -6,7 +6,7 @@ const host = process.env.SERVER_HOST || 'localhost'
 const server_port = process.env.SERVER_PORT || 3000
 const client_port = process.env.CLIENT_PORT || 5000
 const server_address = `${host}:${server_port}`
-const client_address = `10.11.2.7:${client_port}`
+const client_address = `10.12.2.12:${client_port}`
 
 function customLog(...args) {
     const stackTrace = new Error().stack.split('\n');
