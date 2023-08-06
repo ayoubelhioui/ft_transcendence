@@ -6,12 +6,8 @@ import { GameState } from "../../../GameState";
 export class SocketManager {
 
     socket : Socket
-    socketAddr : string
 
     constructor(game : Game) {
-        const host = import.meta.env.VITE_HOST || 'localhost'
-        const port = import.meta.env.VITE_SERVER_PORT || '80'
-        this.socketAddr = `http://${host}:${port}`
         this.socket = this.getSocket(game)
     }
 
@@ -44,32 +40,32 @@ export class SocketManager {
 
     socketOn(socket : Socket, game : Game) {
         if (!game.gameParams.isWatchMode) {
-            socket.on("start", (data) => {
+            socket.on("start", (data : any) => {
                 game.start(data)
             })
         
-            socket.on("end_game", (data) => {
+            socket.on("end_game", (data : any) => {
                 game.end(data)
             })
             
-            socket.on("ballInfo", (data) => {
+            socket.on("ballInfo", (data : any) => {
                 game.ballObj.socketGetBallInfo(data)
             })
         
         
-            socket.on("moveRacket", (data) => {
+            socket.on("moveRacket", (data : any) => {
                 game.player2.socketMoveRacket(data)
             })
         
-            socket.on("gameScore", (data) => {
+            socket.on("gameScore", (data : any) => {
                 game.changeScore(data)
             })
         
-            socket.on("turn", (data) => {
+            socket.on("turn", (data : any) => {
                 game.gameInfo.turn = data.turn
             })
 
-            socket.on("exception", (data) => {
+            socket.on("exception", (data : any) => {
                 game.gameParams.callBack(GameState.gameException)
                 //console.log("exception",  data)
             })

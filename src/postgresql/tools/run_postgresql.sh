@@ -3,8 +3,8 @@
 PATH="$PATH:/usr/lib/postgresql/15/bin"
 
 service postgresql start
-psql -c "ALTER USER postgres PASSWORD '$POSTGRESQL_PASS';"
-psql -c "CREATE DATABASE $DB_NAME;"
+psql -c "ALTER USER postgres PASSWORD '$PG_PASSWORD';"
+psql -c "CREATE DATABASE $PG_DATABASE;"
 service postgresql stop
 
 

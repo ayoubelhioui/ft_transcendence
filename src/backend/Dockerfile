@@ -1,14 +1,15 @@
 FROM node:18
 
+RUN apt update -y
+RUN apt install postgresql-client -y
+
 WORKDIR /home/src/backend
-COPY package*.json ./
+COPY ./code/package*.json ./
 RUN npm i
-# RUN npm i @nestjs/websockets
-COPY . .
 
+COPY ./code/. ./
 COPY ./script.sh /home
+COPY ./assets/. ./uploads/
 
-COPY ./assets/* ./uploads
 RUN chmod +x /home/script.sh
-
 CMD /home/script.sh

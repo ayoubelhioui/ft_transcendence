@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SocketAdapter } from './CorsHelp.class';
-import { host, server_port, client_address, customLog } from './Const';
+import { server_host, server_port, client_address, customLog } from './Const';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {cors : true});
@@ -18,11 +18,10 @@ async function bootstrap() {
   // ]
   // });
 
+  await app.listen(server_port, server_host, () => {
+    customLog(`Server is running on ${server_host}:${server_port}`);
+  });
 
-
-  await app.listen(server_port, host, () => {
-    customLog(`Server is running on ${host}:${server_port}`);
-  });; 
 }
 
 bootstrap();

@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException, Redirect } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt"
-import { client_address } from "src/Const";
+import { host_client_address } from "src/Const";
 import { UserDto } from "src/global/dto/user.dto";
 import TokenBlacklist from "src/database/entities/token_blacklist";
 import { UserService } from "src/components/user/user.service";
@@ -38,7 +38,7 @@ export class AuthService{
         } else {
             res.cookie('access_token', tokens['access_token']);
             res.cookie('refresh_token', tokens['refresh_token']);
-            res.redirect(`http://${client_address}/`);
+            res.redirect(`http://${host_client_address}/`);
         }
     }
     

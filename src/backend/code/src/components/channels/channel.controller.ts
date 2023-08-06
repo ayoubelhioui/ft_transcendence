@@ -161,7 +161,7 @@ export class ChannelController {
         if (messagesDateDto.date)
             date = new Date(messagesDateDto.date);
         let a = await this.channelService.getChannelMessages(user,channel, date)
-        customLog(channel, date, a)
+        // customLog(channel, date, a)
         return (a);
     };
 

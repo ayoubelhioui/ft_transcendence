@@ -6,7 +6,7 @@ import { UserDto } from 'src/global/dto/user.dto';
 import TokenBlacklist from 'src/database/entities/token_blacklist';
 import axios from 'axios';
 import { createWriteStream } from 'fs';
-import { customLog, server_address } from 'src/Const';
+import { customLog } from 'src/Const';
 import { IUserRepository } from '../repositories/repositories_interfaces';
 import { AchievementService } from '../achievement/achievement.service';
 import SimpleCrypto from 'simple-crypto-js';
@@ -105,9 +105,9 @@ export class UserService{
         user.two_factors_enabled = true
         return (await this.userRepository.save(user));
     }
-    generateImageURL (userId: number, imageExtension: string) : string{
-        return (`http://${server_address}/user/images/` + userId + "." + imageExtension);
-    }
+    // generateImageURL (userId: number, imageExtension: string) : string{
+    //     return (`http://${server_address}/user/images/` + userId + "." + imageExtension);
+    // }
 
     async addTokenToBlacklist(token: string)
     {

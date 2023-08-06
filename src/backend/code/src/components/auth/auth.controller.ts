@@ -5,7 +5,7 @@ import { TokenValidationGuard } from "./guards/acces-token.guard";
 import { UserDto } from "src/global/dto/user.dto";
 import { access } from "fs";
 import { CorsGuard } from "./guards/cors.guard";
-import { client_address } from "src/Const";
+import { host_client_address } from "src/Const";
 import * as otplib from 'otplib';
 import { UserService } from "../user/user.service";
 import { authTwoFactorVerifyStorDto } from "./dto/auth.two-factor-store";
@@ -80,7 +80,7 @@ export class AuthController{
     async singUp(@Request() req, @Response() res) {
         const user = await this.authService.isUserAlreadyExist(req.user);
         if (user.two_factors_enabled)
-            res.redirect(`http://${client_address}?id=${user.id}&IntraId=${user.IntraId}&username=${user.username}`);
+            res.redirect(`http://${host_client_address}?id=${user.id}&IntraId=${user.IntraId}&username=${user.username}`);
         else
             await this.authService.authenticate(user, res, true);
     }

@@ -1,68 +1,67 @@
 version: '3.7'
 
 services:
- frontend:
+  frontend:
     build: ./src/front-end
     container_name: frontend
     restart: on-failure
     environment:
-      SERVER_HOST : ${SERVER_HOST}
-      SERVER_PORT : ${SERVER_PORT}
-      DB_HOST : ${DB_HOST}
-      DB_PORT : ${DB_PORT}
-      DB_USERNMAE : ${DB_USERNMAE}
-      DB_PASSWORD : ${DB_PASSWORD}
-      DB_DATABASE : ${DB_DATABASE}
-      CLIENT_ID : ${CLIENT_ID}
-      TOKEN_SECRET : ${TOKEN_SECRET}
-      CLIENT_SECRET : ${CLIENT_SECRET}
-      CALLBACK_URL : ${CALLBACK_URL}
-      VITE_HOST : ${VITE_HOST}
+      VITE_HOST_IP : ${VITE_HOST_IP}
+      VITE_SERVER_HOST : ${VITE_SERVER_HOST}
+      VITE_CLIENT_HOST : ${VITE_CLIENT_HOST}
       VITE_SERVER_PORT : ${VITE_SERVER_PORT}
-      VITE_APP_PORT : ${VITE_APP_PORT}
+      VITE_CLIENT_PORT : ${VITE_CLIENT_PORT}
       VITE_API : ${VITE_API}
-      POSTGRESQL_PASS : ${POSTGRESQL_PASS}
-      DB_NAME : ${DB_NAME}
-      PMA_HOST : ${PMA_HOST}
-      PMA_PORT : ${PMA_PORT}
     init : true
     networks:
-    - my_network
+      - my_network
     ports:
-      - "5000:5000"
- backend:
+      - "${VITE_CLIENT_PORT}:${VITE_CLIENT_PORT}"
+
+  backend:
     build: ./src/backend
     container_name: backend
     restart: on-failure
     environment:
+      HOST_IP : ${HOST_IP}
       SERVER_HOST : ${SERVER_HOST}
+      CLIENT_HOST : ${CLIENT_HOST}
       SERVER_PORT : ${SERVER_PORT}
-      DB_HOST : ${DB_HOST}
-      DB_PORT : ${DB_PORT}
-      DB_USERNMAE : ${DB_USERNMAE}
-      DB_PASSWORD : ${DB_PASSWORD}
-      DB_DATABASE : ${DB_DATABASE}
+      CLIENT_PORT : ${CLIENT_PORT}
       CLIENT_ID : ${CLIENT_ID}
       TOKEN_SECRET : ${TOKEN_SECRET}
       CLIENT_SECRET : ${CLIENT_SECRET}
       CALLBACK_URL : ${CALLBACK_URL}
-      VITE_HOST : ${VITE_HOST}
-      VITE_SERVER_PORT : ${VITE_SERVER_PORT}
-      VITE_APP_PORT : ${VITE_APP_PORT}
-      VITE_API : ${VITE_API}
-      POSTGRESQL_PASS : ${POSTGRESQL_PASS}
-      DB_NAME : ${DB_NAME}
-      PMA_HOST : ${PMA_HOST}
-      PMA_PORT : ${PMA_PORT}
+      PG_HOST : ${PG_HOST}
+      PG_PORT : ${PG_PORT}
+      PG_USER : ${PG_USER}
+      PG_PASSWORD : ${PG_PASSWORD}
+      PG_DATABASE : ${PG_DATABASE}
     init : true
     networks:
-    - my_network
+      - my_network
     ports:
-      - "3000:3000"
- postgresql:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+
+  postgresql:
     build: ./src/postgresql
     container_name: postgresql
     restart: on-failure
+    environment:
+      PG_USER : ${PG_USER}
+      PG_HOST : ${PG_HOST}
+      PG_PORT : ${PG_PORT}
+      PG_PASSWORD : ${PG_PASSWORD}
+      PG_DATABASE : ${PG_DATABASE}
+    init : true
+    networks:
+      - my_network
+    ports:
+      - "${PG_PORT}:${PG_PORT}"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
     environment:
       POSTGRESQL_PASS : ${POSTGRESQL_PASS}
       DB_NAME : ${DB_NAME}
@@ -70,21 +69,12 @@ services:
       PMA_PORT : ${PMA_PORT}
       PGADMIN_DEFAULT_EMAIL : ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD : ${PGADMIN_DEFAULT_PASSWORD}
-    init : true
+    ports:
+      - "${PMA_PORT}:80"
     networks:
       - my_network
-    ports:
-      - "5432:5432"
- pgadmin:
-  image: dpage/pgadmin4
-  restart: always
-  env_file:
-    - .env
-  ports:
-    - "5050:80"
-  networks:
-    - my_network
 
 networks:
   my_network:
     driver: bridge
+

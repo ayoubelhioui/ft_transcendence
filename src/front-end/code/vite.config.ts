@@ -8,7 +8,11 @@ dotenv.config(); // Load environment variables from .env file
 export default defineConfig({
   plugins: [react()],
   server: {
-    host : process.env.VITE_HOST || '0.0.0.0',
+    host : process.env.VITE_CLIENT_HOST || '0.0.0.0',
     port: parseInt(process.env.VITE_APP_PORT) || 5000
   },
+  preview: {
+    host : process.env.VITE_CLIENT_HOST || '0.0.0.0',
+    port: parseInt(process.env.VITE_APP_PORT) || 5001
+  }
 })

@@ -11,17 +11,16 @@ export default function typeOrmConfigs() : any {
         useFactory: (configService: ConfigService) => {
           let a = ({
             type:     'postgres',
-            host:     configService.get('DB_HOST'),
-            port:     +configService.get('DB_PORT'),
-            username: configService.get('DB_USERNMAE'),
-            password: configService.get('DB_PASSWORD'),
-            database: configService.get('DB_DATABASE'),
+            host:     configService.get('PG_HOST'),
+            port:     +configService.get('PG_PORT'),
+            username: configService.get('PG_USER'),
+            password: configService.get('PG_PASSWORD'),
+            database: configService.get('PG_DATABASE'),
             entities:       [User, Achievement, Channel, Friends, ChannelMessages, ChannelBlacklist, BlockedUsers, ChannelUsers,  Game, Notification, UsersMuted, ChannelInvites, TokenBlacklist],
             synchronize:    true,
             autoSchemaSync: true
           })
 
-          customLog(a)
           return (a)
         }
     }

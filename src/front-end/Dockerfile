@@ -1,11 +1,14 @@
 FROM node:18
 
+RUN apt update -y
+
 WORKDIR /home/src/frontend
-COPY package*.json ./
+COPY ./code/package*.json ./
 RUN npm i
-COPY . .
+RUN npm i -g vite
 
+COPY ./code/. ./
 COPY ./script.sh /home
-RUN chmod +x /home/script.sh
 
+RUN chmod +x /home/script.sh
 CMD /home/script.sh
