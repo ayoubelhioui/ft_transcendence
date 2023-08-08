@@ -13,12 +13,4 @@ export class authTwoFactorVerifyDto {
   @IsString()
   passCode : string;
 
-  @IsNotEmpty()
-  @IsNumber()
-  IntraId: number;
-
-  @IsNotEmpty()
-  @IsString()
-  username: string;
-
 }

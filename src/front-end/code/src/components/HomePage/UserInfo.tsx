@@ -5,7 +5,7 @@ import { STATUS_SUCCESS } from "../../Const";
 
 const UserInfo = () => {
   const appService = useAppServiceContext()
-  const intraId = appService.authService.user!.IntraId
+  const id = appService.authService.user!.id
   const newAvatar = useRef<File | undefined>(undefined);
   const name = useRef<string>('');
 
@@ -26,7 +26,7 @@ const UserInfo = () => {
     const formData = new FormData();
     formData.append('avatar', newAvatar.current as File);
     formData.append('username', name.current);
-    const res = await appService.requestService.postUpdateUserInfo(intraId, formData)
+    const res = await appService.requestService.postUpdateUserInfo(id, formData)
     if (res.status === STATUS_SUCCESS) {
       window.location.reload()
     } else {

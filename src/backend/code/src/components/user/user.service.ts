@@ -43,10 +43,21 @@ export class UserService{
         return (user);
     }
 
-    async findById(IntraId: number): Promise<User | undefined>{
+    //!findById
+
+    async findUserByIntraId(intraId: number): Promise<User | undefined>{
         const user = await this.userRepository.findOneByOptions({
             where : {
-                IntraId: IntraId,
+                IntraId: intraId,
+            },
+        });
+        return (user);
+    }
+
+    async findUserByEmail(email: string): Promise<User | undefined>{
+        const user = await this.userRepository.findOneByOptions({
+            where : {
+                email: email,
             },
         });
         return (user);
@@ -152,33 +163,5 @@ export class UserService{
         });
     }
 
-    async sendEmail(emailVerificationCode: string, userEmail: string){
-         const transporter = await nodemailer.createTransport({
-            service: 'outlook',
-            auth: {
-              user: 'imagesblablablabla@gmail.com',
-              pass: 'imAges8899@#',
-            },
-          });
-          const mailOptions = {
-            from: 'imagesblablablabla@gmail.com',
-            to: userEmail,
-            subject: 'Two-Factor Authentication Code',
-            text: `Thank you for using Your TRANSCENDENCE. To complete your login and ensure the security of your account, \
-please enter the following verification code: \
-Verification Code: "${emailVerificationCode}" \
-Please enter the code within 3 minutes.\
-If you didn't initiate this request or need any assistance, \
-please contact our support team\
-Best regards,
-TRANSCENDENCE TEAM`
-          };
-          await transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              console.error('Error occurred:', error.message);
-            } else {
-              customLog('Email sent successfully!', info.response);
-            }
-        });
-    }
+    
 }

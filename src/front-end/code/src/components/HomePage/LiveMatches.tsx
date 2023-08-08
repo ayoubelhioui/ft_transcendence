@@ -4,6 +4,8 @@ import { MdKeyboardDoubleArrowRight as RightArrowIcon, MdKeyboardArrowRight as S
 import { ReactNode} from "react";
 import { useAppServiceContext } from "../../Context/Context";
 import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../Const";
+import three_image from '../../assets/table3d.png'
+import classic_image from '../../assets/classic-game.png'
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
@@ -19,29 +21,28 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 const Item = ({payload} : {payload : any}) => {
     const player1 = payload.player1
     const player2 = payload.player2
-    const isClassic = payload.isClassic
+    const isClassic = !payload.type
 
     //console.log("payload", payload)
 
    
 
-    const imagePath = isClassic ? "/src/assets/table3d.png" : "/src/assets/classic-game.png"
+    const imagePath = isClassic ? three_image : classic_image
 
     //!link to the live
 
     return (
         <div className="flex flex-wrap h-[190px] w-[260px] cursor-pointer ">
-           <div className={`flex bg-[url('${imagePath}')] w-full h-[130px] rounded-[16px] bg-cover`} >
-                {/* <img src={imagePath} alt="Image_Type" className="w-[300px] object-cover h-[120px]"/> */}
+           <div className={`flex  w-full h-[130px] rounded-[16px] bg-cover`} >
+           <img src={imagePath} alt="Image_Type" className="w-full  h-full"/>
+                
             </div>
             <div className="flex justify-between px-2 items-center w-full back h-[40px]">
                 <div className="flex flex-col items-center">
-                    {/* <Avatar alt="Avatar" src={`http://${address}/users/image/` + player1.IntraId} sx={{ width: 30, height: 30 }}/> */}
                     <span className="text-white text-base">{player1.username}</span>
 
                 </div>
                 <div className="flex flex-col items-center">
-                     {/* <Avatar alt="Avatar" src={`http://${address}/users/image/` + player2.IntraId} sx={{ width: 30, height: 30 }}/> */}
                     <span className="text-white text-base">{player2.username}</span>
                 </div>
             </div>

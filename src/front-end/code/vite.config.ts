@@ -13,6 +13,6 @@ export default defineConfig({
   },
   preview: {
     host : process.env.VITE_CLIENT_HOST || '0.0.0.0',
-    port: parseInt(process.env.VITE_APP_PORT) || 5001
+    port: parseInt(process.env.VITE_APP_PORT) || 5000
   }
 })

@@ -25,7 +25,7 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 const Item = ({payload, rank} : {payload : any, rank : number}) => {
   const user = payload
 
-    const avatar = `http://${address}/users/image/${user.IntraId}`
+    const avatar = `http://${address}/users/image/${user.id}`
 
     return (
       <div className="flex mt-3 items-center justify-between text-white bg-[#4D194D] py-3 px-4 rounded-[10px]">

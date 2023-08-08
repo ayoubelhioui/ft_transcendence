@@ -36,7 +36,7 @@ const Item = ({payload, setHandleNotif} : {payload : any, setHandleNotif : any})
 
   //! need to get user's avatar
 
-  const avatar = `http://${address}/users/image/${item.sender?.IntraId}`
+  const avatar = `http://${address}/users/image/${item.sender?.id}`
 
   const acceptClick = async () => {
     if (item.acceptMethod === "PUT") {
@@ -120,6 +120,7 @@ const Notifications = ({setHandleNotif} : {setHandleNotif : any}) => {
 
 
   const data :any[] = appService.socketService.listNotification
+  console.log("=> ", data)
 
   //! if fetching failed don't open notification or just display <NoContent />
   return (

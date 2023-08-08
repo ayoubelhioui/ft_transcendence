@@ -1,35 +1,59 @@
 import { ForbiddenException, Injectable, NotFoundException, Redirect } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt"
-import { host_client_address } from "src/Const";
+import { host_client_address, twoFactorSecretCryptoKey } from "src/Const";
 import { UserDto } from "src/global/dto/user.dto";
 import TokenBlacklist from "src/database/entities/token_blacklist";
 import { UserService } from "src/components/user/user.service";
 import * as otplib from 'otplib';
 import { PasswordService } from "../channels/password.service";
 import { authTwoFactorVerifyDto } from "./dto/auth.two-factor-verify.dto";
+import { User } from "src/database/entities";
+import { IUserIntra } from "./intefaces/user.intra.interface";
+import { IUserGoogle } from "./intefaces/user.google.interface";
 const SimpleCrypto = require("simple-crypto-js").default;
 
 
 @Injectable()
 export class AuthService{
-    private payload: object;
-    private userInfo: any;
-    constructor(private jwtService: JwtService, private userService: UserService, private passwordService: PasswordService) { }
+    //private payload: object;
+    //private userInfo: any;
+    constructor(
+        private jwtService: JwtService,
+        private userService: UserService,
+        private passwordService: PasswordService) { }
     
-    async isUserAlreadyExist(userDto: UserDto){
-        this.userInfo = await this.findUserByName(userDto.username);
-        if (!this.userInfo)
+    
+    async signUpByIntra(userInfo : IUserIntra) {
+        console.log("info = " , userInfo);
+        const user = await this.userService.findUserByIntraId(userInfo.IntraId)
+        if (!user)
         {
-            this.userInfo = await this.userService.createUser(userDto);
-            //await this.userService.uploadImageFromUrl(userDto.avatar, './uploads/' + userDto.IntraId);
+            const newUser : UserDto = {
+                username : userInfo.username,
+                IntraId : userInfo.IntraId
+            }
+            return await this.userService.createUser(newUser);
         }
-        return (this.userInfo);
+        return (user);
+    }
+    async signUpByGoogle(userInfo : IUserGoogle) {
+        const user = await this.userService.findUserByEmail(userInfo.email)
+        if (!user)
+        {
+            const newUser : UserDto = {
+                username : userInfo.name,
+                email : userInfo.email
+            }
+            return await this.userService.createUser(newUser);
+        }
+        return (user);
     }
 
-    async authenticate(userDto: authTwoFactorVerifyDto, res: any, redirect : boolean) : Promise<void> {
-        this.payload = { sub: userDto.IntraId, username: userDto.username };
 
-        const tokens = await this.generateAuthTokens();
+    async authenticate(user: User, res: any, redirect : boolean) : Promise<void> {
+        const payload = { sub: user.id, username: user.username };
+
+        const tokens = await this.generateAuthTokens(payload);
         if (!redirect) {
             res.status(200).json({
                 accessToken : tokens['access_token'],
@@ -51,13 +75,11 @@ export class AuthService{
         );
     }
 
-    async findUserById(intraId: number) : Promise<object | undefined> {
-        return (await this.userService.findById(intraId));
+
+    async findUserById(id: number) : Promise<object | undefined> {
+        return (await this.userService.findUserById(id));
     }
 
-    async findUserByName(username: string) : Promise<object | undefined> {
-        return (await this.userService.findByUsername(username));
-    }
 
     async removeTokens(accessToken: string, refreshToken: string) {
         await this.userService.addTokenToBlacklist(accessToken);
@@ -68,16 +90,10 @@ export class AuthService{
         return (await this.userService.accessTokenInBlacklist(token));
     }
 
-    async mailingUser(userEmail: string) {
-        this.payload = { sub: userEmail };
-        const emailVerificationCode: string = await this.generateNewToken(this.payload, '3m');
-        await this.userService.sendEmail(emailVerificationCode, userEmail);
-    }
-
-    async generateAuthTokens(): Promise<object> {
+    async generateAuthTokens(payload : Object): Promise<object> {
         return ({
-            access_token: await this.generateNewToken(this.payload, '1d'),
-            refresh_token: await this.generateNewToken(this.payload, '2d'),
+            access_token: await this.generateNewToken(payload, '1d'),
+            refresh_token: await this.generateNewToken(payload, '2d'),
         });
     }
     
@@ -89,11 +105,11 @@ export class AuthService{
         return (await this.userService.disableTwoFactors(id));
     }
 
-    async verifyTwoFactors(Body: authTwoFactorVerifyDto) {
-        const twoFactorSecret = await this.userService.getSecretById(Body.id);
-        const simpleCrypto = new SimpleCrypto('helloWorldTesting');
+    async verifyTwoFactors(payload: authTwoFactorVerifyDto) {
+        const twoFactorSecret = await this.userService.getSecretById(payload.id);
+        const simpleCrypto = new SimpleCrypto(twoFactorSecretCryptoKey);
         const decryptedData = simpleCrypto.decrypt(twoFactorSecret);
-        const test = await otplib.authenticator.check(Body.passCode, decryptedData);
+        const test = await otplib.authenticator.check(payload.passCode, decryptedData);
         return (test);
     }
 }

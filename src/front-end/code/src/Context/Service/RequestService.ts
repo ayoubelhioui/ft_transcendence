@@ -332,12 +332,12 @@ export class RequestService {
         return await RequestService.makePutRequest(this, '/users/update', payload)
     }
 
-    async putUpdateUserImageRequest(intraId : number, payload : any = {}) {
-        return await RequestService.makePutRequest(this, `/users/image/${intraId}`, payload)
+    async putUpdateUserImageRequest(id : number, payload : any = {}) {
+        return await RequestService.makePutRequest(this, `/users/image/${id}`, payload)
     }
 
-    async postUpdateUserInfo(intraId : number, payload : any = {}) {
-        return await RequestService.makePostRequest(this, `/users/userInfo/${intraId}`, payload);
+    async postUpdateUserInfo(id : number, payload : any = {}) {
+        return await RequestService.makePostRequest(this, `/users/userInfo/${id}`, payload);
     }
 
     //============================================ Channels

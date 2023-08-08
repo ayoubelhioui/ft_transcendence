@@ -12,6 +12,7 @@ export class SocketService {
     allFriendsList : any[]
     setRerender? : any = undefined
     setRerenderProfile? : any = undefined
+    setRefreshRelation? : any = undefined
 
 
     constructor(requestService : RequestService) {
@@ -89,7 +90,8 @@ export class SocketService {
         //============================= Notification
 
         this.socket.on("new_notification", (data : any) => {
-            //console.log("notification", data?.notification)
+            // console.log("notification", data?.notification)
+            this.setRefreshRelation?.((value : boolean) => !value)
             this.listNotification.push(data.notification)
         })
 

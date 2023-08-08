@@ -47,7 +47,6 @@ interface popupContentI {
 interface InviteI {
   username : string
   id : number
-  intraId : number
   gameToken: string
   gameType : string
   isClassic : boolean
@@ -138,7 +137,7 @@ const Popup = () => {
           const newContent : popupContentI = {
             link : `/Chat/${data.channelId}`,
             message : `${data.message}`,
-            iconLink : `http://${address}/users/image/${data.user.IntraId}`,
+            iconLink : `http://${address}/users/image/${data.user.id}`,
             type : MESSAGE_EVENT,
             payload : data,
           }
@@ -151,7 +150,7 @@ const Popup = () => {
           const newContent : popupContentI = {
             link : data.gameToken,
             message : `${data.username} has invited you to ${data.gameType}`,
-            iconLink : `http://${address}/users/image/${data.intraId}`,
+            iconLink : `http://${address}/users/image/${data.id}`,
             type : INVITE_EVENT,
             payload : data,
           }

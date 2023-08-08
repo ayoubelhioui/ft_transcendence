@@ -14,6 +14,8 @@ import { useAppServiceContext } from "../../Context/Context";
 import { STATUS_SUCCESS } from "../../Const";
 import { useNavigate } from "react-router-dom";
 import { GameParamsCollect } from '../Game/PingPongGames/interfaces/interface.game.params';
+import { useEffect, useState } from 'react';
+import { appService } from '../../Context/Service/AppDataService';
 
 enum friendRequestStatus{
   unspecified = -1,
@@ -247,8 +249,17 @@ const FriendsRequest = ({relation} : {relation : Relation}) => {
 }
 
 const Relation = ({relation} : {relation : Relation}) => {
+  const appService = useAppServiceContext()
 
-  //console.log("R: ", relation)
+  
+  useEffect(() => {
+    appService.socketService.setRefreshRelation = relation.affect
+    return () => {
+      appService.socketService.setRefreshRelation = undefined
+    }
+  }, [])
+
+
   if (relation.status === friendRequestStatus.accepted) {
     return (
       <>

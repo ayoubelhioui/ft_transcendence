@@ -20,14 +20,14 @@ const Item = ({payload} : {payload : any}) => {
 			<div className="flex flex-col my-3 gap-4 w-full text-white px-4 ">
 				<div className="flex gap-2 items-center justify-between">
 					<div className="flex items-center gap-2">
-						<Avatar alt="Avatar" src={`http://${address}/users/image/` + payload.player1.IntraId} />
+						<Avatar alt="Avatar" src={`http://${address}/users/image/` + payload.player1.id} />
 						<span className="text-gray-400">{payload.player1.username}</span>
 					</div>
 					<span>{payload.player1_score}</span>
 				</div>
 				<div className="flex gap-2 items-center w-full justify-between">
 					<div className="flex items-center gap-2">
-						<Avatar alt="Avatar" src={`http://${address}/users/image/` + payload.player2.IntraId} />
+						<Avatar alt="Avatar" src={`http://${address}/users/image/` + payload.player2.id} />
 						<span className="text-gray-400">{payload.player2.username}</span>
 					</div>
 					<span>{payload.player2_score}</span>

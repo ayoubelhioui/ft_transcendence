@@ -97,7 +97,6 @@ export class GameSessions {
       const payloadToSend = {
         username : newClient.user.username,
         id : newClient.user.id,
-        intraId : newClient.user.IntraId,
         gameToken: newClient.gameToken,
         gameType : newClient.isClassicGame ? "classic" : "3d game",
         isClassic : newClient.isClassicGame,

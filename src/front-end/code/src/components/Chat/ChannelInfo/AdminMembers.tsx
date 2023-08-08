@@ -10,7 +10,6 @@ import { useChatContext } from '../ChatContext';
 interface ChannelMember {
   id : number
   username : string
-  IntraId : number
   userRole : number
 }
 
@@ -83,9 +82,8 @@ export const ThreeButton = ({payload, myRule} : {payload : any, myRule : number}
 const Item = ({payload, myRule} : {payload : any, myRule : number}) => {
   const user = payload
   const navigate = useNavigate();
-  //!should return the IntraId
-  const intraId = user.IntraId ?? -1
-  const avatar = `http://${address}/users/image/${intraId}`
+  const userId = user.id ?? "UserDefaultImage.png" //!UserDefaultImage
+  const avatar = `http://${address}/users/image/${userId}`
 
   const [isOpen, setIsOpen] = useState(false);
 

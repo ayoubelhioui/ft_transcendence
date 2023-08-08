@@ -1,5 +1,7 @@
 import { STATUS_SUCCESS } from "../../Const"
 import { useAppServiceContext } from "../../Context/Context"
+import three_image from '../../assets/table3d.png'
+import classic_image from '../../assets/classic-game.png'
 
 const NoContent = () => {
   return (
@@ -12,19 +14,21 @@ const Item = ({ item }: {item : any}) => {
   const player1 = item.player1
   const player2 = item.player2
 
+  const imagePath = !item.type ? three_image : classic_image
+  
   return (
       <div className="flex flex-col h-[190px] w-[230px] max-md:w-[170px] max-md:h-[150px] max-sm:w-[70%] max-sm:mx-auto gap-4">
-            <div className={`flex bg-[url('/src/assets/classic-game.png')] w-[230px] h-[130px] max-sm:w-full max-md:h-[110px] rounded-[16px] bg-cover`} >
-                {/* <img src={imagePath} alt="Image_Type" className="w-[300px] object-cover h-[120px]"/> */}
+            <div className={`flex w-[230px] h-[130px] max-sm:w-full max-md:h-[110px] rounded-[16px] bg-cover`} >
+              <img src={imagePath} alt="Image_Type" className="w-full  h-full"/>
             </div>
             <div className="flex justify-between px-2 max-md:h-[30px] items-center w-full back h-[40px]">
                 <div className="flex flex-col items-center">
-                    {/* <Avatar alt="Avatar" src={`http://${address}/users/image/` + player1.IntraId} sx={{ width: 30, height: 30 }}/> */}
+                    {/* <Avatar alt="Avatar" src={`http://${address}/users/image/` + player1.id} sx={{ width: 30, height: 30 }}/> */}
                     <span className="text-white text-base max-md:text-sm">{player1.username}</span>
 
                 </div>
                 <div className="flex flex-col items-center">
-                     {/* <Avatar alt="Avatar" src={`http://${address}/users/image/` + player2.IntraId} sx={{ width: 30, height: 30 }}/> */}
+                     {/* <Avatar alt="Avatar" src={`http://${address}/users/image/` + player2.id} sx={{ width: 30, height: 30 }}/> */}
                     <span className="text-white text-base max-md:text-sm">{player2.username}</span>
                 </div>
             </div>
@@ -33,6 +37,7 @@ const Item = ({ item }: {item : any}) => {
 }
 
 const List = ({list} : {list : any}) => {
+  console.log(list)
   return (
     <>
       {

@@ -6,7 +6,7 @@ import { address } from '../../Const';
 
 const Item = ({item} : {item : any}) => {
   const user = item
-  const image = `http://${address}/users/image/${user.IntraId}`
+  const image = `http://${address}/users/image/${user.id}`
 
   //console.log(item)
   return (

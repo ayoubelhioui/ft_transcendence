@@ -11,6 +11,7 @@ export interface UserI {
     win_rate: number;
     two_factors_enabled: boolean;
     IntraId: number
+    email : string
     isFirstTime: boolean
 }
 
@@ -114,7 +115,6 @@ export class AuthService {
             message : "not implemented"
         })
     }
-
     //====================================================
     //====================================================
 
@@ -140,8 +140,8 @@ export class AuthService {
             }
         } catch (error : any) {
 
-            // Cookies.remove('access_token');
-            // Cookies.remove('refresh_token');
+            Cookies.remove('access_token');
+            Cookies.remove('refresh_token');
 
             return {
                 status : STATUS_ERROR,

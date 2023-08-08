@@ -1,5 +1,5 @@
 
-import { Injectable, CanActivate, ExecutionContext, NestMiddleware, ForbiddenException } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, NestMiddleware, ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from '../auth.service';
 import { NextFunction } from 'express';
@@ -29,8 +29,9 @@ export class TokenValidationMiddleware implements NestMiddleware {
 
     async use(request: any, response: Response, next: NextFunction) {
         this.token = request.headers?.authorization?.replace('Bearer ', '');
+        if (this.token == undefined)
+            throw new UnauthorizedException('unauthorized');
         const isValidToken : boolean = await this._isValidToken();
-   
         if (!isValidToken) {
             customLog('invalid token');
             throw new ForbiddenException('Invalid token');

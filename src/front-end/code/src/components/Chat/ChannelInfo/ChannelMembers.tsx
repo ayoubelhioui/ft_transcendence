@@ -10,8 +10,8 @@ import { ThreeButton } from './AdminMembers';
 const Item = ({payload, myRule} : {payload : any, myRule : number}) => {
   const user = payload
   const navigate = useNavigate();
-  const intraId = user.IntraId ?? -1
-  const avatar = `http://${address}/users/image/${intraId}`
+  const userId = user.id ?? "UserDefaultImage.png" //!UserDefaultImage
+  const avatar = `http://${address}/users/image/${userId}`
   const [isOpen, setIsOpen] = useState(false);
 
   const imageOnClick = () => {

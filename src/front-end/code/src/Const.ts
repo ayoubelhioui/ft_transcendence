@@ -11,6 +11,7 @@ const server_address = `${server_host}:${server_port}`
 const client_address = `${client_host}:${client_port}`
 
 const intra_api = import.meta.env.VITE_API
+const google_api = `http://${host_server_address}/auth/google`
 
 
 const address = host_server_address
@@ -32,6 +33,7 @@ export {
     server_address,
     client_address,
     intra_api,
+    google_api,
     STATUS_UNDEFINED,
     STATUS_SUCCESS,
     STATUS_ERROR,

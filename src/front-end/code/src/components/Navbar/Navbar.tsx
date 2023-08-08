@@ -67,7 +67,7 @@ const Navbar = () => {
         <ul  className=' py-2 flex items-center max-md:mt-1 max-md:justify-between '>
           <li className=' pl-3 max-sm:pl-1'>
             <NavLink to="/Profile">
-              <img src={`http://${address}/users/image/` + authNav.user?.IntraId} alt="" className=' cursor-pointer object-cover rounded-full w-[45px] h-[45px]' />
+              <img src={`http://${address}/users/image/` + authNav.user?.id} alt="" className=' cursor-pointer object-cover rounded-full w-[45px] h-[45px]' />
             </NavLink>
           </li>
 

@@ -27,7 +27,7 @@ const Item = ({payload, closeDialog} : {payload : any, closeDialog : any}) => {
   const navigate = useNavigate();
   const user = payload
 
-  const avatar = `http://${address}/users/image/${user.IntraId}`
+  const avatar = `http://${address}/users/image/${user.id}`
 
 
   const itemOnClick = async () => {

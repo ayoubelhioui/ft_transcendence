@@ -19,7 +19,7 @@ export class AddBotMiddleware implements NestMiddleware {
   async use(req: any, res: any, next: () => void) {
     if(AddBotMiddleware.botCreated)
       return next();
-    const BOT = await this.userService.findById(2147483647);
+    const BOT = await this.userService.findUserByIntraId(2147483647);
 
     if(!BOT)
     {

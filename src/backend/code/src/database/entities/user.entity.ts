@@ -12,9 +12,12 @@ class User{
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @Column()
+    @Column({nullable: true})
     public IntraId: number;
     
+    @Column({nullable: true})
+    public email: string;
+
     @Column()
     public username: string;
     

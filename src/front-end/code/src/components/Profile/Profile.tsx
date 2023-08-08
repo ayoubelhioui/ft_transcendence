@@ -43,7 +43,7 @@ const ProfileUserName = ({userInfo} : {userInfo : any}) => {
 
 const EditImage = () => {
   const appService = useAppServiceContext()
-  const intraId = appService.authService.user!.IntraId
+  const id = appService.authService.user!.id
   const [open, setOpen] = useState(false);
   const newAvatar = useRef<File | undefined>(undefined);
 
@@ -60,7 +60,7 @@ const EditImage = () => {
 
     const formData = new FormData();
     formData.append('avatar', newAvatar.current as File);
-    const res = await appService.requestService.putUpdateUserImageRequest(intraId, formData)
+    const res = await appService.requestService.putUpdateUserImageRequest(id, formData)
     if (res.status === STATUS_SUCCESS) {
       window.location.reload()
     } else {
@@ -87,8 +87,8 @@ const EditImage = () => {
 }
 
 const ProfileImage = ({userInfo} : {userInfo : any}) => {
-  const intraId = userInfo?.user?.IntraId
-  const avatarLink = `http://${address}/users/image/${intraId}`
+  const id = userInfo?.user?.id
+  const avatarLink = `http://${address}/users/image/${id}`
   const appService = useAppServiceContext()
   const isOnline = appService.socketService.listFriends.find((item : any) => item?.id === userInfo?.user?.id)
   const isFriend = appService.socketService.allFriendsList.find((item : any) => item?.id === userInfo?.user?.id)

@@ -1,6 +1,8 @@
 import * as dotenv from 'dotenv'
 dotenv.config({path: __dirname + '/../src/.env'})
 
+const twoFactorSecretCryptoKey = process.env.TWO_FACTOR_SECRET_KEY || 'Hello World 12'
+
 const host_ip = process.env.HOST_IP || '0.0.0.0' //host
 const server_host = process.env.SERVER_HOST || '0.0.0.0' //container
 const client_host = process.env.CLIENT_HOST || '0.0.0.0' //container
@@ -32,5 +34,6 @@ export {
   client_port,
   server_address,
   client_address,
+  twoFactorSecretCryptoKey,
   customLog
 }

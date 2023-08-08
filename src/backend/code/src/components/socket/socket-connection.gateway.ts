@@ -51,7 +51,7 @@ export class ConnectionGateway implements OnGatewayConnection, OnGatewayDisconne
     const {sub} = payload as any;
     //customLog(payload);
     //customLog(socket.id);
-    const user = await this.userService.findById(sub);
+    const user = await this.userService.findUserById(sub);
     (socket as any).user  = user;
     return ((user) ? true : false);
   }
