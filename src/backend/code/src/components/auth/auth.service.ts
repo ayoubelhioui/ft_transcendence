@@ -17,11 +17,11 @@ export class AuthService{
     constructor(private jwtService: JwtService, private userService: UserService, private passwordService: PasswordService) { }
     
     async isUserAlreadyExist(userDto: UserDto){
-        this.userInfo = await this.findUserById(userDto.IntraId);
+        this.userInfo = await this.findUserByName(userDto.username);
         if (!this.userInfo)
         {
             this.userInfo = await this.userService.createUser(userDto);
-            await this.userService.uploadImageFromUrl(userDto.avatar, './uploads/' + userDto.IntraId);
+            //await this.userService.uploadImageFromUrl(userDto.avatar, './uploads/' + userDto.IntraId);
         }
         return (this.userInfo);
     }
@@ -53,6 +53,10 @@ export class AuthService{
 
     async findUserById(intraId: number) : Promise<object | undefined> {
         return (await this.userService.findById(intraId));
+    }
+
+    async findUserByName(username: string) : Promise<object | undefined> {
+        return (await this.userService.findByUsername(username));
     }
 
     async removeTokens(accessToken: string, refreshToken: string) {

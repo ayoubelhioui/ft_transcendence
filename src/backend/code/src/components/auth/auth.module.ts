@@ -10,6 +10,7 @@ import { UserModule } from "src/components/user/user.module";
 import TokenBlacklist from "src/database/entities/token_blacklist";
 import { PasswordService } from "../channels/password.service";
 import { TokenValidationMiddleware } from "./middlewares/acces-token.middleware";
+import { GoogleStrategy } from "./google.strategy";
 
 @Module({
     imports: [
@@ -23,7 +24,7 @@ import { TokenValidationMiddleware } from "./middlewares/acces-token.middleware"
         })
     ],
     controllers: [AuthController],
-    providers: [AuthService, JwtService, FortyTwoStrategy, PasswordService],
+    providers: [AuthService, JwtService, FortyTwoStrategy, PasswordService, GoogleStrategy],
     exports : [AuthService]
 })
 export class AuthModule implements NestModule {
@@ -36,7 +37,12 @@ export class AuthModule implements NestModule {
         { path: 'auth/two-factors-verify', method: RequestMethod.POST },
         { path: 'auth/two-factors', method: RequestMethod.POST },
         { path: 'users/image/:id*', method: RequestMethod.ALL },
+        { path: 'auth/google/callback', method: RequestMethod.ALL },
+        { path: 'auth/google', method: RequestMethod.ALL },
+        
         // More routes can be excluded if needed
       ).forRoutes('*');
     }
   }
+
+  

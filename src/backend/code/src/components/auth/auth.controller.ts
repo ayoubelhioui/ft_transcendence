@@ -2,16 +2,14 @@ import { Controller, Get, UseGuards, Request, Post, Body, Response, Req, Res } f
 import { AuthService } from "./auth.service";
 import { AuthGuard } from '@nestjs/passport';
 import { TokenValidationGuard } from "./guards/acces-token.guard";
-import { UserDto } from "src/global/dto/user.dto";
-import { access } from "fs";
-import { CorsGuard } from "./guards/cors.guard";
-import { host_client_address } from "src/Const";
+import { customLog, host_client_address } from "src/Const";
 import * as otplib from 'otplib';
 import { UserService } from "../user/user.service";
 import { authTwoFactorVerifyStorDto } from "./dto/auth.two-factor-store";
 import { authTwoFactorVerifyDto } from "./dto/auth.two-factor-verify.dto";
-const SimpleCrypto = require("simple-crypto-js").default;
 
+
+let ids = 0
 
 @Controller('auth')
 export class AuthController{
@@ -84,5 +82,22 @@ export class AuthController{
         else
             await this.authService.authenticate(user, res, true);
     }
-}
 
+
+
+    @Get('google')
+    @UseGuards(AuthGuard('google'))
+    googleLogin() {}
+  
+    @Get('google/callback')
+    @UseGuards(AuthGuard('google'))
+    async googleCallback(@Req() req, @Response() res) {
+        customLog(req.user);
+        const newUser = {
+            username : req.user.name,
+            IntraId : ids++,
+        }
+        const user = await this.authService.isUserAlreadyExist(newUser);
+        await this.authService.authenticate(user, res, true);
+    }
+}
