@@ -5,6 +5,7 @@ import { useAppServiceContext } from "../../Context/Service/AppServiceContext"
 import { UserI } from "../../Context/Service/AuthService";
 import { send } from "process";
 import { useNavigate } from "react-router-dom";
+import { Triggers } from "../../Context/Service/UtilService";
 // import {acceptImage} from '../../assets/accept.png'
 
 interface NotificationI {
@@ -47,9 +48,7 @@ const Item = ({payload, setHandleNotif} : {payload : any, setHandleNotif : any})
       if (res?.status === STATUS_SUCCESS) {
         const deleteRes = await appService.requestService.deleteNotification(item.id)
         if (deleteRes.status === STATUS_SUCCESS) {
-          appService.socketService.listNotification = appService.socketService.listNotification.filter((a : any) => {
-            return a.id !== item.id
-          })
+          appService.socketService.deleteNotification(item.id)
         } 
         setHandleNotif(false)
       } else {
@@ -98,7 +97,13 @@ const List = ({list, setHandleNotif} : {list : any, setHandleNotif : any}) => {
 
 const Notifications = ({setHandleNotif} : {setHandleNotif : any}) => {
   const appService = useAppServiceContext()
+  const refreshNotificationTrigger = appService.utilService.addTrigger(Triggers.RefreshNotification)
+  const data :any[] = appService.socketService.listNotification
   const ref = useRef<any>(null)
+
+  useEffect(() => {
+
+  }, [refreshNotificationTrigger])
 
   useEffect(() => {
     
@@ -118,11 +123,6 @@ const Notifications = ({setHandleNotif} : {setHandleNotif : any}) => {
 
   })
 
-
-  const data :any[] = appService.socketService.listNotification
-  console.log("=> ", data)
-
-  //! if fetching failed don't open notification or just display <NoContent />
   return (
       <div ref={ref}>
         <List list={data} setHandleNotif={setHandleNotif}/>

@@ -134,9 +134,7 @@ const ConversationsChat = ({id} : {id : number}) => {
   useEffect(() => {
     const event = "on_message_send"
     appService.socketService.on(event, (data : any) => {
-      //console.log("Message Received to chat", id)
       updateList([data], true, data.channelId)
-
       updateChat()
     })
 

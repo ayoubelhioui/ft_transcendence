@@ -5,7 +5,9 @@ import { GameParamsCollect } from "../../components/Game/PingPongGames/interface
 
 export enum Triggers {
     RefreshProfile,
-    RefreshListFriend
+    RefreshListFriend,
+    RefreshNotification,
+    RefreshProfileImageOfOnlineFriend,
 }
 
 export class UtilService {
@@ -29,7 +31,7 @@ export class UtilService {
 
     trigger(event : number) {
         if (!this.reRenderMap.has(event))
-            throw new Error("You did not set this event.")
+            return
         this.reRenderMap.get(event)()
     }
 

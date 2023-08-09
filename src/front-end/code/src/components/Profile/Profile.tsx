@@ -91,23 +91,25 @@ const ProfileImage = ({userInfo} : {userInfo : any}) => {
   const id = userInfo?.user?.id
   const avatarLink = `http://${address}/users/image/${id}`
   const appService = useAppServiceContext()
-  const isOnline = appService.socketService.listFriends.find((item : any) => item?.id === userInfo?.user?.id)
-  const isFriend = appService.socketService.allFriendsList.find((item : any) => item?.id === userInfo?.user?.id)
+  const isOnline = appService.socketService.isFriendOnline(id)
+  const refreshProfileImageOfOnlineFriendTrigger = appService.utilService.addTrigger(Triggers.RefreshProfileImageOfOnlineFriend)
 
+  useEffect(() => {
 
+  }, [refreshProfileImageOfOnlineFriendTrigger])
 
-
+  
   return (
     <>
       <div className="flex justify-start relative">
         <img src={avatarLink} alt='avatar' className=' object-cover rounded-full w-[130px] h-[130px]'/>
         { !(userInfo?.relation) && <EditImage/> }
         {
-          isOnline && 
+          isOnline === true && 
             <span className="w-4 h-4 rounded-full bg-green-500 border-2 border-white absolute left-2 top-[1rem]"></span>
         }
         {
-          isFriend && !isOnline &&
+          isOnline === false &&
           <span className="w-4 h-4 rounded-full bg-red-500 border-2 border-white absolute left-2 top-[1rem]"></span>
         }
 
