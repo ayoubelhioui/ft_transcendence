@@ -3,7 +3,7 @@ import { useState } from "react";
 import Conversations from "./Conversations/Conversations";
 import ChannelInfo from "./ChannelInfo/ChannelInfo";
 import { ChatContextProvider } from "./ChatContext";
-import { useAppServiceContext } from "../../Context/Context";
+import { useAppServiceContext } from "../../Context/Service/AppServiceContext";
 import { useParams } from "react-router-dom";
 
 const Chat = () => {

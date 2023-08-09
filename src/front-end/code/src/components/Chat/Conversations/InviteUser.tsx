@@ -7,7 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../../Const";
-import { useAppServiceContext } from "../../../Context/Context";
+import { useAppServiceContext } from "../../../Context/Service/AppServiceContext";
 import { useChatsGroupsPanelContext } from "../ChatsGroupsPanel/ChatsGroupsPanelContext";
 import { useChatContext } from "../ChatContext";
 

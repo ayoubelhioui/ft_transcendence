@@ -1,8 +1,8 @@
-import { Avatar } from "@mui/material";
+import { Avatar, Skeleton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { MdKeyboardDoubleArrowRight as RightArrowIcon, MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
 import { ReactNode} from "react";
-import { useAppServiceContext } from "../../../Context/Context";
+import { useAppServiceContext } from "../../../Context/Service/AppServiceContext";
 import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../../Const";
 
 const SeeMore = () => {
@@ -78,7 +78,12 @@ export const TopPlayers = () => {
     response.effect()
         
     if (result.status === STATUS_UNDEFINED) {
-      return <div>Loading ...</div>
+      return (
+        <div className="w-full h-screen   flex-col flex text-white justify-start mx-6 max-custom-md:mx-2 mt-4 gap-6 items-center overflow-x-auto">
+            <Skeleton className="h-2 w-5/6  my-2 bg-[#cccccc43]" height={50}/>
+            <Skeleton className="h-2 w-5/6  my-2 bg-[#cccccc43]" height={50}/>
+        </div>
+      )
     } else if (result.status === STATUS_ERROR) {
       return (
         <>

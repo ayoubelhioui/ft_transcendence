@@ -2,7 +2,7 @@ import { Avatar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { MdKeyboardDoubleArrowRight as RightArrowIcon, MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
 import { ReactNode} from "react";
-import { useAppServiceContext } from "../../Context/Context";
+import { useAppServiceContext } from "../../Context/Service/AppServiceContext";
 import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../Const";
 import three_image from '../../assets/table3d.png'
 import classic_image from '../../assets/classic-game.png'

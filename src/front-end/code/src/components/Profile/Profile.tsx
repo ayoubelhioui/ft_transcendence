@@ -13,12 +13,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import React, { useEffect, useRef, useState } from 'react';
 import { STATUS_ERROR, STATUS_SUCCESS, address } from '../../Const';
-import { useAppServiceContext } from '../../Context/Context';
+import { useAppServiceContext } from '../../Context/Service/AppServiceContext';
 import AxiosInstance from '../../Context/Service/AxiosInstance';
 import { useParams } from 'react-router-dom';
 import { UserI } from '../../Context/Service/AuthService';
 import Relation from './Relation';
 import { UserInfo } from '..';
+import { Triggers } from '../../Context/Service/UtilService';
 
 
 const ProfileUserName = ({userInfo} : {userInfo : any}) => {
@@ -188,7 +189,7 @@ const UserProfile = ({userInfo} : {userInfo : any}) => {
 const Profile = () => {
   const appService = useAppServiceContext()
   const params = useParams();
-  const [affect, setAffect] = useState(true)
+  
   let id = params.id ? +params.id : undefined
   if (id === appService.authService.user?.id)
     id = undefined
@@ -196,8 +197,8 @@ const Profile = () => {
   //!Unauthorized
   const result = response.state
 
-  //console.log("Profile, ", id)
-  response.effect([id, affect])
+  const refreshProfile = appService.utilService.addTrigger(Triggers.RefreshProfile)
+  response.effect([id, refreshProfile])
   
   let userInfo = result.data
   if (result.status === STATUS_ERROR && result.message === "profile") {
@@ -206,10 +207,8 @@ const Profile = () => {
       relation : undefined,
     }
   }
-  if (userInfo?.relation) {
-    userInfo.relation.affect = setAffect
-  }
-  //console.log("UserInfo", affect, userInfo)
+
+
   return <UserProfile userInfo={userInfo}/>
 }
 

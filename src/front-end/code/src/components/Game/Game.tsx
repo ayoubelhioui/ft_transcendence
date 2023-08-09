@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState} from 'react'
 import { GameParams, GameParamsCollect } from './PingPongGames/interfaces/interface.game.params'
 import { GameState } from './PingPongGames/GameState'
-import { useAppServiceContext } from '../../Context/Context';
+import { useAppServiceContext } from '../../Context/Service/AppServiceContext';
 import { Game as ThreeGame } from './PingPongGames/3dGame/src/MyObjects/Game'
 import { Game as ClassicGame } from './PingPongGames/ClassicGame/src/MyObjects/Game'
 import EndGame from './EndGame';
@@ -104,7 +104,7 @@ const Game =  () => {
     return (
         <>
             <GameUi state={state}></GameUi>
-            <div ref={rootHtmlElement} className='absolute h-screen w-screen z-[1000] inset-0 m-auto translate-x-0 translate-y-0 max-sm:h-full' />
+            <div ref={rootHtmlElement} className='fixed h-screen w-screen z-[1000] inset-0 m-auto translate-x-0 translate-y-0 max-sm:h-full' />
         </>
     )
         

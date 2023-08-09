@@ -3,7 +3,7 @@ import image from '../../assets/image.png'
 import image_2 from '../../assets/image_2.png'
 import img_classic_game from '../../assets/classic-game.png'
 import img_three_game from '../../assets/table3d.png'
-import { useAppServiceContext } from '../../Context/Context';
+import { useAppServiceContext } from '../../Context/Service/AppServiceContext';
 import { useNavigate } from 'react-router-dom';
 
 const GAME_2D = true

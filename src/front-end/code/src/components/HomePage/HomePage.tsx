@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import img from "../../assets/ping-pong-player-darkbg.png"
 import FriendSection from './FriendSection'
 // import { address } from '../../Const';
-import { useAppServiceContext } from '../../Context/Context';
+import { useAppServiceContext } from '../../Context/Service/AppServiceContext';
 import { Live } from './Containers/Live';
 import { Results } from './Containers/Results';
 import { TopPlayers } from './Containers/TopPlayers';
@@ -35,11 +35,12 @@ const HomePage = () => {
             </div>
           </div>
 
-            <div className=" text-white flex text-center w-[90%] max-custom-md:w-[75%] mx-auto mt-[3rem] max-md:w-[85%] max-custom-md:flex-col max-custom-md:gap-6 max-custom-lg:mt-3 max-sm:w-[95%]">
-              <Live />
-              <Results />
-            </div>
-            <TopPlayers />
+          <div className=" text-white flex text-center w-[90%] max-custom-md:w-[75%] mx-auto mt-[3rem] max-md:w-[85%] max-custom-md:flex-col max-custom-md:gap-6 max-custom-lg:mt-3 max-sm:w-[95%]">
+            <Live />
+            <Results />
+          </div>
+          <TopPlayers />
+
         </div>
 
         <FriendSection />

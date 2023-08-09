@@ -9,8 +9,8 @@ import {
 } from "react-router-dom";
 
 import { ThemeProvider } from "@material-tailwind/react";
-import { AppDataContext } from './Context/Context.ts';
-import { appService } from './Context/Service/AppDataService.ts';
+import { AppServiceProvider } from './Context/Service/AppServiceContext.tsx';
+
 
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
@@ -18,9 +18,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 
     <BrowserRouter>
       <ThemeProvider>
-        <AppDataContext.Provider value={appService}>
+        <AppServiceProvider>
           <App />
-        </AppDataContext.Provider>
+        </AppServiceProvider>
       </ThemeProvider>
     </BrowserRouter>
 

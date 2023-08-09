@@ -1,4 +1,4 @@
-import { useAppServiceContext } from '../../../Context/Context';
+import { useAppServiceContext } from '../../../Context/Service/AppServiceContext';
 import { useChatContext } from '../ChatContext';
 import AdminMembers from './AdminMembers';
 import ChannelMembers from './ChannelMembers';

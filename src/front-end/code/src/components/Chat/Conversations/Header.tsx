@@ -1,7 +1,7 @@
 import { useState} from "react";
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import {BsFillArrowLeftCircleFill} from 'react-icons/bs'
-import { useAppServiceContext } from "../../../Context/Context";
+import { useAppServiceContext } from "../../../Context/Service/AppServiceContext";
 import { ConversationInfoI, useChatContext } from "../ChatContext";
 import { STATUS_SUCCESS } from "../../../Const";
 import InviteUser from "./InviteUser";

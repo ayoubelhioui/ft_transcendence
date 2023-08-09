@@ -3,7 +3,7 @@ import axios from "axios";
 import { ReactNode, useEffect, useState } from "react";
 import { VscSettings } from "react-icons/vsc";
 import { Console } from "console";
-import { useAppServiceContext } from "../../../Context/Context";
+import { useAppServiceContext } from "../../../Context/Service/AppServiceContext";
 import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../../Const";
 import { useChatsGroupsPanelContext } from "./ChatsGroupsPanelContext";
 

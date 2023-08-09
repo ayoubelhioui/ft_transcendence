@@ -1,7 +1,8 @@
 import Avatar from '@mui/material/Avatar';
 import { useEffect, useState } from 'react';
-import { useAppServiceContext } from '../../Context/Context';
+import { useAppServiceContext } from '../../Context/Service/AppServiceContext';
 import { address } from '../../Const';
+import { Triggers } from '../../Context/Service/UtilService';
 
 
 const Item = ({item} : {item : any}) => {
@@ -29,13 +30,10 @@ const List = ({list} : {list : any}) => {
 const FriendSection = () => {
   const appService = useAppServiceContext()
   const listFriends = appService.socketService.listFriends
-  const [rerender, setRerender] = useState(false)
-   if (!appService.socketService.setRerender)
-    appService.socketService.setRerender = setRerender
 
+  const refreshListFriendTrigger = appService.utilService.addTrigger(Triggers.RefreshListFriend)
   useEffect(() => {
-    //console.log("Rerender")
-  }, [rerender])
+  }, [refreshListFriendTrigger])
 
   return (
     <div className="flex flex-col h-[100%] my-auto items-center gap-6 pt-4 bg-blue-950 bg-opacity-70 rounded-[10px] px-2 max-custom-md:hidden">

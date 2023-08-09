@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-import { useAppServiceContext } from "../../../Context/Context"
+import { useAppServiceContext } from "../../../Context/Service/AppServiceContext"
 import { useChatContext } from "../ChatContext"
 import { useChatsGroupsPanelContext } from "./ChatsGroupsPanelContext"
 import ProtectedGroup from "./ProtectedGroup"

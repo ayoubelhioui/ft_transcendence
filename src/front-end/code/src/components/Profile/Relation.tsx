@@ -1,21 +1,9 @@
-// import React, { useEffect, useRef, useState } from "react";
 import { motion } from 'framer-motion'
-// import { MdEdit } from 'react-icons/md'
-// import QRCode from 'qrcode.react';
-// import * as otplib from 'otplib';
-
-// import DialogActions from '@mui/material/DialogActions';
-// import Button from '@mui/material/Button';
-// import TextField from '@mui/material/TextField';
-// import Dialog from '@mui/material/Dialog';
-// import DialogContent from '@mui/material/DialogContent';
-// import DialogTitle from '@mui/material/DialogTitle';
-import { useAppServiceContext } from "../../Context/Context";
+import { useAppServiceContext } from "../../Context/Service/AppServiceContext";
 import { STATUS_SUCCESS } from "../../Const";
 import { useNavigate } from "react-router-dom";
 import { GameParamsCollect } from '../Game/PingPongGames/interfaces/interface.game.params';
-import { useEffect, useState } from 'react';
-import { appService } from '../../Context/Service/AppDataService';
+import { Triggers } from '../../Context/Service/UtilService';
 
 enum friendRequestStatus{
   unspecified = -1,
@@ -39,7 +27,6 @@ interface Relation {
   sender? : User
   receiver? : User
   channel? : Channel
-  affect : any
   blocked? : User
   blockedBy? : User
 }
@@ -110,33 +97,6 @@ const GoToChat = ({relation} : {relation : Relation}) => {
   )
 }
 
-const Play = ({relation} : {relation : Relation}) => {
-
-  const handleSubmit = async () => {
-    // const res = await request()
-    // if (res.status === STATUS_SUCCESS) {
-    //   relation.affect((value : any) => !value)
-    // }
-    // else {
-    //   //console.log("Error")
-    //   //!popup
-    // }
-  }
-
-
-  return (
-    <>
-      <motion.button
-      onClick={handleSubmit}
-      type='button'
-      whileTap={{scale: 0.955}}
-      className='flex items-center bg-[#4D194D] py-2 px-6 mx-auto text-xs outline-none ml-2'
-      > 
-          Play
-      </motion.button>
-    </>
-  )
-}
 
 const BlockRequest = ({relation} : {relation : Relation}) => {
   const appService = useAppServiceContext()
@@ -156,7 +116,7 @@ const BlockRequest = ({relation} : {relation : Relation}) => {
   const handleSubmit = async () => {    
     const res = await request()
     if (res.status === STATUS_SUCCESS) {
-      relation.affect((value : any) => !value)
+      appService.utilService.trigger(Triggers.RefreshProfile)
     }
     else {
       //console.log("Error")
@@ -216,7 +176,7 @@ const FriendsRequest = ({relation} : {relation : Relation}) => {
   const handleSubmit = async (rejectRequest : boolean) => {    
     const res = await request(rejectRequest)
     if (res.status === STATUS_SUCCESS) {
-      relation.affect((value : any) => !value)
+      appService.utilService.trigger(Triggers.RefreshProfile)
     }
     else {
       //console.log("Error")
@@ -249,17 +209,6 @@ const FriendsRequest = ({relation} : {relation : Relation}) => {
 }
 
 const Relation = ({relation} : {relation : Relation}) => {
-  const appService = useAppServiceContext()
-
-  
-  useEffect(() => {
-    appService.socketService.setRefreshRelation = relation.affect
-    return () => {
-      appService.socketService.setRefreshRelation = undefined
-    }
-  }, [])
-
-
   if (relation.status === friendRequestStatus.accepted) {
     return (
       <>

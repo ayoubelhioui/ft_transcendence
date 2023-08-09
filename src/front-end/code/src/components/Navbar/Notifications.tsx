@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useRef } from "react"
 import { STATUS_SUCCESS, address } from "../../Const"
 import { Avatar } from "@mui/material"
-import { useAppServiceContext } from "../../Context/Context"
+import { useAppServiceContext } from "../../Context/Service/AppServiceContext"
 import { UserI } from "../../Context/Service/AuthService";
 import { send } from "process";
 import { useNavigate } from "react-router-dom";

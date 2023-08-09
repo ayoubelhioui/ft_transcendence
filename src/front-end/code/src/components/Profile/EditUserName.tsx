@@ -10,7 +10,7 @@ import * as otplib from 'otplib';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useAppServiceContext } from "../../Context/Context";
+import { useAppServiceContext } from "../../Context/Service/AppServiceContext";
 import { STATUS_SUCCESS } from "../../Const";
 
 const EditUserName = ({setUserName} : {setUserName : any}) => {

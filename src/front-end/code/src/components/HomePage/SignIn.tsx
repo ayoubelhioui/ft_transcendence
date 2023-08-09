@@ -4,7 +4,7 @@ import image_2 from "../../assets/ping_pong_2.jpg"
 import { STATUS_SUCCESS, intra_api, google_api } from "../../Const"
 import { MainWrapper } from ".."
 import { useRef, useState } from "react"
-import { useAppServiceContext } from "../../Context/Context"
+import { useAppServiceContext } from "../../Context/Service/AppServiceContext"
 import Cookies from 'js-cookie';
 
 const SignIn = () => {

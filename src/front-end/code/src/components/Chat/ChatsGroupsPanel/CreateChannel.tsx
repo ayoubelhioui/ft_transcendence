@@ -4,7 +4,7 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-import { useAppServiceContext } from "../../../Context/Context";
+import { useAppServiceContext } from "../../../Context/Service/AppServiceContext";
 import { STATUS_SUCCESS } from "../../../Const";
 import { useChatContext } from "../ChatContext";
 import { useChatsGroupsPanelContext } from "./ChatsGroupsPanelContext";

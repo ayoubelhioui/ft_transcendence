@@ -2,7 +2,7 @@ import { Avatar } from "@mui/material";
 import { Navigate, useNavigate } from "react-router-dom";
 import { MdKeyboardArrowRight as SingleArrow  } from 'react-icons/md'
 import { ReactNode, useEffect, useRef, useState} from "react";
-import { useAppServiceContext } from "../../../Context/Context";
+import { useAppServiceContext } from "../../../Context/Service/AppServiceContext";
 import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../../Const";
 import { useChatContext } from "../ChatContext";
 import { RequestResultI } from "../../../Context/Service/RequestService";

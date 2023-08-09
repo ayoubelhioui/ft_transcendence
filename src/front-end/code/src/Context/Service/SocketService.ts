@@ -1,22 +1,22 @@
 import { io, Socket } from "socket.io-client";
 import { RequestService } from "./RequestService";
 import { address, STATUS_SUCCESS } from "../../Const";
+import { Triggers, UtilService } from "./UtilService";
 
 
 export class SocketService {
     
     private socket : Socket | undefined
-    private requestService : RequestService
+    private readonly requestService : RequestService
+    private readonly utilService : UtilService
     listFriends : any[]
     listNotification : any[]
     allFriendsList : any[]
-    setRerender? : any = undefined
-    setRerenderProfile? : any = undefined
-    setRefreshRelation? : any = undefined
 
 
-    constructor(requestService : RequestService) {
+    constructor(requestService : RequestService, utilService : UtilService) {
         this.requestService = requestService
+        this.utilService = utilService
         this.listFriends = []
         this.listNotification = []
         this.allFriendsList = []
@@ -68,31 +68,27 @@ export class SocketService {
                 if (data?.user)
                     this.listFriends.push(data.user)
             }
-            this.setRerender?.((value : any) => !value)
-            this.setRerenderProfile?.((value : any) => !value)
+            this.utilService.trigger(Triggers.RefreshListFriend)
         })
     
         this.socket.on("friendDisconnect", (data : any) => {
             //console.log("friendDisconnect", data)
             this.listFriends = this.listFriends.filter((item : any) => item.id !== data?.user?.id)
-            this.setRerender?.((value : any) => !value)
-            this.setRerenderProfile?.((value : any) => !value)
+            this.utilService.trigger(Triggers.RefreshListFriend)
         })
 
         this.socket.on("myOnlineFriends", (data : any[]) => {
             //console.log("myOnlineFriends", data)
             this.listFriends = data
-            this.setRerender?.((value : any) => !value)
-            this.setRerenderProfile?.((value : any) => !value)
+            this.utilService.trigger(Triggers.RefreshListFriend)
         })
 
 
         //============================= Notification
 
         this.socket.on("new_notification", (data : any) => {
-            // console.log("notification", data?.notification)
-            this.setRefreshRelation?.((value : boolean) => !value)
             this.listNotification.push(data.notification)
+            this.utilService.trigger(Triggers.RefreshProfile)
         })
 
 
