@@ -126,20 +126,20 @@ const ConversationsChat = ({id} : {id : number}) => {
 
 
   const updateChat = () => {
-    //console.log("update chat list: ", chatContext.updateChats)
-    //chatContext.updateChats = !chatContext.updateChats
     chatContext.setUpdateChats(!chatContext.updateChats)
   }
 
   useEffect(() => {
     const event = "on_message_send"
-    appService.socketService.on(event, (data : any) => {
+    const handler = (data : any) => {
       updateList([data], true, data.channelId)
       updateChat()
-    })
+    }
+
+    appService.socketService.on(event, handler)
 
     return (() => {
-      appService.socketService.off(event)
+      appService.socketService.off(event, handler)
     })
   }, [refreshTrigger, id, chatContext.updateChats])
 

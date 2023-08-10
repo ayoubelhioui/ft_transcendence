@@ -38,13 +38,12 @@ const InviteToGame = ({relation, isClassic} : {relation : Relation, isClassic : 
 
   const sendRequest = () => {
     const bodyData : GameParamsCollect = {
-      isWatchMode : false,
       isClassic : isClassic,
       isBotMode : false,
       userId : appService.authService.user?.id,
       userToInvite : relation.targetUserId
     };
-  
+    
     appService.utilService.gameParams = bodyData
     navigate("/Play")
   }

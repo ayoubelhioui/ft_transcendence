@@ -52,7 +52,6 @@ const Game =  () => {
     const gameParams = appService.utilService.gameParams
     const [state, setState] = useState(GameState.gameLoading)
     const rootHtmlElement = useRef<HTMLDivElement>(null);
-    const [errorInGame, setErrorInGame] = useState(0)
 
     useEffect(() => {
         let canvas : HTMLCanvasElement | null = null
@@ -67,29 +66,25 @@ const Game =  () => {
             gameParams.socket = appService.socketService.getSocket()
             gameParams.callBack = (state : number) => {
                 if (state === GameState.gameException) {
-                    //console.log("Exception??", errorInGame, "state", state)
                     gameObject?.stop()
-                    // if (errorInGame < 3) {
-                    //     //console.log("Refresh Game....")
-                    //     setTimeout(setErrorInGame, 1000, errorInGame + 1)
-                    // }
                 }
                 setTimeout(setState, 500, state)
             }
             if (validateGameParams(gameParams)) {
-                //console.log("creating game with gameParams = ", gameParams)
+                console.log("creating game with gameParams = ", gameParams)
                 gameObject = createGame(gameParams)
                 gameObject.loop()
             } else {
-                //console.log("Error game Params: ", gameParams)
+                console.log("Error game Params: ", gameParams)
             }
         }
+        
         if (!gameObject) {
-            //console.log("Error in game")
+            console.log("Error in game")
         }
    
         return () => {
-            //console.log("leave")
+            console.log("leave game")
             if (gameObject) {
                 gameObject.stop()
                 gameObject.socketMgr.socket.emit("leaveGame", {})
@@ -99,7 +94,7 @@ const Game =  () => {
             }          
         };
 
-    }, [errorInGame])
+    }, [])
 
     return (
         <>

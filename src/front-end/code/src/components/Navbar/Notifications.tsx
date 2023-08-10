@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Triggers } from "../../Context/Service/UtilService";
 // import {acceptImage} from '../../assets/accept.png'
 
-interface NotificationI {
+export interface INotification {
   id: number;
   message : string
   acceptLink : string;
@@ -17,7 +17,7 @@ interface NotificationI {
   refuseMethod : string;
   time : Date;
   seen : boolean;
-  receiver : UserI;
+  //receiver : UserI;
   sender : UserI;
 }
 
@@ -33,7 +33,7 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 const Item = ({payload, setHandleNotif} : {payload : any, setHandleNotif : any}) => {
   const appService = useAppServiceContext()
   const navigate = useNavigate()
-  const item : NotificationI = payload;
+  const item : INotification = payload;
 
   //! need to get user's avatar
 
@@ -98,8 +98,9 @@ const List = ({list, setHandleNotif} : {list : any, setHandleNotif : any}) => {
 const Notifications = ({setHandleNotif} : {setHandleNotif : any}) => {
   const appService = useAppServiceContext()
   const refreshNotificationTrigger = appService.utilService.addTrigger(Triggers.RefreshNotification)
-  const data :any[] = appService.socketService.listNotification
+  const data :any[] = [... appService.socketService.listNotification].reverse()
   const ref = useRef<any>(null)
+
 
   useEffect(() => {
 

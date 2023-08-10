@@ -2,8 +2,6 @@ import { IsBoolean, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } 
 import { SocketService } from "src/components/socket/socket.service";
 import { User } from "src/database/entities";
 
-//!check if isWatchMod = true => token is exist
-//!check if userToInvite = true => token is undefined w 3akss (optional)
 
 export class PlayerJoinDto{
     @IsBoolean()
@@ -13,10 +11,6 @@ export class PlayerJoinDto{
     @IsNotEmpty()
     @IsBoolean()
     isBotMode : boolean;
-
-    @IsBoolean()
-    @IsNotEmpty()
-    isWatchMode : boolean;
 
     @IsNumber()
     @IsOptional()

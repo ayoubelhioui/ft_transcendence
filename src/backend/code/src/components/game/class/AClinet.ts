@@ -11,7 +11,6 @@ export class AClient {
   socket : Socket
   isClassicGame : boolean
   isBotGame : boolean
-  isWatchMode : boolean
   gameToken? : string //the user that has been invited must have this token from the link, this token will be created by the sender
   userToInvite : number
 
@@ -22,7 +21,6 @@ export class AClient {
       this.socket = socket
       this.isClassicGame = payload.isClassic
       this.isBotGame = payload.isBotMode
-      this.isWatchMode = payload.isWatchMode
       this.gameToken = payload.token
       this.userToInvite = payload.userToInvite
 
@@ -31,7 +29,6 @@ export class AClient {
           clc.green("socketId: "), this.socket.id,
           clc.green("IsBotMode: "), payload.isBotMode,
           clc.green("IsClassic: "), payload.isClassic,
-          clc.green("IsWatchMode: "), payload.isWatchMode,
           clc.green("UserToInvite: "), payload.userToInvite,
           clc.green("token: "), payload.token,
           clc.green("userId: "), payload.user.id

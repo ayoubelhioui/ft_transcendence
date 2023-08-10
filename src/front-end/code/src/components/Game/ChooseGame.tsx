@@ -16,7 +16,6 @@ const ChooseGame = () => {
 
   const goToGame = (isClassicGame : boolean) => {  
     appService.utilService.gameParams = {
-      isWatchMode : false,
       isBotMode : isBotGame!,
       isClassic : isClassicGame
     }

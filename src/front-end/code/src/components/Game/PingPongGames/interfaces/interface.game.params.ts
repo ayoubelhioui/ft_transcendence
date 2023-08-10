@@ -2,7 +2,6 @@ import { Socket } from 'socket.io-client'
 import { LoaderResult } from '../3dGame/src/interfaces/interface.load.result.ts'
 
 export interface GameParams {
-    isWatchMode : boolean,
     isClassic : boolean,
     isBotMode : boolean,
     userId : number,
@@ -16,7 +15,6 @@ export interface GameParams {
 }
 
 export interface GameParamsCollect {
-    isWatchMode : boolean,
     isClassic : boolean,
     isBotMode? : boolean,
     userId? : number,

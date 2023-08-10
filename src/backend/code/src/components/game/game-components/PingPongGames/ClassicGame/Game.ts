@@ -78,7 +78,6 @@ export class Game {
             this.player1.update()
             this.player2.update()
             this?.botObj?.update()
-            this.room.broadcastToWatchers()
             params.frame++
             t = performance.now() - t
             this.totalTime += t 

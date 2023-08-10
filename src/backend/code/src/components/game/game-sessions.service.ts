@@ -103,7 +103,7 @@ export class GameSessions {
         isBotMode : false
 
       }
-      //console.log(payloadToSend)
+      customLog("invite to play: ", payloadToSend)
       socketsToSend.forEach(socketToSend => {
         socketToSend.emit('invite_to_game', payloadToSend);
       })

@@ -2,7 +2,6 @@ import { Socket } from 'socket.io';
 import { PlayerScores } from '../../dto/player-scores.dto';
 import { PlayerJoin } from '../../interfaces/play-join.interface';
 import { Client } from 'socket.io/dist/client';
-import { Watcher } from '../../interfaces/watcher.interface';
 import { ThreeRoom } from './ThreeRoom';
 import { AClient } from '../../class/AClinet';
 import { ClassicRoom } from './ClassicRoom';
@@ -22,7 +21,6 @@ export class Room {
     player1 : AClient;
     player2 : AClient;
     isFinished : boolean
-    watchers : Map<string, Watcher> = new Map()
     events : RoomEvent = {
         onStop : undefined
     }
@@ -44,21 +42,6 @@ export class Room {
             }
             return originalMethod.apply(this, args);
         };
-    }
-
-    addClientToWatch(payload : PlayerJoin, socket : Socket) {
-        let newPlayer : Watcher = {
-            id : payload.user.id,
-            socket : socket,
-            user : payload.user
-        }
-        this.watchers.set(newPlayer.socket.id, newPlayer)
-        socket.join("Room" + this.roomId)
-    }
-
-    removeClientFromWatch(socket : Socket) {
-        socket.leave("Room" + this.roomId)
-        this.watchers.delete(socket.id)
     }
 
     getPlayer2Id(socketId : string) : Socket {

@@ -88,7 +88,7 @@ export class MyScene extends THREE.Scene {
     updatePaddle() {
         //send event to the server
         if (params.event.x && this.game.isStarted())
-            this.game.socketMgr.racketMove({e: params.event.x})
+            this.game.socketMgr.movePaddle({e: params.event.x})
     }
 
     update() {

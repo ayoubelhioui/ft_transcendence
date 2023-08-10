@@ -2,24 +2,18 @@ import * as THREE from "three";
 import { MyScene } from "./MyScene";
 import { MyCamera } from './MyCamera'
 import { params } from '../Utils/Params'
-import { SocketManager } from "../Utils/SocketManager";
 import { GameParams } from "../../../interfaces/interface.game.params";
 import { GameState } from "../../../GameState";
+import { ClassicGameSocket } from "../../../SocketManager/ClassicGameSocket";
  
 export class Game {
 
     renderer : THREE.WebGLRenderer
     scene : MyScene
     camera : MyCamera
-    socketMgr : SocketManager
+    socketMgr : ClassicGameSocket
     gameParams : GameParams
     eventsCallBack : any[]
-    // token : string
-    // isBotMode : boolean
-    // canvas : any
-    // isWatchMode : boolean
-    // userToInvite : string
-    // callBack : (state: number) => void
 
     gameInfo = {
         scorePlayer1: 0,
@@ -34,15 +28,13 @@ export class Game {
         this.renderer = this.#setUpRenderer()
         this.scene = new MyScene(this)
         this.camera = new MyCamera()
-        this.socketMgr = new SocketManager(this)
+        this.socketMgr = new ClassicGameSocket(this)
         this.eventsCallBack = []
 
         this.scene.visible = false
         this.#events(this)
+        this.socketMgr.emitJoin(true)
 
-        if (this.gameParams.isWatchMode) {
-            this.start({})
-        }
     }
 
     isStarted() {
@@ -50,7 +42,7 @@ export class Game {
     }
 
     start(payload : any) {
-        //console.log("Game is started ...")
+        console.log("Game is started ...")
         this.gameInfo.turn = payload.turn
         this.scene.visible = true
         this.gameInfo.start = true

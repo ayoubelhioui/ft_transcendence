@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { GuiParams } from "./GuiParams";
 import { MyScene } from "./MyScene";
 import { MyCamera } from './MyCamera'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
@@ -7,7 +6,6 @@ import {params} from '../Utils/Params'
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
-import { SocketManager } from "../Utils/SocketManager";
 import { LoaderResult } from "../interfaces/interface.load.result";
 import { AmbientLight } from "./AmbientLight";
 import { Ball } from "./Ball";
@@ -17,6 +15,7 @@ import { SpotLight } from "./SpotLight";
 import { Player2 } from "./Player2";
 import { GameParams } from "../../../interfaces/interface.game.params";
 import { GameState } from "../../../GameState";
+import { ThreeGameSocket } from "../../../SocketManager/ThreeGameSocket";
 
 
 export class Game {
@@ -28,7 +27,7 @@ export class Game {
     bloomPass : UnrealBloomPass
     //guiParams : GuiParams
     orbit : OrbitControls
-    socketMgr : SocketManager
+    socketMgr : ThreeGameSocket
     resources : LoaderResult
     eventsCallBack : any[]
     // canvas : any
@@ -63,7 +62,7 @@ export class Game {
         this.renderer = this.#setUpRenderer()
         this.scene = new MyScene(this)
         this.camera = new MyCamera()
-        this.socketMgr = new SocketManager(this)
+        this.socketMgr = new ThreeGameSocket(this)
         this.eventsCallBack = []
 
         this.ambientLightObj = new AmbientLight(this)
@@ -89,13 +88,9 @@ export class Game {
         //this.guiParams = new GuiParams(this)
         this.scene.visible = false
         this.#events(this)
+        this.socketMgr.emitJoin(false)
 
-        if (this.gameParams.isWatchMode) {
-            params.enableOrbit = true
-            this.start({})
-        }
 
-        //window.game = this
     }
 
     start(payload : any) {
@@ -137,8 +132,6 @@ export class Game {
            return
         this.netObj.update()
         this.ballObj.update()
-        if (!this.gameParams.isWatchMode)
-            this.racketObj.update()
         this.player2.update()
     }
 

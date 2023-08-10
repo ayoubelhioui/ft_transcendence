@@ -18,7 +18,6 @@ export class ClassicRoom extends Room {
         this.sendBallInfo = this.wrapMethod(this.sendBallInfo)
         this.sendPaddleMove = this.wrapMethod(this.sendPaddleMove)
         this.sendGameScore = this.wrapMethod(this.sendGameScore)
-        this.broadcastToWatchers = this.wrapMethod(this.broadcastToWatchers)
         this.receivePaddleMove = this.wrapMethod(this.receivePaddleMove)
 
         this.game = new ClassicGame(this, isBotGame)
@@ -46,17 +45,6 @@ export class ClassicRoom extends Room {
         this.sendGameScore(p, p)
     }
 
-    broadcastToWatchers() {
-        let data = {
-            score : [this.classicGame.gameInfo.scorePlayer1, this.classicGame.gameInfo.scorePlayer2],
-            position: this.classicGame.ballObj.position,
-            velocity: this.classicGame.ballObj.velocity,
-            speed: this.classicGame.ballObj.speed,
-            paddlePlayer1 : this.classicGame.player1.position.y,
-            paddlePlayer2 : this.classicGame.player2.position.y
-        }
-        this.player1.socket.to("Room" + this.roomId).emit("live_data", data);
-    }
 
 //=============== Receive
 

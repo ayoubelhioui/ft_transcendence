@@ -22,7 +22,6 @@ export class ThreeRoom extends Room {
         this.sendBotRacketInfo = this.wrapMethod(this.sendBotRacketInfo)
         this.sendGameScore = this.wrapMethod(this.sendGameScore)
         this.sendTurn = this.wrapMethod(this.sendTurn)
-        this.broadcastToWatchers = this.wrapMethod(this.broadcastToWatchers)
         this.receiveHitBall = this.wrapMethod(this.receiveHitBall)
 
         this.game = new ThreeGame(this, isBotGame)
@@ -91,25 +90,7 @@ export class ThreeRoom extends Room {
         this.broadCast("turn", payload, payload)
     }
 
-    broadcastToWatchers() {
-        let data = {
-            score : [this.game.gameInfo.scorePlayer1, this.game.gameInfo.scorePlayer2],
-            ballInfo : {
-                position : this.game.ballObj.position,
-                velocity : this.game.ballObj.velocity,
-                init : this.threeGame.ballObj.initialize,
-                net : this.threeGame.ballObj.ballInfo,
-                spotPos : undefined,
-                end : undefined
-            },
-            racketPlayer1Pos : this.threeGame.racketP1,
-            racketPlayer2Pos : this.threeGame.racketP2
-        }
-        if (this.threeGame.ballObj.ballInfo.spot) {
-            data.ballInfo.spotPos = this.threeGame.ballObj.groundInfo.p
-        }
-        this.player1.socket.to("Room" + this.roomId).emit("live_data", data);
-    }
+
 
 
 //=============== Receive

@@ -81,8 +81,7 @@ export class GameGateway {
     } catch (e : any) {
       customLog("addClient Error:", e.message)
       client.emit("exception", e.message)
-      //console.log(e.stack)
-      // client.disconnect()
+      console.log("exception", e.message)
     }
   }
 

@@ -2,6 +2,9 @@ import { io, Socket } from "socket.io-client";
 import { RequestService } from "./RequestService";
 import { address, STATUS_SUCCESS } from "../../Const";
 import { Triggers, UtilService } from "./UtilService";
+import { popupContentI } from "../../components/HomePage/Popup/Popup";
+import { INotification } from "../../components/Navbar/Notifications";
+
 
 
 export class SocketService {
@@ -52,17 +55,17 @@ export class SocketService {
         })
 
 
-        this.socket.on("connect", () => {
+        this.on("connect", () => {
             console.log("Connected")
         })
 
-        this.socket.on("disconnect", () => {
+        this.on("disconnect", () => {
             console.log("disconnected")
         })
 
         //******************************** friends
 
-        this.socket.on("newFriendOnline", (data : any) => {
+        this.on("newFriendOnline", (data : any) => {
             console.log("newFriendOnline", data)
             let isExist = this.listFriends.find((item : any) => item.id === data?.user?.id)
             if (!isExist && data?.user) {
@@ -74,14 +77,14 @@ export class SocketService {
     
         //!unfriend
         //!online friend with new friend
-        this.socket.on("friendDisconnect", (data : any) => {
+        this.on("friendDisconnect", (data : any) => {
             console.log("friendDisconnect", data)
             this.listFriends = this.listFriends.filter((item : any) => item.id !== data?.user?.id)
             this.utilService.trigger(Triggers.RefreshListFriend)
             this.utilService.trigger(Triggers.RefreshProfileImageOfOnlineFriend)
         })
 
-        this.socket.on("myOnlineFriends", (data : any[]) => {
+        this.on("myOnlineFriends", (data : any[]) => {
             console.log("myOnlineFriends", data)
             this.listFriends = data
             this.utilService.trigger(Triggers.RefreshListFriend)
@@ -91,7 +94,8 @@ export class SocketService {
 
         //******************************** Notification
 
-        this.socket.on("new_notification", (data : any) => {
+        this.on("new_notification", (data : any) => {
+            console.log(data.notification)
             this.listNotification.push(data.notification)
             this.utilService.trigger(Triggers.RefreshNotification)
             this.utilService.trigger(Triggers.RefreshProfile)
@@ -121,6 +125,22 @@ export class SocketService {
         })
     }
 
+    addNotificationFromPopUp(popupContent : popupContentI) {
+        const newItem : INotification = {
+            id: this.listNotification.length,
+            message : popupContent.message,
+            acceptLink : "",
+            acceptMethod : "",
+            refuseLink : "",
+            refuseMethod : "",
+            time : new Date(),
+            seen : false,
+            sender : popupContent.payload.user
+        }
+        this.listNotification.push(newItem)
+        console.log(this.listNotification)
+        this.utilService.trigger(Triggers.RefreshNotification)
+    }
 
     //******************************** Socket Utils */
 
@@ -133,9 +153,9 @@ export class SocketService {
         this.socket?.on(event, callBack)
     }
 
-    off(event : string) {
+    off(event : string, listener : any = undefined) {
         console.log(event, "Off")
-        this.socket?.off(event)
+        this.socket?.off(event, listener)
     }
 
     getSocket() {

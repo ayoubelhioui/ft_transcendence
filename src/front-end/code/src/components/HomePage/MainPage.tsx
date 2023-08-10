@@ -3,7 +3,7 @@ import { Chat, HomePage, LeaderBoard, LiveMatches, MainWrapper, Navbar, Profile,
 import Game from "../Game/Game"
 import ChooseGame from "../Game/ChooseGame"
 import { useAppServiceContext } from "../../Context/Service/AppServiceContext"
-import { Popup } from "./Popup"
+import { Popup } from "./Popup/Popup"
 
 const MainPage = () => {
     const appService = useAppServiceContext()

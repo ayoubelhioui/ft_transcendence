@@ -4,7 +4,6 @@ import { User } from "src/database/entities";
 export interface PlayerJoin{
     isClassic : boolean;
     isBotMode : boolean;
-    isWatchMode : boolean;
     userToInvite? : number;
     user : User;
     socketService : SocketService;
