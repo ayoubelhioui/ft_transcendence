@@ -20,6 +20,7 @@ import Notifications from "./Notifications.tsx";
 import { STATUS_ERROR, STATUS_SUCCESS, address } from '../../Const';
 import { useAppServiceContext } from '../../Context/Service/AppServiceContext.tsx';
 import { Triggers } from '../../Context/Service/UtilService.ts';
+import { Avatar } from '@mui/material';
 
 
 
@@ -51,16 +52,21 @@ const NavBarNotification = () => {
   const appService = useAppServiceContext()
   const refreshNotificationTrigger = appService.utilService.addTrigger(Triggers.RefreshNotification)
   const [handleNotif, setHandleNotif] = useState(false);
-  const [isThereNewNotifacation, setIsThereNewNotifacation] = useState(false)
+  const [isThereNewNotification, setIsThereNewNotification] = useState(false)
+  const firstTimeDone = useRef(false)
 
   useEffect(() => {
-    console.log("new notification")
-    setIsThereNewNotifacation(true)
+    if (firstTimeDone.current === true) {
+      console.log("new notification")
+      setIsThereNewNotification(true)
+    } else {
+      firstTimeDone.current = true
+    }
   }, [refreshNotificationTrigger])
 
 
   const iconClick = () => {
-    setIsThereNewNotifacation(false)
+    setIsThereNewNotification(false)
     setHandleNotif(true)
   }
 
@@ -71,7 +77,7 @@ const NavBarNotification = () => {
   return (
   <>
     {
-      isThereNewNotifacation ?
+      isThereNewNotification ?
         <MdNotificationsActive
           style={styles}
           size={30}
@@ -96,6 +102,7 @@ const NavBarNotification = () => {
 const Navbar = () => {
   const appService = useAppServiceContext();
   const authNav = appService.authService
+  const user = authNav.user
 
   const [handleMenu, setHandleMenu] = useState(false);
 
@@ -107,13 +114,15 @@ const Navbar = () => {
     window.location.reload()
   }
 
+  const avatar = `http://${address}/users/image/${user?.id}`
+
   return (
     <>
       <div className="  text-white back rounded-[0] bg-blue-950 w-[60%] max-sm:w-[90%] mx-auto my-5 z-20">
         <ul  className=' py-2 flex items-center max-md:mt-1 max-md:justify-between '>
           <li className=' pl-3 max-sm:pl-1'>
             <NavLink to="/Profile">
-              <img src={`http://${address}/users/image/` + authNav.user?.id} alt="" className=' cursor-pointer object-cover rounded-full w-[45px] h-[45px]' />
+              <Avatar src={avatar} alt={user?.username} className=' cursor-pointer object-cover rounded-full w-[45px] h-[45px]' />
             </NavLink>
           </li>
 

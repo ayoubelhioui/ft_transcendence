@@ -29,20 +29,11 @@ const LastMessage = ({message} : {message : any | undefined}) => {
 }
 
 const Item = ({payload} : {payload : any}) => {
-  const chatService = useChatContext()
   const navigate = useNavigate();
   const channel = payload
   let avatar = `http://${address}/users/image/${channel.avatar}`
   let groupIcon = ""
   
-  const imageOnClick = () => {
-    //!get the id of the user
-    const id = 1
-    if (!payload.isGroup) {
-      navigate(`/Profile/${id}`)
-    }
-  }
-
   if (!payload.isGroup){
     avatar = `http://${address}/users/image/${payload.avatar}`
   }
@@ -54,22 +45,16 @@ const Item = ({payload} : {payload : any}) => {
     map.set("protected", "")
     if (map.has(payload.visibility))
       groupIcon = map.get(payload.visibility)!
-    //!render the icon
   }
 
   function onItemClick() {
     navigate(`/Chat/${payload.id}`)
-
-    // if (payload.isGroup) {
-    //   //console.log(payload.id)
-    //   //! turn off channel info
-    // }
   }
 
   return (
     <>
       <div className="flex my-4 items-center mx-6 gap-4" onClick={onItemClick}>
-          <img onClick={imageOnClick} src={avatar} alt='avatar' className=' object-cover rounded-full w-[50px] h-[50px] cursor-pointer'/>
+          <img src={avatar} alt='avatar' className=' object-cover rounded-full w-[50px] h-[50px] cursor-pointer'/>
           <div className="flex flex-col cursor-pointer">
             <h2 className='text-white'>{channel.name}</h2>
             <LastMessage message={channel.lastMessage} />

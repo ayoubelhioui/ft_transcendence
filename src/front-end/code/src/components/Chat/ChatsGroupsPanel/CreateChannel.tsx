@@ -8,6 +8,7 @@ import { useAppServiceContext } from "../../../Context/Service/AppServiceContext
 import { STATUS_SUCCESS } from "../../../Const";
 import { useChatContext } from "../ChatContext";
 import { useChatsGroupsPanelContext } from "./ChatsGroupsPanelContext";
+import { openPopupError } from "../../HomePage/Popup/Popup";
 
 
 
@@ -141,10 +142,10 @@ const CreateChannel = ({openState} : {openState : [boolean, React.Dispatch<React
         //chatsGroupsPanelContext.setCommitSearch(!chatsGroupsPanelContext.commitSearch)
         setIsOpen(false)
       } else {
-        //!popup
+        openPopupError("An error occurred")
       }
     } else {
-      //!error
+      openPopupError("There are some missing values")
     }
   }
 

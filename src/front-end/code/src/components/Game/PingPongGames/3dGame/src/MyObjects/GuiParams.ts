@@ -5,7 +5,7 @@ import * as THREE from "three";
 
 export class GuiParams {
 
-    //!destroy
+    //?destroy
     game : Game
     isExist = new Map()
     gui = new dat.GUI()

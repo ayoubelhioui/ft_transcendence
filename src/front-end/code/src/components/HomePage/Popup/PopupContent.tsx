@@ -59,12 +59,35 @@ const Invite = ({content, setIsOpen} : {content : popupContentI , setIsOpen: any
 }
 
 const Error = ({content} : {content : popupContentI}) => {
-  return <div className="break-words ml-3 text-sm font-normal overflow-wrap w-[200px]"> {content.message} </div>
+  return (
+    <div className="flex cursor-pointer">
+      <div className="break-words ml-3 text-sm font-normal overflow-wrap w-[200px]">
+        <h5 className="font-bold text-[#f74e4e]">{content.title}</h5>
+        <div className="ml-2 mt-1">{content.message}</div>
+      </div>
+    </div>
+  )
+}
+
+const Status = ({content} : {content : popupContentI}) => {
+  return (
+    <div className="flex cursor-pointer">
+      <div className="break-words ml-3 text-sm font-normal overflow-wrap w-[200px]">
+        <h5 className="font-bold text-[#6ce989]">{content.title}</h5>
+        <div className="ml-2 mt-1">{content.message}</div>
+      </div>
+    </div>
+  )
 }
 
 const PopupContent = ({content, setIsOpen} : {content : popupContentI | undefined, setIsOpen: any}) => {
 
   if (content) {
+
+    if (content.type === POPUP_EVENT.STATUS_EVENT) {
+      return <Status content={content}/>
+    }
+
     if (content.type === POPUP_EVENT.ERROR_EVENT) {
       return <Error content={content}/>
     }

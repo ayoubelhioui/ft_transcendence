@@ -24,12 +24,12 @@ const Item = ({ item }: {item : any }) => {
     return (
         <div className="flex gap-4 w-full h-full justify-center items-start">
             <div className="flex mx-auto py-2 items-center bg-opacity-40">
-                <Avatar src={`http://${address}/users/image/` + player1.id} sx={{ width: 60, height: 60 }} />
+                <Avatar src={`http://${address}/users/image/` + player1.id} alt="P" sx={{ width: 60, height: 60 }} />
                 <div className=" mx-12 flex items-center gap-2">
                 <span> Live </span>
                 <span className='w-[11px] h-[12px] rounded-[50%] bg-red-700'></span>
                 </div>
-                <Avatar src={`http://${address}/users/image/` + player2.id} sx={{ width: 60, height: 60 }}/>
+                <Avatar src={`http://${address}/users/image/` + player2.id} alt="P" sx={{ width: 60, height: 60 }}/>
             </div>
         </div>
 

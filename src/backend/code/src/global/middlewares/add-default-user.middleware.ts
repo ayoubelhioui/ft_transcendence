@@ -6,7 +6,7 @@ import { User } from 'src/database/entities';
 import { customLog } from 'src/Const';
 
 
-//! TODO : make guest users
+
 
 @Injectable()
 export class AddUserMiddleware implements NestMiddleware {

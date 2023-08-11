@@ -4,6 +4,7 @@ import { address } from "../../../Const"
 import { UserI } from "../../../Context/Service/AuthService"
 import { useAppServiceContext } from "../../../Context/Service/AppServiceContext";
 import { PopupContent } from "./PopupContent";
+import { Triggers } from "../../../Context/Service/UtilService";
 
 Modal.setAppElement('#root');
 
@@ -11,6 +12,7 @@ export enum POPUP_EVENT {
   MESSAGE_EVENT = 0,
   INVITE_EVENT = 1,
   ERROR_EVENT = 2,
+  STATUS_EVENT = 3,
 }
 
 export interface popupContentI {
@@ -71,27 +73,67 @@ const PopupTimeOut = ({onRequestClose, progress} : {onRequestClose : any, progre
   return <div ref={ref} className={`bg-blue-600 h-1 rounded-full`} ></div>
 }
 
+let openPopupError : (error : string) => void = (error : string) => {
+  console.log(error)
+}
+
+let openPopupStatus : (status : string) => void = (status : string) => {
+  console.log(status)
+}
+
 const Popup = () => {
     const appService = useAppServiceContext() 
     const [isOpen, setIsOpen] = useState(false);
+    const openFlag = useRef(false)
     const [content, setContent] = useState<popupContentI | undefined>(undefined);
+    //const showPopUpTrigger = appService.utilService.addTrigger(Triggers.ShowPopUp)
     const progress = useRef(100)
 
-    console.log("Popup")
+    // useEffect(() => {
+    //   onSetIsOpen(true)
+    // }, [showPopUpTrigger])
+
+    openPopupError = (error : string) => {
+      console.log("Open Notification ... with", error, openFlag.current)
+      const newContent : popupContentI = {
+        message : error,
+        type : POPUP_EVENT.ERROR_EVENT,
+        payload : undefined,
+        title : "Error"
+      }
+      setContent(newContent)
+      onSetIsOpen(true)
+    }
+
+    openPopupStatus = (status : string) => {
+      const newContent : popupContentI = {
+        message : status,
+        type : POPUP_EVENT.STATUS_EVENT,
+        payload : undefined,
+        title : "System"
+      }
+      setContent(newContent)
+      onSetIsOpen(true)
+    }
+
 
     function onSetIsOpen(value : boolean) {
-      if (value === true)
+      if (value === true) {
         progress.current = 100
+        setIsOpen(true)
+        openFlag.current = true
+      }
       else {
-        if (content) {
+        if (content && openFlag.current !== value) {
           if (content.type === POPUP_EVENT.INVITE_EVENT) {
             console.log("Store ", content)
             appService.socketService.addNotificationFromPopUp(content)
           }
         }
         setContent(undefined)
+        setIsOpen(false)
+        openFlag.current = false
       }
-      setIsOpen(value)
     }
 
     function isChat() {
@@ -174,7 +216,7 @@ const Popup = () => {
       }, [])
 
     const onRequestClose = () => {
-        onSetIsOpen(false);
+      onSetIsOpen(false);
     };
 
     if (!isOpen)
@@ -183,7 +225,7 @@ const Popup = () => {
     return (
       <>
 
-      <div className="absolute z-[999] right-0 mt-5 mr-1"> 
+      <div className="absolute z-[10000] right-0 mt-5 mr-1"> 
         <div id="toast-success" className="flex flex-col items-center w-full max-w-xs p-4 mb-4 text-white bg-[#282f729e] rounded-lg" role="alert">
         
             
@@ -211,5 +253,7 @@ const Popup = () => {
 
 
 export {
-  Popup
+  Popup,
+  openPopupError,
+  openPopupStatus
 }

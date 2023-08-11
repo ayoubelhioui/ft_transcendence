@@ -6,6 +6,7 @@ import { Console } from "console";
 import { useAppServiceContext } from "../../../Context/Service/AppServiceContext";
 import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../../Const";
 import { useChatsGroupsPanelContext } from "./ChatsGroupsPanelContext";
+import { openPopupError, openPopupStatus } from "../../HomePage/Popup/Popup";
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
@@ -32,12 +33,10 @@ const Item = ({payload} : {payload : any}) => {
         password : password
       })
       if (res.status == STATUS_ERROR) {
-        //console.log(res.message)
-        //!popup message
+        openPopupError("An error occurred")
       } else {
         chatsGroupsPanelContext.setUpdateListChannelsJoin(!chatsGroupsPanelContext.updateListChannelsJoin)
-        //console.log("join success")
-        //!join success
+        openPopupStatus("Join success")
       }
   };
 

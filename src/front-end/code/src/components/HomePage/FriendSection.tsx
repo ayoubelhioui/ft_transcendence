@@ -11,7 +11,7 @@ const Item = ({item} : {item : any}) => {
 
   //console.log(item)
   return (
-    <Avatar alt="Avatar" src={image} sx={{ width: 50, height: 50 }} className='cursor-pointer'/>
+    <Avatar alt={user.username} src={image} sx={{ width: 50, height: 50 }} className='cursor-pointer'/>
   )
 }
 

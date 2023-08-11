@@ -5,6 +5,7 @@ import { useAppServiceContext } from "../../../Context/Service/AppServiceContext
 import { ConversationInfoI, useChatContext } from "../ChatContext";
 import { STATUS_SUCCESS } from "../../../Const";
 import InviteUser from "./InviteUser";
+import { openPopupError } from "../../HomePage/Popup/Popup";
 
 const Header = ({conversationInfo} : {conversationInfo : ConversationInfoI}) => {
   const name = conversationInfo.name
@@ -23,7 +24,7 @@ const Header = ({conversationInfo} : {conversationInfo : ConversationInfoI}) => 
     if (res.status === STATUS_SUCCESS) {
       chatContext.setUpdateChats((value : boolean) => !value)
     } else {
-      //!error
+      openPopupError("An error occurred")
     }
   }
 

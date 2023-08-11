@@ -7,6 +7,7 @@ import { VscSettings } from "react-icons/vsc";
 import { Console } from "console";
 import { useAppServiceContext } from "../../../Context/Service/AppServiceContext";
 import { useChatsGroupsPanelContext } from "./ChatsGroupsPanelContext";
+import { openPopupError, openPopupStatus } from "../../HomePage/Popup/Popup";
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
@@ -30,12 +31,10 @@ const Item = ({payload} : {payload : any}) => {
     const joinToChannel = async (channelId: number) => {
         const res = await appService.requestService.postJoinChannelRequest(channelId)
         if (res.status == STATUS_ERROR) {
-            //console.log(res.message)
-            //!popup message
+            openPopupError("An error occurred")
         } else {
             chatsGroupsPanelContext.setUpdateListChannelsJoin(!chatsGroupsPanelContext.updateListChannelsJoin)
-            //console.log("join success")
-            //!join success
+            openPopupStatus("Join success")
         }
     };
 

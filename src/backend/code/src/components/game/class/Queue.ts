@@ -9,7 +9,6 @@ export class Queue {
   private bot         : AClient | undefined
   private invite      : AClient[]
 
-  static id = 0;
   constructor() {
       this.botUser = ({ 
         user : {
@@ -33,10 +32,6 @@ export class Queue {
           this.randomQueue.push(client)
         }
       } else {
-        if (client.userToInvite !== undefined) {
-          client.gameToken = `${Queue.id}`;
-          Queue.id++
-        }
         this.invite.push(client)
       }
       const match = this.getMatch(client)

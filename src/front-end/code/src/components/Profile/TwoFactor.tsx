@@ -12,6 +12,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useAppServiceContext } from "../../Context/Service/AppServiceContext";
 import { STATUS_SUCCESS } from "../../Const";
+import { openPopupError } from "../HomePage/Popup/Popup";
 
 
 const TwoFactor = () => {
@@ -37,7 +38,7 @@ const TwoFactor = () => {
             setUrl(otpAuthUrl)
             setOpen(true)
         } else {
-            //!popup
+            openPopupError("An error occurred")
         }
     }
 
@@ -50,7 +51,7 @@ const TwoFactor = () => {
             setFactor(true)
             setOpen(false)
         } else {
-            //!popup
+            openPopupError("An error occurred")
         }
     }
 
@@ -59,7 +60,7 @@ const TwoFactor = () => {
         if (res.status === STATUS_SUCCESS) {
             setFactor(false)
         } else {
-            //!popup
+            openPopupError("An error occurred")
         }
     }
 

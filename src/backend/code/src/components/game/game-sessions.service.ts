@@ -28,6 +28,16 @@ enum AchievementEnum {
     WIN_WITH_OPPONENT_ZERO_SCORE
 }
 
+function generateRandomString(length : number) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
+    }
+    return result;
+}
+
 @Injectable()
 export class GameSessions {
 
@@ -90,6 +100,7 @@ export class GameSessions {
     //####################################################################
     //####################################################################
 
+    
     inviteToGame(socketService : SocketService, newClient : AClient)
     {
       const targetedUserId = newClient.userToInvite
@@ -97,12 +108,13 @@ export class GameSessions {
       const payloadToSend = {
         username : newClient.user.username,
         id : newClient.user.id,
-        gameToken: newClient.gameToken,
+        gameToken: generateRandomString(20),
         gameType : newClient.isClassicGame ? "classic" : "3d game",
         isClassic : newClient.isClassicGame,
         isBotMode : false
 
       }
+      newClient.gameToken = payloadToSend.gameToken
       customLog("invite to play: ", payloadToSend)
       socketsToSend.forEach(socketToSend => {
         socketToSend.emit('invite_to_game', payloadToSend);

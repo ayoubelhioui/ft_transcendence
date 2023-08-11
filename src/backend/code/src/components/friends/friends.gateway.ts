@@ -43,11 +43,11 @@ export class FriendsGateway {
     this.server
       .to(user1_sockets
       .map(socket => socket.id))
-      .emit("friendDisconnect", {user2});
+      .emit("friendDisconnect", {user: user2});
     this.server
     .to(user2_sockets
     .map(socket => socket.id))
-    .emit("friendDisconnect", {user1});
+    .emit("friendDisconnect", {user: user1});
    
   }
 }

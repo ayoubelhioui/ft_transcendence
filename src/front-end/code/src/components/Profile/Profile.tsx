@@ -12,7 +12,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import React, { useEffect, useRef, useState } from 'react';
-import { STATUS_ERROR, STATUS_SUCCESS, address } from '../../Const';
+import { STATUS_ERROR, STATUS_OTHER, STATUS_SUCCESS, address } from '../../Const';
 import { useAppServiceContext } from '../../Context/Service/AppServiceContext';
 import AxiosInstance from '../../Context/Service/AxiosInstance';
 import { useParams } from 'react-router-dom';
@@ -20,6 +20,8 @@ import { UserI } from '../../Context/Service/AuthService';
 import Relation from './Relation';
 import { UserInfo } from '..';
 import { Triggers } from '../../Context/Service/UtilService';
+import { openPopupError } from '../HomePage/Popup/Popup';
+import { Avatar } from '@mui/material';
 
 
 const ProfileUserName = ({userInfo} : {userInfo : any}) => {
@@ -65,7 +67,7 @@ const EditImage = () => {
     if (res.status === STATUS_SUCCESS) {
       window.location.reload()
     } else {
-      //!popup
+      openPopupError("An error occurred")
     }
   }
 
@@ -102,7 +104,7 @@ const ProfileImage = ({userInfo} : {userInfo : any}) => {
   return (
     <>
       <div className="flex justify-start relative">
-        <img src={avatarLink} alt='avatar' className=' object-cover rounded-full w-[130px] h-[130px]'/>
+        <Avatar src={avatarLink} alt={userInfo?.user?.username} className=' object-cover rounded-full w-[130px] h-[130px]' sx={{ width: 130, height: 130 }}/>
         { !(userInfo?.relation) && <EditImage/> }
         {
           isOnline === true && 
@@ -196,22 +198,27 @@ const Profile = () => {
   if (id === appService.authService.user?.id)
     id = undefined
   const response = appService.requestService.getUserWithRelation(id)
-  //!Unauthorized
   const result = response.state
 
   const refreshProfile = appService.utilService.addTrigger(Triggers.RefreshProfile)
   response.effect([id, refreshProfile])
-  
-  let userInfo = result.data
-  if (result.status === STATUS_ERROR && result.message === "profile") {
-    userInfo = {
-      user : appService.authService.user!,
-      relation : undefined,
+
+  if (result.status === STATUS_ERROR) {
+    openPopupError("You're not authorized.")
+    return <div> </div>
+  } else {
+    let userInfo = result.data
+
+    if (result.status === STATUS_OTHER && result.message === "profile") {
+      userInfo = {
+        user : appService.authService.user!,
+        relation : undefined,
+      }
     }
+
+    return <UserProfile userInfo={userInfo}/>
   }
 
-
-  return <UserProfile userInfo={userInfo}/>
 }
 
 export default Profile

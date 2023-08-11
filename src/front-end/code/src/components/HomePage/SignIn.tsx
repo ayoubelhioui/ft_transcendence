@@ -6,6 +6,7 @@ import { MainWrapper } from ".."
 import { useRef, useState } from "react"
 import { useAppServiceContext } from "../../Context/Service/AppServiceContext"
 import Cookies from 'js-cookie';
+import { openPopupError } from "./Popup/Popup"
 
 const SignIn = () => {
     const appService = useAppServiceContext()
@@ -28,7 +29,7 @@ const SignIn = () => {
                 Cookies.set('refresh_token', res.data.refreshToken);
                 window.location.href = "/";
             } else {
-                //!error
+                openPopupError("An error occurred")
             }
         }
        

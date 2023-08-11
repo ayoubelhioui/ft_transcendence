@@ -89,7 +89,6 @@ const ConversationsChat = ({id} : {id : number}) => {
 
   const requestData = async () => {
     const oldestMessageDate = getOldestMessageDate()
-    // //console.log("next request: ", oldestMessageDate)
     const result = await appService.requestService.getChannelMessagesRequest(id, oldestMessageDate)
     if (result.status === STATUS_SUCCESS) {
       if (result.data.length === 0) {
@@ -98,7 +97,7 @@ const ConversationsChat = ({id} : {id : number}) => {
         updateList(result.data, false, id)
       }
     } else {
-      //!handle Error
+      //?handle Error
     }
   }
 

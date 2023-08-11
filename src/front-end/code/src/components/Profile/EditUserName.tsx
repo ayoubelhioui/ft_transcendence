@@ -12,6 +12,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useAppServiceContext } from "../../Context/Service/AppServiceContext";
 import { STATUS_SUCCESS } from "../../Const";
+import { openPopupError } from "../HomePage/Popup/Popup";
 
 const EditUserName = ({setUserName} : {setUserName : any}) => {
     const appService = useAppServiceContext()
@@ -36,12 +37,12 @@ const EditUserName = ({setUserName} : {setUserName : any}) => {
                 setOpen(false);
             }
             else {
-                //!popup
+                openPopupError("An error occurred")
             }
         }
         else
         {
-            //!popup
+            openPopupError("Empty field")
         }
     }  
 

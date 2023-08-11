@@ -18,7 +18,6 @@ class ChannelMessagesRepository extends ABaseRepository<ChannelMessages> impleme
   }
 
   async getChannelMessages(channel : Channel, date ?: Date) : Promise <ChannelMessages[] | undefined> {
-    //!why channel: { id: channel.id } instead of  channel
     const condition : any = {
       channel: { id: channel.id },
     };

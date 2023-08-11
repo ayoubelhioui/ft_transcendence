@@ -43,8 +43,6 @@ export class UserService{
         return (user);
     }
 
-    //!findById
-
     async findUserByIntraId(intraId: number): Promise<User | undefined>{
         const user = await this.userRepository.findOneByOptions({
             where : {

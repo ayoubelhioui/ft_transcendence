@@ -5,7 +5,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useState } from 'react';
 import { useAppServiceContext } from '../../../Context/Service/AppServiceContext';
 import { useChatContext } from '../ChatContext';
-
+import { Avatar } from '@mui/material';
 
 interface ChannelMember {
   id : number
@@ -25,26 +25,10 @@ const ChangeRule = "change rule"
 const Mute = "mute"
 
 
-export const ThreeButton = ({payload, myRule} : {payload : any, myRule : number}) => {
+const ThreeButtonList = ({payload, list} : {payload : any, list : any}) => {
   const appService = useAppServiceContext()
   const chatContext = useChatContext()
 
-  let a : any[] = []
-  if (myRule === Rule.OWNER) {
-    if (payload.userRole === Rule.ADMIN || payload.userRole === Rule.MEMBER) {
-      a = [Kik, Block, ChangeRule, Mute]
-      if (payload.userRole === Rule.ADMIN)
-        a[2] = "Turn To Member"
-      else
-        a[2] = "Turn To Admin"
-    }
-  } else if (myRule === Rule.ADMIN) {
-    if (payload.userRole === Rule.MEMBER) {
-      a = [Kik, Block, Mute]
-    }
-  }
-  
-  
   const itemClick = async (type : string) => {
     if (type === Kik) {
       const res = await appService.requestService.kickMember(chatContext.conversationInfo.id!, payload.id)
@@ -68,48 +52,74 @@ export const ThreeButton = ({payload, myRule} : {payload : any, myRule : number}
 
   return (
     <>
-      {
-        a.map((item : any, index : number) => (
-            <span key={index} onClick={() => itemClick(item)} className="text-sm my-3 cursor-pointer hover:text-gray-300 hover:border-gray-300">
-              {item}
-            </span>
-        ))
-      }
+    {
+      list.map((item : any, index : number) => (
+        <span key={index} onClick={() => itemClick(item)} className="text-sm my-3 cursor-pointer hover:text-gray-300 hover:border-gray-300">
+          {item}
+        </span>
+      ))
+    }
     </>
+  )
+}
+
+
+export const ThreeButton = ({payload, myRule} : {payload : any, myRule : number}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  let a : any[] = []
+  if (myRule === Rule.OWNER) {
+    if (payload.userRole === Rule.ADMIN || payload.userRole === Rule.MEMBER) {
+      a = [Kik, Block, ChangeRule, Mute]
+      if (payload.userRole === Rule.ADMIN)
+        a[2] = "Turn To Member"
+      else
+        a[2] = "Turn To Admin"
+    }
+  } else if (myRule === Rule.ADMIN) {
+    if (payload.userRole === Rule.MEMBER) {
+      a = [Kik, Block, Mute]
+    }
+  }
+  
+  if (a.length === 0)
+    return <div></div>
+  
+  return (
+    <div className="flex flex-col relative ml-auto mr-2">
+      <BsThreeDotsVertical
+        size={20}
+        className="text-white cursor-pointer"
+        onClick={() => setIsOpen(!isOpen)}
+      />
+
+      {isOpen && (
+        <div className="flex flex-col bg-blue-950 items-center rounded-[10px] absolute top-[1.5rem] -left-[5rem] w-[130px] inline-block justify-center text-white">
+          <ThreeButtonList payload={payload} list={a} />
+        </div>
+      )}
+    </div>
   )
 }
 
 const Item = ({payload, myRule} : {payload : any, myRule : number}) => {
   const user = payload
   const navigate = useNavigate();
-  const userId = user.id ?? "UserDefaultImage.png" //!UserDefaultImage
+  const userId = user.id
   const avatar = `http://${address}/users/image/${userId}`
-
-  const [isOpen, setIsOpen] = useState(false);
 
   const imageOnClick = () => {
     navigate(`/Profile/${payload.id}`)
   }
 
+  
+
   return (
     <>
       <div className="flex items-center mt-5 ml-2 gap-4">
-        <img onClick={imageOnClick} src={avatar} alt='ChannelS Avatar' className=' object-cover rounded-full w-[40px] h-[40px]'/>
+        <Avatar onClick={imageOnClick} src={avatar} alt={user.username} className=' object-cover rounded-full w-[40px] h-[40px]'/>
         <h2 className='text-white text-sm'>{user.username}</h2>
-        <div className="flex flex-col relative ml-auto mr-2">
-          <BsThreeDotsVertical
-            size={20}
-            className="text-white cursor-pointer"
-            onClick={() => setIsOpen(!isOpen)}
-          />
-
-          {isOpen && (
-            <div className="flex flex-col bg-blue-950 items-center rounded-[10px] absolute top-[1.5rem] -left-[5rem] w-[100px] h-[110px] justify-center text-white">
-
-              <ThreeButton payload={payload} myRule={myRule} />
-            </div>
-          )}
-        </div>
+        <ThreeButton payload={payload} myRule={myRule} />
       </div>
       
     </>
@@ -140,7 +150,6 @@ const AdminMembers = ({result, myRule}: {result : RequestResultI, myRule : numbe
 
   if (result.status === STATUS_SUCCESS) {
     if (result.data.length !== 0) {
-      //!result.data.members
       return (
         <List list={result.data.admins} myRule={myRule}/>
       )

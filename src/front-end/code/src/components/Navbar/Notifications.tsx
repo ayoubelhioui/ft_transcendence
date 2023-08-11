@@ -6,7 +6,7 @@ import { UserI } from "../../Context/Service/AuthService";
 import { send } from "process";
 import { useNavigate } from "react-router-dom";
 import { Triggers } from "../../Context/Service/UtilService";
-import { InviteI } from "../HomePage/Popup/Popup";
+import { InviteI, openPopupError } from "../HomePage/Popup/Popup";
 // import {acceptImage} from '../../assets/accept.png'
 
 export enum NotificationType {
@@ -44,13 +44,18 @@ const Item = ({payload, setHandleNotif} : {payload : any, setHandleNotif : any})
   const navigate = useNavigate()
   const item : INotification = payload;
 
-  //! need to get user's avatar
 
   const avatar = `http://${address}/users/image/${item.sender?.id}`
 
   const acceptFriendRequest = async () => {
-    navigate(`/Profile/${item.sender.id}`)
-    setHandleNotif(false)
+    const deleteRes = await appService.requestService.deleteNotification(item.id)
+    if (deleteRes.status === STATUS_SUCCESS) {
+      appService.socketService.deleteNotification(item)
+      navigate(`/Profile/${item.sender.id}`)
+      setHandleNotif(false)
+    } else {
+      setHandleNotif(false)
+    }
   }
 
   const acceptInviteGroup = async () => {
@@ -58,12 +63,12 @@ const Item = ({payload, setHandleNotif} : {payload : any, setHandleNotif : any})
       if (res?.status === STATUS_SUCCESS) {
         const deleteRes = await appService.requestService.deleteNotification(item.id)
         if (deleteRes.status === STATUS_SUCCESS) {
-          appService.socketService.deleteNotification(item.id)
+          appService.socketService.deleteNotification(item)
         } 
         setHandleNotif(false)
       } else {
         setHandleNotif(false)
-        //!error
+        openPopupError("An error occurred")
     }
   }
 
@@ -71,13 +76,18 @@ const Item = ({payload, setHandleNotif} : {payload : any, setHandleNotif : any})
     if (item.payload) {
       console.log("item", item)
       const popupContent : InviteI = item.payload
-      appService.utilService.gameParams = {
-        isClassic : popupContent.isClassic,
-        isBotMode : popupContent.isBotMode,
-        gameToken : popupContent.gameToken,
+      if (popupContent.gameToken) {
+        appService.utilService.gameParams = {
+          isClassic : popupContent.isClassic,
+          isBotMode : popupContent.isBotMode,
+          gameToken : popupContent.gameToken,
+        }
+        setHandleNotif(false)
+        appService.socketService.deleteNotification(item)
+        navigate('/Play')
+      } else {
+        openPopupError("An error occurred")
       }
-      setHandleNotif(false)
-      navigate('/Play')
     }
   }
 
@@ -87,7 +97,7 @@ const Item = ({payload, setHandleNotif} : {payload : any, setHandleNotif : any})
   return (
     <div className="flex bg-white bg-opacity-20 backdrop-blur-md rounded-[10px] m-2 h-[60px]">
         <div className="flex items-center mx-[.8rem] gap-4">
-          <Avatar alt="Avatar" src={avatar} />
+          <Avatar alt={item.sender?.username} src={avatar}/>
             {/* <img src={avatar} alt='avatar' className=' object-cover rounded-full w-[25px] h-[25px] cursor-pointer'/> */}
             <div className="flex cursor-pointer items-center justify-between">
                 <div className="flex flex-col">

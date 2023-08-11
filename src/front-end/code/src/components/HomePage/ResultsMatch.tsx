@@ -15,19 +15,22 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
 }
 
 const Item = ({payload} : {payload : any}) => {
+    const avatar1 = `http://${address}/users/image/${payload.player1.id}`
+    const avatar2 = `http://${address}/users/image/${payload.player2.id}`
+
 	return (
 		<div className="flex flex-wrap back h-[120px] w-[290px] hover:scale-105 transition-all duration-300">
 			<div className="flex flex-col my-3 gap-4 w-full text-white px-4 ">
 				<div className="flex gap-2 items-center justify-between">
 					<div className="flex items-center gap-2">
-						<Avatar alt="Avatar" src={`http://${address}/users/image/` + payload.player1.id} />
+						<Avatar alt={payload.player1.username} src={avatar1} />
 						<span className="text-gray-400">{payload.player1.username}</span>
 					</div>
 					<span>{payload.player1_score}</span>
 				</div>
 				<div className="flex gap-2 items-center w-full justify-between">
 					<div className="flex items-center gap-2">
-						<Avatar alt="Avatar" src={`http://${address}/users/image/` + payload.player2.id} />
+						<Avatar alt={payload.player2.username} src={avatar2} />
 						<span className="text-gray-400">{payload.player2.username}</span>
 					</div>
 					<span>{payload.player2_score}</span>

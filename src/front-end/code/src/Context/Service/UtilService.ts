@@ -8,6 +8,7 @@ export enum Triggers {
     RefreshListFriend,
     RefreshNotification,
     RefreshProfileImageOfOnlineFriend,
+    ShowPopUp,
 }
 
 export class UtilService {

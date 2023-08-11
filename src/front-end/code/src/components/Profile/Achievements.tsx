@@ -18,6 +18,7 @@ const Item = ({ item }: {item : any}) => {
 }
 
 const List = ({list} : {list : any}) => {
+
   return (
     <>
       {
@@ -42,7 +43,7 @@ const Achievements = ({userInfo} : {userInfo : any}) => {
     return (
       <div className="flex flex-col top_1 ml-2 text-gray-400 max-md:ml-0 overflow-x-scroll h-[250px] max-custom-md:h-[280px] max-m-custom-md:h-[200px]">
         <h1 className="text-2xl p-2">Achievements</h1>
-        <div className="flex justify-between gap-4 max-sm:gap-2 max-sm:flex-wrap my-auto items-center mx-4 max-sm:mx-2 overflow-x-scroll">
+        <div className="flex gap-12 max-sm:gap-2 max-sm:flex-wrap my-auto items-center mx-4 max-sm:mx-2">
           <List list={results.data} />
         </div>
       </div>

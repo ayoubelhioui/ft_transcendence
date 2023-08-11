@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AuthService } from "./AuthService";
 import AxiosInstance from "./AxiosInstance";
-import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED } from "../../Const";
+import { STATUS_ERROR, STATUS_OTHER, STATUS_SUCCESS, STATUS_UNDEFINED } from "../../Const";
 import { ConversationInfoI } from "../../components/Chat/ChatContext";
 
 export interface RequestResultI {
@@ -184,9 +184,6 @@ export class RequestService {
 
     // ==== Chat ====================================================
 
-    //!users/me/channels/{channelId}/status Group
-    //$_POST["name" ds]
-
     getChannelUsers(channelInfo : ConversationInfoI) {
         const request = async (obj : RequestService, channelInfo : ConversationInfoI) => {
             if (channelInfo.id && channelInfo.isGroup)
@@ -209,12 +206,10 @@ export class RequestService {
         return this.getData(RequestService.makeGetRequest, ["/channels"])
     }
 
-    //!channelInfo
     getChannelUsersRequest(channelId : number) {
         return this.getData(RequestService.makeGetRequest, [`/channels/${channelId}/users`])
     }
 
-    //!messages
     getChannelMessagesRequest(channelId : number, date : string | undefined = undefined) {
         let a = !date ? "" : `?date=${date}`
         return RequestService.makeGetRequest(this, `/channels/${channelId}/messages${a}`)
@@ -240,7 +235,7 @@ export class RequestService {
             //console.log("getUserWithRelation: ", this)
             if (!userId) {
                 return ({
-                    status : STATUS_ERROR,
+                    status : STATUS_OTHER,
                     message : "profile",
                     data : undefined
                 })

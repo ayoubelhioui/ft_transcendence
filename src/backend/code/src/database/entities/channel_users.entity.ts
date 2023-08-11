@@ -18,8 +18,6 @@ class ChannelUsers{
     @ManyToOne(() => Channel, channel => channel.channelUsers, {cascade : true,  onDelete : "CASCADE"})
     public channel: Channel;
 
-    //!add date to channel to sort
-
     @Column()
     public userRole : ChannelUserRole;
 

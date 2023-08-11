@@ -19,7 +19,7 @@ const ChannelImage = () => {
 
   return (
     <div className="flex flex-col items-center w-full mt-20">
-      <img src={avatar} alt='ChannelS Avatar' className=' object-cover rounded-full w-[110px] h-[110px]'/>
+      <img src={avatar} alt='Channel' className=' object-cover rounded-full w-[110px] h-[110px]'/>
       <h2 className='text-white text-sm pt-2'>{name}</h2>
     </div> 
 )

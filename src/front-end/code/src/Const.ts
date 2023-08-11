@@ -20,6 +20,7 @@ const STATUS_UNDEFINED = 0
 const STATUS_SUCCESS = 1
 const STATUS_ERROR = 2
 const STATUS_NOT_SIGN_IN = 3
+const STATUS_OTHER = 4
 
 export {
     address,
@@ -37,5 +38,6 @@ export {
     STATUS_UNDEFINED,
     STATUS_SUCCESS,
     STATUS_ERROR,
-    STATUS_NOT_SIGN_IN
+    STATUS_NOT_SIGN_IN,
+    STATUS_OTHER
 }

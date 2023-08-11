@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlinePlusCircle as PlusCircle } from 'react-icons/ai'
 import { searchEffect } from "../Utils/utils";
 import AddFriend from "./SearchUsers";
+import { openPopupError } from "../HomePage/Popup/Popup";
+import { Avatar } from "@mui/material";
 
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
@@ -42,14 +44,14 @@ const Item = ({payload} : {payload : any}) => {
     if (res.status === STATUS_SUCCESS){
       navigate(`/Chat/${res.data.id}`)
     } else {
-      //!error
+      openPopupError("An error occurred")
     }
   }
 
   return (
     <div  className="flex mt-3 items-center justify-between max-custom-md:justify-around text-white w-[90%]">
       <div className="flex items-center gap-6 w-full">
-        <img onClick={itemOnClick} src={avatar} className="w-[50px] h-[50px] cursor-pointer rounded-[50%] object-cover" alt="" />
+        <Avatar onClick={itemOnClick} src={avatar} className="w-[50px] h-[50px] cursor-pointer rounded-[50%] object-cover" alt={user.username} />
         <div className="w-1/2 cursor-pointer">{user.username}</div>
       </div>
       <button onClick={itemOnClickDm} type="button" className="purple_back ml-1 py-1 px-4">DM</button>

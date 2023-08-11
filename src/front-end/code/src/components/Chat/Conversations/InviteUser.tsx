@@ -10,6 +10,8 @@ import { STATUS_ERROR, STATUS_SUCCESS, STATUS_UNDEFINED, address } from "../../.
 import { useAppServiceContext } from "../../../Context/Service/AppServiceContext";
 import { useChatsGroupsPanelContext } from "../ChatsGroupsPanel/ChatsGroupsPanelContext";
 import { useChatContext } from "../ChatContext";
+import { openPopupError } from "../../HomePage/Popup/Popup";
+import { Avatar } from "@mui/material";
 
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
@@ -42,7 +44,7 @@ const Item = ({payload, closeDialog} : {payload : any, closeDialog : any}) => {
   return (
     <div onClick={itemOnClick} className="flex mt-3 items-center justify-between text-white w-full cursor-pointer">
       <div className="flex items-center gap-6 w-full">
-        <img src={avatar} className="w-[50px] h-[50px] rounded-[50%] object-cover" alt="" />
+        <Avatar src={avatar} className="w-[50px] h-[50px] rounded-[50%] object-cover" alt={user.username} />
         <div className="w-1/2">{user.username}</div>
       </div>
     </div>
@@ -87,19 +89,16 @@ const InviteUser = ({openState} : {openState : any}) => {
     event.preventDefault();
 
     const result = await appService.requestService.getUsersSearchRequest(search.current);
-    //console.log(result)
 
     if (result.status === STATUS_UNDEFINED) {
-        //!loading
         setList([])
     } else if (result.status === STATUS_SUCCESS) {
         setList(result.data)
     } else if (result.status === STATUS_ERROR) {
         setList([])
-        //!popup
+        openPopupError("An error occurred")
     }
 
-    //console.log("Search ... ", search.current)
   }
 
 

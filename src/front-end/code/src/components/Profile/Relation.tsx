@@ -4,6 +4,7 @@ import { STATUS_SUCCESS } from "../../Const";
 import { useNavigate } from "react-router-dom";
 import { GameParamsCollect } from '../Game/PingPongGames/interfaces/interface.game.params';
 import { Triggers } from '../../Context/Service/UtilService';
+import { openPopupError } from '../HomePage/Popup/Popup';
 
 enum friendRequestStatus{
   unspecified = -1,
@@ -78,7 +79,7 @@ const GoToChat = ({relation} : {relation : Relation}) => {
     if (res.status === STATUS_SUCCESS){
       navigate(`/Chat/${res.data.id}`)
     } else {
-      //!error
+      openPopupError("An error occurred")
     }
   }
   
@@ -118,8 +119,7 @@ const BlockRequest = ({relation} : {relation : Relation}) => {
       appService.utilService.trigger(Triggers.RefreshProfile)
     }
     else {
-      //console.log("Error")
-      //!popup
+      openPopupError("An error occurred")
     }
   }
 
@@ -178,8 +178,7 @@ const FriendsRequest = ({relation} : {relation : Relation}) => {
       appService.utilService.trigger(Triggers.RefreshProfile)
     }
     else {
-      //console.log("Error")
-      //!popup
+      openPopupError("An error occurred")
     }
   }
 

@@ -31,7 +31,7 @@ const Item = ({payload, rank} : {payload : any, rank : number}) => {
       <div className="flex mt-3 items-center justify-between text-white bg-[#4D194D] py-3 px-4 rounded-[10px]">
         <div className="w-1/4">{rank}</div>
         <div className="flex items-center gap-2 w-full">
-          <img src={avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt="" />
+          <Avatar src={avatar} className="w-[30px] h-[30px] rounded-[50%] object-cover" alt={user.username} />
           <div className="w-1/2">{user.username}</div>
         </div>
         <div className="w-1/4 text-center">{user.winrate}%</div>

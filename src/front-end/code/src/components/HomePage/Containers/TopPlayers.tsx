@@ -39,7 +39,7 @@ const Item = ({ payload }: {payload : any}) => {
     return (
         <div className="flex text-white justify-start mx-6 max-custom-md:mx-2 mt-4 gap-6 items-center overflow-x-auto">
             <div className="align">
-                <Avatar src={`http://${address}/users/image/` + payload.id} sx={{ width: 85, height: 85 }}/>
+                <Avatar src={`http://${address}/users/image/` + payload.id} alt={payload.username} sx={{ width: 85, height: 85 }}/>
                 <span className="text-center mt-3 max-md:mt-1 text-xl max-sm:text-sm">{payload.username}</span>
                 <span className=' w-full max-md:w-[55px] h-[1px] bg-white flex'></span>
                 <span className='text-xl max-md:text-xs'>{payload.winrate}%</span>

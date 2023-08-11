@@ -40,6 +40,7 @@ services:
       GOOGLE_CLIENT_ID : ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET : ${GOOGLE_CLIENT_SECRET}
       GOOGLE_CALL_BACK : ${GOOGLE_CALL_BACK}
+      TWO_FACTOR_SECRET_KEY : ${TWO_FACTOR_SECRET_KEY}
     init : true
     networks:
       - my_network

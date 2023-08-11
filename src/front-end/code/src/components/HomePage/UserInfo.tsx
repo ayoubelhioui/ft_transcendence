@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAppServiceContext } from "../../Context/Service/AppServiceContext"
 import { STATUS_SUCCESS } from "../../Const";
+import { openPopupError } from "./Popup/Popup";
 
 
 const UserInfo = () => {
@@ -30,7 +31,7 @@ const UserInfo = () => {
     if (res.status === STATUS_SUCCESS) {
       window.location.reload()
     } else {
-      //!popup
+      openPopupError("An error occurred")
     }
   }
 

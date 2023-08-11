@@ -37,7 +37,7 @@ export class SocketService {
                     item.type = NotificationType.FriendRequest
                 return item
             })
-            this.utilService.trigger(Triggers.RefreshNotification)
+            //this.utilService.trigger(Triggers.RefreshNotification)
         }
     }
 
@@ -81,10 +81,12 @@ export class SocketService {
                 this.utilService.trigger(Triggers.RefreshListFriend)
                 this.utilService.trigger(Triggers.RefreshProfileImageOfOnlineFriend)
             }
+            isExist = this.allFriendsList.find((item : any) => item.id === data?.user?.id)
+            if (!isExist && data?.user) {
+                this.allFriendsList.push(data.user)
+            }
         })
     
-        //!unfriend
-        //!online friend with new friend
         this.on("friendDisconnect", (data : any) => {
             console.log("friendDisconnect", data)
             this.listFriends = this.listFriends.filter((item : any) => item.id !== data?.user?.id)
@@ -130,10 +132,14 @@ export class SocketService {
 
     //******************************** Notification Utils */
 
-    deleteNotification(notificationId : number) {
+    deleteNotification(item : INotification) {
+        console.log("delete notification: ", item)
         this.listNotification = this.listNotification.filter((a : any) => {
-            return a.id !== notificationId
+            if (a.type === item.type)
+                return a.id !== item.id
+            return true
         })
+        this.utilService.trigger(Triggers.RefreshNotification)
     }
 
     addNotificationFromPopUp(popupContent : popupContentI) {
@@ -145,7 +151,7 @@ export class SocketService {
         }
 
         const newItem : INotification = {
-            id: -1,
+            id: this.listNotification.length,
             message : popupContent.message,
             acceptLink : "",
             acceptMethod : "",
