@@ -4,7 +4,7 @@ import { Avatar } from "@mui/material";
 
 const NoContent = () => {
   return (
-    <div className="flex mx-auto h-full my-auto w-full justify-center items-center text-3xl text-gray-400 "> No Lives </div>
+    <div className="flex mx-auto h-full my-auto w-full justify-center items-center text-3xl text-gray-400 "> No Achievements </div>
   )
 }
 

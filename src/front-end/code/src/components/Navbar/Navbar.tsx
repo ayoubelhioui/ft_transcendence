@@ -9,6 +9,7 @@ import { VscAccount as AccountIcon, VscHome as HomeIcons } from "react-icons/vsc
 import { MdSource as MessageIcon, MdVideoLibrary as VideoIcon, MdSportsEsports as GameIcon, MdExitToApp as ExitIcon } from "react-icons/md";
 
 import { IoIosNotificationsOutline as NotificationIcon } from 'react-icons/io'
+import { MdNotificationsActive } from 'react-icons/md'
 
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -18,6 +19,7 @@ import Notifications from "./Notifications.tsx";
 
 import { STATUS_ERROR, STATUS_SUCCESS, address } from '../../Const';
 import { useAppServiceContext } from '../../Context/Service/AppServiceContext.tsx';
+import { Triggers } from '../../Context/Service/UtilService.ts';
 
 
 
@@ -45,13 +47,57 @@ const links: any = [
 
 ]
 
+const NavBarNotification = () => {
+  const appService = useAppServiceContext()
+  const refreshNotificationTrigger = appService.utilService.addTrigger(Triggers.RefreshNotification)
+  const [handleNotif, setHandleNotif] = useState(false);
+  const [isThereNewNotifacation, setIsThereNewNotifacation] = useState(false)
+
+  useEffect(() => {
+    console.log("new notification")
+    setIsThereNewNotifacation(true)
+  }, [refreshNotificationTrigger])
+
+
+  const iconClick = () => {
+    setIsThereNewNotifacation(false)
+    setHandleNotif(true)
+  }
+
+  const styles = {
+    color: '#ffcb00',
+  };
+
+  return (
+  <>
+    {
+      isThereNewNotifacation ?
+        <MdNotificationsActive
+          style={styles}
+          size={30}
+          className='ml-6 text-white cursor-pointer'
+          onClick={iconClick}/>
+      :
+        <NotificationIcon
+        size={30}
+        className='ml-6 text-white cursor-pointer'
+        onClick={iconClick}/>
+    }
+
+    {handleNotif && <Notifications setHandleNotif={setHandleNotif} /> }
+  
+  </>
+  )
+
+           
+
+}
 
 const Navbar = () => {
   const appService = useAppServiceContext();
   const authNav = appService.authService
 
   const [handleMenu, setHandleMenu] = useState(false);
-  const [handleNotif, setHandleNotif] = useState(false);
 
 
   const hoverStyle: string = "hover:scale-125 hover:duration-500 ease-in-out";
@@ -75,14 +121,9 @@ const Navbar = () => {
 
           <li className= {`max-md:hidden`}>
             
+            <NavBarNotification />
             
-            
-              <NotificationIcon size={30} className='ml-6 text-white cursor-pointer' onClick={() => setHandleNotif(true)}/>
-           
-
-             
-
-            { handleNotif && <Notifications setHandleNotif={setHandleNotif}/>}
+      
           </li>
 
           <div className="flex mx-auto justify-between w-1/2 max-md:hidden">

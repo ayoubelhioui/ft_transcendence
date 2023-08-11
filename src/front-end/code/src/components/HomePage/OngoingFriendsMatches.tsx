@@ -10,7 +10,7 @@ import classic_image from '../../assets/classic-game.png'
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
         <div className="flex flex-col purple_back mt-[4%] max-custom-lg:mt-[4%] w-[80%] max-custom-lg:w-[70%] mx-auto h-[60vh] max-custom-lg:h-[80vh] max-md:mt-[3%] max-md:w-[85%] max-sm:h-screen pb-5 max-sm:pb-0 max-sm:w-[95%] max-custom-md:w-[85%] max-custom-md:h-[75vh]">
-            <h1 className="text-white text-2xl mx-5 mt-5">Live Games</h1>
+            <h1 className="text-white text-2xl mx-5 mt-5">Ongoing Games</h1>
             <div className="flex flex-wrap mt-12 mx-5 gap-12 overflow-x-scroll justify-around">
                 {children}
             </div>
@@ -29,7 +29,7 @@ const Item = ({payload} : {payload : any}) => {
 
     const imagePath = isClassic ? three_image : classic_image
 
-    //!link to the live
+
 
     return (
         <div className="flex flex-wrap h-[190px] w-[260px] cursor-pointer ">
@@ -71,9 +71,9 @@ const List = ({list} : {list : any}) => {
     )
 }
 
-const LiveMatches = () => {
+const OngoingFriendsMatches = () => {
     const appService = useAppServiceContext()
-    const response = appService.requestService.getLivesRequest()
+    const response = appService.requestService.getOngoingFriendsMatchesRequest()
     const result = response.state
 
     response.effect()
@@ -99,7 +99,7 @@ const LiveMatches = () => {
 }
 
 
-export default LiveMatches;
+export default OngoingFriendsMatches;
 
 
 

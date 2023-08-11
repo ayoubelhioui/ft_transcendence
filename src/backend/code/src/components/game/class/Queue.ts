@@ -33,8 +33,9 @@ export class Queue {
           this.randomQueue.push(client)
         }
       } else {
-        if (client.userToInvite) {
-          client.gameToken = String(Queue.id++);
+        if (client.userToInvite !== undefined) {
+          client.gameToken = `${Queue.id}`;
+          Queue.id++
         }
         this.invite.push(client)
       }

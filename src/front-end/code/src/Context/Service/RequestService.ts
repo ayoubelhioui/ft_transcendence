@@ -151,7 +151,7 @@ export class RequestService {
     //====================================================
     //====================================================
 
-    getLivesRequest() {
+    getOngoingFriendsMatchesRequest() {
         return this.getData(RequestService.makeGetRequest, ["/games/live"])
     }
 

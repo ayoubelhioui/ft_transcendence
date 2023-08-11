@@ -133,6 +133,7 @@ export class Game {
         this.netObj.update()
         this.ballObj.update()
         this.player2.update()
+        this.racketObj.update()
     }
 
     loop() {

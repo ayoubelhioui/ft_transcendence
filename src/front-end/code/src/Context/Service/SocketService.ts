@@ -3,7 +3,8 @@ import { RequestService } from "./RequestService";
 import { address, STATUS_SUCCESS } from "../../Const";
 import { Triggers, UtilService } from "./UtilService";
 import { popupContentI } from "../../components/HomePage/Popup/Popup";
-import { INotification } from "../../components/Navbar/Notifications";
+import { INotification, NotificationType } from "../../components/Navbar/Notifications";
+import { UserI } from "./AuthService";
 
 
 
@@ -29,6 +30,13 @@ export class SocketService {
         const res = await this.requestService.getNotification()
         if (res.status === STATUS_SUCCESS) {
             this.listNotification = res.data
+            this.listNotification = this.listNotification.map((item : any) => {
+                if (item.acceptMethod === "POST")
+                    item.type = NotificationType.InviteToGroup
+                if (item.acceptMethod === "PUT")
+                    item.type = NotificationType.FriendRequest
+                return item
+            })
             this.utilService.trigger(Triggers.RefreshNotification)
         }
     }
@@ -95,7 +103,10 @@ export class SocketService {
         //******************************** Notification
 
         this.on("new_notification", (data : any) => {
-            console.log(data.notification)
+            if (data.notification.acceptMethod === "POST")
+                data.notification.type = NotificationType.InviteToGroup
+            if (data.notification.acceptMethod === "PUT")
+                data.notification.type = NotificationType.FriendRequest
             this.listNotification.push(data.notification)
             this.utilService.trigger(Triggers.RefreshNotification)
             this.utilService.trigger(Triggers.RefreshProfile)
@@ -126,8 +137,15 @@ export class SocketService {
     }
 
     addNotificationFromPopUp(popupContent : popupContentI) {
+        console.log(popupContent)
+
+        const fakeUser = {
+            id : popupContent.payload.id,
+            username : popupContent.payload.username
+        }
+
         const newItem : INotification = {
-            id: this.listNotification.length,
+            id: -1,
             message : popupContent.message,
             acceptLink : "",
             acceptMethod : "",
@@ -135,7 +153,9 @@ export class SocketService {
             refuseMethod : "",
             time : new Date(),
             seen : false,
-            sender : popupContent.payload.user
+            sender : fakeUser as UserI,
+            type : NotificationType.InviteToGame,
+            payload : popupContent.payload
         }
         this.listNotification.push(newItem)
         console.log(this.listNotification)

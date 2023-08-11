@@ -6,7 +6,14 @@ import { UserI } from "../../Context/Service/AuthService";
 import { send } from "process";
 import { useNavigate } from "react-router-dom";
 import { Triggers } from "../../Context/Service/UtilService";
+import { InviteI } from "../HomePage/Popup/Popup";
 // import {acceptImage} from '../../assets/accept.png'
+
+export enum NotificationType {
+  InviteToGame,
+  InviteToGroup,
+  FriendRequest
+}
 
 export interface INotification {
   id: number;
@@ -19,6 +26,8 @@ export interface INotification {
   seen : boolean;
   //receiver : UserI;
   sender : UserI;
+  type : number
+  payload? : any
 }
 
 const Wrapper = ( {children} : {children : ReactNode} ) =>  {
@@ -39,12 +48,13 @@ const Item = ({payload, setHandleNotif} : {payload : any, setHandleNotif : any})
 
   const avatar = `http://${address}/users/image/${item.sender?.id}`
 
-  const acceptClick = async () => {
-    if (item.acceptMethod === "PUT") {
-      navigate(`/Profile/${item.sender.id}`)
-      setHandleNotif(false)
-    } else {
-      const res = await appService.requestService.acceptNotification(item.acceptMethod, item.acceptLink)
+  const acceptFriendRequest = async () => {
+    navigate(`/Profile/${item.sender.id}`)
+    setHandleNotif(false)
+  }
+
+  const acceptInviteGroup = async () => {
+    const res = await appService.requestService.acceptNotification(item.acceptMethod, item.acceptLink)
       if (res?.status === STATUS_SUCCESS) {
         const deleteRes = await appService.requestService.deleteNotification(item.id)
         if (deleteRes.status === STATUS_SUCCESS) {
@@ -54,9 +64,24 @@ const Item = ({payload, setHandleNotif} : {payload : any, setHandleNotif : any})
       } else {
         setHandleNotif(false)
         //!error
-      }
     }
   }
+
+  const acceptGameInvite = async () => {
+    if (item.payload) {
+      console.log("item", item)
+      const popupContent : InviteI = item.payload
+      appService.utilService.gameParams = {
+        isClassic : popupContent.isClassic,
+        isBotMode : popupContent.isBotMode,
+        gameToken : popupContent.gameToken,
+      }
+      setHandleNotif(false)
+      navigate('/Play')
+    }
+  }
+
+ 
 
   //console.log("g", item)
   return (
@@ -70,11 +95,14 @@ const Item = ({payload, setHandleNotif} : {payload : any, setHandleNotif : any})
                   <p className='text-white text-xs'>{item.message}</p>
                 </div>
                 {/* <img src={acceptImage} alt="" /> */}
-                { item.acceptLink && item.acceptMethod === "POST" && 
-                  <span onClick={acceptClick} className="text-white font-bold ">accept</span>
+                { item.acceptLink && item.type === NotificationType.InviteToGroup && 
+                  <span onClick={acceptInviteGroup} className="text-white font-bold ">accept</span>
                 }
-                { item.acceptLink && item.acceptMethod === "PUT" && 
-                  <span onClick={acceptClick} className="text-white font-bold ">go too profile</span>
+                { item.acceptLink && item.type === NotificationType.FriendRequest && 
+                  <span onClick={acceptFriendRequest} className="text-white font-bold ">go too profile</span>
+                }
+                { item.type === NotificationType.InviteToGame && 
+                  <span onClick={acceptGameInvite} className="text-white font-bold "> accept </span>
                 }
             </div>
         </div>
@@ -88,7 +116,7 @@ const List = ({list, setHandleNotif} : {list : any, setHandleNotif : any}) => {
       <Wrapper>
           {
               list.map((item : any, index : number) => (            
-                  <Item key={item.id} payload={item} setHandleNotif={setHandleNotif} />
+                  <Item key={index} payload={item} setHandleNotif={setHandleNotif} />
               ))
           }
       </Wrapper>

@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom"
-import { Chat, HomePage, LeaderBoard, LiveMatches, MainWrapper, Navbar, Profile, ResultsLatestHome, UserInfo } from ".."
+import { Chat, HomePage, LeaderBoard, OngoingFriendsMatches, MainWrapper, Navbar, Profile, ResultsLatestHome, UserInfo } from ".."
 import Game from "../Game/Game"
 import ChooseGame from "../Game/ChooseGame"
 import { useAppServiceContext } from "../../Context/Service/AppServiceContext"
@@ -44,7 +44,7 @@ const MainPage = () => {
 
                     <Route path='Playthrough' element={ <ChooseGame />} />
 
-                    <Route path='FriendsPlaying' element={<LiveMatches />}/>
+                    <Route path='FriendsPlaying' element={<OngoingFriendsMatches />}/>
 
 
                 </Route>

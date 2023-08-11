@@ -19,6 +19,7 @@ export interface popupContentI {
   iconLink? : string
   type : number
   payload : any
+  title : string
 }
 
 export interface InviteI {
@@ -116,6 +117,7 @@ const Popup = () => {
         iconLink : `http://${address}/users/image/${data.user.id}`,
         type : POPUP_EVENT.MESSAGE_EVENT,
         payload : data,
+        title : `${data.user.username} has a message for you!`
       }
       
 
@@ -126,12 +128,16 @@ const Popup = () => {
     const inviteToGameEventHandler = (data : InviteI) => {
       if (isGame())
         return
+      let gameTitle = `${data.username} invites you to a thrilling 3D gaming session!`
+      if (data.isClassic)
+        gameTitle = `${data.username} invites you to a classic 2D game!`
       const newContent : popupContentI = {
         link : data.gameToken,
         message : `${data.username} has invited you to ${data.gameType}`,
         iconLink : `http://${address}/users/image/${data.id}`,
         type : POPUP_EVENT.INVITE_EVENT,
         payload : data,
+        title : gameTitle
       }
       setContent(newContent)
       onSetIsOpen(true)
@@ -144,6 +150,7 @@ const Popup = () => {
         iconLink : undefined,
         type : POPUP_EVENT.ERROR_EVENT,
         payload : data,
+        title : "Error"
       }
       setContent(newContent)
       onSetIsOpen(true)

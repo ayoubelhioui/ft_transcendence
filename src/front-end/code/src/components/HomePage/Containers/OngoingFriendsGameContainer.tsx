@@ -9,7 +9,7 @@ const Wrapper = ( {children} : {children : ReactNode} ) =>  {
     return (
         <>
             <div className=' min-h-[370px] max-custom-lg:min-h-[35vh] max-md:min-h-[270px] back rounded-[10px] flex-1 mr-16 max-custom-md:mr-0 flex flex-col justify-between shadow-md max-md:mr-0'>
-                <h1 className="text-2xl p-2 mb-4">Live Games</h1>
+                <h1 className="text-2xl p-2 mb-4">Ongoing Games</h1>
                 {children}
             </div>
         </>
@@ -26,7 +26,7 @@ const Item = ({ item }: {item : any }) => {
             <div className="flex mx-auto py-2 items-center bg-opacity-40">
                 <Avatar src={`http://${address}/users/image/` + player1.id} sx={{ width: 60, height: 60 }} />
                 <div className=" mx-12 flex items-center gap-2">
-                <span>LIVE</span>
+                <span> Live </span>
                 <span className='w-[11px] h-[12px] rounded-[50%] bg-red-700'></span>
                 </div>
                 <Avatar src={`http://${address}/users/image/` + player2.id} sx={{ width: 60, height: 60 }}/>
@@ -48,7 +48,7 @@ const SeeMore = () => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate('/Live');
+        navigate('/FriendsPlaying');
       };
 
     return (
@@ -62,10 +62,11 @@ const SeeMore = () => {
 }
 
 const List = ({lives} : {lives : any}) => {
+
     return (
         <Wrapper>
             {
-                lives.slice(0, 3).map((item : any) => (            
+                lives.slice(0, 3).map((item : any, index : number) => (            
                     <Item key={item.token} item={item}/>
                 ))
             }
@@ -78,9 +79,9 @@ const List = ({lives} : {lives : any}) => {
     )
 }
 
-export const Live = () => {
+export const OngoingFriendsGameContainer = () => {
     const appService = useAppServiceContext()
-    const response = appService.requestService.getLivesRequest()
+    const response = appService.requestService.getOngoingFriendsMatchesRequest()
     const result = response.state
     
     response.effect()

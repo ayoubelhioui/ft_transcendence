@@ -5,10 +5,18 @@ import { useAppServiceContext } from "../../../Context/Service/AppServiceContext
 
 
 const PopupItem = ({content} : {content : popupContentI}) => {
+
+  let message = content.message.substring(0, 150)
+  if (content.message.length > 150)
+    message = message + " ..."
+
   return (
-    <div className="flex">
+    <div className="flex cursor-pointer">
     <Avatar alt="Avatar" src={content.iconLink} />
-    <div className="break-words ml-3 text-sm font-normal overflow-wrap w-[200px]">{content.message}</div>
+    <div className="break-words ml-3 text-sm font-normal overflow-wrap w-[200px]">
+      <h5 className="font-bold">{content.title}</h5>
+      <div className="ml-2 mt-1">{message}</div>
+    </div>
     </div>
   )
 }
@@ -37,8 +45,6 @@ const Invite = ({content, setIsOpen} : {content : popupContentI , setIsOpen: any
     appService.utilService.gameParams = {
       isClassic : payload.isClassic,
       isBotMode : payload.isBotMode,
-      userId : appService.authService.user?.id,
-      canvas : undefined,
       gameToken : payload.gameToken,
     }
     setIsOpen(false)
