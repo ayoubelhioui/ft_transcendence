@@ -14,6 +14,7 @@ export class Game {
     socketMgr : ClassicGameSocket
     gameParams : GameParams
     eventsCallBack : any[]
+    gameEnd : boolean
 
     gameInfo = {
         scorePlayer1: 0,
@@ -30,6 +31,7 @@ export class Game {
         this.camera = new MyCamera()
         this.socketMgr = new ClassicGameSocket(this)
         this.eventsCallBack = []
+        this.gameEnd = false
 
         this.scene.visible = false
         this.#events(this)
@@ -55,6 +57,7 @@ export class Game {
         //console.log("Game is Ended ...", payload)
         this.scene.visible = false
         this.gameInfo.start = false
+        this.gameEnd = true
         if (params.frame > 10) {
             if (payload.isWin)
                 this.gameParams.callBack(GameState.gameEndedWin)

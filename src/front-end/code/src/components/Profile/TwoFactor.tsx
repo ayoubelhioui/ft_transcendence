@@ -51,7 +51,7 @@ const TwoFactor = () => {
             setFactor(true)
             setOpen(false)
         } else {
-            openPopupError("An error occurred")
+            openPopupError("Incorrect pass code.")
         }
     }
 

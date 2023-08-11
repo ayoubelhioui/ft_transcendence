@@ -65,7 +65,8 @@ const Game =  () => {
             gameParams.canvas = canvas
             gameParams.socket = appService.socketService.getSocket()
             gameParams.callBack = (state : number) => {
-                if (state === GameState.gameException) {
+                console.log("callBack", state)
+                if (state === GameState.gameException || state === GameState.gameEndedWin || state === GameState.gameEndedLoss) {
                     gameObject?.stop()
                 }
                 setTimeout(setState, 500, state)
@@ -85,7 +86,7 @@ const Game =  () => {
    
         return () => {
             console.log("leave game")
-            if (gameObject) {
+            if (gameObject && gameObject.gameEnd === false) {
                 gameObject.stop()
                 gameObject.socketMgr.socket.emit("leaveGame", {})
             }

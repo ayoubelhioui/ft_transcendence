@@ -45,6 +45,7 @@ export class Game {
     tableModel : THREE.Group
     racketModel : THREE.Group
     gameParams : GameParams
+    gameEnd : boolean
 
     gameInfo = {
         turn: 0, //the player that will shot the ball
@@ -64,6 +65,7 @@ export class Game {
         this.camera = new MyCamera()
         this.socketMgr = new ThreeGameSocket(this)
         this.eventsCallBack = []
+        this.gameEnd = false
 
         this.ambientLightObj = new AmbientLight(this)
         this.spotLight = new SpotLight(this)
@@ -107,6 +109,7 @@ export class Game {
         //console.log("Game is Ended ...", payload)
         this.gameInfo.start = false
         this.scene.visible = false
+        this.gameEnd = true
         if (payload.isWin)
             this.gameParams.callBack(GameState.gameEndedWin)
         else

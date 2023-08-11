@@ -295,8 +295,8 @@ export class GameService {
                 game.player1.wins += 1 
                 game.player2.loss += 1 
             } else {
-                game.player1.wins += 1 
-                game.player2.loss += 1 
+                game.player2.wins += 1 
+                game.player1.loss += 1 
             }
             game.player1.winrate = Math.round((game.player1.wins * 100) / (game.player1.wins + game.player1.loss))
             game.player2.winrate = Math.round((game.player2.wins * 100) / (game.player2.wins + game.player2.loss))

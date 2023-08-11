@@ -33,7 +33,7 @@ const Item = ({payload} : {payload : any}) => {
         password : password
       })
       if (res.status == STATUS_ERROR) {
-        openPopupError("An error occurred")
+        openPopupError("Incorrect password.")
       } else {
         chatsGroupsPanelContext.setUpdateListChannelsJoin(!chatsGroupsPanelContext.updateListChannelsJoin)
         openPopupStatus("Join success")
@@ -42,26 +42,33 @@ const Item = ({payload} : {payload : any}) => {
 
   return (
       <div className="flex mt-2 items-center justify-between mx-6 relative">
-          <div className="flex items-center gap-4 ml-6 cursor-pointer">
-            <img
-              src={avatar}
-              alt="avatar"
-              className=" object-cover rounded-full w-[45px] h-[45px] cursor-pointer"
-            />
+          
+          {!isOpened && (
+            <>
+              <div className="flex items-center gap-4 ml-6 cursor-pointer">
+                <img
+                  src={avatar}
+                  alt="avatar"
+                  className=" object-cover rounded-full w-[45px] h-[45px] cursor-pointer"
+                />
 
-            <h2 className="text-white">{channel.name}</h2>
-          </div>
-          <button
-            type="button"
-            className="text-white relative bg-purple-950 p-2 text-sm outline-none"
-            onClick={() => {setIsOpened(!isOpened)}}
-          >
-            Join Now
-          </button>
+                <h2 className="text-white">{channel.name}</h2>
+              </div>
+              <button
+                  type="button"
+                  className="text-white relative bg-purple-950 p-2 text-sm outline-none"
+                  onClick={() => {setIsOpened(!isOpened)}}
+                >
+                  Join Now
+              </button>
+            </>
+          )
+
+          }
 
           {isOpened && (
 
-            <div className=" bg-blue-950 absolute rounded-[10px] w-[150px] h-[45px] text-white z-[999] top-14 left-1/3">
+            <div className=" bg-blue-950  rounded-[10px] w-[150px] h-[100%] text-white z-[999] top-14 left-1/3">
               <div className="flex flex-col">
                 <input
                   autoComplete="off" 
