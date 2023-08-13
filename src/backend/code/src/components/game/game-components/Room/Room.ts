@@ -111,7 +111,7 @@ export class Room {
     }
 
     private gameScoreTrigger(player1Score, player2Score) {
-        let maxScore = 2
+        let maxScore = 10
         if(player1Score == maxScore || player2Score == maxScore)
         {
             return (true)
