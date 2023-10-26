@@ -29,6 +29,10 @@
 
 ![ProfilePage](https://github.com/mmounib/ft_transendence/blob/master/screenshot-profile.png)
 
+## GIF VIDEO
+
+![AppVideo](https://github.com/mmounib/ft_transendence/blob/master/ezgif.com-video-to-gif.gif)
+
 "FT_Transcendence" showcases a blend of modern technologies and a passion for gaming, resulting in an impressive and enjoyable ping pong gaming platform. It serves as a testament to my expertise in full-stack development and my ability to create engaging online experiences.
 
 
