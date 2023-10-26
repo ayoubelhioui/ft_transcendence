@@ -25,6 +25,10 @@
 
 ![Game](https://github.com/mmounib/ft_transendence/blob/master/image-bg.png)
 
+![Game-1](https://github.com/mmounib/ft_transendence/blob/master/screenshot-transcendence.png)
+
+![ProfilePage](https://github.com/mmounib/ft_transendence/blob/master/screenshot-profile.png)
+
 "FT_Transcendence" showcases a blend of modern technologies and a passion for gaming, resulting in an impressive and enjoyable ping pong gaming platform. It serves as a testament to my expertise in full-stack development and my ability to create engaging online experiences.
 
 
