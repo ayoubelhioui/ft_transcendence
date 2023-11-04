@@ -19,6 +19,20 @@
 - **Game Statistics:** Users can track their game statistics and performance over time, enhancing the competitive aspect.
 - **Secure Database Management:** Utilized PostgreSQL for secure and efficient data storage, ensuring data integrity and reliability.
 
+## Screenshots
+
+![HomePage](https://github.com/mmounib/ft_transendence/blob/master/ft_transcendence.png)
+
+![Game](https://github.com/mmounib/ft_transendence/blob/master/image-bg.png)
+
+![Game-1](https://github.com/mmounib/ft_transendence/blob/master/screenshot-transcendence.png)
+
+![ProfilePage](https://github.com/mmounib/ft_transendence/blob/master/screenshot-profile.png)
+
+## GIF VIDEO
+
+![AppVideo](https://github.com/mmounib/ft_transendence/blob/master/ezgif.com-video-to-gif.gif)
+
 "FT_Transcendence" showcases a blend of modern technologies and a passion for gaming, resulting in an impressive and enjoyable ping pong gaming platform. It serves as a testament to my expertise in full-stack development and my ability to create engaging online experiences.
 
 
